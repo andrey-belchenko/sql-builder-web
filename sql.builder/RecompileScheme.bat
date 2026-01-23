@@ -1,0 +1,1 @@
+bin\x86\Debug\sql.builder.exe -rs

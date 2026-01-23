@@ -1,0 +1,191 @@
+﻿<query name="vem_is_ad_all" timestamp="02.11.2017 20:08:06" class="1">
+  <select>
+    <column table="a" column="num_ouco" type="string" data-size="20" />
+    <column table="a" column="num_ds" type="string" data-size="40" />
+    <column table="a" column="num_req" type="string" data-size="50"/>
+    <column table="a" column="contr_kind" type="string" data-size="10" />
+    <column table="a" column="name_vid_ad" type="string" data-size="200" />
+    <column table="a" column="pr_sum_name" type="string" data-size="250" />
+    <column table="a" column="guess_sum" type="number" />
+    <column table="a" column="sum_rated" type="number" />
+    <column table="a" column="contr_sumf" type="number" />
+    <column table="a" column="contr_sum_m" type="number" />
+    <column table="a" column="contr_sum_e" type="number" />
+    <column table="a" column="cnt_mes" type="number" />
+    <column table="a" column="pr_late_payment" type="number" />
+    <column table="a" column="contr_opl" type="number" />
+    <column table="a" column="contr_opl_d" type="number" />
+    <column table="a" column="contr_opl_i" type="number" />
+    <column table="a" column="opl" type="number" />
+    <column table="a" column="perepl" type="number" />
+    <column table="a" column="vozvrat" type="number" />
+    <column table="a" column="sum_os" type="number" />
+    <column table="a" column="zadol_opl" type="number" />
+    <column table="a" column="zadol_d" type="number" />
+    <column table="a" column="zadol_i" type="number" />
+    <column table="a" column="sum_akts" type="number" />
+    <column table="a" column="proc_opl" type="number" />
+    <column table="a" column="imuch" type="number" />
+    <column table="a" column="dat_first_opl" type="date" />
+    <column table="a" column="dat_opl" type="date" />
+    <column table="a" column="a_customer" type="string" data-size="250" />
+    <column table="a" column="name_all" type="string" data-size="1000" />
+    <column table="a" column="inn" type="string" data-size="15" />
+    <column table="a" column="kpp" type="string" data-size="20" />
+    <column table="a" column="name_zayav" type="string" data-size="250" />
+    <column table="a" column="dt_contract" type="date" />
+    <column table="a" column="srok_uslug" type="date" />
+    <column table="a" column="dat_end" type="date" />
+    <column table="a" column="dat_rastorg" type="date" />
+    <column table="a" column="kod_dop_contract" type="number" main="1"/>
+    <column table="a" column="dat_ouco" type="date" />
+    <column table="a" column="name_kr" type="string" data-size="25" />
+    <column table="a" column="fl_build" type="number" />
+    <column table="a" column="fl_build_vip" type="number" />
+    <column table="a" column="fl_build_z" type="number" />
+    <column table="a" column="fl_build_z_vip" type="number" />
+    <column table="a" column="sum_pd" type="number" />
+    <column table="a" column="god_tarif" type="number" />
+    <column table="a" column="ind_proekt" type="number" />
+    <column table="a" column="god_ip" type="number" />
+    <column table="a" column="pr_name" type="string" data-size="250" />
+    <column table="a" column="korr_ip" type="number" />
+    <column table="a" column="name_obj" type="string" data-size="60" />
+    <column table="a" column="name_otrasl" type="string" data-size="200" />
+    <column table="a" column="razdel_okved" type="string" data-size="30" />
+    <column table="a" column="name_razdel_okved" type="string" data-size="250" />
+    <column table="a" column="sposob_okved" type="string" data-size="4000" />
+    <column table="a" column="kn_zone" type="number" />
+    <column table="a" column="filial" type="string" data-size="25" />
+    <column table="a" column="name_rs" type="string" data-size="25" />
+    <column table="a" column="cust_addr" type="string" data-size="250" />
+    <column table="a" column="load_point" type="string" data-size="300" />
+    <column table="a" column="group_lp" type="string" data-size="50" />
+    <column table="a" column="load_point1" type="string" data-size="300" />
+    <column table="a" column="group_lp1" type="string" data-size="50" />
+    <column table="a" column="lp_addr" type="string" data-size="250" />
+    <column table="a" column="sum_load" type="number" />
+    <column table="a" column="load_sum1" type="number" />
+    <column table="a" column="load_sum2" type="number" />
+    <column table="a" column="load_sum3" type="number" />
+    <column table="a" column="load123" type="number" />
+    <column table="a" column="load1" type="number" />
+    <column table="a" column="load2" type="number" />
+    <column table="a" column="load3" type="number" />
+    <column table="a" column="load_existed" type="number" />
+    <column table="a" column="load_ex1" type="number" />
+    <column table="a" column="load_ex2" type="number" />
+    <column table="a" column="load_ex3" type="number" />
+    <column table="a" column="supply" type="string" data-size="250" />
+    <column table="a" column="supply1" type="string" data-size="250" />
+    <column table="a" column="vol" type="string" data-size="20" />
+    <column table="a" column="vol1" type="string" data-size="20" />
+    <column table="a" column="dt_request" type="date" />
+    <column table="a" column="exp_num" type="string" data-size="20" />
+    <column table="a" column="exp_dat" type="date" />
+    <column table="a" column="exp_prim" type="string" data-size="2000" />
+    <column table="a" column="name_status" type="string" data-size="50" />
+    <column table="a" column="old_status_name" type="string" data-size="2000" />
+    <column table="a" column="dataizm" type="date" />
+    <column table="a" column="fio" type="string" data-size="250" />
+    <column table="a" column="folder" type="string" data-size="250" />
+    <column table="a" column="folder_date" type="date" />
+    <column table="a" column="name_folder_user" type="string" data-size="50" />
+    <column table="a" column="name_kurators" type="string" data-size="250" />
+    <column table="a" column="name_kurators_req" type="string" data-size="250" />
+    <column table="a" column="num_tu" type="string" data-size="4000" />
+    <column table="a" column="srok_tu" type="date" />
+    <column table="a" column="contr_note" type="string" data-size="4000" />
+    <column table="a" column="prim" type="string" data-size="300" />
+    <column table="a" column="dat_sl_zap" type="date" />
+    <column table="a" column="dat_per_sl_zap" type="date" />
+    <column table="a" column="dat_ks" type="date" />
+    <column table="a" column="CP" type="number" />
+    <column table="a" column="AP" type="number" />
+    <column table="a" column="Uvedom" type="number" />
+    <column table="a" column="Uvedom_r" type="number" />
+    <column table="a" column="reg_req_title" type="string" data-size="45" />
+    <column table="a" column="kn_sert" type="number" />
+    <column table="a" column="vid_atp" type="string" data-size="4000" />
+    <column table="a" column="dt_reg" type="date" />
+    <column table="a" column="dt_delivery" type="date" />
+    <column table="a" column="ind_tar" type="number" />
+    <column table="a" column="fl_work_ps" type="number" />
+    <column table="a" column="fl_work_net" type="number" />
+    <column table="a" column="fl_work_pu" type="number" />
+    <column table="a" column="fl_loss" type="number" />
+    <column table="a" column="name_group" type="string" data-size="50" />
+    <column table="a" column="dat_tz_ks" type="date" />
+    <column table="a" column="dat_ks_11" type="date" />
+    <column table="a" column="dat_act" type="date" />
+    <column table="a" column="dat_vip_rab" type="date" />
+    <column table="a" column="num_vip_rab" type="string" data-size="20" />
+    <column table="a" column="dat_fact_vol" type="date" />
+    <column table="a" column="text_rab" type="string" data-size="13" />
+    <column table="a" column="text_oblig" type="string" data-size="11" />
+    <column table="a" column="analog" type="string" data-size="4000" />
+    <column table="a" column="dat_dop_doc" type="date" />
+    <column table="a" column="num_dop_doc" type="string" data-size="301" />
+    <column table="a" column="num_ad" type="string" data-size="50" />
+    <column table="a" column="pr_num_pref_control" type="number" />
+    <column table="a" column="load_units" type="string" data-size="15" />
+    <column table="a" column="fl_rotate" type="number" />
+    <column table="a" column="fl_rnk_not" type="number" />
+    <column table="a" column="vrem_tp" type="number" />
+    <column table="a" column="quant_ds" type="number" />
+    <column table="a" column="dat_ds" type="date" />
+    <column table="a" column="fl_discount" type="number" />
+    <column table="a" column="titul_ip" type="string" data-size="250" />
+    <column table="a" column="num_aip" type="string" data-size="250" />
+    <column table="a" column="name_kat_zayav" type="string" data-size="250" />
+    <column table="a" column="dat_close_deb_zadol" type="date" />
+    <column table="a" column="otl_usl" type="string" data-size="2000" />
+    <column table="a" column="vid_otl_usl" type="string" data-size="250" />
+    <column table="a" column="srok_otl_usl" type="date" />
+    <column table="a" column="stage" type="number" />
+    <column table="a" column="sso" type="number" />
+    <column table="a" column="dat_status_2" type="date" />
+    <column table="a" column="pr_db" type="number" />
+    <column table="a" column="dat_uv_el_ust" type="date" />
+    <column table="a" column="dat_spis_kz" type="date" />
+    <column table="a" column="um_status_1" type="string" data-size="50" />
+    <column table="a" column="podr_status_1" type="string" data-size="100" />
+    <column table="a" column="vid_ds" type="string" data-size="200" />
+    <column table="a" column="DS_not_rab_LE" type="number" />
+    <column table="a" column="read_to_close" type="number" />
+    <column table="a" column="dat_read_to_close" type="date" />
+    <column table="a" column="got_to_close" type="number" />
+    <column table="a" column="dat_got_to_close" type="date" />
+    <column table="a" column="text_spis" type="string" data-size="500" />
+    <column table="a" column="prior_ad" type="string" data-size="250" />
+    <column table="a" column="pr_ofz" type="number" />
+    <column table="a" column="status_ofz" type="string" data-size="250" />
+    <column table="a" column="name_direct_i" type="string" data-size="100" />
+    <column table="a" column="n_pril" type="string" data-size="50" />
+    <column table="a" column="all_control" type="number" />
+    <column table="a" column="folder_ofz" type="string" data-size="250" />
+    <column table="a" column="name_mo" type="string" data-size="250" />
+    <column table="a" column="name_sp" type="string" data-size="250" />
+    <column table="a" column="name_np" type="string" data-size="250" />
+    <column table="a" column="s_mobr" type="string" data-size="250" />
+    <column table="a" column="mo_name" type="string" data-size="250" />
+    <column table="a" column="s_nasp" type="string" data-size="250" />
+    <column table="a" column="vid_opl_ad" type="string" data-size="3" />
+    <column table="a" column="pr_ad_iskl" type="number" />
+    <column table="a" column="type_req" type="string" data-size="30" />
+    <column table="a" column="type_req1" type="string" data-size="30" />
+    <column table="a" column="titul_ad" type="number" />
+    <column table="a" column="sposob_zayav" type="string" data-size="40" />
+    <column table="a" column="spos_vip" type="string" data-size="10" />
+    <column table="a" column="dat_plan_rab" type="date" />
+    <column table="a" column="org_active" type="string" data-size="250" />
+    <column table="a" column="name_ini_prod" type="string" data-size="50" />
+    <column table="a" column="dt_bus_plan" type="date" />
+    <column table="a" column="cnt_mes_tp" type="date" />
+    <column table="a" column="name_ini_prod_ds" type="string" data-size="50" />
+    <column table="a" column="name_dzo_bus_plan" type="string" data-size="50" />
+  </select>
+  <from>
+    <table name="vem_is_ad_all" as="a" />
+  </from>
+</query>

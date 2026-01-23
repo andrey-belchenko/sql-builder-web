@@ -1,0 +1,100 @@
+﻿using System;
+using System.Xml.Linq;
+using System.Linq;
+//using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Data;
+//using DevExpress.XtraLayout;
+//using DevExpress.XtraBars;
+//using DevExpress.XtraLayout.Utils;
+//using infoenergo.core.Extensions;
+using sql.builder.DataApi;
+using sql.builder.Controls;
+//using sql.builder.Controls.Grids;
+
+namespace sql.builder.UI
+{
+    public partial class UIFormC : IForm
+    {
+        internal SortedList<string, VSXElement> eventsTags = null;
+        internal void AddEventTag(string eventName, VSXElement tag)
+        {
+            if (eventsTags == null)
+            {
+                eventsTags = new SortedList<string, VSXElement>();
+            }
+            eventsTags.Add(eventName, tag);
+        }
+        internal void RaiseUIEvent(string name)
+        {
+            if (eventsTags != null)
+            {
+                if (eventsTags.ContainsKey(name))
+                {
+                    throw new NotImplementedException();
+                    //VUseAction.ExecuteAction(this._form_name, (VUseAction)eventsTags[name], this.dataSource, this, null, null, null);
+                }
+            }
+        }
+        public event Action<UIFormC> CustomSave = null;
+        internal void RaiseCustomSave()
+        {
+            if (CustomSave != null)
+            {
+                CustomSave(this);
+            }
+        }
+        public event Action<UIFormC, XElement> OnButtonClick = null;
+        internal void RaiseButtonClick(XElement xinfo)
+        {
+            if (OnButtonClick != null)
+            {
+                OnButtonClick(this, xinfo);
+            }
+        }
+        internal void UpdateEvents( XElement xevents)
+        {
+            if (xevents == null)
+            {
+                return;
+            }
+            foreach (XElement xcmd in xevents.Elements(TextConst.EName.UseAction))
+            {
+                var action = Cmn.GetActionInfo(xcmd);
+                AddEventTag(xcmd.Attribute(TextConst.AName.EventName).Value, action);
+            }
+        }
+        //internal void UpdateGridEvents(ucTableViewerContainer grid, XElement xevents)
+        //{
+        //    if (xevents == null)
+        //    {
+        //        return;
+        //    }
+        //    grid.RemoveUIEventHandler(this.Grid_UIEvent);
+        //    grid.AddUIEventHandler(this.Grid_UIEvent);
+        //    grid.UpdateEvents(xevents);
+        //}
+        //private bool Grid_UIEvent(object sender, UIEventArgs e)
+        //{
+        //    VUseAction.ExecuteAction(this._form_name, (VUseAction)e.ActionInfo, dataSource, this, e.Table, e.Row, null);
+        //    return true;
+        //}
+    }
+    internal class UIEventArgs : EventArgs
+    {
+        public VSXElement ActionInfo;
+        public DataRow Row;
+        public VDataTable Table;
+        public VDataColumn Column;
+        public string EventName;
+        public UIEventArgs(string eventName, VSXElement actionInfo, VDataTable table, DataRow row, VDataColumn column)
+        {
+            EventName = eventName;
+            ActionInfo = actionInfo;
+            Row = row;
+            Table = table;
+            Column = column;
+        }         
+    }
+    internal delegate bool UIEventHandler(object sender, UIEventArgs e);
+}
