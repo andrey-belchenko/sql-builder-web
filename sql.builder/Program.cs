@@ -35,6 +35,7 @@ namespace sql.builder
 
         public static void Main(string[] args)
         {
+            XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
             //var conStr = infoenergo.framework.Global2.BuildConnectionString("asuse", "kl0pik", "realkazn");
             var conStr = "User Id=asuse;Password=kl0pik;Server=REALKAZN;Pooling=False;Sid=REALKAZN;Port=1521";
 

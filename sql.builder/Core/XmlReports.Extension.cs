@@ -27,7 +27,16 @@ namespace sql.builder
         /// Путь к папке source. Заполняется при вызове из ASP
         /// для веба Application.StartupPath использовать нельзя
         /// </summary>
-        public static string SourceFolder;
+        /// 
+        private static string _sourceFolder = null;
+        public static string SourceFolder
+        {
+            get { return _sourceFolder; }
+
+            set {  
+                _sourceFolder= value;
+            }
+        }
         private static XElement _inputParams;
         public static XElement InputParams {
             get {
@@ -128,11 +137,11 @@ namespace sql.builder
             else scheme = schemeName;
             if (customer != null) customerId = customer;
             else customer = customerId;
-            SourceFolder = source_folder;
-            if (SourceFolder == null) // Бельченко 06.06.2017,SourceFolder используется ProjectManager, чтобы работал web
-            {
-                SourceFolder = CleanUtils.GetRootPath();
-            }
+            //SourceFolder = source_folder;
+            //if (SourceFolder == null) // Бельченко 06.06.2017,SourceFolder используется ProjectManager, чтобы работал web
+            //{
+            //    SourceFolder = CleanUtils.GetRootPath();
+            //}
             // Емцов - схема перекомпилируется только из проекта sql.builder 
             // Чтобы нормально работало в infoenergo.exe
             //if (IsDeveloperMode() && !dontCompile && Application.ProductName == NativeProductName)
