@@ -90,7 +90,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Ionic.Zip">
-      <HintPath>..\infoenergo.sys\Lib\Ionic.Zip.dll</HintPath>
+      <HintPath>dll\Ionic.Zip.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
