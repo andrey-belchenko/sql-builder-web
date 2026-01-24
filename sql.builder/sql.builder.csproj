@@ -137,179 +137,11 @@
     <Compile Include="Clean\Extensions\Extensions.cs" />
     <Compile Include="Clean\Global.cs" />
     <Compile Include="Controls\FormFields\ParamField.cs" />
-    <Compile Include="Controls\Grids\Container\delete.IReportGrid.cs" />
-    <Compile Include="Controls\Grids\Container\ucTableViewerContainer.cs" />
-    <Compile Include="Controls\Grids\ReportViewModes\Dashboard\ucDashboardBase.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\Dashboard\ucDashboardBase.Designer.cs">
-      <DependentUpon>ucDashboardBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\Dashboard\ucDashboardDesigner.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\Dashboard\ucDashboardDesigner.Designer.cs">
-      <DependentUpon>ucDashboardDesigner.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\Dashboard\ucDashboardViewer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\Dashboard\ucDashboardViewer.Designer.cs">
-      <DependentUpon>ucDashboardViewer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\DataEditor\ucDataEditorMain.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\DataEditor\ucDataEditorMain.Designer.cs">
-      <DependentUpon>ucDataEditorMain.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\DataEditor\ucFormDesigner.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\DataEditor\ucFormDesigner.Designer.cs">
-      <DependentUpon>ucFormDesigner.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\DeveloperTools\ucTempViewer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\DeveloperTools\ucTempViewer.Designer.cs">
-      <DependentUpon>ucTempViewer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\FormParametersControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\FormParametersControl.Designer.cs">
-      <DependentUpon>FormParametersControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Containers\ucBaseContainer.cs" />
-    <Compile Include="Controls\Containers\ucBaseContainer.Designer.cs">
-      <DependentUpon>ucBaseContainer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\Grid\Container\ucGridContainer.cs" />
-    <Compile Include="Controls\Grids\ReportViewModes\Grid\Container\IGridContainer.cs" />
-    <Compile Include="Controls\Grids\ReportViewModes\Grid\Container\ucGridContainerWF.ViewEvents.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\Grid\Container\ucGridContainerWFUtils.cs" />
-    <Compile Include="Controls\Grids\ReportViewModes\Grid\Container\ucGridContainer.ViewEvents.cs" />
-    <Compile Include="Controls\Grids\ReportViewModes\Grid\Container\ucGridContainer.ViewEvents.New.cs" />
-    <Compile Include="Controls\Grids\ReportViewModes\Grid\Container\ucGridContainer.TreeEvents.cs" />
-    <Compile Include="Controls\Grids\ReportViewModes\Grid\Grid\ucGridWF.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\Grid\Grid\ucGridWF.Ext.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\Grid\Grid\ucGridWF.Events.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\Grid\Tree\ucTreeWF.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\Grid\Tree\ucTreeWF.Events.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\Grid\Tree\ucTreeWF.Ext.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\RepositoryManager.cs" />
-    <Compile Include="Controls\Grids\ReportViewModes\ucEmpty.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\ucEmpty.Designer.cs">
-      <DependentUpon>ucEmpty.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\ucExcelNew.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\ucExcelNew.Designer.cs">
-      <DependentUpon>ucExcelNew.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\Grid\Container\ucGridContainerWF.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\Grid\Container\ucGridContainerWF.Designer.cs">
-      <DependentUpon>ucGridContainerWF.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Grids\Old\ucGridOld.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\Old\ucGridOld.Designer.cs">
-      <DependentUpon>ucGridOld.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Grids\Old\ucExcel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\Old\ucExcel.Designer.cs">
-      <DependentUpon>ucExcel.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Containers\ucFormContainer.cs" />
-    <Compile Include="Controls\Containers\ucFormContainer.Designer.cs">
-      <DependentUpon>ucFormContainer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\ucPivotNew.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\ucPivotNew.Designer.cs">
-      <DependentUpon>ucPivotNew.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Grids\Old\ucPivot.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\Old\ucPivot.Designer.cs">
-      <DependentUpon>ucPivot.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\ucTreeNew.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\ucTreeNew.Designer.cs">
-      <DependentUpon>ucTreeNew.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Grids\Old\ucTree.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\Old\ucTree.Designer.cs">
-      <DependentUpon>ucTree.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Grids\Container\ucTableViewerContainerWF.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\Container\ucTableViewerContainerWF.Designer.cs">
-      <DependentUpon>ucTableViewerContainerWF.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Grids\Container\ucTableViewerContainer.VarDep.cs" />
-    <Compile Include="Controls\Grids\Container\ucTableViewerContainer.Transition.cs" />
-    <Compile Include="Controls\QueryEditor\ucExcelDataEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\QueryEditor\ucExcelDataEditor.Designer.cs">
-      <DependentUpon>ucExcelDataEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\QueryEditor\ucQueryEditor.Utils.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Testing\ucReportsAndParams.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Testing\ucReportsAndParams.Designer.cs">
-      <DependentUpon>ucReportsAndParams.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Testing\ucTestReports.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Testing\ucTestReports.Designer.cs">
-      <DependentUpon>ucTestReports.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ucProjects.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\ucProjects.Designer.cs">
-      <DependentUpon>ucProjects.cs</DependentUpon>
-    </Compile>
     <Compile Include="Core\Compiler.Cache.cs" />
     <Compile Include="Core\Compiler.Extension.AutoFilter.cs" />
     <Compile Include="Core\Compiler.MakeResultScheme.cs" />
-    <Compile Include="Core\Compiler.Test.cs" />
     <Compile Include="Core\XmlSpecialFiles.cs" />
     <Compile Include="DashboardUtils\DataExtractHelper.cs" />
     <Compile Include="DataApi\AName.cs" />
@@ -340,9 +172,6 @@
     <Compile Include="Core\ProjectManager.cs" />
     <Compile Include="DataApi\Qube\VDimLink.cs" />
     <Compile Include="DataApi\Qube\VDimension.Uses.cs" />
-    <Compile Include="DataApi\TableDataAccessor\Adapters\VTDAGridView.cs" />
-    <Compile Include="DataApi\TableDataAccessor\Adapters\VTDADataTable.cs" />
-    <Compile Include="DataApi\TableDataAccessor\Adapters\VTDATreeList.cs" />
     <Compile Include="DataApi\TableDataAccessor\IVTableDataAdapter.cs" />
     <Compile Include="DataApi\TableDataAccessor\VTDAUtils.cs" />
     <Compile Include="DataApi\VReport.MakeResultScheme.cs" />
@@ -355,9 +184,6 @@
     <Compile Include="DataApi\XElement.Extension.cs" />
     <Compile Include="DataApi\XmlNode.Extension.cs" />
     <Compile Include="Exceptions\VCompilerException.cs" />
-    <Compile Include="ExpressReport.cs" />
-    <Compile Include="Forms\VFrmGroupingEditor.cs" />
-    <Compile Include="Forms\VFrmRegExtract.cs" />
     <Compile Include="IO\StringWriter.UTF8.cs" />
     <Compile Include="IO\XmlWriter.Extension.cs" />
     <Compile Include="MP\MPDatabase\IMPTableFiller.cs" />
@@ -368,8 +194,6 @@
     <Compile Include="MP\MPDataLoader\SqlLoader.cs" />
     <Compile Include="MP\MPDataLoader\SqlLoaderScriptGenerator.cs" />
     <Compile Include="MP\MPDataReader\Excel\ExcelDataReader.cs" />
-    <Compile Include="MP\MPDataReader\Excel\ExcelFlexCelEnvironment.cs" />
-    <Compile Include="MP\MPDataReader\Excel\ExcelMSEnvironment.cs" />
     <Compile Include="MP\MPDataReader\Excel\ExcelValue.cs" />
     <Compile Include="MP\MPDataReader\Excel\IExcelEnvironment.cs" />
     <Compile Include="MP\MPDataReader\IMPDataReader.cs" />
@@ -384,7 +208,6 @@
     <Compile Include="MP\MPDataStore\IMPDataStore.cs" />
     <Compile Include="MP\MPDataStore\MPDataToFile.cs" />
     <Compile Include="MP\MPEnvironment.cs" />
-    <Compile Include="MP\Test\Test.cs" />
     <Compile Include="MP\Tools\Announcer.cs" />
     <Compile Include="MP\Tools\CommandPrompt.cs" />
     <Compile Include="MP\Tools\Converters\ExcelValueToNetType.cs" />
@@ -394,25 +217,10 @@
     <Compile Include="MP\Tools\RegistryHelper.cs" />
     <Compile Include="MP\Tools\ThreadHelper.cs" />
     <Compile Include="MP\Tools\UserSettings.cs" />
-    <Compile Include="MP\WinForms\frmUpdateData.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MP\WinForms\frmUpdateData.Designer.cs">
-      <DependentUpon>frmUpdateData.cs</DependentUpon>
-    </Compile>
     <Compile Include="MP\WinForms\UpdateDataController.cs" />
     <Compile Include="PackagePrint\Package.cs" />
     <Compile Include="PackagePrint\TestData.cs" />
-    <Compile Include="PackagePrint\ucPackagePrint.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="PackagePrint\ucPackagePrint.Designer.cs">
-      <DependentUpon>ucPackagePrint.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Print\FlexCelHelper.cs" />
-    <Compile Include="Print\Xlsx\ExcelPrintDocument.Text.cs" />
     <Compile Include="Print\Xlsx\IExcelPrintElement.cs" />
-    <Compile Include="Print\XML\ExcelPrintDocument.Test.cs" />
     <Compile Include="Print\Xlsx\ExcelBaseFile.cs" />
     <Compile Include="Print\Xlsx\ExcelBaseItem.cs" />
     <Compile Include="Print\Xlsx\ExcelCell.cs" />
@@ -456,46 +264,10 @@
     <Compile Include="Print\XML\ExcelPrintValue.cs" />
     <Compile Include="Print\XML\IExcelPrintElement.cs" />
     <Compile Include="Print\XML\XmlSerializer.cs" />
-    <Compile Include="Special\Kido\Lkk.cs" />
-    <Compile Include="Special\Report\BatchUnloadRep.cs" />
     <Compile Include="Special\Report\HelperRep.cs" />
-    <Compile Include="Special\Report\VerticalRep.cs" />
-    <Compile Include="Test\ExcelMergeUnmerge.cs" />
-    <Compile Include="Test\FormMSBI.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Test\FormMSBI.Designer.cs">
-      <DependentUpon>FormMSBI.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Test\OtherTests.cs" />
-    <Compile Include="Test\FormTest5.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Test\FormTest5.Designer.cs">
-      <DependentUpon>FormTest5.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Test\TestQuery.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Test\TestQuery.designer.cs">
-      <DependentUpon>TestQuery.cs</DependentUpon>
-    </Compile>
     <Compile Include="Text\StringExt.cs" />
-    <Compile Include="Text\StringExt.Test.cs" />
     <Compile Include="UI\Common\Form\UIFormC.Dialog.cs" />
     <Compile Include="UI\Common\Other\UITextArray.cs" />
-    <Compile Include="UI\ImpementaionWinForms\Bar\VBarEditContainer.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Bar\VPopupMenu.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Other\VDialogManager.cs" />
-    <Compile Include="UI\ImpementaionWinForms\Other\VEditorButton.cs" />
-    <Compile Include="UI\ImpementaionWinForms\Other\VLinkEdit.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Other\VNotificationManager.cs" />
     <Compile Include="UI\Interfaces\Bar\IVBarEdit.cs" />
     <Compile Include="UI\Interfaces\Bar\IVPopupMenu.cs" />
     <Compile Include="UI\Interfaces\Other\IVEditorButton.cs" />
@@ -519,25 +291,11 @@
     <Compile Include="WebReports\Client\WebReportsClient.cs" />
     <Compile Include="WebReports\WebReportsAdapter.Dates.cs" />
     <Compile Include="WebReports\WebReportsAdapter.FormValues.cs" />
-    <Compile Include="WebReports\WebReportsAdapter.Exec.cs" />
     <Compile Include="WebReports\WebReportsAdapter.Xml.Query.cs" />
     <Compile Include="WebReports\WebReportsAdapter.Xml.Form.cs" />
-    <Compile Include="WebReports\WebReportsAdapter.Navigator.cs" />
-    <Compile Include="WebReports\WebReportsAdapter.Tags.cs" />
     <Compile Include="WebReports\WebReportsAdapter.DataSet.cs" />
-    <Compile Include="WinForms\frmMessageBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmMessageBox.Designer.cs">
-      <DependentUpon>frmMessageBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="XmlHelpers\ExcelLoadUtils.cs" />
     <Compile Include="XmlHelpers\WaitUIHelper.cs" />
     <Compile Include="TFS\AutoCheckIn\AutoCheckInProjectSetting.cs" />
-    <Compile Include="TFS\AutoCheckIn\Commands\ResolveConflictsCommand.cs" />
-    <Compile Include="TFS\AutoCheckIn\Commands\MergeCommand.cs" />
-    <Compile Include="TFS\AutoCheckIn\Commands\UndoCommand.cs" />
-    <Compile Include="TFS\AutoCheckIn\Commands\CheckInCommand.cs" />
     <Compile Include="TFS\AutoCheckIn\AutoCheckInAnnouncer.cs" />
     <Compile Include="TFS\AutoCheckIn\AutoCheckInControllerEventArgs.cs" />
     <Compile Include="TFS\AutoCheckIn\AutoCheckInControllerStatus.cs" />
@@ -550,19 +308,8 @@
     <Compile Include="TFS\AutoCheckIn\Config\TakeLocalPathsCollection.cs" />
     <Compile Include="TFS\AutoCheckIn\Config\TakeServerPathsCollection.cs" />
     <Compile Include="TFS\AutoCheckIn\AutoCheckInFolderSetting.cs" />
-    <Compile Include="TFS\AutoCheckIn\Commands\GetCommand.cs" />
     <Compile Include="TFS\AutoCheckIn\Commands\ICommand.cs" />
-    <Compile Include="TFS\AutoCheckIn\Commands\QueueBuildCommand.cs" />
     <Compile Include="TFS\AutoCheckIn\Commands\RebuildSchemeCommand.cs" />
-    <Compile Include="TFS\AutoCheckIn\AutoCheckInController.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="TFS\AutoCheckIn\frmAutoCheckIn.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="TFS\AutoCheckIn\frmAutoCheckIn.Designer.cs">
-      <DependentUpon>frmAutoCheckIn.cs</DependentUpon>
-    </Compile>
     <Compile Include="TFS\TFSFileInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -570,84 +317,16 @@
     <Compile Include="TFS\TFSHelper.cs" />
     <Compile Include="TFS\TFSResolveResult.cs" />
     <Compile Include="TFS\TFSGetResult.cs" />
-    <Compile Include="TFS\TFSServer.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="TFS\AutoCheckIn\Config\TFSAutoCheckInConfig.cs" />
     <Compile Include="UI\ColorUtils.cs" />
-    <Compile Include="UI\ImpementaionWinForms\Bar\VBar.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Bar\VBarButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Bar\VBarMenu.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Custom\UITepSchemaSearch.cs" />
-    <Compile Include="Test\UITestCustom.cs" />
-    <Compile Include="Test\UITestCustomArray.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Test\UITestCustomArray.Designer.cs">
-      <DependentUpon>UITestCustomArray.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\Common\Form\UIFormC.Transition.cs" />
     <Compile Include="UI\Common\Other\IBase.cs" />
     <Compile Include="UI\Common\Other\ICustom.cs" />
-    <Compile Include="Controls\ucAccessDenied.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\ucAccessDenied.Designer.cs">
-      <DependentUpon>ucAccessDenied.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ucMainSqlBuilder.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\ucMainSqlBuilder.Designer.cs">
-      <DependentUpon>ucMainSqlBuilder.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\ucMainReports.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ucMainReports.Designer.cs">
-      <DependentUpon>ucMainReports.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\QueryEditor\ucQueryEditorUses.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\QueryEditor\ucQueryEditorUses.Designer.cs">
-      <DependentUpon>ucQueryEditorUses.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ucBase.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\ucBase.Designer.cs">
-      <DependentUpon>ucBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\QueryEditor\ucQueriesEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\QueryEditor\ucQueriesEditor.Designer.cs">
-      <DependentUpon>ucQueriesEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\QueryEditor\ucQueryEditorContextManagers.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\QueryEditor\ucQueryEditorContextManagers.Designer.cs">
-      <DependentUpon>ucQueryEditorContextManagers.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\QueryEditor\ucQueryEditor.cs">
       <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\QueryEditor\ucQueryEditor.Designer.cs">
-      <DependentUpon>ucQueryEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ucSaveLoadForm.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\ucSaveLoadForm.Designer.cs">
-      <DependentUpon>ucSaveLoadForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DataApi\Actions\VAction.Execute.cs" />
     <Compile Include="DataApi\Actions\VColDimVal.cs" />
@@ -706,7 +385,6 @@
     <Compile Include="DataApi\Security\VRole.cs" />
     <Compile Include="DataApi\Security\VUseObject.cs" />
     <Compile Include="DataApi\Security\VUseRole.cs" />
-    <Compile Include="DataApi\Security\VSecurityUtils.cs" />
     <Compile Include="DataApi\Forms\VButtons.cs" />
     <Compile Include="DataApi\VHaving.cs" />
     <Compile Include="DataApi\VUseField.cs" />
@@ -741,119 +419,21 @@
     <Compile Include="DataApi\Format\VFormatPackage.cs" />
     <Compile Include="DataApi\Grouping\VGroupingUtils.cs" />
     <Compile Include="Print\ExcelEnvironment.cs" />
-    <Compile Include="Print\ExcelTemplate.cs" />
     <Compile Include="Print\TableReferense.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Form\UIFormControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Form\UIFormControl.Designer.cs">
-      <DependentUpon>UIFormControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Other\VButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Other\VDateEdit.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Other\VListEdit.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Other\VNumberEdit.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Other\VMemoEdit.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Other\VFileEdit.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\VControlsFactoryWinForms.cs" />
-    <Compile Include="UI\ImpementaionWinForms\Other\VControl.cs" />
-    <Compile Include="UI\ImpementaionWinForms\Other\VTextEdit.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Other\VCheckContainer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="UI\Interfaces\Bar\IVBarButton.cs" />
     <Compile Include="UI\Interfaces\Bar\IVBar.cs" />
     <Compile Include="UI\Interfaces\Bar\IVBarMenu.cs" />
     <Compile Include="UI\Interfaces\Bar\IVBarItem.cs" />
-    <Compile Include="UI\Interfaces\Grid\IucTableViewer.cs" />
-    <Compile Include="UI\Interfaces\Grid\IucGridContainer.cs" />
-    <Compile Include="UI\Interfaces\Grid\IucGrid.cs" />
-    <Compile Include="UI\Interfaces\IVControlsFactory.cs" />
     <Compile Include="Test\ITree.cs" />
-    <Compile Include="Test\IUIBase.cs" />
-    <Compile Include="Test\TestParameters.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Test\TestParameters.Designer.cs">
-      <DependentUpon>TestParameters.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Layout\VLayoutBorderedGroup.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Layout\VLayoutBorderedGroup.Designer.cs">
-      <DependentUpon>VLayoutBorderedGroup.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\Common\Layout\VLayoutGroupInfo.cs" />
-    <Compile Include="UI\ImpementaionWinForms\Layout\VLayoutControlContainer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Layout\VLayoutControlContainer.Designer.cs">
-      <DependentUpon>VLayoutControlContainer.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\Common\Layout\VLayoutItemInfo.cs" />
     <Compile Include="UI\Common\Layout\VLayout.cs" />
-    <Compile Include="UI\ImpementaionWinForms\Layout\VLayoutLabel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Layout\VLayoutLabel.Designer.cs">
-      <DependentUpon>VLayoutLabel.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\Common\Layout\VLayoutNodeInfo.cs" />
     <Compile Include="UI\Common\Layout\VLayoutControlContainerInfo.cs" />
     <Compile Include="UI\Common\Layout\VLayoutLabelInfo.cs" />
-    <Compile Include="UI\ImpementaionWinForms\Layout\VLayoutTabs.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Layout\VLayoutTabs.Designer.cs">
-      <DependentUpon>VLayoutTabs.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\Common\Layout\VLayoutTabsInfo.cs" />
     <Compile Include="UI\Common\Layout\VLayoutContainerInfo.cs" />
-    <Compile Include="UI\ImpementaionWinForms\Layout\VLayoutSplitContainer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Layout\VLayoutSplitContainer.Designer.cs">
-      <DependentUpon>VLayoutSplitContainer.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\Common\Layout\VLayoutSplitContainerInfo.cs" />
-    <Compile Include="UI\ImpementaionWinForms\Layout\VLayoutGroup.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Layout\VLayoutGroup.Designer.cs">
-      <DependentUpon>VLayoutGroup.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Layout\VLayoutTabs2.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Layout\VLayoutTabs2.Designer.cs">
-      <DependentUpon>VLayoutTabs2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Layout\VLayoutBarGroup.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\ImpementaionWinForms\Layout\VLayoutBarGroup.Designer.cs">
-      <DependentUpon>VLayoutBarGroup.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Common\Other\CommandItems\CommandItemController.cs" />
     <Compile Include="UI\Common\Other\CommandItems\UIFormsPool.cs" />
     <Compile Include="UI\Interfaces\Layout\IVLayoutGroup.cs" />
     <Compile Include="UI\Interfaces\Layout\IVLayoutTabs.cs" />
@@ -867,30 +447,11 @@
     <Compile Include="UI\Common\Other\UIBase.Bindings.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UI\Common\Other\UICustom.cs" />
-    <Compile Include="UI\Common\Other\UICustom.Designer.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="UI\Common\Other\UIDateTime.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UI\Common\Other\UIDateTime.Designer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UI\Common\Other\UIFile.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UI\Common\Other\UIFile.Designer.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="UI\Common\Form\UIFormC.Subforms.cs" />
-    <Compile Include="UI\Common\Other\UIList.Designer.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="UI\Common\Other\UINumber.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UI\Common\Other\UINumber.Designer.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UI\Common\Form\UIFormC.Tabs.cs" />
@@ -898,17 +459,10 @@
     <Compile Include="UI\Common\Form\UIFormC.Events.cs" />
     <Compile Include="UI\Common\Form\UIFormC.Test.cs" />
     <Compile Include="UI\Common\Form\UIFormC.InnerSubforms.cs" />
-    <Compile Include="UI\Common\Other\UILink.cs" />
-    <Compile Include="UI\Common\Other\UILink.Designer.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="UI\Common\Other\UIBase.Designer.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UI\Common\Other\UIText.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UI\Common\Other\UIText.Designer.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UI\Interfaces\Other\IVPanel.cs" />
@@ -916,110 +470,20 @@
     <Compile Include="UI\Interfaces\Other\IVCheckContainer.cs" />
     <Compile Include="UI\Interfaces\Other\IVForm.cs" />
     <Compile Include="UI\Interfaces\Other\IControlWithTableSource.cs" />
-    <Compile Include="UI\Interfaces\Other\IVListEdit.cs" />
     <Compile Include="UI\Interfaces\Other\IVDateEdit.cs" />
     <Compile Include="UI\Interfaces\Other\IVNumberEdit.cs" />
     <Compile Include="UI\Interfaces\Other\IVMemoEdit.cs" />
     <Compile Include="UI\Interfaces\Other\IVFileEdit.cs" />
     <Compile Include="UI\UIStatic.cs" />
     <Compile Include="Test\Wait.cs" />
-    <Compile Include="WinForms\frmCustomCustomization.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmCustomCustomization.Designer.cs">
-      <DependentUpon>frmCustomCustomization.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\frmDataError.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmDataError.Designer.cs">
-      <DependentUpon>frmDataError.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\frmDynamicEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmDynamicEditor.Designer.cs">
-      <DependentUpon>frmDynamicEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\frmDynamicEditorOld.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmDynamicEditorOld.Designer.cs">
-      <DependentUpon>frmDynamicEditorOld.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\frmColumnsEditorNew.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmColumnsEditorNew.Designer.cs">
-      <DependentUpon>frmColumnsEditorNew.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\frmFieldsSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmFieldsSettings.Designer.cs">
-      <DependentUpon>frmFieldsSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\frmScriptingTest.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmScriptingTest.Designer.cs">
-      <DependentUpon>frmScriptingTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\frmReplaceText.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmReplaceText.Designer.cs">
-      <DependentUpon>frmReplaceText.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\frmParamsHistory.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmParamsHistory.Designer.cs">
-      <DependentUpon>frmParamsHistory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\frmSaveLoadGS.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmSaveLoadGS.Designer.cs">
-      <DependentUpon>frmSaveLoadGS.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\frmTableLayoutColumns.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmTableLayoutColumns.Designer.cs">
-      <DependentUpon>frmTableLayoutColumns.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\frmInnerSubform.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmInnerSubform.Designer.cs">
-      <DependentUpon>frmInnerSubform.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\frmCompileFormsCache.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmCompileFormsCache.Designer.cs">
-      <DependentUpon>frmCompileFormsCache.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\frmWCFCompare.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmWCFCompare.Designer.cs">
-      <DependentUpon>frmWCFCompare.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\ShowMessage.cs" />
     <Compile Include="XmlHelpers\Cache.cs" />
-    <Compile Include="XmlHelpers\GridDesigner.cs" />
     <Compile Include="XmlHelpers\IPCHelper.cs" />
-    <Compile Include="XmlHelpers\Parser\Parser.GridLoad.cs" />
     <Compile Include="XmlHelpers\SqlPipelined.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XmlHelpers\SqlSchemeBuilder.cs" />
     <Compile Include="XmlHelpers\Logger.cs" />
     <Compile Include="XmlHelpers\QlikView.cs" />
     <Compile Include="XmlHelpers\ReflectionHelper.cs" />
-    <Compile Include="SqlBuilder.cs" />
     <Compile Include="XmlHelpers\SqlRepository.cs" />
     <Compile Include="DataApi\Actions\VAction.cs" />
     <Compile Include="DataApi\Actions\VUseAction.cs" />
@@ -1072,82 +536,10 @@
     <Compile Include="DataApi\VSelect.cs" />
     <Compile Include="DataApi\VFrom.cs" />
     <Compile Include="DataApi\VCall.cs" />
-    <Compile Include="Images\AwesomeImages.cs" />
     <Compile Include="Cmn.cs" />
     <Compile Include="Core\Compiler.cs" />
-    <Compile Include="Controls\QueryEditor\ucQueryEditorContextList.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\QueryEditor\ucQueryEditorContextList.Designer.cs">
-      <DependentUpon>ucQueryEditorContextList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\QueryEditor\ucQueryEditorContextManager.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\QueryEditor\ucQueryEditorContextManager.Designer.cs">
-      <DependentUpon>ucQueryEditorContextManager.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Test\TestLayout.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Test\TestLayout.Designer.cs">
-      <DependentUpon>TestLayout.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Test\TestMultiple.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Test\TestMultiple.Designer.cs">
-      <DependentUpon>TestMultiple.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\Common\Other\UICombo.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UI\Common\Other\UICombo.Designer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmExpressReport.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmExpressReport.Designer.cs">
-      <DependentUpon>frmExpressReport.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\frmVisibleParams.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmVisibleParams.Designer.cs">
-      <DependentUpon>frmVisibleParams.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Containers\ucReportContainer.cs" />
-    <Compile Include="Controls\Containers\ucReportContainer.Designer.cs">
-      <DependentUpon>ucReportContainer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Grids\Old\ucReportGridOld.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\Old\ucReportGridOld.Designer.cs">
-      <DependentUpon>ucReportGridOld.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Containers\ucReportsTree.cs" />
-    <Compile Include="Controls\Containers\ucReportsTree.Designer.cs">
-      <DependentUpon>ucReportsTree.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Grids\Old\ucGridBase.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\Old\ucGridBase.Designer.cs">
-      <DependentUpon>ucGridBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Grids\Old\ucReferenceGrid.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\Old\ucReferenceGrid.Designer.cs">
-      <DependentUpon>ucReferenceGrid.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\ucNoGrid.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Grids\ReportViewModes\ucNoGrid.Designer.cs">
-      <DependentUpon>ucNoGrid.cs</DependentUpon>
     </Compile>
     <Compile Include="DataApi\VEntity.cs" />
     <Compile Include="DataApi\EntityField.cs" />
@@ -1176,95 +568,38 @@
     <Compile Include="ExcelApi\VExcelObject.cs" />
     <Compile Include="ExcelApi\VExcelRange.cs" />
     <Compile Include="ExcelApi\VExcelSheet.cs" />
-    <Compile Include="WinForms\frmTestReports.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmTestReports.Designer.cs">
-      <DependentUpon>frmTestReports.cs</DependentUpon>
-    </Compile>
     <Compile Include="Print\ExcelPrintDocument.cs" />
     <Compile Include="Print\Xlsx\ExcelPrintValue.cs" />
     <Compile Include="Print\Printing.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WinForms\frmColumnsEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmColumnsEditor.Designer.cs">
-      <DependentUpon>frmColumnsEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Test\QryBuilder.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Test\QryBuilder.Designer.cs">
-      <DependentUpon>QryBuilder.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Test\frmReportList2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Test\frmReportList2.Designer.cs">
-      <DependentUpon>frmReportList2.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\Common\Other\UIBase.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UI\Common\Other\UICheck.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UI\Common\Other\UICheck.Designer.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="UI\Common\Other\UIDate.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UI\Common\Other\UIDate.Designer.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UI\Common\Other\UIDateRange.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UI\Common\Other\UIDateRange.Designer.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="UI\Common\Form\UIFormC.cs" />
     <Compile Include="UI\Common\Other\UIList.cs" />
-    <Compile Include="UI\Common\Other\UITextEx.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UI\Common\Other\UITextEx.Designer.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="UI\Common\Other\UIComboRange.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UI\Common\Other\UIComboRange.Designer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmMain.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmMain.Designer.cs">
-      <DependentUpon>frmMain.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WinForms\frmBaseSqlBuilder.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\frmBaseSqlBuilder.Designer.cs">
-      <DependentUpon>frmBaseSqlBuilder.cs</DependentUpon>
     </Compile>
     <Compile Include="XmlHelpers\Parser\Parser.cs" />
     <Compile Include="Core\XmlReports.cs" />
     <Compile Include="XmlHelpers\RepositoriesHelper.cs" />
     <Compile Include="XmlHelpers\SqlSprav.cs" />
-    <Compile Include="XmlHelpers\VSProjectHelper.cs" />
     <Compile Include="XmlHelpers\WCFHelper.cs" />
-    <Compile Include="XmlHelpers\XmlDiffHelper.cs" />
     <Compile Include="XmlHelpers\XmlSchemeBuilder.cs" />
     <Compile Include="XmlHelpers\SettingsHelper.cs" />
     <Compile Include="XmlHelpers\SqlReportPkg.cs" />
     <Compile Include="XmlHelpers\CodeGenerationUtils.cs" />
     <Compile Include="XmlHelpers\CodeGenerationUtils.LKK.cs" />
-    <Compile Include="XmlHelpers\PackageGenerationASUTP.cs" />
     <Compile Include="XmlHelpers\DocGenerationASUTP.cs" />
     <Compile Include="XmlHelpers\CcbGenSqlUtils.cs" />
     <Content Include="DDL\vg_pret_dolg.sql" />
@@ -1283,45 +618,6 @@
     <None Include="Resources\commitandclose_24.png" />
     <None Include="Resources\GridChoiceRow.png" />
     <None Include="infoenergo-inverted.ico" />
-    <EmbeddedResource Include="Controls\QueryEditor\ucExcelDataEditor.resx">
-      <DependentUpon>ucExcelDataEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Testing\ucReportsAndParams.resx">
-      <DependentUpon>ucReportsAndParams.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Testing\ucTestReports.resx">
-      <DependentUpon>ucTestReports.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ucProjects.resx">
-      <DependentUpon>ucProjects.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MP\WinForms\frmUpdateData.resx">
-      <DependentUpon>frmUpdateData.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PackagePrint\ucPackagePrint.resx">
-      <DependentUpon>ucPackagePrint.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Test\FormMSBI.resx">
-      <DependentUpon>FormMSBI.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Test\FormTest5.resx">
-      <DependentUpon>FormTest5.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Test\TestQuery.resx">
-      <DependentUpon>TestQuery.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TFS\AutoCheckIn\frmAutoCheckIn.resx">
-      <DependentUpon>frmAutoCheckIn.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmMessageBox.resx">
-      <DependentUpon>frmMessageBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmScriptingTest.resx">
-      <DependentUpon>frmScriptingTest.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmWCFCompare.resx">
-      <DependentUpon>frmWCFCompare.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="RecompileScheme.bat" />
     <None Include="Resources\Ok_24.png" />
     <None Include="Resources\Ok_16.png" />
@@ -1340,221 +636,21 @@
     <None Include="Resources\AddItem_24.png" />
     <None Include="Resources\AddChildItem_24.png" />
     <None Include="Resources\DeleteItem_24.png" />
-    <EmbeddedResource Include="Controls\Grids\ReportViewModes\Dashboard\ucDashboardDesigner.resx">
-      <DependentUpon>ucDashboardDesigner.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Grids\ReportViewModes\Dashboard\ucDashboardViewer.resx">
-      <DependentUpon>ucDashboardViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\DataEditor\ucDataEditorMain.resx">
-      <DependentUpon>ucDataEditorMain.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\DataEditor\ucFormDesigner.resx">
-      <DependentUpon>ucFormDesigner.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\DeveloperTools\ucTempViewer.resx">
-      <DependentUpon>ucTempViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Grids\ReportViewModes\ucEmpty.resx">
-      <DependentUpon>ucEmpty.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Grids\ReportViewModes\ucExcelNew.resx">
-      <DependentUpon>ucExcelNew.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Grids\ReportViewModes\Grid\Container\ucGridContainerWF.resx">
-      <DependentUpon>ucGridContainerWF.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Grids\Old\ucGridOld.resx">
-      <DependentUpon>ucGridOld.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Grids\Old\ucExcel.resx">
-      <DependentUpon>ucExcel.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Controls\Containers\ucFormContainer.resx">
       <DependentUpon>ucFormContainer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Grids\ReportViewModes\ucPivotNew.resx">
-      <DependentUpon>ucPivotNew.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Grids\Old\ucPivot.resx">
-      <DependentUpon>ucPivot.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Grids\ReportViewModes\ucTreeNew.resx">
-      <DependentUpon>ucTreeNew.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Grids\Old\ucTree.resx">
-      <DependentUpon>ucTree.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Grids\Container\ucTableViewerContainerWF.resx">
-      <DependentUpon>ucTableViewerContainerWF.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ucAccessDenied.resx">
-      <DependentUpon>ucAccessDenied.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ucBase.resx">
-      <DependentUpon>ucBase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\FormParametersControl.resx">
-      <DependentUpon>FormParametersControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ucMainSqlBuilder.resx">
-      <DependentUpon>ucMainSqlBuilder.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ucMainReports.resx">
       <DependentUpon>ucMainReports.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\QueryEditor\ucQueryEditorUses.resx">
-      <DependentUpon>ucQueryEditorUses.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\QueryEditor\ucQueriesEditor.resx">
-      <DependentUpon>ucQueriesEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\QueryEditor\ucQueryEditorContextManagers.resx">
-      <DependentUpon>ucQueryEditorContextManagers.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\QueryEditor\ucQueryEditorContextList.resx">
-      <DependentUpon>ucQueryEditorContextList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\QueryEditor\ucQueryEditorContextManager.resx">
-      <DependentUpon>ucQueryEditorContextManager.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Controls\QueryEditor\ucQueryEditor.resx">
       <DependentUpon>ucQueryEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ucSaveLoadForm.resx">
-      <DependentUpon>ucSaveLoadForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Test\TestLayout.resx">
-      <DependentUpon>TestLayout.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Test\TestMultiple.resx">
-      <DependentUpon>TestMultiple.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Test\TestParameters.resx">
-      <DependentUpon>TestParameters.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\ImpementaionWinForms\Form\UIFormControl.resx">
-      <DependentUpon>UIFormControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\ImpementaionWinForms\Layout\VLayoutBorderedGroup.resx">
-      <DependentUpon>VLayoutBorderedGroup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\ImpementaionWinForms\Layout\VLayoutControlContainer.resx">
-      <DependentUpon>VLayoutControlContainer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\ImpementaionWinForms\Layout\VLayoutLabel.resx">
-      <DependentUpon>VLayoutLabel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\ImpementaionWinForms\Layout\VLayoutTabs.resx">
-      <DependentUpon>VLayoutTabs.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\ImpementaionWinForms\Layout\VLayoutSplitContainer.resx">
-      <DependentUpon>VLayoutSplitContainer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\ImpementaionWinForms\Layout\VLayoutGroup.resx">
-      <DependentUpon>VLayoutGroup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\ImpementaionWinForms\Layout\VLayoutTabs2.resx">
-      <DependentUpon>VLayoutTabs2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\ImpementaionWinForms\Layout\VLayoutBarGroup.resx">
-      <DependentUpon>VLayoutBarGroup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Test\UITestCustomArray.resx">
-      <DependentUpon>UITestCustomArray.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmCustomCustomization.resx">
-      <DependentUpon>frmCustomCustomization.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmDataError.resx">
-      <DependentUpon>frmDataError.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmDynamicEditor.resx">
-      <DependentUpon>frmDynamicEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmExpressReport.resx">
-      <DependentUpon>frmExpressReport.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmFieldsSettings.resx">
-      <DependentUpon>frmFieldsSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmReplaceText.resx">
-      <DependentUpon>frmReplaceText.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmParamsHistory.resx">
-      <DependentUpon>frmParamsHistory.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmSaveLoadGS.resx">
-      <DependentUpon>frmSaveLoadGS.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmTableLayoutColumns.resx">
-      <DependentUpon>frmTableLayoutColumns.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmCompileFormsCache.resx">
-      <DependentUpon>frmCompileFormsCache.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmVisibleParams.resx">
-      <DependentUpon>frmVisibleParams.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Containers\ucReportContainer.resx">
-      <DependentUpon>ucReportContainer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Grids\Old\ucReportGridOld.resx">
-      <DependentUpon>ucReportGridOld.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Containers\ucReportsTree.resx">
-      <DependentUpon>ucReportsTree.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Grids\Old\ucGridBase.resx">
-      <DependentUpon>ucGridBase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Grids\Old\ucReferenceGrid.resx">
-      <DependentUpon>ucReferenceGrid.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Grids\ReportViewModes\ucNoGrid.resx">
-      <DependentUpon>ucNoGrid.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmTestReports.resx">
-      <DependentUpon>frmTestReports.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Test\frmReportList2.resx">
-      <DependentUpon>frmReportList2.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmColumnsEditor.resx">
-      <DependentUpon>frmColumnsEditor.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Test\QryBuilder.resx">
-      <DependentUpon>QryBuilder.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmMain.resx">
-      <DependentUpon>frmMain.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmBaseSqlBuilder.resx">
-      <DependentUpon>frmBaseSqlBuilder.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmDynamicEditorOld.resx">
-      <DependentUpon>frmDynamicEditorOld.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmColumnsEditorNew.resx">
-      <DependentUpon>frmColumnsEditorNew.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\frmInnerSubform.resx">
-      <DependentUpon>frmInnerSubform.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config">
       <SubType>Designer</SubType>
@@ -1564,11 +660,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
     <None Include="Resources\base_xlsx.xlsx" />
     <Compile Include="Core\XmlReports.Extension.cs" />
   </ItemGroup>
