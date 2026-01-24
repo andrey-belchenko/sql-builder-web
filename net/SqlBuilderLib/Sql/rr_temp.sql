@@ -1,0 +1,5 @@
+ALTER TABLE RR_TEMP 
+ ADD (
+  T1 CLOB
+ )
+/
