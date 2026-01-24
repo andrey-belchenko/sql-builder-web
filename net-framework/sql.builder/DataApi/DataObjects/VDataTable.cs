@@ -775,18 +775,6 @@ namespace sql.builder.DataApi
                         }
                         efAllParVals1.Add(val);
                     }
-                  
-                    //foreach (var par in efKeyParVals)
-                    //{
-                    //    //if (!par.Value.Any())
-                    //    //{
-                    //    //    efAllParVals[par.Key] = Cmn.undefinedString;
-                    //    //}
-                    //    //else
-                    //    //{
-                    //    efAllParVals[par.Key] = par.Value.ToArray();
-                    //    //}
-                    //}
                     DataSetForFetch.Refresh(efAllParVals1.ToArray());
                     reader = DataSetForFetch.GetAllTables().First().otherReader;
                     fetchedRowsCount1 = 0;
@@ -1232,25 +1220,6 @@ namespace sql.builder.DataApi
                     }
                     SetCommandParams(dataset, this, this.ProcedureCommand, this.ProcParamNames);
                 }
-                //DataAdapter.SelectCommand.Parameters.Clear();
-                //foreach (string parName in ParamNames)
-                //{
-                //    if (((VDataSet)this.DataSet).Params != null)
-                //    {
-                //        if (((VDataSet)this.DataSet).Params.ContainsKey(parName.TrimEnd()))
-                //        {
-                //            OracleParameter dbPar = ((VDataSet)this.DataSet).Params[parName.TrimEnd()];
-                //            if (dbPar.OracleDbType == OracleDbType.Array || Cmn.Nvl(dbPar.Value, "").ToString() == Cmn.undefinedString)
-                //            {
-                //                DataAdapter.SelectCommand.CommandText = DataAdapter.SelectCommand.CommandText.Replace(":" + parName, dbPar.Value.ToString());
-                //            }
-                //            else
-                //            {
-                //                DataAdapter.SelectCommand.Parameters.Add(dbPar);
-                //            }
-                //        }
-                //    }
-                //}
                 if (this.is_dependant_refresh) {
                     DataRelation rel = this.ParentRelations[0];
                     VDataTable parentTable = (VDataTable)rel.ParentColumns[0].Table;
@@ -2232,35 +2201,6 @@ namespace sql.builder.DataApi
                 }
             }
             return result;
-            //// если важен только факт наличия ошибки - ищем первую
-            //if (errors_info == null)
-            //{
-
-            //}
-            //// собираем информацию обо всех ошибках валидации
-            //else
-            //{
-            //    foreach (var row in rows.ToList())
-            //    {
-            //        foreach (var col in cols.ToList())
-            //        {
-            //            var error = col.GetValidation(row.Value);// row.GetColumnError(col);
-            //            if (error != "")
-            //            {
-            //                if (errors_info.ContainsKey(row.Value))
-            //                {
-            //                    errors_info[row.Value] += (Environment.NewLine + error);
-            //                }
-            //                else
-            //                {
-            //                    errors_info.Add(row.Value, error);
-            //                }
-            //            }
-            //        }
-            //    }
-
-            //    return (!errors_info.Any());
-            //}
         }
 
 
@@ -2317,17 +2257,6 @@ namespace sql.builder.DataApi
 
 
         #endregion
-
-        // Емцов - временно для хранения файлов
-        //public Dictionary<string, MemoryStream> files = new Dictionary<string, MemoryStream>();
-        //~VDataTable()
-        //{
-        //    foreach (var stream in files.Values)
-        //    {
-        //        stream.Close();
-        //    }
-        //}
-
         #region DeleteState
         bool _manualDelete = false;
         int _manualDeleteIgnoreFlag = 0;

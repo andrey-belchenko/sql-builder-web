@@ -31,26 +31,6 @@ namespace sql.builder.UI
 
         public override void Show()
         {
-            //foreach (VLayoutGroupInfo node in Nodes)
-            //{
-            //    if (node.IsSelfVisible() != node.oldVisible || node.visibleUndefined)
-            //    {
-            //        node.visibleUndefined = false;
-            //        node.oldVisible = node.IsSelfVisible();
-            //        if (!node.IsSelfVisible())
-            //        {
-            //            GetTypedControl().HideTab(node);
-            //        }
-            //        else
-            //        {
-            //            GetTypedControl().ShowTab(node);
-            //        }
-            //    }
-            //    if (node.IsSelfVisible())
-            //    {
-            //        node.Show();
-            //    }
-            //}
         }
         public override void AddChild(VLayoutNodeInfo node)
         {
@@ -67,18 +47,6 @@ namespace sql.builder.UI
             //}
             //return GetTypedControl().GetSelectedTab() == tab;
         }
-
-        //public override IVLayoutNode GetControl()
-        //{
-        //    if (control == null)
-        //    {
-        //        control = layoutController.GetControlsFactory().CreateTabs();
-        //        GetTypedControl().Init(this);
-                
-        //    }
-        //    return control;
-        //}
-
         public override void InitControl()
         {
             //GetTypedControl().Init(this);

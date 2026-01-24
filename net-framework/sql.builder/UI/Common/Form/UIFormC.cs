@@ -198,26 +198,6 @@ namespace sql.builder.UI
             }
             return text;
         }
-        //public BaseDocument DockDocument { get; set; }
-        //private bool tab_page_adding = false;
-        //internal ucDataEditorMain dataEditorMain = null;
-        //internal ucDataEditorMain DataEditorMain
-        //{
-        //    get
-        //    {
-        //        var frm = this;
-        //        while (frm.ContainerForm != null)
-        //        {
-        //            frm = frm.ContainerForm as UIFormC;
-        //        }
-        //        return frm.dataEditorMain;
-        //    }
-        //    set
-        //    {
-        //        dataEditorMain = value;
-        //    }
-        //}
-        // Емцов - поменял sortedlist на dictionary, тк от порядка зависит заполнение дефолтных параметров
         private readonly Dictionary<string, UIBase> _controls;
         /// <summary>
         /// Набор полей формы
@@ -440,34 +420,6 @@ namespace sql.builder.UI
             //specialButtons.Add(buttonType, btn);
             //btn.SetVisible(false);
         }
-
-        //public IVForm GetControl()
-        //{
-        //    if (this._control == null)
-        //    {
-        //        //_control = UIStatic.GetControlsfactory().CreateForm();
-        //        //_control.SetController(this);
-        //        //_control.BeginInitialize();
-        //        ////if (IsShowToolbar(XForm))
-        //        ////{
-        //        ////    AddBarButton(TextConst.AVFormButtonType.Refresh, "Обновить");
-        //        ////    AddBarButton(TextConst.AVFormButtonType.Save, "Сохранить");
-        //        ////    AddBarButton(TextConst.AVFormButtonType.SaveAndClose, "Сохранить и закрыть");
-        //        ////    AddBarButton(TextConst.AVFormButtonType.Delete, "Сохранить и закрыть");
-        //        ////    AddBarButton(TextConst.AVFormButtonType.Choice, "Выбрать");
-        //        ////    AddBarButton(TextConst.AVFormButtonType.SaveSettings, "Сохранить шаблон");
-        //        ////    AddBarButton(TextConst.AVFormButtonType.LoadSettings, "Загрузить шаблон");
-        //        ////    AddBarButton(TextConst.AVFormButtonType.ExtParams, "Дополнительные параметры");
-        //        ////}
-               
-        //        //_control.EndInitialize();
-        //        if (TmpGetControlAsWinFormCtrl() != null)// временно
-        //        {
-        //            TmpGetControlAsWinFormCtrl().SetVForm(this);// временно
-        //        }
-        //    }
-        //    return _control;
-        //}
         public UIFormC Form
         {
             get { return this; }
@@ -496,17 +448,6 @@ namespace sql.builder.UI
             //WithBehavior = xform.AttrOrDefault(AName.WithBehavior, true);
             string security_id = xform.AttrOrDefault(AName.security_id, null);
             this._security_id = security_id ?? string.Empty;
-            //if (security_id != null && !VSecurityUtils.HasReadPermission(security_id))
-            //{
-            //    string text = this.TitleOriginal;
-            //    foreach (string title_variable in TitleVariables)
-            //    {
-            //        text = text.Replace("[:" + title_variable + "]", string.Empty);
-            //    }
-            //    this._title = text;
-            //    this.SetAccessDenied(security_id);
-            //    return;
-            //}
             if (parentLayoutGroup == null)
             {
                 this._layout = new VLayout();
@@ -524,30 +465,6 @@ namespace sql.builder.UI
             }
             XElement xcontent = xform.Element(EName.content) ?? xform;
             this.LoadContentFromXmlNew(xcontent, parentLayoutGroup, null, null);
-            // добавляем зависимости между гридами
-            //foreach (string gridName in this._grids.Keys)
-            //{
-            //   // IReportGrid 
-            //    ucTableViewerContainer grid = this._grids[gridName];
-            //    var dt = (VDataTable)this.DataSource.Tables[gridName];
-            //    if (dt.ParentRelations.Count > 0)
-            //    {
-            //        string parentName = dt.ParentRelations[0].ParentColumns[0].Table.TableName;
-            //        ucTableViewerContainer master;
-            //        if (this._grids.TryGetValue(parentName, out master)) {
-            //            //IReportGrid 
-            //            grid.SetParent(master);
-            //        }
-            //    }
-            //    //if (TmpGetToolBar().Visible)
-            //    //{
-            //    //    grid.SetToolbarButtonVisible(TextConst.GridButtonControl.Commit, false);
-            //    //}
-            //    if (xform.AttrOrDefault(AName.show_toolbar, false)) {
-            //        grid.SetToolbarButtonVisible(TextConst.GridButtonControl.Commit, false);
-            //    }
-            //}
-            // добавляем зависимости между контролами
             foreach (UIBase control in this._controls.Values)
             {
                 // если мастер контрол SimpleRange, учитывыем его параметры один раз
@@ -667,47 +584,9 @@ namespace sql.builder.UI
 
         internal void ItemVisibleChanged(UIBase ctrl, bool update_immediately = false)// new done
         {
-           
-            //if (!ctrl.isInGrid)
-            //{
-            //    bool val = ctrl.GetVisibilityFromSource();
-            //    var item = Layout.GetItemByControl(ctrl.GetRootControl());
-            //    item.SetVisibility(val);
-            //}
-            //else
-            //{
-            //    bool val = ctrl.GetVisibilityFromSource(false);
-            //    // временное решение - не продумано
-            //    var col = ctrl.GetBoundColumn();
-            //    var tableName = col.GetTable().TableName;
-            //    var grid = this._grids[tableName];
-            //    grid.SetColumnVisibility(col.GetTextSourceName(), val);
-            //}
-
         }
         internal void SetLayoutItemVisible(UIBase ctrl, bool visible, bool update_immediately = false)
         {
-            //if (this._useType != UseType.DataEditor)
-            //{
-            //    Layout.GetItemByControl(ctrl.GetRootControl()).SetVisibility(visible);
-            //}
-            //else// заплатка для стыковки нового и старого варианта
-            //{
-            //    if (visible)
-            //    {
-
-            //        if (ctrl.GetBoundColumn().ColumnVisibleSource != null)
-            //        {
-            //        }
-            //        ctrl.GetBoundColumn().ColumnVisibleSource = TextConst.AVBool.True;
-
-            //    }
-            //    else
-            //    {
-            //        ctrl.GetBoundColumn().ColumnVisibleSource = TextConst.AVBool.False;
-            //    }
-            //}
-
         }
 
         internal void SetControlOptions(string name, VFieldStateAndOtherInfo options)
@@ -733,38 +612,6 @@ namespace sql.builder.UI
                 this.DefaultParams = null;
                 return;
             }
-            //var loaded_params_names = xParams.Element(EName.Content).Descendants(EName.Field).Select(field => field.Attribute(AName.Name).Value);
-            //var form_params_names = new List<string>();
-            //XElement xcontent = this._xform.Element(EName.Content) ?? this._xform;
-            //foreach (XElement xfield in xcontent.Descendants(EName.Field))
-            //{
-            //    string field_name = xfield.Attribute(AName.Name).Value;
-            //    if (xfield.Attribute(AName.ControlType).Value.EndsWith("Range")) {
-            //        form_params_names.Add(field_name + "1");
-            //        form_params_names.Add(field_name + "2");
-            //    } else {
-            //        form_params_names.Add(field_name);
-            //    }
-            //}
-            // не нужно, тк схема проходит через RepairScheme
-            //var xsimple_loaded = xParams.Element(EName.Scheme).Elements(EName.Table).FirstOrDefault(el => el.Attribute(AName.As).Value == "Table1");
-            //var xtable_loaded = xParams.Element("data").Elements(EName.Table).FirstOrDefault(el => el.Attribute(AName.As).Value == "Table1");
-            // удаление лишних данных
-            //if (xsimple_loaded.Element(EName.Columns).Elements().Any())
-            //{
-            //    int i = 0;
-            //    var tds = xtable_loaded.Element("data").Element("tr").Element("cells").Elements("td").ToArray();
-            //    foreach (var xcol_loaded in xsimple_loaded.Element("columns").Elements("column"))
-            //    {
-            //        if (!form_params_names.Contains(xcol_loaded.Attribute("name").Value))
-            //        {
-            //            tds[i].Remove();
-            //        }
-            //        i++;
-            //    }
-            //    if (!tds.Any()) xtable_loaded.Remove();
-            //}
-            // запрещаем выставлять дефолтные значения при рефреше
             if (!allow_defaults)
             {
                 var loaded_params_names = new HashSet<string>();
@@ -807,34 +654,6 @@ namespace sql.builder.UI
                 }
             }
             xParams = Parser.RepairParams(xParams, xroot.Element(EName.@params), this._xform, hide_new_fields);
-            //var ds = VDataSet.FromXml(xParams, null, clean_ds: false);
-            //foreach (VDataTable tbl in this.DataSource.Tables)
-            //{
-            //    tbl.SuppressChangeEvent();
-            //    tbl.Clear();
-            //    if (ds.Tables.Contains(tbl.TableName))
-            //    {
-            //        var tbl1 = ds.ParamsTableOrSpecifiedTable(tbl.TableName);
-            //        foreach (DataRow row in tbl1.Rows)
-            //        {
-            //            var newRow = tbl.NewRow();
-            //            foreach (VDataColumn col1 in tbl1.Columns)
-            //            {
-            //                if (tbl.Columns.Contains(col1.ColumnName))
-            //                {
-            //                    var col = tbl.Columns[col1.ColumnName];
-            //                    if (col.DataType == col1.DataType)
-            //                    {
-            //                        newRow[col] = row[col1];
-            //                    }
-            //                }
-            //            }
-            //            tbl.Rows.Add(newRow);
-            //        }
-            //    }
-            //    tbl.UnsuppressChangeEvent();
-            //}
-            //Ошибся, оказалось и так работает
             VDataSet.FromXml(xParams, this.DataSource, clean_ds: false);
             XElement xcontent = xParams.Element(EName.content);
             if (xcontent == null) return;
@@ -988,36 +807,6 @@ namespace sql.builder.UI
                 }
             }
         }
-        //public DataTable GetParamsDataTable()
-        //{
-        //    var dt_params = new DataTable();
-        //    dt_params.Columns.AddRange(new[]
-        //    {
-        //        new DataColumn("check", typeof(bool)),
-        //        new DataColumn("name", typeof(string)),
-        //        new DataColumn("title", typeof(string)),
-        //        new DataColumn("parent_name", typeof(string)),
-        //        new DataColumn("xml", typeof(XElement))
-        //    });
-        //    var xcontent = XForm.Element(TextConst.EName.Content) ?? XForm;
-        //    foreach (var xitem in xcontent.Descendants().Where(i => i.Name.LocalName == "field" || i.Name.LocalName == "fieldgroup"))
-        //    {
-        //        var item_info = Layout.GetNodeByTag(xitem);
-        //        dt_params.Rows.Add(item_info.IsSelfVisible(), item_info.GetId(), item_info.GetText(), item_info.GetParentId(), xitem);
-        //    }
-        //    dt_params.AcceptChanges();
-        //    return dt_params;
-        //}
-        //public void SetParamsDataTable(DataTable dt_params)// new done
-        //{
-        //    foreach (var param_row in dt_params.AsEnumerable().Reverse())
-        //    {
-        //        var visible = (bool)param_row["check"];
-        //        var item = Layout.GetNodeById(param_row["name"]);
-        //        item.SetVisibility(visible);
-        //    }
-        //    ApplyVisibitlity();
-        //}
         public void SetParamsVisibilitiyFromXml(XElement xcontentVisibleNew)// new done
         {
             foreach (XElement el in xcontentVisibleNew.Descendants())
@@ -1177,154 +966,6 @@ namespace sql.builder.UI
             //item_info.IsFiller = true;
             //return item_info;
         }
-   //     private ucTableViewerContainer CreateGrid(XElement xgrid, VLayoutGroupInfo group = null)
-   //     {
-   //         Contract.Assert(xgrid != null);
-   //         if (xgrid.Attribute(AName.table) == null) {
-   //             throw new VCompilerException("У элемента grid должен быть указан атрибут table", this._xform, null);
-   //         }
-   //         var dt = (VDataTable)this.DataSource.Tables[xgrid.Attribute(AName.table).Value];
-   //         var xscheme = new XElement(EName.scheme, dt.Scheme);
-   //         xscheme.Elements().Elements(EName.childs).Remove();
-   //         var xroot = new XElement(EName.root, xscheme);
-   //         var xgridfields = xgrid.Element(EName.columns).Descendants(EName.field).ToArray();
-   //         string pid = xgrid.AttrOrDefault(AName.parent_field_name, null);
-   //         if (pid == null) {
-   //             xscheme.SetAttributeValue(AName.mode, TextConst.AVViewModes.Default);
-   //         } else {
-   //             xscheme.SetAttributeValue(AName.mode, TextConst.AVViewModes.Tree);
-   //         }
-   //         // Емцов - подумать куда это засунуть
-   //         //var xviewcolumns = xscheme.Element(EName.Table).Element(EName.ViewColumns).Descendants(EName.Column);
-   //         var xviewcolumns = new Dictionary<string, XElement>(xgridfields.Length);
-   //         foreach (XElement vc in xscheme.Element(EName.table).Element(EName.viewcolumns).Descendants(EName.column)) {
-   //             xviewcolumns.Add(vc.Attribute(AName.name).Value, vc);
-   //         }
-   //         var colCol = new Dictionary<string, string>(); // Химия чтобы подсунуть editor в колорнку с текстом а не с кодом
-   //         foreach (XElement xfield in xgridfields)
-   //         {
-   //             string column_name = xfield.Attribute(AName.name).Value;
-   //             string view_column_name = column_name + TextConst.Pfx.ExtValName;
-   //             //XElement xviewcolumn = xviewcolumns.FirstOrDefault(vc => vc.Attribute(AName.Name).Value == column_name + TextConst.Pfx.ExtValName);
-   //             //if (xviewcolumn == null)
-   //             //{
-   //             //    xviewcolumn = xviewcolumns.FirstOrDefault(vc => vc.Attribute(AName.Name).Value == column_name);
-   //             //    if (xviewcolumn == null) continue;
-   //             //}
-   //             //colCol.Add(column_name, xviewcolumn.Attribute(AName.Name).Value);
-   //             XElement xviewcolumn = null;
-   //             if (!xviewcolumns.TryGetValue(view_column_name, out xviewcolumn)) {
-   //                 view_column_name = column_name;
-   //                 if (!xviewcolumns.TryGetValue(view_column_name, out xviewcolumn)) {
-   //                     continue;
-   //                 }
-   //             }
-   //             colCol.Add(column_name, view_column_name);
-   //             xviewcolumn.SetAttributeValue(AName.width, xfield.AttrOrDefault(AName.width, null));
-   //         }
-   //         // инициализация ui грида
-   //         //IReportGrid 
-   //         var mode = (SelectionTarget != null || xgrid.AttrOrDefault(AName.show_checkbox, false))
-   //             ? ControlMode.Select
-   //             : ControlMode.Data;
-   //         ucTableViewerContainer grid = new ucTableViewerContainer(mode);
-   //         grid.SetFooterVisible(xgrid.AttrOrDefault(AName.show_agg_panel, false));
-   //         grid.SetGlobalFooterVisible(false);
-   //         grid.SetExpandAllNodes(true);
-   //         grid.SetIsDxExport((xgrid.AttrOrDefault(AName.dx_export, true)));
-   //         grid.SetOrderFieldName(xgrid.AttrOrDefault(AName.order_field_name, null));
-   //         grid.SetCaptionForExport(xgrid.AttrOrDefault(AName.title, null));
-   //         // для сохранения настроек
-   //         grid.SetFormName(this._form_name);
-   //         //grid.GetControl().Margin = new System.Windows.Forms.Padding(0);
-   //         grid.SetIsInForm();
-   //         grid.BeginUpdate();
-   //         //grid.Initialize(null, false);
-   //         //grid.GetControl().Name = dt.TableName;
-   //         grid.SetControlName(dt.TableName);
-   //         if (pid != null)
-   //         {
-   //           //  grid.SetParentFieldName(pid);
-   //             //grid.SetAllowDragAndDrop(true);
-   //             // для web нужно чтобы признак установился раньше инициализации
-   //             xroot.Element(EName.scheme).Elements(EName.table).First().SetAttributeValue(AName.parent_field_name, pid);
-   //         }
-			//grid.SetAllowSelectMoveColumns(xgrid.AttrOrDefault(AName.allow_select_move_columns, false));
-			//grid.LoadSchemeSettingsFromXml(xroot, null);
-   //         grid.DataSource = this.DataSource;
-   //         grid.EndUpdate();
-   //         if (SelectionTarget != null) dt.SelectionTarget = SelectionTarget;
-   //         grid.SetTopToolbarVisible(xgrid.AttrOrDefault(AName.show_toolbar, false));
-   //         grid.SetBottomToolbarVisible(xgrid.AttrOrDefault(AName.show_bottom_toolbar, false));
-   //         grid.SetSummaryVisible(xgrid.AttrOrDefault(AName.show_footer, false));
-   //         grid.SetFilterRowVisible(xgrid.AttrOrDefault(AName.auto_filter, false));
-   //         grid.SetMultiselect(xgrid.AttrOrDefault(AName.multi_select, true));
-   //         if (pid != null)
-   //         {
-   //             // тут выполняется второй раз , попробовал убрать, стала видимой колонка с parent_key и грузятся не все записи только 100 как в гриде
-   //             // пока оставлю так
-   //             grid.SetParentFieldName(pid);
-   //             //grid.SetAllowDragAndDrop(true);
-   //         }
-   //         IucGrid grd = grid.GetGridControl();
-   //         var colEditor = new Dictionary<string, UIBase>(); // Химия чтобы подсунуть editor в колонку с текстом а не с кодом
-   //         foreach (XElement xfield in xgridfields)
-   //         {
-   //             //var ctrl = CreateUIControl(xfield);
-   //             //ctrl.isInGrid = true;
-   //             UIBase f = null;
-   //             this.CreateFieldNew(xfield, group, ref f, true);
-   //             colEditor.Add(xfield.Attribute(AName.name).Value, f);
-   //         }
-   //         foreach (XElement xfield in xgridfields)
-   //         {
-   //             string field_name = xfield.Attribute(AName.name).Value;
-   //             //var ctrl = CreateUIControl(xfield);
-   //             //ctrl.isInGrid = true;
-   //             var col = grd.GetColumnByFieldName(colCol[field_name]);
-   //             grd.SetColumnEditor(col, colEditor[field_name].GetCheckContainer());
-   //         }
-   //         grid.SetTitle(xgrid.AttrOrDefault(AName.title, string.Empty));
-   //         this._grids.Add(dt.TableName, grid);
-   //         //XGrids.Add(dt.TableName, xgrid);
-   //         if (!UIStatic.IsWeb())
-   //         {
-   //             XElement xmenu = xgrid.Element(EName.menu);
-   //             if (xmenu != null)
-   //             {
-   //                 IVBarItem[] items = Cmn.CreateBarItems(xmenu, grid.GetBarManager(), Command_ItemClick,
-   //                     BarItemControl_EditValueChanged, BarItemRepository_EditValueChanged, this, getVariableDepandantceController());
-   //                 grid.UpdatePopupMenu(xmenu, items);
-   //             }
-   //         }
-   //         XElement xtoolbarTop = xgrid.Elements()
-   //             .TakeWhile(EPredicate.IsNotColumns)
-   //             .FirstOrDefault(EPredicate.IsToolbar);
-   //         if (xtoolbarTop != null) {
-   //             this.UpdateGridToolbar(grid, xtoolbarTop, false);
-   //         }
-   //         XElement xtoolbarBottom = xgrid.Elements()
-   //             .SkipWhile(EPredicate.IsNotColumns)
-   //             .FirstOrDefault(EPredicate.IsToolbar);
-   //         if (xtoolbarBottom != null) {
-   //             this.UpdateGridToolbar(grid, xtoolbarBottom, true);
-   //         }
-   //         XElement xevents = xgrid.Element(EName.events);
-   //         if (xevents != null) {
-   //             this.UpdateGridEvents(grid, xevents);
-   //         }
-   //         //if (Cmn.GetAttrValue(xgrid, TextConst.AName.ColumnEditable) == TextConst.AVBool.False)// временное решение, не универсально
-   //         //{
-   //         //    grid.SetEditable(false);
-   //         //}
-   //         //SetEditable
-   //         //grid.ModifiedData += Grid_OnModifiedData;
-   //         //grid.RefreshedData += Grid_OnRefreshedData;
-   //         //grid.CommitedData += Grid_OnCommitedData;
-   //         grid.AddHasMessageHandler(this.Grid_OnHasMessage, this.Grid_OnHasMessage2);
-   //         return grid;
-   //     }
-        
         private VLayoutGroupInfo CreateFieldGroupNew(XElement xfieldgroup, VLayoutContainerInfo parent_group)
         {
             Contract.Assert(xfieldgroup != null);
@@ -1511,17 +1152,6 @@ namespace sql.builder.UI
                 this.LoadContentFromXmlNew(item_info_child1.Item2, item_info_child1.Item1, null, null);
                 //добавть то что в конце LoadContentFromXmlNew для item_info_child1.Item1
             }
-            /////////////
-            //var tgroup = new TabbedControlGroup()
-            //{
-            //    Name = "tg_" + (xfieldgroup.AttrOrDefault(TextConst.AName.Id, null) ?? GetNewID().ToString())
-            //};
-            //tgroup.SelectedPageChanged += tgroup_OnSelectedPageChanged;
-            //var tabContainerItem = AddTabContainerItem(tgroup, parentTab);
-            //if (parent_group != null) (parent_group as LayoutGroup).AddTabbedGroup(tgroup);
-            //var item_info = new LayoutItemInfo(xfieldgroup, tgroup, parent_group);
-            //_items_info.Add(item_info);
-            //SetPaddingAndSpacing(item_info);
             return tabsInfo;
         }
         private void onSelectedPageChangedNew(object sender, EventArgs args)
@@ -1568,50 +1198,6 @@ namespace sql.builder.UI
         private IVButton CreateButtonControl(XElement xcmd)
         {
             throw new NotImplementedException();
-            //VSXElement action = Cmn.GetActionInfo(xcmd);
-            //IVButton btn = UIStatic.GetControlsfactory().CreateButton();
-            //Image img = Cmn.GetIcon(xcmd);
-            //string title = xcmd.Attribute(AName.title).Value;
-            //if (img != null) {
-            //    btn.SetImage(img);
-            //    btn.SetToolTip(title);
-            //} else {
-            //    btn.SetCaption(title);
-            //}
-            //btn.Tag = action;
-            //btn.ButtonClick += btn_ButtonClick;
-            //foreach (XAttribute attr in xcmd.Attributes().Where(APredicate.IsBehaviorColumns)) {
-            //    string attrName = attr.Name.LocalName;
-            //    bool invert = xcmd.AttrOrDefault(attrName + "-" + TextConst.AName.Invert, false);
-            //    this.AddVariableStateDependance(btn, attr.Value, attrName, invert);
-            //}
-            //var btn = new SimpleButton();
-            //btn.Name = "a" + btn.GetHashCode().ToString();
-            //btn.Image = Cmn.GetIcon(xcmd);
-            //if (btn.Image != null)
-            //{
-            //    btn.ToolTip = xcmd.Attribute(AName.Title).Value;
-            //}
-            //else
-            //{
-            //    btn.Text = xcmd.Attribute(TextConst.AName.Title).Value;
-            //}
-            //btn.AutoSize = true;
-            //btn.MaximumSize = btn.CalcBestSize();
-            //var action = Cmn.GetActionInfo(xcmd);
-            //btn.Tag = action;
-            //btn.Click += Button_Click;
-            //foreach (string attrName in TextConst.ANameArray.BehaviorColumns)
-            //{
-            //    var attr = xcmd.Attribute(attrName);
-            //    if (attr != null)
-            //    {
-            //        AddVariableStateDependance(btn, attr.Value, attrName
-            //             , Cmn.GetAttrValue(xcmd, attrName + "-" + TextConst.AName.Invert) == TextConst.AVBool.True
-            //            );
-            //    }
-            //}
-            //return btn;
         }
         private void btn_ButtonClick(object actionInfo)
         {
@@ -1626,54 +1212,6 @@ namespace sql.builder.UI
         private EditorButtonInfo CreateEditorButton(XElement xcmd, string fieldName, string default_side = TextConst.AVSides.Left)
         {
             throw new NotImplementedException();
-    //        var bi = new EditorButtonInfo();
-    //        //var btn = new EditorButton();
-    //        IVEditorButton btn = UIStatic.GetControlsfactory().CreateEditorButton();
-    //        VSXElement action = Cmn.GetActionInfo(xcmd);
-    //        if (action.Name == EName.menu) {
-			 // if (!string.IsNullOrEmpty(fieldName)) {
-				//  foreach (XElement f in action.Descendants(EName.uicommand)) {
-				//	  f.SetAttributeValue(AName.field, fieldName);
-				//  }
-			 // }
-			 // IVPopupMenu menu = this.CreatePopupMenu(action);
-			 // btn.Tag = menu;
-    //        } else {  // action.Name == EName.UICommand
-    //            btn.Tag = action;
-				//action.SetAttributeValue(AName.field, fieldName);
-    //        }
-    //        string action_title = action.Attribute(AName.title).Value;
-    //        bi.ButtonControl = btn;
-    //        btn.SetToolTip(action_title);
-    //        btn.SetCaption(action_title);
-    //        string side = action.AttrOrDefault(AName.side, default_side);
-    //        btn.SetIsLeft(side == TextConst.AVSides.Left);
-    //        XAttribute xkind = action.Attribute(AName.type);
-    //        if (xkind != null) {
-    //            string kind = xkind.Value;
-    //            btn.SetKind(kind); // тип значения - enum DevExpress.XtraEditors.Controls.ButtonPredefines
-    //            //ButtonPredefines k;
-    //            //if (Enum.TryParse(kind, true, out k)) {
-    //            //    if (k == ButtonPredefines.Glyph) {
-    //            //        btn.SetImage(Cmn.GetIcon(action));
-    //            //    }
-    //            //}
-    //            if (string.Compare(kind, "Glyph", true) == 0) {
-    //                btn.SetImage(Cmn.GetIcon(action));
-    //            }
-    //        }
-    //        foreach (XAttribute attr in action.Attributes().Where(APredicate.IsBehaviorColumns)) {
-    //            string attrName = attr.Name.LocalName;
-    //            bool invert = xcmd.AttrOrDefault(attrName + "-" + TextConst.AName.Invert, false);
-    //            string varName = this.AddVariableStateDependance(btn, attr.Value, attrName, invert);
-    //            if (attr.Name == AName.visible) {
-    //                if (varName == null) {
-    //                    varName = attr.Value;
-    //                }
-    //                bi.VisibilitySource = varName;
-    //            }
-    //        }
-    //        return bi;
         }
         //private void UpdateGridToolbar(ucTableViewerContainer grid, XElement xtoolbar, bool bottom = false)
         //{
@@ -1690,24 +1228,6 @@ namespace sql.builder.UI
         {
 
             throw new NotImplementedException();
-            //Contract.Assert(xmenu != null);
-            ////Contract.Assert(xmenu.Name == EName.Menu);
-            //IVPopupMenu menu = UIStatic.GetControlsfactory().CreatePopupMenu();
-            //if (!UIStatic.IsWeb())
-            //{
-            //    (menu as sql.builder.UI.WinForms.VPopupMenu).SetBarManager(this.TmpGetBarManager());
-            //}
-            //IVBarItem[] items = Cmn.CreateBarItems(xmenu, this.TmpGetBarManager(), this.Command_ItemClick, this.BarItemControl_EditValueChanged, this.BarItemRepository_EditValueChanged, this, this.getVariableDepandantceController());
-            ////var items = Cmn.CreateBarItems(xmenu, bm, handler, ctrlEditValueChangedHandler, repEditValueChangedHandler, form, vdc);
-            //menu.Clear();
-            //for (int index = 0; index < items.Length; index++) {
-            //    menu.AddButton(items[index], false);
-            //}
-            ////menu.BeginUpdate();
-            ////menu.ClearLinks();
-            ////menu.AddItems(items);
-            ////menu.EndUpdate();
-            //return menu;
         }
         public void UpdateFormToolbar(XElement xform, ValueChangeEventHandler handler, EventHandler ctrlEditValueChangedHandler, EventHandler repEditValueChangedHandler, UIFormC form, bool isDialog)
         {
@@ -1792,40 +1312,9 @@ namespace sql.builder.UI
         }
         private void BarItemControl_EditValueChanged(object sender, EventArgs args)
         {
-            //var control = sender as UIBase;
-
-            //if (control is UICheck)
-            //{
-            //    (control as UICheck).UpdateRepItemValue();
-            //}
-            //else
-            //{
-            //    var item = (control.GetRootControl() as Control).Tag as BarEditItem; // временно
-
-            //    var val1 = item.EditValue;
-            //    var val2 = control.GetSimpleSourceValue();
-            //    if (!object.Equals(val1, val2))
-            //    {
-            //        item.EditValue = val2;
-            //    }
-            //}
         }
         private void UpdateGroupsCaptionsNew()
         {
-            //if (this._useType != UseType.ParamEditor) return;
-            //var itemsWithValues = this._controls.Values.Where(c => c.HasValue()).Select(c1 => Layout.GetItemByControl(c1.GetRootControl())).ToList();
-            //var groupsWithValues = itemsWithValues.SelectMany(i => i.GetAllParentGroups()).Distinct().ToList();
-            //foreach (var gr in Layout.GetAllGroups())
-            //{
-            //    if (groupsWithValues.Contains(gr))
-            //    {
-            //        gr.SetBold(true);
-            //    }
-            //    else
-            //    {
-            //        gr.SetBold(false);
-            //    }
-            //}
         }
         private void AttachDataSourceEvents()
         {
@@ -1865,83 +1354,6 @@ namespace sql.builder.UI
         public bool SaveData(bool isClosing)
         {
             throw new NotImplementedException();
-     //       //var grids = Cmn.GetChildControlsOfType<ucGridBase>(this);
-     //       foreach (var grid in this._grids.Values)
-     //       {
-     //           //grid.MainView.RefreshData();
-     //           grid.AcceptChanges();
-     //       }
-     //       VDataSet.ValidationResult valid = new VDataSet.ValidationResult();
-     //       bool changes = false;
-     //       if (this.IsModified())
-     //       {
-     //           changes = true;
-     //       }
-     //       valid = this.dataSource.Validate();
-     //       if (valid != null)
-     //       {
-     //           if (!string.IsNullOrEmpty(valid.Error))
-     //           {
-     //               valid.Error = "Сохранение невозможно! " + valid.Error;
-					//UIStatic.GetControlsfactory().GetNotificationManager(null).ShowNotification(null, valid.Error, "Exclamation");
-     //               //ShowMessage.ShowExclamation(valid.Error);
-     //               // ShowMessage.Show(ShowMessage.MType.InvalidDataExclamation);
-     //               return false;
-     //           }
-     //           //else
-     //           //{
-     //           //    var warn = "";
-     //           //    var q = "\r\n";
-     //           //    foreach (var s in valid.Warning)
-     //           //    {
-     //           //        warn += q + s;
-     //           //    }
-     //           //    if (warn != "")
-     //           //    {
-     //           //        warn = "Данные сохранены!" + warn;
-     //           //        ShowMessage.ShowInformation(warn);
-     //           //    }
-     //           //}
-     //       }
-     //       SaveResult result = dataSource.Save();
-     //       if (!result.Success)
-     //       {
-     //           foreach (var grid in this._grids.Values)
-     //           {
-     //               grid.DismissChanges(result.RowsExceptions);
-     //           }
-     //           //var error_message = Cmn.GetErrorRowsMessage(error_rows);
-     //           //ShowMessage.Show(ShowMessage.MType.ErrorSaveRowsChanges, error_message);
-
-     //           // Пока так - если нет права на запись строки, то в exception пишется null
-     //           if (result.RowsExceptions.Any(r => r.Value == null))
-     //           {
-     //               frmDataError.Show(frmDataError.ErrorType.NoWriteAccess, SecurityID, "");
-     //           }
-     //           return false;
-     //       }
-     //       if (SubForms != null)
-     //       {
-     //           foreach (UIFormC subForm in SubForms)
-     //           {
-     //               if (subForm.Equiped)
-     //               {
-     //                   if (!subForm.SaveData(isClosing)) return false;
-     //               }
-     //           }
-     //       }
-     //       RaiseUIEvent(TextConst.AVEventName.SaveOrSaveAndClose);
-     //       if (!isClosing)
-     //       {
-     //           RaiseUIEvent(TextConst.AVEventName.Save);
-     //       }
-     //       RaiseCustomSave();
-     //       LastDialogResult = DialogResult.OK;
-     //       if (changes)
-     //       {
-     //           WasChanges = true;
-     //       }
-     //       return true;
         }
         public bool WasChanges = false;
         public void SaveDataAndClose()
@@ -1960,18 +1372,6 @@ namespace sql.builder.UI
         public void Close()
         {
             throw new NotImplementedException();
-            //var frm = TmpGetControlAsWinFormCtrl().FindForm();
-            //if (frm != null)
-            //{
-            //    frm.Close();
-            //}
-            //else
-            //{
-            //    //if (ucDataEditorMain.GetInstance() != null)
-            //    //{
-            //    //    ucDataEditorMain.GetInstance().CloseForm(this);
-            //    //}
-            //}
         }
         public bool ChooseReportParams(ref DataTable dt_params)
         {
@@ -2216,50 +1616,9 @@ namespace sql.builder.UI
         {
             this.Choice();
         }
-        //private void ButtonTest_ItemClick(object sender, ItemClickEventArgs e)
-        //{
-        //    //   SelectTabs(tabContainerItems);
-        //    viewTemp();
-        //}
-        //private void Grid_OnRefreshedData(object sender, GridDataRefreshEventArgs args)
-        //{
-        //    //UpdateButtonsState();
-        //}
-        //private void Grid_OnModifiedData(object sender, ModifiedDataEventArgs args)
-        //{
-        //    //UpdateButtonsState();
-        //}
-        //private void Grid_OnCommitedData(object sender, EventArgs args)
-        //{
-        //    //UpdateButtonsState();
-        //}
-        //private void Grid_OnHasMessage(string text)
-        //{
-        //    ShowMessage.ShowExclamation(text);
-        //}
-        //private void Grid_OnHasMessage2(object sender, HasMessageArgs args)
-        //{
-        //    ShowMessage.ShowExclamation(args.Message);
-        //}
         private void Command_ItemClick(object sender)
         {
             throw new NotImplementedException();
-			//var tag = (VUseAction)((sender as IVTagControl).Tag);
-   //         string tableName = tag.AttrOrDefault(AName.update_target, string.Empty);
-   //         VDataTable tbl = null;
-   //         if (tableName != string.Empty)
-   //         {
-   //             tbl = this.dataSource.Tables[tableName] as VDataTable;
-   //         }
-			//else if (tag.Attribute(AName.field) != null)
-			//{
-   //             var ctrl = this._controls[tag.Attribute(AName.field).Value];
-			//	if (ctrl.SourceType == ReturnType.Array)
-			//	{
-			//		tbl = (ctrl as UIList).ArrayEditValue;
-			//	}
-			//}
-   //         VUseAction.ExecuteAction(this._form_name, tag, this.dataSource, this, tbl, null, null);
         }
 		//private static UIBase _popupMenuOwner = null;
         private void EditorButton_Click(object sender)
@@ -2271,51 +1630,6 @@ namespace sql.builder.UI
         {
 
             throw new NotImplementedException();
-			////_popupMenuOwner = null;
-   //         // весь огород, тк EditorButton не наследуется от Control
-   //         if (sender is VMenu) // веременно
-   //         {
-   //             return;
-   //         }
-   //         VUseAction tag = null;
-   //         if (sender is VUseAction) // веременно
-   //         {
-   //             tag = (VUseAction)sender;
-   //         }
-   //         else
-   //         {
-   //            var  otag = ((sender is Control) ? (sender as Control).Tag : (sender as EditorButton).Tag);
-   //            if (otag is PopupMenu)
-   //            {
-			//	   ((PopupMenu)otag).ShowPopup(Cursor.Position);
-   //                return;
-   //            }
-   //            tag = (VUseAction)otag;
-   //         }
-   //         VDataColumn col = null;
-   //         VDataTable tbl = null;
-   //         DataRow r = null;
-   //         XAttribute attr = tag.Attribute(AName.@object);
-   //         if (attr != null) {
-   //             tbl = (VDataTable)this.DataSource.Tables[attr.Value];
-   //             r = tbl.CurrentRow;
-   //         } else {
-   //             attr = tag.Attribute(AName.field);
-   //             if (attr != null) {
-   //                 var ctrl = this._controls[attr.Value];
-   //                 if (ctrl.SourceType == ReturnType.Simple)
-   //                 {
-   //                     col = ctrl.GetBoundColumn();
-   //                     tbl = col.GetTable();
-   //                     r = tbl.CurrentRow;
-   //                 }
-   //                 else if (ctrl.SourceType == ReturnType.Array)
-   //                 {
-   //                     tbl = (ctrl as UIList).ArrayEditValue;
-   //                 }
-   //             }
-   //         }
-   //         VUseAction.ExecuteAction(this._form_name, tag, this.dataSource, this, tbl, r, col);
         }
         #endregion
         public void AcceptSelection(string tableName)
@@ -2350,95 +1664,13 @@ namespace sql.builder.UI
 		internal void SaveGS()
         {
             throw new NotImplementedException();
-
-            //var xroot = new XElement(EName.root);
-            //Parser.SaveReportParamsToXml(xroot, this);
-            //using (var frm = new frmSaveLoadGS())
-            //{
-            //    frm.Initialize(this._form_name, frmSaveLoadGS.Mode.Save, _selected_kod_gs);
-            //    frm.Setting = xroot;
-            //    var result = frm.ShowDialog();
-            //    if (result == DialogResult.OK)
-            //    {
-            //        _selected_kod_gs = frm.GetCurrentKodGs();
-            //    }
-            //}
         }
         internal void LoadGS()
         {
-            //using (var frm = new frmSaveLoadGS())
-            //{
-            //    frm.Initialize(this._form_name, frmSaveLoadGS.Mode.Load, _selected_kod_gs);
-            //    if (frm.SettingsCount == 0)
-            //    {
-            //        ShowMessage.ShowInformation("Нет сохранённых настроек для данной формы");
-            //        return;
-            //    }
-            //    var result = frm.ShowDialog();
-            //    if (result == DialogResult.OK)
-            //    {
-            //        Parser.LoadReportParamsFromXml(frm.Setting, this);
-            //        _selected_kod_gs = frm.GetCurrentKodGs();
-            //    }
-            //}
         }
         internal bool ChooseReportParams(string title = null)
         {
             throw new NotImplementedException();
-            ////всякие манипуляции, чтобы поля формы можно было выбирать как колонки
-            //XElement xcontentAll = GetParamsAsColumnsXml();
-            //XElement xcontentVisible = new XElement(xcontentAll);
-            //xcontentVisible.Descendants().Where(e => !e.AttrOrDefault(AName.visible, true)).Remove();
-            //xcontentAll.Descendants().Attributes(AName.visible).Remove();
-            //xcontentVisible.Descendants().Attributes(AName.visible).Remove();
-            //if (title == null)
-            //{
-            //    title = "Выбор параметров отчета";
-            //}
-            //using (var frm = new frmColumnsEditorNew())
-            //{
-            //    frm.SetCantChangeOrder();
-            //    frm.Initialize(xcontentAll, xcontentVisible);
-            //    frm.Text = title;
-            //    if (frm.ShowDialog() == DialogResult.OK)
-            //    {
-            //        var xcontentVisibleNew = frm.GetColumnsXml();
-            //        foreach (XElement e in xcontentAll.Descendants()) {
-            //            if (e.Name != EName.band) {
-            //                e.SetAttrValue(AName.visible, false);
-            //            } else {
-            //                e.SetAttrValue(AName.visible, true);
-            //            }
-            //        }
-            //        foreach (XElement el in xcontentVisibleNew.Descendants(EName.column))
-            //        {
-            //            string id = el.Attribute(AName.id).Value;
-            //            xcontentAll.Descendants(EName.column).First(e => e.Attribute(AName.id).Value == id).SetAttrValue(AName.visible, true);
-            //        }
-            //        foreach (XElement bb in xcontentAll.Descendants(EName.band))
-            //        {
-            //            bool visible = bb.Descendants(EName.column).Any(e => e.Attribute(AName.visible).Value == TextConst.AVBool.True);
-            //            bb.SetAttrValue(AName.visible, visible);
-            //        }
-            //        SetParamsVisibilitiyFromXml(xcontentAll);
-            //        return true;
-            //    }
-            //    //var xViewColumns_new = frm.GetColumnsXml();
-            //    //XmlReports.CorrectScheme(xViewColumns_new, xViewColumns_old);
-            //    //xViewColumns_preset.ReplaceWith(xViewColumns_new);
-            //    //CurrentGC.UpdateGridSettings(fixed_scheme: true);
-            //}
-            ////var dt_params = GetParamsDataTable();
-            ////using (var frm = new frmVisibleParams() { ParamsTable = dt_params })
-            ////{
-            ////    if (title != null) frm.Text = title;
-            ////    if (frm.ShowDialog() == DialogResult.Yes)
-            ////    {
-            ////        SetParamsDataTable(dt_params);
-            ////        return true;
-            ////    }
-            ////}
-            //return false;
         }
         private void btnExtParams_ItemClick(object sender)
         {
@@ -2455,19 +1687,6 @@ namespace sql.builder.UI
         #endregion
         public void DeleteCurrentRowFromFirstTableAndSave()
         {
-            //VDataTable tbl = DataSource.TopTable[0];
-            //if (tbl.CurrentRow != null)
-            //{
-            //    string title = this._title;
-            //    DialogResult result = ShowMessage.ShowQuestion("Удалить \"" + title + "\"?");
-            //    if (result == DialogResult.Yes)
-            //    {
-            //        tbl.CurrentRow.Delete();
-            //        tbl.Save();
-            //        ShowMessage.ShowInformation("Удалено: " + title);
-            //        this.Close();
-            //    }
-            //}
         }
         private void buttonDelete_ItemClick(object sender)
         {
@@ -2501,19 +1720,6 @@ namespace sql.builder.UI
         }
         private void setTitle(string title)
         {
-            //if (XmlReports.IsInfoenergo && TmpGetControlAsWinFormCtrl().ParentForm != null)
-            //{
-            //    TmpGetControlAsWinFormCtrl().ParentForm.Text = title;
-            //}
-            //else if (DockDocument != null)
-            //{
-            //    DockDocument.Caption = title;
-            //}
-            //else if (TmpGetControlAsWinFormCtrl() != null && TmpGetControlAsWinFormCtrl().ParentForm != null)
-            //{
-            //    TmpGetControlAsWinFormCtrl().ParentForm.Text = title;
-            //}
-            //GetControl().SetTitle(title);
         }
         internal void SetButtonVisible(string btn, bool visible)
         {
@@ -2527,17 +1733,6 @@ namespace sql.builder.UI
             //BarButtonItem button = GetBarButton(btn);
             //button.Enabled = enable;
         }
-        //public bool HasParentContainer()
-        //{
-        //    if (UIStatic.IsWeb())
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return (TmpGetControlAsWinFormCtrl().FindForm() != null);
-        //    }
-        //}
         public bool AskUnsavedChangesQuestion()
         {
             throw new NotImplementedException();
@@ -2613,19 +1808,4 @@ namespace sql.builder.UI
         }
         #endregion
     }
-
-    //public enum FormBarButtonType
-    //{
-    //    Refresh,
-    //    Save,
-    //    SaveAndClose,
-    //    Delete,
-    //    Choice,
-    //    //Test,
-
-    //    ExtParams,
-    //    SaveSettings,
-    //    LoadSettings
-    //  //  , ViewTemp
-    //}
 }

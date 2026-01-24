@@ -19,24 +19,6 @@ namespace sql.builder.DataApi
             : base(element)
         {
         }
-        //public VLink AddLink(string name)
-        //{
-        //    VLink link= new VLink();
-        //    link.SetAttributeValue("name", name);
-        //    this.Add(link);
-        //    return link;
-        //}
-        //public VDLink AddDLink(string name)
-        //{
-        //    VDLink link = new VDLink();
-        //    link.SetAttributeValue("name", name);
-        //    this.Add(link);
-        //    return link;
-        //}
-        //internal VQuery GetOwnerQuery()
-        //{
-        //    return (VQuery)this.GetAncestor(EName.from).Parent;
-        //}
         internal string GetRelChildColumnName() // колонка, которая ссылается на родителя, для query в отчете, частный случай для генерации кода
         {
             VSXElement call = this.GetElementsP(EName.call).FirstOrDefault();

@@ -108,32 +108,6 @@ namespace sql.builder.XmlHelpers
             var ds = ri.DataSet;
             var parsDefinition = ri.ParsDefinition;
             var pars = ri.Pars;
-            //var rep = XmlReports.Environment.GetPrecompiledReport(name);
-            //var pars = new List<object>();
-            //var parsDefinition = new List<string>();
-            //if (!isAnonimusBlock)
-            //{
-            //    rep.IsSimpleParams = false; // чтобы подставолись имена параметров без :
-            //    foreach (var xformalPar in rep.FormalParams())
-            //    {
-            //        var pname = xformalPar.Attribute(TextConst.AName.Name).Value;
-            //        pars.Add(new Cmn.VStringParamName(xformalPar.Attribute(TextConst.AName.Name).Value));
-            //        var pdef = pname + " " + Cmn.OracleTypeDefinitionFromType(Cmn.GetTypeFromStringType(xformalPar.Attribute(TextConst.AName.Type).Value, null), -1);
-            //        parsDefinition.Add(pdef);
-            //    }
-            //}
-            //XElement xpars = null;
-            //if (pars.Any())
-            //{
-            //    xpars = VDataSet.ParsObjectArrayToXelement(pars.ToArray(), rep.GetElementsP(TextConst.EName.Params).First());
-            //}
-
-
-
-
-            //var ds = rep.Result(xpars, 2, null);
-
-
             var sb = new StringBuilder();
             var prfx = "sqlb_";
             var pfname =  prfx+name;
@@ -667,44 +641,6 @@ namespace sql.builder.XmlHelpers
             sb.AppendLine("/");
             sb.AppendLine();
         }
-
-
-        //private static void GeneratePackageRootTable(StringBuilder sb, string tableName, string selectText, string[] columns,string pkName=null)
-        //{
-        //    //sb.AppendLine(string.Format("\t\tDELETE FROM sqlb_{0}_tbl;", tableName));
-        //    var scols = string.Join(",", columns);
-
-        //    sb.AppendLine(string.Format("\t\t{0}", "for rec_"+ tableName+" in (select " + scols + " from (" + selectText + ")) loop"));
-
-        //    sb.AppendLine(string.Format("\t\tINSERT INTO {0} ({1}) values (", tableName, scols));
-        //    var q = "";
-        //    foreach (var cn in columns)
-        //    {
-        //        sb.AppendLine("\t\t\t\t" + q +"rec_"+ tableName + "." + cn);
-        //        q = ",";
-        //    }
-
-        //    sb.AppendLine(")");
-        //    if (pkName != null)
-        //    {
-        //        sb.AppendLine(" returning " + pkName + " into " + rootKeyNameVar);
-        //    }
-        //    sb.AppendLine(";");
-        //    sb.AppendLine("\t\tend loop;");
-          
-        //}
-
-        //private static void GeneratePackageBodyTable(StringBuilder sb, string tableName,string selectText,string[] columns)
-        //{
-        //    sb.AppendLine(string.Format("\t\tDELETE FROM sqlb_{0}_tbl;", tableName));
-        //    var scols = string.Join(",", columns);
-        //    sb.AppendLine(string.Format("\t\tINSERT INTO sqlb_{0}_tbl({1})", tableName,scols));
-        //    sb.AppendLine(string.Format("\t\t{0};","select "+scols+" from ("+ selectText+")"));
-        //}
-
-        
-
-
         private static void GenerateProcEnd(string procName, StringBuilder sb)
         {
 

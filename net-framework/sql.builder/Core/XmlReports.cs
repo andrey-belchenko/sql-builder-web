@@ -122,18 +122,6 @@ namespace sql.builder
         {
             get { return false; }
         }
-        //private static bool _useInfoenergoRibbon=true;
-        //public static bool UseInfoenergoRibbon
-        //{
-        //    get
-        //    {
-        //        return IsInfoenergo && _useInfoenergoRibbon;
-        //    }
-        //    set
-        //    {
-        //        _useInfoenergoRibbon = value;
-        //    }
-        //}
         internal static bool IsNative
         {
             get {
@@ -153,79 +141,6 @@ namespace sql.builder
         {
             "plan.economic.analytics"
         };
-        //public static DataTable GetReportList(string customer, bool developer_mode = false)
-        //{
-        //    var env = Environment;
-        //    var dt = new DataTable();
-        //    dt.Columns.AddRange(new[]
-        //    {
-        //        new DataColumn("name") { Caption = "Идентификатор" }, 
-        //        new DataColumn("title") { Caption = "Наименование отчёта" }, 
-        //        new DataColumn("form") { Caption = "Форма" }, 
-        //        //new DataColumn("editable") { Caption = "Редактируемый" }, 
-        //        new DataColumn("folder") { Caption = "Папка" }, 
-        //        //new DataColumn("nogrid") { Caption = "Без грида" }, 
-        //        new DataColumn("item_type") { Caption = "Тип элемента" },
-        //        new DataColumn("visible") { Caption = "Видимый" },
-        //        new DataColumn("kod_menu") { Caption = "Код права" },
-        //        //new DataColumn() {ColumnName = "original_name",  DataType = typeof (string) },
-        //        //new DataColumn() {ColumnName = "changed", DataType = typeof (decimal), DefaultValue = 0M },
-        //        //new DataColumn() {ColumnName = "is_template", DataType = typeof (decimal), DefaultValue = 0M },
-        //        //new DataColumn() {ColumnName = "kod_gs",  DataType = typeof (decimal) },
-        //        //new DataColumn() {ColumnName = "data", DataType = typeof(string) },
-        //        //new DataColumn() {ColumnName = "image_id", DataType = typeof (int)}
-        //    });
-        //    // Отчёты
-        //    var xreports_new = Compiler.SchemeRoot.Elements(TextConst.EName.Reports).Elements(TextConst.EName.Report);
-        //    var xreports_old = Compiler.schemeRootOld.Elements(TextConst.EName.Reports).Elements(TextConst.EName.Report);
-        //    var xreports_from_queries = Compiler.SchemeRoot.Elements(TextConst.EName.Queries).Elements().Where(e => Cmn.GetAttrValue(e, TextConst.AName.IsReport) == TextConst.AVBool.True).ToList();
-        //    //var tttt = xreports_from_queries.Where(e => Cmn.GetAttrValue(e, "name") == "arbitrage_journal").ToList();
-        //    var xreports_from_forms = Compiler.SchemeRoot.Elements(TextConst.EName.Forms).Elements().Where(e => Cmn.GetAttrValue(e, TextConst.AName.IsReport) == TextConst.AVBool.True).ToList();
-        //    var xreports = xreports_new.Concat(xreports_old).ToList();
-        //    xreports.AddRange(xreports_from_queries);
-        //    xreports.AddRange(xreports_from_forms);
-        //    xreports = xreports.Where(r => r.Element(TextConst.EName.Customers) != null
-        //                                && r.Element(TextConst.EName.Customers).Elements(TextConst.EName.Customer).Any(c => c.AttrOrDef(TextConst.AName.Id, null) == customer)).ToList();
-        //    foreach (var xreport in xreports)
-        //    {
-        //        // без заголовка
-        //        if (xreport.AttrOrDef(TextConst.AName.Title, null) == null) continue;
-        //        // видимые только для разработчиков
-        //        if (xreport.AttrOrDef(TextConst.AName.Visible, null) == "0" && !developer_mode && !IsDeveloperMode()) continue;
-        //        string itype = (xreport.AttrOrDef(TextConst.AName.NoGrid, "") == "1") ? "nogrid" : (xreport.Name.LocalName == TextConst.EName.Form) ? "editable" : "report";
-        //        dt.Rows.Add(
-        //            xreport.AttrOrDef(TextConst.AName.Name, ""),
-        //            xreport.AttrOrDef(TextConst.AName.Title, ""),
-        //            xreport.AttrOrDef(TextConst.AName.Form, ""),
-        //            //xreport.AttrOrDef(TextConst.AName.Editable, ""),
-        //            xreport.AttrOrDef(TextConst.AName.Folder, ""),
-        //            //xreport.AttrOrDef(TextConst.AName.NoGrid, ""),
-        //         itype,
-        //            xreport.AttrOrDef(TextConst.AName.Visible, ""),
-        //            xreport.AttrOrDef(TextConst.AName.KodMenu, ""));
-        //    }
-        //    // Папки
-        //    var folder_names = xreports.Attributes(TextConst.AName.Folder).Select(a => a.Value).Distinct();
-        //    var xfolders = Compiler.SchemeRoot.Elements(TextConst.EName.Folders)
-        //        .Descendants(TextConst.EName.Folder)
-        //        .Where(f => folder_names.Contains(f.Attribute(TextConst.AName.Name).Value))
-        //        .AncestorsAndSelf(TextConst.EName.Folder)
-        //        .Distinct();
-        //    foreach (var xfolder in xfolders)
-        //    {
-        //        dt.Rows.Add(
-        //           xfolder.AttrOrDef(TextConst.AName.Name, ""),
-        //           xfolder.AttrOrDef(TextConst.AName.Title, ""),
-        //           "",
-        //            //"",
-        //           (xfolder.Parent != null && xfolder.Parent.Name == TextConst.EName.Folder) ? xfolder.Parent.AttrOrDef(TextConst.AName.Name, "") : "",
-        //            //"",
-        //           "folder",
-        //           xfolder.AttrOrDef(TextConst.AName.Visible, ""),
-        //           xfolder.AttrOrDef(TextConst.AName.KodMenu, ""));
-        //    }
-        //    return dt;
-        //}
         /*public static void GenerateNavigators()
         {
             var env = Environment;
@@ -423,89 +338,6 @@ namespace sql.builder
             }
             return xform;
         }
-        //static void ReWriteEnum(string path)
-        //{
-        //    //return;
-        //    //формирование списков в enum.xsd
-        //    XDocument doc_enum = XDocument.Load(path + NativeProductName + @"\xsd\enum_template.xsd");
-        //    XNamespace xs = "http://www.w3.org/2001/XMLSchema";
-        //    //находим список отчетов
-        //    var list_query = doc_enum.Root
-        //        .Elements().First(el => el.Name.LocalName == "simpleType" && el.Attribute("name").Value == "list_queryname")
-        //            .Elements().First(el => el.Name.LocalName == "restriction");
-        //    //очищаем список отчетов
-        //    list_query.RemoveNodes();
-        //    //Compiler.schemeRoot.Elements
-        //    //добавляем в список все найденные запросы
-        //    foreach (var element in Compiler.SchemeRoot.Elements("queries").Elements().OrderBy(e => e.Attribute("name").Value))
-        //    {
-        //        string title = String.Empty;
-        //        if (element.Attribute("title") != null)
-        //            title = element.Attribute("title").Value;
-        //        list_query.Add(new XElement(xs + "enumeration", new XElement(xs + "annotation", new XElement(xs + "documentation", title)), new XAttribute("value", element.Attribute("name").Value)));
-        //    }
-        //    //находим список функций
-        //    var list_function = doc_enum.Root
-        //        .Elements().First(el => el.Name.LocalName == "simpleType" && el.Attribute("name").Value == "list_function")
-        //            .Elements().First(el => el.Name.LocalName == "restriction");
-        //    //очищаем список отчетов
-        //    list_function.RemoveNodes();
-        //    //Compiler.schemeRoot.Elements
-        //    //добавляем в список все найденные запросы
-        //    foreach (var element in Compiler.SchemeRoot.Elements("functions").Elements().OrderBy(e => e.Attribute("name").Value))
-        //    {
-        //        string title = String.Empty;
-        //        if (element.Attribute("comment") != null)
-        //            title = element.Attribute("comment").Value;
-        //        list_function.Add(new XElement(xs + "enumeration", new XElement(xs + "annotation", new XElement(xs + "documentation", title)), new XAttribute("value", element.Attribute("name").Value)));
-        //    }
-        //    //находим список part
-        //    var list_part = doc_enum.Root
-        //        .Elements().First(el => el.Name.LocalName == "simpleType" && el.Attribute("name").Value == "list_part")
-        //            .Elements().First(el => el.Name.LocalName == "restriction");
-        //    //очищаем список 
-        //    list_part.RemoveNodes();
-        //    //Compiler.schemeRoot.Elements
-        //    //добавляем в список все найденные запросы
-        //    foreach (var element in Compiler.SchemeRoot.Elements("parts").Elements().OrderBy(e => e.Attribute("id").Value))
-        //    {
-        //        string title = String.Empty;
-        //        if (element.Attribute("id") != null)
-        //            title = element.Attribute("id").Value;
-        //        list_part.Add(new XElement(xs + "enumeration", new XElement(xs + "annotation", new XElement(xs + "documentation", title)), new XAttribute("value", element.Attribute("id").Value)));
-        //    }
-        //    //находим список field
-        //    var list_field = doc_enum.Root
-        //        .Elements().First(el => el.Name.LocalName == "simpleType" && el.Attribute("name").Value == "list_field")
-        //            .Elements().First(el => el.Name.LocalName == "restriction");
-        //    //очищаем список 
-        //    list_field.RemoveNodes();
-        //    //Compiler.schemeRoot.Elements
-        //    //добавляем в список все найденные запросы
-        //    foreach (var element in Compiler.SchemeRoot.Elements("fields").Elements().OrderBy(e => e.Attribute("id").Value))
-        //    {
-        //        string title = String.Empty;
-        //        if (element.Attribute("name") != null)
-        //            title = "Параметр: " + element.Attribute("name").Value;
-        //        if (element.Attribute("title") != null)
-        //            title = String.Format("{0}; {1}", title, element.Attribute("title").Value);
-        //        list_field.Add(new XElement(xs + "enumeration", new XElement(xs + "annotation", new XElement(xs + "documentation", title)), new XAttribute("value", element.Attribute("id").Value)));
-        //    }
-        //    doc_enum.Save(path + NativeProductName + @"\xsd\enum.xsd");
-        //}
-        //#region repair
-        //public static XmlDocument getRepairInfo(XmlDocument srcDoc)
-        //{
-        //    XmlDocument resultDoc = new XmlDocument();
-        //    resultDoc.InnerXml = "<root></root>";
-        //    XmlNode buffer = resultDoc.CreateElement("buffer");
-        //    foreach (XmlNode node in srcDoc.SelectNodes("//root/*/*[not(@found) or @dublers]"))
-        //    {
-        //        buffer.InnerXml = node.OuterXml;
-        //        resultDoc.FirstChild.AppendChild(buffer.FirstChild);
-        //    }
-        //    return resultDoc;
-        //}
         /*public static XmlDocument repair(string fromFileName, string toFolderName)
         {
             XmlDocument srcDoc = new XmlDocument();
@@ -650,62 +482,6 @@ namespace sql.builder
             return mainDoc;
         }*/
         #endregion
-        //public static XmlDocument loadXmlTest(string scheme, string customer, XElement pars)
-        //{
-        //    XmlDocument mainDoc;
-        //    string projectPath = @"C:\infoenergo_root\root\main\all\sql.builder\";
-        //    string productName = @"sql.builder";
-        //    string startupPath = @"C:\infoenergo_root\root\main\all\sql.builder\bin\x86\Debug";
-        //    if (scheme == null)
-        //    {
-        //        scheme = schemeName;
-        //    }
-        //    if (customer == null)
-        //    {
-        //        customer = customerId;
-        //    }
-        //    if (IsDeveloperMode())
-        //    {
-        //        mainDoc = loadXmlfromFiles(projectPath + productName + @"\source\scheme\common", null);
-        //        mainDoc = loadXmlfromFiles(projectPath + productName + @"\oldsource\scheme\" + scheme, mainDoc);
-        //        mainDoc = loadXmlfromFiles(projectPath + productName + @"\oldsource\reports\" + scheme, mainDoc);
-        //        Compiler.schemeRoot = XDocument.Parse(mainDoc.InnerXml).Element("root");
-        //        Compiler.PreCompile();
-        //        mainDoc.LoadXml(Compiler.schemeRoot.ToString());
-        //        mainDoc.Save(projectPath + "\\" + productName + "\\" + scheme + ".old.xml");
-        //        mainDoc.Save(startupPath + "\\" + productName + "\\" + scheme + ".old.xml");
-        //        /* mainDoc = loadXmlfromFiles(projectPath + productName + @"\source\" + scheme + "\\extension", mainDoc);
-        //         mainDoc = loadXmlfromFiles(projectPath + productName + @"\reports\common", mainDoc);
-        //         mainDoc = loadXmlfromFiles(projectPath + productName + @"\reports\" + scheme, mainDoc);
-        //         */
-        //        mainDoc = loadXmlfromFiles(projectPath + productName + @"\source\scheme\common", null);
-        //        mainDoc = loadXmlfromFiles(projectPath + productName + @"\source\scheme\" + scheme + @"\original", mainDoc,true);
-        //        mainDoc = loadXmlfromFiles(projectPath + productName + @"\source\scheme\" + scheme + @"\extension", mainDoc,true);
-        //        mainDoc = loadXmlfromFiles(projectPath + productName + @"\source\reports\" + scheme, mainDoc);
-        //        Compiler.schemeRoot = XDocument.Parse(mainDoc.InnerXml).Element("root");
-        //        Compiler.PreCompile();
-        //        mainDoc.LoadXml(Compiler.schemeRoot.ToString());
-        //        mainDoc.Save(projectPath + "\\" + productName + "\\" + scheme + ".xml");
-        //        mainDoc.Save(startupPath + "\\" + productName + "\\" + scheme + ".xml");
-        //    }
-        //    Printing.templatesFolder = startupPath + "\\" + productName + "\\printTemplate";
-        //    mainDoc = new XmlDocument();
-        //    mainDoc.Load(startupPath + "\\" + productName + "\\" + scheme + ".old.xml");
-        //    schemeDocumentOld = mainDoc;
-        //    Compiler.schemeRootOld = XDocument.Parse(mainDoc.InnerXml).Element("root");
-        //    mainDoc = new XmlDocument();
-        //    mainDoc.Load(startupPath + "\\" + productName + "\\" + scheme + ".xml");
-        //    schemeDocument = mainDoc;
-        //    Compiler.schemeRoot = XDocument.Parse(mainDoc.InnerXml).Element("root");
-        //    schemeName = scheme;
-        //    customerId = customer;
-        //    environment = new VEnvironment(Compiler.schemeRoot, CurrentConnection);
-        //    environment.SchemeOld = Compiler.schemeRootOld;
-        //    Cmn.setParams(Compiler.schemeRoot.Element("globalparams"), pars, true);
-        //    Compiler.forCustomersProcessing(Compiler.schemeRoot, customer);
-        //    Compiler.forCustomersProcessing(Compiler.schemeRootOld, customer);
-        //    return mainDoc;
-        //}
         private static XmlDocument transformXml(XmlDocument inputDocument, XmlDocument xsltTemplate)
         {
             XslCompiledTransform transform = new XslCompiledTransform();
@@ -840,29 +616,6 @@ namespace sql.builder
             procedureSql += "end;";
             return Compiler.normalizeWhitespace(procedureSql);
         }
-        //public static string getProcedureSql(XmlDocument report, XmlNode reportScheme)
-        //{
-        //    int i = 0;
-        //    string procedureSql = "begin";
-        //    foreach (XmlNode query in report.SelectNodes("root/query[@materialize=1]"))
-        //    {
-        //        XmlNode queryInReport = reportScheme.SelectSingleNode(".//query[@name='" + query.Attributes["name"].Value + "']");
-        //        if (queryInReport == null)
-        //        {
-        //            procedureSql += getQuerySql(query);
-        //            i++;
-        //        }
-        //    }
-        //    procedureSql += "end;";
-        //    if (i == 0)
-        //    {
-        //        return "";
-        //    }
-        //    else
-        //    {
-        //        return Compiler.normalizeWhitespace(procedureSql);
-        //    }
-        //}
         /*public static DataTable executeDataTable(XmlNode queryXml)
         {
             string querySql = getQuerySql(queryXml);
@@ -895,21 +648,6 @@ namespace sql.builder
         }*/
         private static void setProgress(double value)
         {
-
-            //if (progressBar != null)
-            //{
-            //    int val = Convert.ToInt32(value);
-            //    if (val == 0)
-            //    {
-            //        progressBar.Visible = true;
-            //    }
-            //    if (val == 100)
-            //    {
-            //        progressBar.Visible = false;
-            //    }
-            //    progressBar.Position = val;
-            //    Application.DoEvents();
-            //}
         }
         //public static XmlDocument executeReport(string reportName)
         //{
@@ -1030,87 +768,6 @@ namespace sql.builder
             setColumnsVisibility(outputDocument);
             return outputDocument;
         }
-        //private static XmlDocument executeReport(string reportName, bool schemeOnly)
-        //{
-        //    setProgress(0);
-        //    XmlDocument source = schemeDocument;
-        //    XmlDocument report = getItemProcessedXml("report", reportName, false);
-        //    XmlNode reportNode = source.SelectSingleNode(String.Format("root/reports/report[@name='{0}']", reportName));
-        //    if (!schemeOnly)
-        //    {
-        //        string procedureSql = getProcedureSql(report, reportNode);
-        //        db.Connection.BeginTransaction();
-        //        executeNonQuery(procedureSql, db.Connection);
-        //    }
-        //    setProgress(45);
-        //    XmlDocument outputDocument = new XmlDocument();
-        //    XmlNode root = outputDocument.CreateElement("root");
-        //    outputDocument.AppendChild(root);
-        //    XmlNode schemeNode = addChildNode(root, "scheme");
-        //    XmlNode dataNode = addChildNode(root, "data");
-        //    foreach (XmlNode query in reportNode.SelectNodes("queries/query"))
-        //    {
-        //        getReportQueryScheme(query, report, schemeNode);
-        //    }
-        //    if (schemeOnly)
-        //    {
-        //        return outputDocument;
-        //    }
-        //    var xdoc = XDocument.Parse(outputDocument.InnerXml);
-        //    DataSet ds = XmlParse.LoadReportDataFromXml(xdoc.Root);
-        //    foreach (DataTable dataTable in ds.Tables)
-        //    {
-        //    }
-        //    /*
-        //     foreach (XmlNode query in report.SelectNodes("root/query[@materialize=1]"))
-        //    {
-        //        XmlNode queryInReport = reportScheme.SelectSingleNode(".//query[@name='" + query.Attributes["name"].Value + "']");
-        //        if (queryInReport == null)
-        //        {
-        //            procedureSql += getQuerySql(query);
-        //            i++;
-        //        }
-        //    } 
-        //     * */
-        //    SortedList<string, string> rabFields = new SortedList<string, string>();
-        //    foreach (XmlNode nodeColumn in schemeNode.SelectNodes("//column[@into]"))
-        //    {
-        //        if (rabFields.IndexOfKey(nodeColumn.Attributes["into"].Value) < 0)
-        //        {
-        //            rabFields.Add(nodeColumn.Attributes["into"].Value, nodeColumn.Attributes["into"].Value);
-        //        }
-        //    }
-        //    string connectSql = "select level,skod,rn";
-        //    foreach (string col in rabFields.Values)
-        //    {
-        //        connectSql += "," + col;
-        //    }
-        //    string firstLevelQueries = " (";
-        //    string q = "";
-        //    foreach (XmlNode nodeQuery in reportNode.SelectNodes("queries/query"))
-        //    {
-        //        firstLevelQueries += q + "'" + nodeQuery.Attributes["name"].Value + "'";
-        //        q = ",";
-        //    }
-        //    firstLevelQueries += ") ";
-        //    connectSql += " from rr_temp  connect by prior sid=sparentid start with skod in " + firstLevelQueries + " ORDER SIBLINGS BY skod,RN";
-        //    setProgress(50);
-        //    DataTable connectedTable = db.ExecuteDataTable(connectSql, db.Connection);
-        //    setProgress(pr1);
-        //    SortedList<string, string> sqlList = new SortedList<string, string>();
-        //    namedQueryNodes = new SortedList<string, XmlNode>();
-        //    namedColIndexes = new SortedList<string, int>();
-        //    int i = 0;
-        //    foreach (XmlNode query in schemeNode.SelectNodes("table"))
-        //    {
-        //        i = executeReportQuery(query, report, dataNode, null, sqlList, db.Connection, connectedTable, i);
-        //    }
-        //    db.Connection.Commit();
-        //    moveTransposedToParent(outputDocument);
-        //    moveUnitedToParent(outputDocument);
-        //    setColumnsVisibility(outputDocument);
-        //    return outputDocument;
-        //}
         private static double pr1 = 60;
         private static double pr2 = 80;
         // См. перевод на LINQ: Compiler.getReportQueryScheme()
@@ -2095,28 +1752,6 @@ namespace sql.builder
                 }
             }
         }
-        //public static void preCompile()
-        //{
-        //    foreach (XmlNode node1 in schemeDocument.SelectNodes("//query/select/*[not(@as)]"))
-        //    {
-        //        if (node1.Attributes["column"] != null)
-        //        {
-        //            addAttribute(node1, "as", node1.Attributes["column"].Value);
-        //        }
-        //    }
-        //    foreach (XmlNode nodeFromTable in schemeDocument.SelectNodes("root/queries/query/from/table[@as]"))
-        //    {
-        //        foreach (XmlNode nodeColConnect in nodeFromTable.SelectNodes(String.Format("../query[@name]/call/column[@table='{0}']", nodeFromTable.Attributes["as"].Value)))
-        //        {
-        //            XmlNode nodeRefTable = nodeColConnect.SelectSingleNode("../..");
-        //            XmlNode nodeCol = nodeFromTable.SelectSingleNode(String.Format("../../select/column[@table='{0}' and @column='{1}']", nodeFromTable.Attributes["as"].Value, nodeColConnect.Attributes["column"].Value));
-        //            if (nodeCol != null)
-        //            {
-        //                addAttribute(nodeCol, "reference", nodeRefTable.Attributes["name"].Value);
-        //            }
-        //        }
-        //    }
-        //}
         internal static XmlNode XElementToXmlNode(XElement element)
         {
             XmlDocument doc = new XmlDocument();

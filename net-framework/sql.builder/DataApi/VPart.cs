@@ -61,34 +61,6 @@ namespace sql.builder.DataApi
             foreach (VSXElement element in content) {
                 XElement newElement = VSXElement.GetP(new XElement(element), this);
                 ApplyParams(newElement, usePart, this.Element(EName.@params));
-                //int i = 0;
-                //foreach (XElement formalParam in Elements("params").Elements())
-                //{
-                //    //  !!! Лишние повторения для каждого элемента. Пределать?
-                //    XElement factParam = usePart.Elements().Where(e => Cmn.GetAttrValue(e, "parname") == Cmn.GetAttrValue(formalParam, "name")).FirstOrDefault();
-                //    if (factParam == null)
-                //    {
-                //        factParam = usePart.Elements().ElementAt(i);
-                //    }
-                //    foreach (XElement el in newElement.Descendants("useparam").ToList())
-                //    {
-                //        if (el.Attribute("name").Value == formalParam.Attribute("name").Value)
-                //        {
-                //            el.ReplaceWith(new XElement(factParam));
-                //        }
-                //    }
-                //    string text = "";
-                //    if (factParam != null)
-                //    {
-                //        text = factParam.Value.Replace("'","");
-                //    }
-                //    string svar = "[:" + formalParam.Attribute("name").Value + "]";
-                //    foreach (XAttribute attr in newElement.DescendantsAndSelf().Attributes().Where(a => a.Value.Contains(svar)).ToList())
-                //    {
-                //        attr.Value=attr.Value.Replace(svar, text);
-                //    }
-                //    i++;
-                //}
                 Cmn.CopyAttribute(usePart, newElement, TextConst.AName.As);
                 Cmn.CopyAttribute(usePart, newElement, TextConst.AName.Description);
                 Cmn.CopyAttribute(usePart, newElement, TextConst.AName.Title);

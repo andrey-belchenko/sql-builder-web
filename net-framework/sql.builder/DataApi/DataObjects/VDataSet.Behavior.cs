@@ -145,36 +145,6 @@ namespace sql.builder.DataApi
             column.VariableName = variableName;
             (column.Table as VDataTable).AttachBehaviorEvent();
         }
-
-        //public object GetSysVariableValue(string variableName)
-        //{
-        //    object o = DBNull.Value;
-        //    string validRes;
-        //    switch (variableName)
-        //    {
-        //        case TextConst.AVParam.FormValid: 
-        //             validRes =Validate();
-        //             if (string.IsNullOrEmpty(validRes))
-        //            {
-        //                o = "1";
-        //            }
-                    
-        //            break;
-        //        case TextConst.AVParam.FormValidNot:
-        //             validRes =Validate();
-        //             if (!string.IsNullOrEmpty(validRes))
-        //            {
-        //                o = "1";
-        //            }
-        //            break;
-        //    }
-
-           
-        //    return o;
-
-        //}
-
-
         public void SetVariableValue(string variableName,object value, bool isDataChanged)
         {
             if (VariableColumns==null) return;
@@ -252,30 +222,6 @@ namespace sql.builder.DataApi
             }
             return null;
         }
-
-
-        //private static int backgroundProcessCounter = 0;
-        //public static int GetBackgroundProcessId()
-        //{
-        //    backgroundProcessCounter++;
-        //    return backgroundProcessCounter;
-        //}
-        //private static HashSet<int> processesInWork = new HashSet<int>();
-        //public static void AddWorkingProcess(int id)
-        //{
-        //    processesInWork.Add(id);
-        //}
-
-        //public static void RemoveWorkingProcess(int id)
-        //{
-        //    processesInWork.Remove(id);
-        //}
-
-        //public static bool HasWorkingProcesses()
-        //{
-        //    return processesInWork.Count > 0;
-        //}
-
         List<VDataColumn> changingColumns = null;
 
         public void AddChangingColumn(VDataColumn column)

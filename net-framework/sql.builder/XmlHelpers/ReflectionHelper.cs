@@ -40,20 +40,6 @@ namespace sql.builder.XmlHelpers
                 Debug.WriteLine("Найден тип " + type.FullName);
             }
         }
-        /// <summary>
-        /// Вызывает статический метод <paramref name="method_name"/> типа <paramref name="type_name"/> из сборки <paramref name="assembly_name"/>
-        /// И тип, и метод должны быть определены как public.
-        /// У метода не должно быть перегруженных версий (в противном случае будет AmbiguousMatchException)
-        /// </summary>
-        /// <param name="assembly_name">имя сборки, в которой определён тип, например, "mscorlib" или "arbitrage.lib"</param>
-        /// <param name="type_name">полное имя типа</param>
-        /// <param name="method_name">наименование метода</param>
-        /// <param name="input_params">фактические параметры</param>
-        /// <param name="ds">DataSet</param>
-        /// <returns>Возвращаемое значение или null</returns>
-        /// <exception cref="System.IO.FileNotFoundException">если исполняемый файл сборки не найден</exception>
-        /// <exception cref="System.InvalidOperationException">если в тип не найден</exception>
-        /// <exception cref="System.Reflection.AmbiguousMatchException">если метод имеет несколько перегруженных версий</exception>
         internal static object ExecuteStaticMethod(string assembly_name, string type_name, string method_name, IList<object> input_params, DataSet ds)
         {
             Contract.Assume(!string.IsNullOrEmpty(type_name));

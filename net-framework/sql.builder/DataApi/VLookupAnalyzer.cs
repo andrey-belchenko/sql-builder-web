@@ -8,22 +8,6 @@ namespace sql.builder.DataApi
         {
           
         }
-        //public Result Check(VSXElement element)
-        //{
-        //    if (CheckReturn(element))
-        //    {
-        //        return Result.Return;
-        //    }
-        //    if (CheckStop != null)
-        //    {
-        //        if (CheckStop(element))
-        //        {
-        //            return Result.Stop;
-        //        }
-        //    }
-        //    return Result.None;
-            
-        //}
         public AnalyzerCheckDelegate CheckStop;
         public AnalyzerCheckDelegate CheckReturn;
         public AnalyzerReturnDelegate Return;

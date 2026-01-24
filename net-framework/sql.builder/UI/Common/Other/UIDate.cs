@@ -77,66 +77,6 @@ namespace sql.builder.UI
         {
             this.setValue(value);
         }
-        //private static void SetDateTimeFormat(FormatInfo fi)
-        //{
-        //    fi.FormatString = string.Empty;
-        //    fi.FormatType = FormatType.DateTime;
-        //}
-        //public override RepositoryItem GetRepositoryItem()
-        //{
-        //    var rep = new RepositoryItemDateEdit();
-        //    rep.CloseUpKey = KeyShortcut.Empty;
-        //    addRepositoryButtons(rep.Buttons);
-        //    //rep.DisplayFormat.FormatString = string.Empty;
-        //    //rep.DisplayFormat.FormatType = FormatType.DateTime;
-        //    SetDateTimeFormat(rep.DisplayFormat);
-        //    //rep.EditFormat.FormatString = string.Empty;
-        //    //rep.EditFormat.FormatType = FormatType.DateTime;
-        //    SetDateTimeFormat(rep.EditFormat);
-        //    rep.Mask.EditMask = @"([012]?[1-9]|[123]0|31)\.(0?[1-9]|1[012])\.([123][0-9])?[0-9][0-9]";
-        //    rep.Mask.MaskType = MaskType.RegEx;
-        //    //rep.Mask.MaskType = MaskType.RegEx;
-        //    //rep.Mask.EditMask = @"([012]?[1-9]|[123]0|31)\.(0?[1-9]|1[012])\.([123][0-9])?[0-9][0-9]";
-        //    //rep.DisplayFormat.FormatString = "";
-        //    //rep.DisplayFormat.FormatType = FormatType.None;
-        //    //rep.EditFormat.FormatString = "";
-        //    //rep.EditFormat.FormatType = FormatType.None;
-        //    //rep.Buttons.Add(createWarningButton());
-           
-        //    //rep.Buttons[0].IsLeft = true;
-
-        //    // грязный хак, пока лучше не придумал
-        //    // чтобы при неверном значении не сбрасывалось в 01.01.0001
-        //    string last_value = null;
-        //    rep.EditValueChanged += (sender, args) =>
-        //    {
-        //        var edit = (sender as DateEdit);
-        //        last_value = edit.EditValue != null ? edit.EditValue.ToString() : null;
-        //    };
-        //    rep.Validating += (sender, args) =>
-        //    {
-        //        var edit = (sender as DateEdit);
-
-               
-        //        if (edit.EditValue == null || last_value == "")
-        //        {
-        //            edit.EditValue = DBNull.Value;
-        //            setValue(DBNull.Value); 
-        //        }
-        //        else if (edit.EditValue.Equals(DateTime.MinValue))
-        //        {
-
-        //            //edit.EditValue = (deControl as DateEdit).EditValue;
-        //            edit.EditValue = _value;
-        //        }
-        //    };
-        //    rep.Tag = this;
-        //   // rep.ButtonsStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-           
-        //    //_repository = rep;
-        //    rep.ButtonClick += RepositoryEditor_ButtonClick;
-        //    return rep;
-        //}
         public override void RefreshData()
         {
             if (this.UseDefaultQuery && this.data_set_default != null) {

@@ -47,30 +47,6 @@ namespace sql.builder
             }
         }
         internal const string NativeProductName = "sql.builder";
-        //internal static void SetInputParameters(IEnumerable<Parameter> parameters)
-        //{
-        //    XElement pars = new XElement(EName.@params);
-        //    foreach (Parameter param in parameters) {
-        //        if (!string.IsNullOrEmpty(param.Name) && param.Name != "task") {
-        //            XElement p = new XElement(EName.param);
-        //            p.Add(new XAttribute(AName.name, param.Name));
-        //            XElement v;
-        //            if (string.IsNullOrEmpty(param.Value)) {
-        //                v = new XElement(EName.undefined);
-        //            } else {
-        //                v = Factory.NewConst(param.Value);
-        //            }
-        //            p.Add(v);
-        //            pars.Add(p);
-        //        }
-        //    }
-        //    InputParams = pars;
-        //}
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="param_name"></param>
-        /// <param name="value">Значение может быть одно "val" или несколько "val1,val2"</param>
         public static void SetInputParameter(string param_name, string value)
         {
             if (InputParams == null) InputParams = Cmn.GetFakeGlobalParams();
@@ -95,59 +71,12 @@ namespace sql.builder
         {
             return globalParsValues.ContainsKey(name);
         }
-        //public static object GetGlobalParValue(string name)
-        //{
-        //    switch (name) {
-        //        case "dep":
-        //            if (ContextDataModel.Initialized) {
-        //                ContextBase context = ContextDataModel.GlobalContextGroup.GetContext(typeof(infoenergo.app.common.Context.DepartmentContext));
-        //                if (context != null) {
-        //                    return context.Value;
-        //                }
-        //            }
-        //            if (Global.DepartmentKodp.HasValue) {
-        //                return (decimal)Global.DepartmentKodp.GetValueOrDefault();
-        //            }
-        //            break;
-        //        case "ym":
-        //            if (ContextDataModel.Initialized) {
-        //                ContextBase context = ContextDataModel.GlobalContextGroup.GetContext(typeof(infoenergo.app.common.Context.YmContext));
-        //                if (context != null) {
-        //                    return context.Value;
-        //                }
-        //            }
-        //            if (Global.Ym.HasValue) {
-        //                return (decimal)Global.Ym.GetValueOrDefault();
-        //            }
-        //            break;
-        //        case "tep_el":
-        //            if (Global.Tep_el.HasValue) {
-        //                return (decimal)Global.Tep_el.GetValueOrDefault();
-        //            }
-        //            break;
-        //    }
-        //    if (infoenergo.GlobalValues.ContainsVariable(name)) {
-        //        return infoenergo.GlobalValues.GetGlobalVariable(name);
-        //    }
-        //    return globalParsValues[name];
-        //}
         public static void LoadXml(string scheme = null, string customer = null, XElement pars = null, bool dontCompile = false, bool force_reload = false, string source_folder = null)
         {
             if (scheme != null) schemeName = scheme;
             else scheme = schemeName;
             if (customer != null) customerId = customer;
             else customer = customerId;
-            //SourceFolder = source_folder;
-            //if (SourceFolder == null) // Бельченко 06.06.2017,SourceFolder используется ProjectManager, чтобы работал web
-            //{
-            //    SourceFolder = CleanUtils.GetRootPath();
-            //}
-            // Емцов - схема перекомпилируется только из проекта sql.builder 
-            // Чтобы нормально работало в infoenergo.exe
-            //if (IsDeveloperMode() && !dontCompile && Application.ProductName == NativeProductName)
-            //{
-            //    AssembleAllXml(force_reload);
-            //}
             _environment = new VEnvironment(db.Connection);
             //_environment.Manager.LoadProjectIfNeed("common");
 
@@ -332,18 +261,6 @@ namespace sql.builder
             }
             return (assembleDateChange < sourceDateChange);
         }*/
-        //private static IEnumerable<XElement> GetChangedProjects()
-        //{
-        //    return GetSortedProjects().Where(IsProjectChanged);
-        //}
-        //private static IEnumerable<string> GetAllProjectsPaths()
-        //{
-        //    foreach (XElement xproject in GetSortedProjects())
-        //    {
-        //        string srcPath = Cmn.GetVSProjectPath(xproject);
-        //        yield return srcPath;
-        //    }
-        //}
         public static DateTime SchemeChangeTime()
         {
             return Environment.GetLastSchemeAssembleTime();
@@ -779,20 +696,6 @@ namespace sql.builder
                     xViewColumns_new.Add(xcol_missed_new);
                 }
             }
-            // Копирование размноженых колонок - не работает
-            //string alias = _xAllColumns.Parent.Attribute("as").Value;
-            //var scheme_preset = new XElement(current_gc.Grid.DataSource.SchemePreset);
-            //var xViewColumns_preset2 = scheme_preset.Descendants("table").First(tbl => tbl.Attribute("as").Value == alias).Element("viewcolumns");
-            //var xViewColumns2 = scheme_preset.Descendants("table").First(tbl => tbl.Attribute("as").Value == alias).Element("viewcolumns");
-            //var xBands = xViewColumns_preset2.Descendants("band").Where(band => band.Attribute("name") != null);
-            //foreach (var xband in xBands)
-            //{
-            //	var readyBand = xViewColumns2.Descendants("band").FirstOrDefault(e1 => Cmn.GetAttrValue(e1, "value-column") == xband.Attribute("name").Value);
-            //	if (readyBand != null && readyBand.Elements().Any())
-            //	{
-            //		xband.ReplaceWith(readyBand);
-            //	}
-            //}
         }
         #region Обработка Xml
         internal static string GetXElementTitle(XElement xElement)

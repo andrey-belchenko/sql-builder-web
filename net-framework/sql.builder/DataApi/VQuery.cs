@@ -27,33 +27,6 @@ namespace sql.builder.DataApi
         {
             return this.P_IsReport == TextConst.AVBool.True;
         }
-        //public XElement GetExtended()
-        //{
-        //    XElement main = new XElement( GetMainIE());
-        //    foreach (XElement ext in GetExtensionsAndParent())
-        //    {
-        //        XmlReports.ExtentdQuery(new XElement(ext), main);
-        //    }
-        //    return main;
-        //}
-        //public XElement GetExtended()
-        //{
-        //    var main = GetMainE();
-        //    XElement xmain = new XElement(main);
-        //  //  var parent=main.
-        //    foreach (XElement ext in GetExtensions())
-        //    {
-        //        XmlReports.ExtentdQuery(new XElement(ext), xmain);
-        //    }
-        //    if (main.IsInherit())
-        //    {
-        //        var xpar =new XElement( main.GetMainIE());
-        //        Compiler.addColumnsAlias(xpar);
-        //        Compiler.addColumnsAlias(xmain);
-        //        Compiler.Inheritance(xmain, xpar);
-        //    }
-        //    return xmain;
-        //}
         public override VQuery Query()
         {
             return this;
@@ -236,18 +209,6 @@ namespace sql.builder.DataApi
                  entityType = value;
              }
          }
-
-       
-
-
-        
-
-       
-
-         
-
-         
-
          public List<VSXElement> DimensionsOld()
          {
              List<VSXElement> list = new List<VSXElement>();
@@ -273,25 +234,6 @@ namespace sql.builder.DataApi
          {
              return SelfColumns().Where(e => e.P_Fact != "").ToList();
          }
-         //public override void ClearBeforeSave(XElement el)
-         //{
-         //   if (Cmn.GetAttrValue(el, "name") == Cmn.GetAttrValue(el, "extend")) {
-         //        el.Attributes("extend").Remove();
-         //   }
-         //}
-         // public override string GetName(string name)
-         //{
-         //    string ext = "";
-         //    if (Attribute("extend") != null)
-         //    {
-         //        ext = Attribute("extend").Value + ".";
-         //    }
-         //    return ext + GetCurrentName(name);
-         //}
-         //public List<VSXElement> MarkedVidColumns()
-         //{
-         //    return Columns().Where(e => e.IsVid()).ToList();
-         //}
          public VTable SearchSourceTable()
          {
              var tbl = SourceTable();
@@ -772,20 +714,6 @@ namespace sql.builder.DataApi
 
         }
         #endregion
-         //#region NameFieldName
-         //public override void P_NameFieldName_ListRefresh(VDataTable table)
-         //{
-         //    table.Rows.Clear();
-         //    foreach (VSXElement col in this.Columns())
-         //    {
-         //        table.Rows.Add(col.XName, col.XName, col.P_Title);
-         //    }
-         //}
-         //public override bool P_NameFieldName_Exists()
-         //{
-         //    return true;
-         //}
-         //#endregion
          #region ClientCalulation
          public override bool P_ClientCalulation_Exists()
          {

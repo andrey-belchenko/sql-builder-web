@@ -9,16 +9,5 @@ namespace sql.builder.DataApi
             : base(EName.dlink)
         {
         }
-        //#region Prime
-        //public override bool P_Prime_Exists()
-        //{
-        //    var qry = Query();
-        //    if (qry != null)
-        //    {
-        //        return qry.IsQube();
-        //    }
-        //    return false;
-        //}
-        //#endregion
     }
 }

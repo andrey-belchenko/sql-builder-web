@@ -56,26 +56,6 @@ namespace sql.builder.Print.Xlsx
 
             //UpdateHash();
         }
-
-        //void UpdateHash()
-        //{
-        //    _cellNames = new HashSet<string>();
-        //    _colNames = new HashSet<string>();
-
-        //    foreach (ExcelRefToken rf in _refs)
-        //    {
-        //        foreach (var ci in rf.RefsCells)
-        //        {
-        //            _cellNames.Add(ci.CellName);
-
-        //            if (_colNames.Contains(ci.ColumnName))
-        //            {
-        //                _colNames.Add(ci.ColumnName);
-        //            }
-        //        }
-        //    }
-        //}
-
         internal string GetText()
         {
             if (_changed) {

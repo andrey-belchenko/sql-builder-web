@@ -7,21 +7,6 @@ namespace sql.builder.UI
 {
     public class VLayoutItemInfo : VLayoutNodeInfo
     {
-       
-       
-       
-       
-        
-        
-        //public override IVControlsFactory GetControlsFactory()
-        //{
-        //    return GetParent().GetControlsFactory();
-           
-        //}
-
-
-
-
         public void ChangeParent(VLayoutGroupInfo newParent)
         {
             var oldParent = parent;

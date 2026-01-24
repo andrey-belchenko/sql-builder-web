@@ -41,46 +41,5 @@ namespace sql.builder.DataApi
             return s;
         }
         #endregion
-
-        //#region NavigationInfo
-
-
-
-        //public override string P_NavigationInfo
-        //{
-        //    get
-        //    {
-
-        //        return GetNavigationPath();
-
-        //    }
-
-        //}
-
-
-
-
-
-        //public override bool P_NavigationInfo_Exists()
-        //{
-
-        //    return true;
-
-        //}
-        //#endregion
-        //#region Table
-       
-        //public override void P_Table_ListRefresh(VDataTable table)
-        //{
-        //    table.Rows.Clear();
-        //    foreach (VQueryCall el in (GetParent().GetParent() as VNavigationItem).AllSources())
-        //    {
-        //        TableListRowFromElement(table, el);
-        //    }
-
-        //}
-       
-        //#endregion
-
     }*/
 }

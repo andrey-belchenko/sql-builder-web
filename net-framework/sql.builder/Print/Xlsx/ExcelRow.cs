@@ -37,7 +37,7 @@ namespace sql.builder.Print.Xlsx
             }
             if (this._cells.Any(ExcelCell.IsHeadMarker)) {
                 this.head_row = true;
-                // нужно в PostProcess чтобы знать откуда начинать merge_down
+                // пїЅпїЅпїЅпїЅпїЅ пїЅ PostProcess пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ merge_down
                 //cells_headmarker.ForEach(c => c.SetValue(""));
             }
         }
@@ -45,24 +45,6 @@ namespace sql.builder.Print.Xlsx
         {
             this.Xml.Elements(ns.Main.c).First(c => c.Attribute(ns.None.r).Value == cell.CellInfo.CellName).Remove();
             this._cells.Remove(cell);
-            // перебрасываем формулу на след ячейку
-            //if (cell.HasRefFormula)
-            //{
-            //    ExcelCellInfo cell_next_info = cell.FormulaRef.GetNextCellInfo(cell);
-            //    if (cell_next_info != null)
-            //    {
-            //        ExcelCell cell_next = _worksheet.Rows
-            //            .First(r => r.ID == cell_next_info.RowID.ToString())
-            //            .Cells
-            //            .First(c => c.ColumnName == cell_next_info.ColumnName);
-            //        var xf = cell.Xml.Element(ns.main + "f");
-            //        xf.Value = ExcelUtils.CorrectFormulaReferences(xf.Value,
-            //            ExcelUtils.GetColumnNumber(cell_next.ColumnName) - ExcelUtils.GetColumnNumber(cell.ColumnName),
-            //            cell_next.RowID - cell.RowID);
-            //        cell_next.CopyFormula(cell);
-            //    }
-            //}
-            // в смерженных ячейках первая хранит значение, если она удаляется - надо перенести значение в следующую за ней
             bool has_merge_value = this._worksheet.Merges.IsBeginOfMerge(cell.CellInfo);
             if (has_merge_value) {
                 ExcelCellInfo cell_next_info = this._worksheet.Merges.GetNextMergedCell(cell.CellInfo);

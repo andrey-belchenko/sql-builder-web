@@ -443,21 +443,6 @@ namespace sql.builder.DataApi
                     {
                         RaiseCurrentRowChanged();
                     }
-                    //if (_selectedRows.Any())
-                    //{
-                    //    if (currentRow == null)
-                    //    {
-                    //        CurrentRow = _selectedRows.First();
-                    //    }
-
-                    //}
-                    //else
-                    //{
-                    //    if (currentRow != null)
-                    //    {
-                    //        CurrentRow = null;
-                    //    }
-                    //}
                 }
                 
             }
@@ -616,30 +601,6 @@ namespace sql.builder.DataApi
         public bool OnlyForceRefresh = false;
         public bool OnlyVisibleRefresh = false;
         private SortedList<string,SortedList<string,string>> InvalidFields = null;
-       // private SortedList<Tuple<string,string>, string> CellErrors = null;
-        //private HashSet<string> variableDependants = null; 
-        //// !!! пока делаю только variableColumns без оптимизации в случае изменения сразу нескольких
-        
-        //public void AddVariableDependantse(string variableName)
-        //{
-        //    if (variableDependants == null)
-        //    {
-        //        variableDependants = new HashSet<string>();
-        //    }
-        //    variableDependants.Add(variableName);
-        //}
-
-        //public bool IdDependsOnVariable(string variableName)
-        //{
-        //    if (variableDependants == null)
-        //    {
-        //        return false;
-        //    }
-        //    else
-        //    {
-        //        return variableDependants.Contains(variableName);
-        //    }
-        //}
         private SortedList<string,DataRow> InvalidRows = null;
         private HashSet<string> ValidatedRows = null;
         private HashSet<string> CheckedRows = null;
@@ -961,17 +922,6 @@ namespace sql.builder.DataApi
 
 
             string rowid = GetRowId(row);
-            //if (row.RowState != DataRowState.Deleted)
-            //{
-            //    rowid = row[PrimaryKey[0]].ToString();
-            //}
-            //else
-            //{
-            //    rowid = row[PrimaryKey[0],DataRowVersion.Original].ToString();
-            //}
-
-
-            
             if (InvalidFields.ContainsKey(rowid))
             {
                 if (InvalidFields[rowid].ContainsKey(name))
@@ -1319,48 +1269,8 @@ namespace sql.builder.DataApi
            // if (SuppressChangedEvent) return;
             var column = args.Column as VDataColumn;
             if (column == null) return;
-
-            //DataRow row = null;
-            
-
-            
-            //if (ColumnVisibleChanged != null && column.DependantsVisible != null)
-            //{
-            //    foreach (VDataColumn col in column.DependantsVisible)
-            //    {
-            //        var depColumn = col;//(column.Table.Columns[name] as VDataColumn);
-
-            //        //args.Row.SetColumnError(name,depColumn.GetVisibleation(args.Row));
-            //        var args1 = new DataColumnChangeEventArgs(args.Row, depColumn, null);
-            //        ColumnVisibleChanged(this, args1);
-            //    }
-            //}
-
-
-
-            
             ProcessBehaviorChanges(column, args.Row,true);
             GetDataSet().PrcessRefreshQueue();
-            //if ((column.Table.DataSet as VDataSet).VariableChanged != null && column.VariableName != null)
-            //{
-            //    // !!! при смене current row тоже нужно вызывать
-            //    var args1 = new DataColumnChangeEventArgs(args.Row, column, null);
-            //    (column.Table.DataSet as VDataSet).VariableChanged(this, args1);
-            //}
-
-
-
-            //if (column.DependantsNewVal != null)
-            //{
-            //    foreach (VDataColumn col in column.DependantsNewVal)
-            //    {
-            //        var depColumn = col;// (column.Table.Columns[name] as VDataColumn);
-            //        depColumn.ApplyNewValue(args.Row);
-            //    }
-            //}
-
-
-            //RaiseUserChangedData(sender, args);
         }
 
         public void ProcessBehaviorChanges(VDataColumn column, DataRow row,bool isDataChanged) // Перенести все сюда из onColumnChangedForBehavior
@@ -1649,40 +1559,6 @@ namespace sql.builder.DataApi
                 list.Add(RowToArray(r));
             }
             var newRowsA = AddNewRowsWithValues(list);
-           // SuppressChangeEvent();
-           // var ctu = CancelTempUpdate;
-           // CancelTempUpdate = true;
-
-           // var newRows = new List<DataRow>();
-           // foreach (DataRow row in source)
-           // {
-           //     var newRow = Rows.Add();
-           //     ProcessNewRow(newRow);
-           //     UpdateRowValues(newRow, row);
-           //     newRows.Add(newRow);
-           // }
-
-           // ResumeChangeEvent();
-           // CancelTempUpdate = ctu;
-           // var newRowsA=newRows.ToArray();
-           // foreach (var r in newRowsA)
-           // {
-           //     RaiseRowStateChanged(r);
-           //     //RaiseColumnChanged(this.PrimaryKey[0], r);  // чтобы отобразился статус строк в гриде
-           // }
-
-           // //SimpleDelegate d = delegate()
-           // //{
-                
-           // //    RefreshParents();
-
-           // //};
-
-           // EnqueueBackgroundRefresh(newRowsA/*,null,null,d*/);
-           //// UpdateTempRow(newRow);
-           //// RefreshCalulatedValues(newRow);
-
-           
             return newRowsA;
         }
 
@@ -1739,27 +1615,6 @@ namespace sql.builder.DataApi
 
 
             }
-            
-            //else
-            //{
-            //    if (row.RowState != DataRowState.Detached)
-            //    {
-            //        int key = Convert.ToInt32(row[row.Table.PrimaryKey[0]]);
-            //        //if (KeyCounter < key)
-            //        //{
-            //        //    KeyCounter = key;
-            //        //}
-            //        //if (KeyCounter == 0)
-            //        //{
-            //        //    KeyCounter = -1;
-            //        //}
-
-            //        if (KeyCounter > key)
-            //        {
-            //            KeyCounter = key;
-            //        }
-            //    }
-            //}
         }
 
         public string ColumnEditableSource = null;
@@ -2497,75 +2352,6 @@ namespace sql.builder.DataApi
 				return true;
 			}
 		}
-
-
-        //private DataColumn getOrCreateFieldStateColumn(VDataColumn column)
-        //{
-        //    string fscname = column.ColumnName + Pfx.FieldStateColumn;
-        //    if (!Columns.Contains(fscname))
-        //    {
-        //        DataColumn col = new DataColumn();
-        //        col.ColumnName = fscname;
-        //        col.DataType = typeof(VFieldStateAndOtherInfo);
-        //        Columns.Add(col);
-
-        //    }
-        //    return Columns[fscname];
-        //}
-
-        //private VFieldState getOrCreateStateCellValue(VDataColumn column,DataRow row)
-        //{
-        //    DataColumn stateCol = getOrCreateFieldStateColumn(column);
-
-        //    if (row[stateCol] == null)
-        //    {
-        //        row[stateCol] = new VFieldState();
-        //    }
-        //    return (VFieldState)row[stateCol];
-        //}
-
-        //public void SetCellEditable(VDataColumn column,DataRow row, VFieldInfo.StateValue value)
-        //{
-        //    getOrCreateStateCellValue(column, row).Editable = value;
-        //}
-
-
-        //public bool GetCellEditable(VDataColumn column, DataRow row)
-        //{
-        //    var editable = getOrCreateStateCellValue(column, row).Editable;
-
-        //    if (editable == VFieldInfo.StateValue.True)
-        //    {
-        //        return true;
-        //    }
-
-        //    if (editable == VFieldInfo.StateValue.False)
-        //    {
-        //        return false;
-        //    }
-
-        //    if (editable == VFieldInfo.StateValue.Inherit)
-        //    {
-        //        // прочитать значение с колонки и строки
-        //        return false;
-        //    }
-        //    return false;
-
-        //}
-
-
-        //public  SortedList<string, VDBSelectCommand> DbExpressions;
-
-        //public void AddDbExpression(string name, VDBSelectCommand command)
-        //{
-        //    if (DbExpressions == null)
-        //    {
-        //        DbExpressions = new SortedList<string, VDBSelectCommand>();
-        //    }
-
-        //    DbExpressions.Add(name, command);
-        //}
-
         public bool CancelTempUpdate=false;
 
 

@@ -5,30 +5,6 @@ namespace sql.builder.DataApi
 
     internal static partial class TextConst
     {
-        //public static class VTextConst
-        //{
-        //    public enum EelsNames
-        //    {
-        //        Form = "form",
-        //        Forms = "forms",
-        //        Query = "query",
-        //        Field = "field",
-        //        From = "from",
-        //        Content = "content",
-        //        Panel = "panel",
-        //        Column = "column",
-        //        Select = "select",
-        //        Root = "root"
-        //    }
-
-        //}
-
-
-        //internal static class Images
-        //{
-        //    public const string Warning16 = "Warning_16";
-        //}
-
         internal static class MsgTypePref
         {
             public const string Information = "[inf]"; // только значок
@@ -591,35 +567,6 @@ namespace sql.builder.DataApi
             public const string Paste = "ButtonPaste";
             public const string CopyToCB = "ButtonCopyToCB";
         }
-
-        //public enum FormBarButtonType
-        //{
-        //    Refresh,
-        //    Save,
-        //    SaveAndClose,
-        //    Delete,
-        //    Choice,
-        //    //Test,
-
-        //    ExtParams,
-        //    SaveSettings,
-        //    LoadSettings
-        //    //  , ViewTemp
-        //}
-
-
-        //this.tbMain.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-        //new DevExpress.XtraBars.LinkPersistInfo(this.ButtonRefresh),
-        //new DevExpress.XtraBars.LinkPersistInfo(this.ButtonSave),
-        //new DevExpress.XtraBars.LinkPersistInfo(this.ButtonSaveAndClose),
-        //new DevExpress.XtraBars.LinkPersistInfo(this.ButtonDelete),
-        //new DevExpress.XtraBars.LinkPersistInfo(this.ButtonChoice),
-        //new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.None, false, this.ButtonTest, false),
-        //new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem4),
-        //new DevExpress.XtraBars.LinkPersistInfo(this.btnSaveSettings),
-        //new DevExpress.XtraBars.LinkPersistInfo(this.btnLoadSettings),
-        //new DevExpress.XtraBars.LinkPersistInfo(this.btnExtParams)});
-
         internal static class AVEditMask
         {
             public const string N2 = "N2";

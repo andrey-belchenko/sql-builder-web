@@ -53,20 +53,6 @@ namespace sql.builder.UI
             }
 
             (val as object[])[index] = value;
-
-
-            //DateEdit control;
-            //switch (index) {
-            //    case 1:
-            //        control = this.deControlFrom;
-            //        break;
-            //    case 2:
-            //        control = this.deControlTo;
-            //        break;
-            //    default:
-            //        return;
-            //}
-            //control.EditValue = value;
         }
         public override void RefreshData()
         {
@@ -102,17 +88,6 @@ namespace sql.builder.UI
         public override void SetError(string text, int index = 1)
         {
             this.SetErr(text);
-            //switch (index)
-            //{
-            //    case 1:
-            //        //deControlFrom.ErrorText = text;
-            //        SetError(deControlFrom, text);
-            //        break;
-            //    case 2:
-            //          SetError(deControlTo, text);
-            //        //deControlTo.ErrorText = text;
-            //        break;
-            //}
         }
         #region IRange
         void IRange.GetText(out string value_1, out string value_2)

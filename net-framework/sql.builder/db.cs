@@ -54,28 +54,6 @@ namespace sql.builder
             }
             return dt;
         }*/
-        //internal static DataTable SelectReportVisibleSettings(string report_name)
-        //{
-        //    var args = new[]
-        //    {
-        //        new SqlArg("visible", 1, SqlDestination.Where),
-        //        new SqlArg("repname", report_name, SqlDestination.Where, SqlType.String),
-
-        //        new SqlArg("kod_gs", "kod_gs", SqlDestination.Select),
-        //        new SqlArg("original_name", "repname", SqlDestination.Select),
-        //        new SqlArg("name", "repname||'_gs'||to_char(kod_gs)", SqlDestination.Select),
-        //        new SqlArg("title", "name", SqlDestination.Select),
-        //        new SqlArg("folder", "repname", SqlDestination.Select),
-        //        new SqlArg("item_type", "setting", SqlDestination.Select, SqlType.String),
-        //        new SqlArg("image_id", "3", SqlDestination.Select),
-        //        new SqlArg("is_template", "1", SqlDestination.Select),
-        //        new SqlArg("kod_menu", "null", SqlDestination.Select),
-
-        //        new SqlArg("kod_gs", "kod_gs", SqlDestination.Order)
-        //    };
-
-        //    return SqlMethods.Select("vr_grid_settings", args, Connection);
-        //}
         internal static string SelectSettingData(decimal kod_gs)
         {
             OracleParameter[] parameters = new OracleParameter[1] { new OracleParameter("kod_gs", OracleDbType.Number, kod_gs, ParameterDirection.Input) };
@@ -539,17 +517,6 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
             var res = DataHelper.SqlGetTable(sql, Connection);
             return res;
         }
-
-        //public static DataTable GetConstraint(string constraint_name, string owner = null)
-        //{
-        //    if (owner == null) owner = "user";
-        //    else owner = "upper('" + owner + "')";
-
-        //    var sql = string.Format("select * from all_constraints where constraint_name = '{0}' and owner = {1}", constraint_name.ToUpper(), owner.ToUpper());
-        //    var res = DataHelper.SqlGetTable(sql, Connection);
-        //    return res;
-        //}
-
         /*public static DataTable GetConstraintColumns(string constraint_name, string owner = null)
         {
             if (owner == null) owner = "user";

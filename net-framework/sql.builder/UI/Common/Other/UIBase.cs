@@ -69,25 +69,6 @@ namespace sql.builder.UI
         }
         protected void MarkUsed(bool value)
         {
-            //if (!ShowCheck)
-            //{
-            //    // (Form.DataSource.ParamsTable.Columns[FieldName] as VDataColumn).ParamUsed = true;
-            //}
-            //else if (SourceType == ReturnType.Simple)
-            //{
-            //    if (UseType == UIFormC.UseType.ParamEditor)
-            //    {
-            //        //(Form.DataSource.ParamsTable.Columns[FieldName] as VDataColumn).ParamUsed = value;
-            //    }
-            //}
-            //else if (SourceType == ReturnType.SimpleRange)
-            //{
-            //    if (UseType == UIFormC.UseType.ParamEditor)
-            //    {
-            //        //(Form.DataSource.ParamsTable.Columns[FieldName + "1"] as VDataColumn).ParamUsed = value;
-            //        //(Form.DataSource.ParamsTable.Columns[FieldName + "2"] as VDataColumn).ParamUsed = value;
-            //    }
-            //}
             if (SourceType == ReturnType.Array) {
                 //if (Form.DataSource.ParamsTable.Columns.Contains(FieldName))
                 //{
@@ -263,69 +244,6 @@ namespace sql.builder.UI
         }
         private void InitControls()
         {
-            //if (editor != null)
-            //{
-            //    var meditor = editor as IVMaskControl;
-            //    if (meditor != null)
-            //    {
-
-            //        if (EditMask != null)
-            //        {
-            //            meditor.SetMask(EditMask);
-                      
-            //        }
-            //        //text_edit.Properties.Mask.UseMaskAsDisplayFormat = true;
-
-            //        if (MaxLength != null)
-            //        {
-            //            meditor.SetMaxLength(int.Parse(MaxLength));
-                      
-            //        }
-            //    }
-            //}
-            
-            //if (UIStatic.IsWeb()) return;
-            
-            //foreach (var edit in (checkContainer as sql.builder.UI.WinForms.VCheckContainer).GetBaseEditControls())
-            //{
-            //    // чтобы сообщения об ошибке отображались без фокуса
-            //    edit.CausesValidation = false;
-
-            //    //var text_edit = edit as TextEdit;
-            //    //if (text_edit != null)
-            //    //{
-            //    //    if (EditMask != null)
-            //    //    {
-            //    //        if (EditMask.StartsWith("n", true, CultureInfo.CurrentCulture))
-            //    //        {
-            //    //            text_edit.Properties.Mask.MaskType = MaskType.Numeric;
-            //    //        }
-            //    //        text_edit.Properties.Mask.EditMask = EditMask;
-            //    //    }
-            //    //    //text_edit.Properties.Mask.UseMaskAsDisplayFormat = true;
-
-            //    //    if (MaxLength != null)
-            //    //    {
-            //    //        text_edit.Properties.MaxLength = int.Parse(MaxLength);
-            //    //    }
-            //    //}
-
-            //    var button_edit = edit as ButtonEdit;
-            //    if (button_edit != null)
-            //    {
-            //        foreach (EditorButton btn in button_edit.Properties.Buttons)
-            //        {
-            //            btn.IsLeft = true;
-            //        }
-            //    }
-
-            //    //var date_edit = edit as DateEdit;
-            //    //if (date_edit != null)
-            //    //{
-            //    //    date_edit.Properties.Mask.MaskType = MaskType.RegEx;
-            //    //    date_edit.Properties.Mask.EditMask = @"([012]?[1-9]|[123]0|31)\.(0?[1-9]|1[012])\.([123][0-9])?[0-9][0-9]";
-            //    //}
-            //}
         }
         private bool ChangeProcessing = false;
         public void Changed()
@@ -374,46 +292,6 @@ namespace sql.builder.UI
 
         private void onCheckedChanged(/*object sender, EventArgs e*/)
         {
-            //if (this.used) {
-            //    SetCheckEnabled(true);
-            //    //ceUsed.Enabled = true;
-            //} else {
-            //    if (this.UseType == UIFormC.UseType.ParamEditor) {
-            //        ClearSourceValues();
-            //        if (!this.allow_manual_used_set) {
-            //            SetCheckEnabled(false); //ceUsed.Enabled = false;
-            //        }
-            //    }
-            //}
-            //if (this.mandatory) {
-            //    Used = true;
-            //    SetCheckEnabled(false);
-            //    // ceUsed.Enabled = false;
-            //} else if (!this.used) {
-            //    Used = false;
-            //}
-            //OnCheckedChanged();
-            //if (!(this is UICheck))
-            //{
-            //    // это добавлено , чтобы обрабатывался случай снятия/установки галочки при пустом значении, пример kido_lkk.vc_user_login_list
-            //    // при этом есть негативный эффект,с двойной обработкой если одновременной менятся значение и статус пример, form mped.va_src_003?, 
-            //    // исключил для UICheсk т.к. статус=значение
-            //    var col = GetBoundColumn();
-            //    if (col != null)  // всегда true, вроде, но пусть будет
-            //    {
-            //        if (!string.IsNullOrEmpty(col.VariableName))
-            //        {
-
-            //            var ds = col.GetTable().GetDataSet();
-            //            var vdc = ds.VariableDepandantceController;
-            //            if (vdc != null)
-            //            {
-            //                vdc.DataSourceVariableChanged(col.VariableName);
-            //            }
-            //            ds.PrcessRefreshQueue();
-            //        }
-            //    }
-            //}
         }
         protected XElement OnNeedMasterValues(UIBase sender)
         {
@@ -956,24 +834,6 @@ namespace sql.builder.UI
         }
         public string GetButtonsVisibilityString(DataRow row) // для органиизации видимости дополнительных кнопок в полях грида
         {
-            //if (!additionalButtons.Any())
-            //{
-            //    if (this is UINumber || this is UIDate || this is UIDateRange)// костыль в uiNumber, вроде есть кнопка по умолчанию
-            //    {
-            //        var val = GetBoundColumn().GetEditable(row);
-            //        var v = "1";
-            //        if (!val)
-            //        {
-            //            v = "0";
-            //        }
-            //        return v;
-            //    }
-            //    else
-            //    {
-            //        return "";
-            //    }
-            //}
-
             var s = "";
             if (this is UINumber || this is UIDate || this is UIDateTime || this is UIDateRange)// костыль в uiNumber, вроде есть кнопка по умолчанию
             {
@@ -1017,119 +877,6 @@ namespace sql.builder.UI
             }
             return s;
         }
-        //protected void RepositoryEditor_ButtonClick(object sender, ButtonPressedEventArgs e)
-        //{
-        //    if (e.Button.Tag is EditorButton)
-        //    {
-        //        Form.Button_Click(e.Button.Tag, null);
-        //    }
-        //}
-
-        //public void AddEditorAdditionalButton(UIFormC.EditorButtonInfo buttonInfo, EditorButton btn_rep, ValueChangeEventHandler on_click/*,bool isCustomVisibility*/)
-        //{
-        //    AddEditorButton(buttonInfo.ButtonControl, btn_rep, on_click);
-        //    additionalButtons.Add(buttonInfo);
-        //    //if (isCustomVisibility)
-        //    //{
-        //    //    AddButtonWithCustomVisibility(buttonInfo.ButtonControl);
-        //    //}
-        //}
-        //private HashSet<string> _buttonsWithCustomVisibility = null;
-        //public void AddButtonWithCustomVisibility(object btn)
-        //{
-        //    if (_buttonsWithCustomVisibility == null)
-        //    {
-        //        _buttonsWithCustomVisibility = new HashSet<string>();
-        //    }
-        //    var id = btn.GetHashCode().ToString();
-        //    if (!_buttonsWithCustomVisibility.Contains(id))
-        //    {
-        //        _buttonsWithCustomVisibility.Add(id);
-        //    }
-        //}
-        //public bool IsButtonCustomVisibility(object button)
-        //{
-        //    if (_buttonsWithCustomVisibility == null) return false;
-        //    return _buttonsWithCustomVisibility.Contains(button.GetHashCode().ToString());
-        //}
-        //public virtual void AddEditorButton(IVEditorButton btn, EditorButton btn_rep, ValueChangeEventHandler on_click)
-        //{
-        //    // _custom_buttons = true;
-
-        //    checkContainer.AddButton(btn);
-        //    //buttonCollection().Add(btn);
-        //    // additionalButtons.Add(btn);
-        //    btn.ButtonClick += on_click;
-         
-        //    //var rep = (_repository ?? GetRepositoryItem()) as RepositoryItemButtonEdit;
-        //    //var rep =GetRepositoryItem() as RepositoryItemButtonEdit;
-        //    //rep.Buttons.Add(btn_rep);
-        //    //// если кнопок несколько - не отличить по какой был клик!
-        //    //rep.Click += (sender, args) => (sender as Control).Tag = btn_rep.Tag;
-        //    //rep.Click += on_click;
-        //}
-        //  public virtual void AddRepositoryButton(EditorButton btn, EventHandler on_click) { }
-
-        //protected virtual EditorButtonCollection buttonCollection()
-        //{
-        //    return null;
-        //}
-
-
-        //protected void addRepositoryButtons(EditorButtonCollection target)
-        //{
-        //    //var btn1 = createWarningButton();
-        //    //target.Add(btn1);
-        //    foreach (UIFormC.EditorButtonInfo btnInfo in additionalButtons)
-        //    {
-        //        var btn = btnInfo.ButtonControl;
-        //        var btn1 = btn.Copy() ;
-
-               
-        //        btn1.Tag = btn;
-        //        target.Add((EditorButton)btn1); // временно
-
-        //        //btn1.Click += (sender, args) =>
-        //        //{
-        //        //    MessageBox.Show("yep");
-        //        //    //(sender as Control).Tag = btn_rep.Tag;
-        //        //};
-
-        //        //foreach (string attrName in TextConst.ANameArray.BehaviorColumns)
-        //        //{
-        //        //    var attr = action.Attribute(attrName);
-        //        //    if (attr != null)
-        //        //    {
-        //        //        AddVariableStateDependance(btn, attr.Value, attrName);
-        //        //    }
-        //        //}
-
-        //        //return btn;
-        //    }
-        //}
-       
-        
-        
-        //private static SuperToolTip getWarningToolTip()
-        //{
-        //        SuperToolTip toolTip = new SuperToolTip();
-        //        ToolTipItem item1 = new ToolTipItem();
-        //        item1.Image =Cmn.WarningImage14;
-        //        toolTip.Items.Add(item1);
-        //        return toolTip;
-        //}
-        //protected static EditorButton createWarningButton()
-        //{
-        //    var btn = new EditorButton();
-        //    btn.SuperTip = getWarningToolTip();
-        //    btn.Tag = "status";
-        //    btn.IsLeft = true;
-        //    btn.Kind = ButtonPredefines.Glyph;
-        //    btn.Image = Cmn.WarningImage14;
-        //   // btn.Appearance.Image = UIFormC.GetIcon(TextConst.Images.Warning16);
-        //  //  btn.Appearance.BackColor = System.Drawing.Color.Green;
-        //    return btn;
-        //}
         public void AddNullValue(DataTable dt)
         {
             DataColumn key_column = dt.Columns[this.key_field_name];

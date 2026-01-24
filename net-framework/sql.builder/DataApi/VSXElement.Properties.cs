@@ -2053,74 +2053,6 @@ namespace sql.builder.DataApi
             return false;
         }
         #endregion
-        //#region SelfDataType
-        //public virtual string P_SelfDataType
-        //{
-        //    get
-        //    {
-        //        return GetAttrValue(TextConst.AName.DataType);
-        //    }
-        //    set
-        //    {
-
-        //        SetAttributeNotEmpty(TextConst.AName.DataType, value);
-        //    }
-        //}
-
-
-
-        //public virtual string P_SelfDataType_Title()
-        //{
-
-        //    return "Тип данных";
-
-        //}
-
-        //public virtual string P_SelfDataType_ControlType()
-        //{
-
-        //    return typeof(UICombo).Name;
-
-        //}
-
-        //public virtual void P_SelfDataType_List(VDataTable table)
-        //{
-
-        //    table.AddColumn("name", "Тип данных");
-
-        //}
-
-
-
-        //public virtual void P_SelfDataType_ListRefresh(VDataTable table)
-        //{
-        //    table.Rows.Clear();
-        //    table.Rows.Add(TextConst.AVType.Number);
-        //    table.Rows.Add(TextConst.AVType.String);
-        //    table.Rows.Add(TextConst.AVType.Date);
-        //    table.Rows.Add(TextConst.AVType.Array);
-
-        //}
-        //public virtual bool P_SelfDataType_Exists()
-        //{
-
-        //    return false;
-
-        //}
-
-        //public virtual string P_SelfDataType_FieldGroup()
-        //{
-        //    if (GetParent() is VOutputElement)
-        //    {
-        //        return TextConst.SchEdirorFieldGr.MainMain;
-        //    }
-        //    else
-        //    {
-        //        return TextConst.SchEdirorFieldGr.MainOther;
-        //    }
-
-        //}
-        //#endregion
         #region Exclude
         public virtual string P_Exclude {
             get {
@@ -2147,42 +2079,6 @@ namespace sql.builder.DataApi
             return TextConst.SchEdirorFieldGr.MainMain;
         }
         #endregion
-        //#region Prime
-        //public virtual string P_Prime
-        //{
-        //    get
-        //    {
-        //        return GetAttrValue(TextConst.AName.Prime);
-        //    }
-        //    set
-        //    {
-        //        SetAttributeNotEmpty(TextConst.AName.Prime, value);
-
-        //    }
-
-        //}
-
-        //public virtual string P_Prime_ControlType()
-        //{
-
-        //    return typeof(UICheck).Name;
-
-        //}
-
-        //public virtual string P_Prime_Title()
-        //{
-
-        //    return "Назначить главным";
-
-        //}
-
-        //public virtual bool P_Prime_Exists()
-        //{
-
-        //    return false;
-
-        //}
-        //#endregion
         #region Materialize
         public virtual string P_Materialize {
             get {
@@ -2321,58 +2217,6 @@ namespace sql.builder.DataApi
             return false;
         }
         #endregion
-        //#region LayoutMode
-        //public virtual string P_LayoutMode
-        //{
-        //    get
-        //    {
-        //        return GetAttrValue(TextConst.AName.LayoutMode);
-        //    }
-        //    set
-        //    {
-        //        SetAttributeNotEmpty(TextConst.AName.LayoutMode, value);
-        //    }
-        //}
-
-        //public virtual string P_LayoutMode_Title()
-        //{
-        //    return "Расположение элементов";
-        //}
-
-        //public virtual string P_LayoutMode_ControlType()
-        //{
-
-        //    return typeof(UICombo).Name;
-
-        //}
-
-        //public virtual void P_LayoutMode_List(VDataTable table)
-        //{
-        //    table.AddColumn("id");
-        //    table.AddColumn("name", "Наименование");
-        //}
-
-        //public virtual void P_LayoutMode_ListRefresh(VDataTable table)
-        //{
-        //    table.Columns["id"].AllowDBNull = true;
-
-        //    table.Rows.Clear();
-        //    table.Rows.Add(DBNull.Value, "");
-        //    table.Rows.Add("regular", "Обычный");
-        //    table.Rows.Add("table", "Табличный");
-        //    table.Rows.Add("flow", "Плавающий");
-        //}
-
-        //public virtual bool P_LayoutMode_Exists()
-        //{
-        //    return false;
-        //}
-
-        //public virtual bool P_LayoutMode_Editable()
-        //{
-        //    return false;
-        //}
-        //#endregion
         #region WidthPerc
         public virtual string P_WidthPerc {
             get {
@@ -2909,42 +2753,6 @@ namespace sql.builder.DataApi
 
         }
         #endregion
-        //#region ExcludeIfSet
-        //public virtual string P_ExcludeIfSet
-        //{
-        //    get
-        //    {
-        //        return GetAttrValue(TextConst.AName.ExcludeIfSet);
-        //    }
-        //    set
-        //    {
-        //        SetAttributeNotEmpty(TextConst.AName.ExcludeIfSet, value);
-
-        //    }
-
-        //}
-
-        //public virtual string P_ExcludeIfSet_ControlType()
-        //{
-
-        //    return typeof(UICheck).Name;
-
-        //}
-
-        //public virtual string P_ExcludeIfSet_Title()
-        //{
-
-        //    return "Исключить условие, если задан параметр";
-
-        //}
-
-        //public virtual bool P_ExcludeIfSet_Exists()
-        //{
-
-        //    return false;
-
-        //}
-        //#endregion
         #region DxExport (VReport, VQuery и VGrid)
         public virtual string P_DxExport {
             get {
@@ -3398,57 +3206,6 @@ namespace sql.builder.DataApi
 
         }
         #endregion
-
-
-        //#region CheckFieldName
-        //public virtual string P_CheckFieldName
-        //{
-        //    get
-        //    {
-        //        return GetAttrValue(TextConst.AName.CheckFieldName);
-        //    }
-        //    set
-        //    {
-
-        //        SetAttributeNotEmpty(TextConst.AName.CheckFieldName, value);
-        //    }
-        //}
-
-
-
-        //public virtual string P_CheckFieldName_Title()
-        //{
-
-        //    return "Поле выбора";
-
-        //}
-
-        //public virtual string P_CheckFieldName_ControlType()
-        //{
-
-        //    return typeof(UICombo).Name;
-
-        //}
-
-        //public virtual void P_CheckFieldName_List(VDataTable table)
-        //{
-           
-        //    P_ParentFieldName_List(table);
-        //}
-
-        //public virtual void P_CheckFieldName_ListRefresh(VDataTable table)
-        //{
-           
-        //    P_ParentFieldName_ListRefresh(table);
-            
-        //}
-        //public virtual bool P_CheckFieldName_Exists()
-        //{
-
-        //    return P_OrderFieldName_Exists();
-
-        //}
-        //#endregion
         #region ClassTitle
         public virtual string P_ClassTitle {
             get {
@@ -4032,35 +3789,6 @@ namespace sql.builder.DataApi
             return TextConst.SchEdirorFieldGr.Cube;
         }
         #endregion
-        //#region KeyDimension
-        //public virtual string P_KeyDimension
-        //{
-        //    get
-        //    {
-        //        return GetAttrValue(TextConst.AName.KeyDimension);
-        //    }
-        //    set
-        //    {
-        //        SetAttributeNotEmpty(TextConst.AName.KeyDimension, value);
-        //    }
-        //}
-        //public virtual string P_KeyDimension_Title()
-        //{
-        //    return "Ключевое измерение";
-        //}
-        //public virtual string P_KeyDimension_ControlType()
-        //{
-        //    return typeof(UIText).Name;
-        //}
-        //public virtual bool P_KeyDimension_Exists()
-        //{
-        //    return (GetParent() is VSelect);
-        //}
-        //public virtual string P_KeyDimension_FieldGroup()
-        //{
-        //    return TextConst.SchEdirorFieldGr.Qube;
-        //}
-        //#endregion
         #region PrDimension (VQueryCall)
         public virtual string P_PrDimension {
             get {
@@ -4190,54 +3918,6 @@ namespace sql.builder.DataApi
 
         }
         #endregion
-        //#region NameFieldName
-        //public virtual string P_NameFieldName
-        //{
-        //    get
-        //    {
-        //        return GetAttrValue(TextConst.AName.NameFieldName);
-        //    }
-        //    set
-        //    {
-        //        SetAttributeNotEmpty(TextConst.AName.NameFieldName, value);
-        //    }
-        //}
-
-
-        //public virtual string P_NameFieldName_Title()
-        //{
-
-        //    return "Колонка c именем объекта";
-
-        //}
-
-        //public virtual string P_NameFieldName_ControlType()
-        //{
-
-        //    return typeof(UICombo).Name;
-
-        //}
-
-        //public virtual void P_NameFieldName_List(VDataTable table)
-        //{
-
-        //    table.AddColumn("id");
-        //    table.AddColumn("name", "Имя");
-        //    table.AddColumn("title", "Заголовок");
-        //}
-
-        //public virtual void P_NameFieldName_ListRefresh(VDataTable table)
-        //{
-        //    table.Rows.Clear();
-
-        //}
-        //public virtual bool P_NameFieldName_Exists()
-        //{
-
-        //    return false;
-
-        //}
-        //#endregion
         #region Name
         public virtual string P_Name {
             get {
@@ -4410,54 +4090,6 @@ namespace sql.builder.DataApi
             return P_ShowFooter_Exists();
         }
         #endregion
-        //#region ListQuery
-        //public virtual string P_ListQuery
-        //{
-        //    get
-        //    {
-        //        return GetAttrValue(TextConst.AName.Listquery);
-        //    }
-        //    set
-        //    {
-        //        SetAttribute(TextConst.AName.Listquery, value);
-        //    }
-        //}
-
-
-        //public virtual string P_ListQuery_Title()
-        //{
-
-        //    return "Запрос для выбора значений";
-
-        //}
-
-        //public virtual string P_ListQuery_ControlType()
-        //{
-
-        //    return typeof(UICombo).Name;
-
-        //}
-
-        //public virtual void P_ListQuery_List(VDataTable table)
-        //{
-
-        //    P_ColumnEditable_List(table);
-        //}
-
-
-        //public virtual void P_ListQuery_ListRefresh(VDataTable table)
-        //{
-        //    P_ColumnEditable_ListRefresh(table);
-
-        //}
-
-        //public virtual bool P_ListQuery_Exists()
-        //{
-
-        //    return P_ColumnMandatory_Exists();
-
-        //}
-        //#endregion
         #region DeleteValidation
         public virtual string P_DeleteValidation {
             get {
@@ -5592,39 +5224,6 @@ namespace sql.builder.DataApi
             return P_NullIf_Exists();
         }
         #endregion
-        //#region Window
-        //public virtual string P_Window
-        //{
-        //    get
-        //    {
-        //        return GetAttrValue(TextConst.AName.Window);
-        //    }
-        //    set
-        //    {
-        //        SetAttribute(TextConst.AName.Window, value);
-        //    }
-        //}
-        //public virtual string P_Window_Title()
-        //{
-        //    return "Сумма по окну";
-        //}
-        //public virtual string P_Window_ControlType()
-        //{
-        //    return typeof(UICombo).Name;
-        //}
-        //public virtual void P_Window_List(VDataTable table)
-        //{
-        //    P_Editable_List(table);
-        //}
-        //public virtual void P_Window_ListRefresh(VDataTable table)
-        //{
-        //    P_Editable_ListRefresh(table);
-        //}
-        //public virtual bool P_Window_Exists()
-        //{
-        //    return false;
-        //}
-        //#endregion
         #region ParamType (VParam)
         public virtual string P_ParamType {
             get {

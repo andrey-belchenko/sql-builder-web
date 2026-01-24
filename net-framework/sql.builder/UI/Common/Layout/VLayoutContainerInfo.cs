@@ -111,20 +111,6 @@ namespace sql.builder.UI
             node.linkedListNode = new LinkedListNode<VLayoutNodeInfo>(node);
             Nodes.AddBefore(next.linkedListNode, node.linkedListNode);
         }
-
-        //public override List<VLayoutNodeInfo> GetSelfAndChilds()
-        //{
-        //    var list = new List<VLayoutNodeInfo>();
-        //    list.Add(this);
-
-        //    foreach (VLayoutNodeInfo node in Nodes)
-        //    {
-        //        list.AddRange(node.GetSelfAndChilds());
-        //    }
-
-        //    return list;
-        //}
-
         public virtual void ResetAndCalculateChilds()
         {
             

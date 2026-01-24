@@ -26,17 +26,6 @@ namespace sql.builder.Core
             //try {
                 type = OracleType.GetObjectType(type_name, db.Connection);
                 return true;
-            //} catch (OracleException ex) {
-            //    if (ex.Code == 22303) { // OCI-22303: type "ASUSETYPES"."NUMBER$TABLE" not found
-            //        #if DEBUG
-            //        Debug.WriteLine("Тип " + type_name + " не найден.");
-            //        #endif
-            //        type = null;
-            //        return false;
-            //    } else {
-            //        throw;
-            //    }
-            //}
         }
         static ArrayStorage()
         {

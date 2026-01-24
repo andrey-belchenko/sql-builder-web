@@ -301,40 +301,6 @@ namespace sql.builder.DataApi
 
 
                         }
-                        //if (usedColumns.Any())
-                        //{
-
-                        //    if (dimSet != null)// есть факты, или используется признак allRows и есть используемая колонка, под where в dimset не считается
-                        //    {
-                        //        if (dimSetHasFacts)
-                        //        {
-                        //            hasUses = true;
-                        //        }
-                        //        else
-                        //        {
-                        //            if (link.P_AllRows == TextConst.AVBool.True)
-                        //            {
-                        //                foreach (var col in usedColumns)
-                        //                {
-                        //                    if (!col.Ancestors(TextConst.EName.DimSet).Any())
-                        //                    {
-                        //                        hasUses = true;
-                        //                    }
-                        //                }
-                        //            }
-                        //        }
-                        //    }
-                        //    else
-                        //    {
-
-                        //        hasUses = true;
-                        //    }
-
-
-
-
-                        //}
-
                         if (hasUses)
                         {
                             if (!autoMerge)
@@ -447,21 +413,6 @@ namespace sql.builder.DataApi
 
                         if (optionalDimensions.ContainsKey(name))
                         {
-                            //var ftn = "ur_mat_isp_kod_mat_isp";
-                            //if (!optionalDimensions[name].Contains(ftn+"1"))
-                            //{
-                            //    optionalDimensions[name].Add(ftn+"1");
-                            //    optionalDimensions[name].Add(link.P_CalledQuery);
-                            //}
-                            //if (!specFactsForOptionalDimensions.Contains(ftn))
-                            //{
-                            //    specFactsForOptionalDimensions.Add(ftn);
-                            //    var specFact = new XElement(TextConst.AName.Fact);
-                            //    specFact.SetAttributeValue(TextConst.AName.Column, ftn);
-                            //    specFact.SetAttributeValue(TextConst.AName.As, ftn);
-                            //    specFact.SetAttributeValue(TextConst.AName.Removeable, TextConst.AVBool.False);
-                            //    query.Element(TextConst.EName.Select).Add(specFact);
-                            //}
                             if (!optionalDimensions[name].Contains(link.P_CalledQuery))
                             {
                                 optionalDimensions[name].Add(link.P_CalledQuery);
@@ -497,72 +448,6 @@ namespace sql.builder.DataApi
                 allLinks.Remove(link);
                 changes = true;
             }
-
-            //foreach (VQueryCall link in allLinks.ToArray())
-            //{
-            //    //if (link.P_AllRows != TextConst.AVBool.True) // !!! Убрал, возможно будут ошибки
-            //    //{
-            //        var allChilds = link.AllLinks(null);
-            //        allChilds.Add(link);
-            //        bool hasUses = false;
-            //        bool hasUsesInSelect = false;
-            //        foreach (VQueryCall cl in allChilds)
-            //        {
-            //            var usedColumns=cl.UsedColumns();
-            //            if (usedColumns.Any())
-            //            {
-            //                hasUses = true;
-            //                if (!autoMerge)
-            //                {
-            //                    break;
-            //                }
-            //                else
-            //                {
-            //                    if (usedColumns.Where(c => c.GetAncestorsAndSelf(TextConst.EName.Select).Any()).Any())
-            //                    {
-            //                        hasUsesInSelect = true;
-            //                        break;
-            //                    }
-            //                }
-            //            }
-            //        }
-            //        if (!hasUses)
-            //        {
-            //            link.Remove();
-            //            allLinks.Remove(link);
-            //            changes = true;
-            //        }
-            //        else
-            //        {
-
-            //            if (autoMerge && hasUsesInSelect && !keysOfDims.ContainsKey(link.XName) && link.P_OnlyForCond != TextConst.AVBool.True)
-            //            {
-                          
-                            
-            //                var keyName = link.Query().KeyColumn().XName;
-            //                //var keyCol =  cols.Where(c => c.P_Column == keyName).FirstOrDefault();
-
-            //                //if (keyCol == null)
-            //                //{
-            //                    var xkeyCol = new XElement(TextConst.EName.Column);
-            //                    xkeyCol.SetAttributeValue(TextConst.AName.Table, link.XName);
-            //                    xkeyCol.SetAttributeValue(TextConst.AName.Column, keyName);
-            //                    var keyAlias = TextConst.Pfx.Id + link.XName;
-            //                    xkeyCol.SetAttributeValue(TextConst.AName.As, keyAlias);
-            //                    xkeyCol.SetAttributeValue(TextConst.AName.Removeable, TextConst.AVBool.False);
-            //                    query.Element(TextConst.EName.Select).AddFirst(xkeyCol);
-            //                    var keyCol = (VColumn)VSXElement.Get(xkeyCol);
-            //                //}
-            //                    mergerKeyAliasMergeKeyInQube.Add (keyAlias, link.P_CalledQuery);
-            //                    keysOfDims.Add(link.XName, keyAlias);
-
-            //            }
-            //        }
-            //    //}
-
-            //}
-
-
             if (autoMerge)
             {
                 var mergeKeysForDimset = new SortedList<string, List<string>>();
@@ -639,31 +524,6 @@ namespace sql.builder.DataApi
                         qq = ",";
                     }
                 }
-                //var qq = "";
-                //var mergeOrder = "";// string.Join(",", keysOfDims.Values);
-                //for (int i = 0; i < keysOfDims.Count; i++)  // реализация чего-то типа order siblings, м. быть можно проще
-                //{
-                  
-                //    var mo1 = "";
-
-                //    if (i == keysOfDims.Count - 1)
-                //    {
-                //        mo1 = keysOfDims.ElementAt(i).Value;
-                //    }
-                //    else
-                //    {
-                //        mo1 = TextConst.AVFunc.Coalesce + "(";
-                //        var qq1 = "";
-                //        for (int j = i ; j < keysOfDims.Count; j++)
-                //        {
-                //            mo1 += qq1 + keysOfDims.ElementAt(j).Value;
-                //            qq1 = ",";
-                //        }
-                //        mo1 += ")";
-                //    }
-                //    mergeOrder += qq + mo1;
-                //    qq = ",";
-                //}
                 query.SetAttributeValue(TextConst.AName.Order, mergeOrder); // если уже есть сортировка , она затирается, дугого варианта не вижу.
             }
 
@@ -905,131 +765,8 @@ namespace sql.builder.DataApi
             }
 
             #region del
-            //foreach (VFact fact1 in facts)
-            //{
-
-
-            //    var info = fact1.GetFactDimDependanceInfo(new List<string>());
-
-            //    var cumulDims = fact1.GetCumulateDimensionsNames();
-            //    var cumulateInfo = fact1.CumulateInfo();
-            //    var tinfo = fact1.P_Table;
-            //    if (tinfo != "")
-            //    {
-            //        tinfo = "|" + tinfo;
-            //    }
-            //    foreach (var item in info)
-            //    {
-            //        var fact = query.GetEnvironment().GetFactSource(item.Key);
-
-
-
-
-
-            //        string factName = item.Key + cumulateInfo + tinfo;
-
-
-
-            //        if (!dimNamesByFact.ContainsKey(factName))
-            //        {
-            //            dimNamesByFact[factName] = new List<string>();
-            //            cumulateDimNamesByFact[factName] = new List<string>();
-
-
-            //            factSources.Add(factName, fact);
-
-
-
-            //        }
-
-
-
-            //        var dimnames = item.Value.OutputDimensions.ToList();
-            //        dimnames.AddRange(cumulDims.ToArray());
-
-            //        foreach (string dimName in dimnames)
-            //        {
-            //            if (!dimNamesByFact[factName].Contains(dimName))
-            //            {
-            //                dimNamesByFact[factName].Add(dimName);
-            //            }
-
-
-            //            if (!outputLinkNames.Contains(dimName))
-            //            {
-            //                if (!innerOnlyDimensions.Contains(dimName))
-            //                {
-            //                    innerOnlyDimensions.Add(dimName);
-            //                }
-            //            }
-
-            //            if (!innerDimensions.Contains(dimName))
-            //            {
-            //                innerDimensions.Add(dimName);
-            //            }
-            //        }
-
-
-            //        foreach (string dimName in cumulDims)// ???
-            //        {
-            //            if (!cumulateDimNamesByFact[factName].Contains(dimName))
-            //            {
-            //                cumulateDimNamesByFact[factName].Add(dimName);
-            //            }
-            //            if (!allCumulateDimeNames.Contains(dimName))
-            //            {
-            //                allCumulateDimeNames.Add(dimName);
-            //            }
-            //        }
-
-            //        if (fact1.P_Table != "")
-            //        {
-
-            //            var dimSet = qubeElement.GetDimSet(fact1.P_Table);
-            //            if (dimSet.Element(TextConst.EName.Where) != null)
-            //            {
-            //                var dimName = fact1.P_Table + TextConst.Pfx.Dimset;
-            //                if (!dimNamesByFact[factName].Contains(dimName))
-            //                {
-            //                    dimNamesByFact[factName].Add(dimName);
-            //                }
-            //                if (!dimsetWhereDimensions.ContainsKey(dimName))
-            //                {
-            //                    dimsetWhereDimensions.Add(dimName, fact1.P_Table);
-            //                }
-            //            }
-            //            foreach (VQueryCall link in qubeElement.GetDimsetLinks(fact1.P_Table))
-            //            {
-            //                var dimName = DimensionNameInfo.BuildName(link.P_CalledQuery, link.P_OnlyForCond);
-            //                if (!dimNamesByFact[factName].Contains(dimName))
-            //                {
-            //                    dimNamesByFact[factName].Add(dimName);
-            //                }
-            //            }
-            //        }
-            //    }
-
-
-
-
-
-
-            //}
             #endregion
             var dimensionsCollections = new List<DimensionCollection>();
-
-            //if (allRowsQuery != null)
-            //{
-            //    var dimCollection = new DimensionCollection();
-            //    dimensionsCollections.Add(dimCollection);
-            //}
-
-            
-
-
-
-
-
             foreach (var factId in factInfoList_N.Keys)
             {
                 bool exsists = false;
@@ -1235,70 +972,6 @@ namespace sql.builder.DataApi
             }
 
             #region del
-
-            //var factIds = new SortedList<string, string>();
-            //var factNames = new SortedList<string, int>();
-            //foreach (VFact fact in facts.Values.ToList())
-            //{
-            //    var fname = fact.GetFactSource().P_Fact;
-            //    if (!factNames.ContainsKey(fname))
-            //    {
-            //        factNames.Add(fname, 0);
-            //    }
-            //    var factid = fact.FullColName();
-            //    var factPars = fact.GetElementsApplyingParts(TextConst.EName.WithParams).FirstOrDefault();
-
-            //    if (factPars != null)
-            //    {
-            //        factid += factPars.ToString();
-            //    }
-            //    if (!factIds.ContainsKey(factid))
-            //    {
-            //        factNames[fname]++;
-
-
-            //        var factSrc = fact.GetFactSource();
-            //        XElement expr = null;
-            //        string gr = factSrc.P_AggregationS;
-            //        if (gr == "")
-            //        {
-            //            gr = TextConst.AVGroup.Sum;
-            //        }
-            //        // var factName = fact.FullFactName();
-
-
-
-
-            //       // expr = fact.BuildFullExpressionOld(factPars); !!!!!!!!!!!!!!!!!!!!!!!!!!
-
-            //        var alias = fact.P_Column;
-            //        if (factNames[fname] > 1)
-            //        {
-            //            alias += "_" + factNames[fname].ToString();
-
-            //            fact.P_Column = alias;
-            //        }
-            //        factIds.Add(factid, alias);
-            //        expr.SetAttributeValue(TextConst.AName.As, alias + fact.ColNamePfx());
-
-            //        expr.SetAttributeValue(TextConst.AName.Group, gr);
-            //        xQubeFullQuery.Element(TextConst.EName.Select).Add(expr);
-
-
-
-            //    }
-            //    else
-            //    {
-
-            //        if (factNames[fname] > 1)
-            //        {
-
-            //            fact.P_Column = factIds[factid];
-            //        }
-            //    }
-            //    //xQubeQuery.Element(TextConst.EName.Select).Add(expr);
-
-            //}
             #endregion
             var xQuery = new XElement(query);
             xQuery.Elements(TextConst.EName.Expressions).Remove();
@@ -1393,26 +1066,6 @@ namespace sql.builder.DataApi
                 }
             }
             #region del
-            //foreach (var factSrcItem in factSources)
-            //{
-
-            //    var factSrc = factSrcItem.Value;
-      
-            //    XElement expr = null;
-
-            //    var colname = FactInfo.FromString(factSrcItem.Key).BuildName();
-             
-            //    expr = new XElement(TextConst.EName.Column);
-            //    expr.SetAttributeValue(TextConst.EName.Table, TextConst.Pfx.QubeQueryAlias);
-            //    expr.SetAttributeValue(TextConst.EName.Column, colname);
-            //    expr.SetAttributeValue(TextConst.AName.As, colname);
-
-            //    expr.Attributes(TextConst.AName.Group).Remove();
-            //    xQubeUnionQuery1.Element(TextConst.EName.Select).Add(expr);
-
-            //}
-
-
             #endregion
 
             int dcIndex = 0;
@@ -1444,91 +1097,6 @@ namespace sql.builder.DataApi
 
             foreach (DimensionCollection dimCollection in dimensionsCollections) // !!! внешние измерения могут сделать разные коллекции одинаковыми - слить такие.  Например внеш (ym,kod_dog) внутр (ym,kod_dog) (ym) () - будет одна вместо 3-х
             {
-               
-                //VDimSet dimset = null;
-
-                //var nonOutputDimensions = new List<string>();
-
-                //for (int i = 0; i < dimCollection.Dimensions.Count; i++)
-                //{
-                //    var dim = dimCollection.Dimensions[i];
-                //    if (DimensionNameInfo.IsNonoutput(dim))
-                //    {
-                //        dimCollection.Dimensions[i] = DimensionNameInfo.GetDimNameFromFullName(dim);
-                //        nonOutputDimensions.Add(dimCollection.Dimensions[i]);
-                //    }
-
-                //}
-
-
-                //foreach (VQueryCall link in links)
-                //{
-                //    if (link.P_OnlyForCond == TextConst.AVBool.True)
-                //    {
-                //        nonOutputDimensions.Add(link.P_CalledQuery);
-                //    }
-                //}
-
-
-
-
-                
-                //var links1 = links.ToList();
-                //var outerDimensionNames1 = new SortedList<string, string>();
-
-                //foreach (var kv in outerDimensionNames)
-                //{
-                //    outerDimensionNames1.Add(kv.Key, kv.Value);
-                //}
-
-
-
-
-                //foreach (string dim in dimCollection.Dimensions)
-                //{
-                //    if (dimsetWhereDimensions.ContainsKey(dim))
-                //    {
-                //        dimset = (VDimSet)qubeElement.GetDimSet(dimsetWhereDimensions[dim]);
-                //        dimCollection.Dimensions.Remove(dim);
-                //        break;
-                //    }
-                //}
-                //XElement addWhere = null;
-                //if (dimset != null)
-                //{
-
-                //    addWhere = dimset.GetElementsApplyingParts(TextConst.EName.Where).FirstOrDefault();
-                //    foreach (VQueryCall link in qubeElement.GetDimsetLinks(dimset.XName))
-                //    {
-                //        links1.Add(link);
-                //        outerDimensionNames1.Add(link.P_CalledQuery, link.XName);
-                //    }
-                //}
-                //List<string> addedLinks = new List<string>();
-                //foreach (VQueryCall link in qubeElement.AllDimsetsLinks())
-                //{
-
-                //    if (dimCollection.Dimensions.Contains(link.P_CalledQuery))
-                //    {
-                //        if (!addedLinks.Contains(link.P_CalledQuery))
-                //        {
-                //            links1.Add(link);
-                //            addedLinks.Add(link.P_CalledQuery);
-                //        }
-
-                //        if (!outerDimensionNames1.ContainsKey(link.P_CalledQuery))
-                //        {
-                //            outerDimensionNames1.Add(link.P_CalledQuery, link.XName);
-                //        }
-                //    }
-                //}
-
-                //dcIndex++;
-
-
-                //CreateQubeQueryForCollection( outerDimensionNames1, dimCollection
-                //    , factSources,  links1, allLinks, qubeElement, query, xQubeUnion
-                //   , innerDimensions,  qubeInfo, nonOutputDimensions,storages);
                 CreateQubeQueryForCollection(extOuterDimensionNames, dimCollection
                     , factInfoList_N, allLinks, links, qubeElement, query, xQubeUnion
                    , innerDimensions, qubeInfo, null, storages);
@@ -1618,69 +1186,6 @@ namespace sql.builder.DataApi
            );
 
             #region del
-            //XElement scopeLevelQuery = null;
-
-            //if (factsCols.Elements(TextConst.EName.Scope).Any())
-            //{
-
-            //    scopeLevelQuery = new XElement(TextConst.EName.Query);
-            //    scopeLevelQuery.Add(new XElement(TextConst.EName.Select));
-            //    scopeLevelQuery.Add(new XElement(TextConst.EName.From));
-            //    scopeLevelQuery.SetAttributeValue(TextConst.AName.As, qubeName);
-            //    var qubeQuery = xQuery.Elements(TextConst.EName.From).Elements(TextConst.EName.Query).First();
-
-            //    qubeQuery.Remove();
-
-            //    scopeLevelQuery.Element(TextConst.EName.From).Add(qubeQuery);
-            //    xQuery.Element(TextConst.EName.From).AddFirst(scopeLevelQuery);
-            //    foreach (XElement col in qubeQuery.Element(TextConst.EName.Select).Elements())
-            //    {
-            //        bool used = false;
-
-            //        if (col.Attribute(TextConst.AName.Group).Value == TextConst.AVBool.True)
-            //        {
-            //            if (outerDimensionNames.Keys.Contains(col.Attribute(TextConst.AName.Column).Value))
-            //            {
-            //                used = true;
-            //            }
-            //            if (allLinks.Select(e => e.P_CalledQuery).Contains(col.Attribute(TextConst.AName.Column).Value))
-            //            {
-            //                used = true;
-            //            }
-
-            //        }
-            //        else
-            //        {
-
-            //            if (col.Attribute(TextConst.AName.Cumulate) == null)
-            //            {
-            //                used = true;
-
-            //            }
-
-            //        }
-
-            //        if (used)
-            //        {
-
-
-            //            var col1 = new XElement(TextConst.EName.Column);
-
-            //            col1.SetAttributeValue(TextConst.AName.Table, qubeName);
-
-            //            col1.SetAttributeValue(TextConst.AName.Column, (Cmn.Nvl(col.Attribute(TextConst.AName.As), col.Attribute(TextConst.AName.Column)) as XAttribute).Value);
-
-            //            Cmn.CopyAttribute(col, col1, TextConst.AName.Group);
-
-            //            scopeLevelQuery.Element(TextConst.EName.Select).Add(col1);
-            //        }
-
-
-            //    }
-
-            //}
-
-            //var scopes = new SortedList<string, int>();
             #endregion
             foreach (XElement fact in factsCols)
             {
@@ -1705,78 +1210,6 @@ namespace sql.builder.DataApi
                 }
 
                 #region del
-                // col.Add(fact.Elements(TextConst.EName.Pivot));
-                //var sect = fact.Element(TextConst.EName.Scope);
-                //if (sect != null)
-                //{
-
-                //    var dimName = sect.Attribute(TextConst.AName.Cumulate).Value;
-
-                //    var factName = fact.Attribute(TextConst.EName.Column).Value;
-                    
-                //    var scopeId = factName + dimName + sect.Elements().First().ToString();
-
-
-                //    bool isNew = false;
-                //    if (!scopes.ContainsKey(scopeId))
-                //    {
-                //        scopes.Add(scopeId, scopes.Count);
-                //        isNew = true;
-                //    }
-
-
-                //    //scopeIndex = scopes[scopeId];
-                //    var colName = new FactInfo(fact.Attribute(TextConst.AName.Column).Value, dimName, Cmn.GetAttrValue(fact, TextConst.EName.Table)).BuildName(); // Для форм наверное будет ошибка
-                //    var colIndName = colName + scopeIndex.ToString();
-                //    col.Attribute(TextConst.AName.Column).Value = colIndName;
-                //    if (isNew)
-                //    {
-
-
-                //        var sourceExpr = query.GetEnvironment().GetFactSource(factName);
-
-
-
-                //        var expr = new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunc.If),
-                //                         new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunc.Or),
-                //                               new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, "="),
-                //                                 new XElement(TextConst.AName.Column, new XAttribute(TextConst.AName.Table, qubeName), new XAttribute(TextConst.AName.Column, dimName)),
-                //                                 new XElement(sect.Elements().First())
-                //                               ),
-                //                               new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunc.And),
-                //                                   new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunc.Ls),
-                //                                     new XElement(TextConst.AName.Column, new XAttribute(TextConst.AName.Table, qubeName), new XAttribute(TextConst.AName.Column, dimName)),
-                //                                     new XElement(sect.Elements().First())
-                //                                   )
-                //                                   , new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunc.Or),
-                //                                       new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunc.Gt),
-                //                                         new XElement(TextConst.AName.Column, new XAttribute(TextConst.AName.Table, qubeName), new XAttribute(TextConst.AName.Column, dimName + TextConst.Pfx.CumulNext)),
-                //                                         new XElement(sect.Elements().First())
-
-                //                                       ),
-                //                                       new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunc.IsNull),
-                //                                         new XElement(TextConst.AName.Column, new XAttribute(TextConst.AName.Table, qubeName), new XAttribute(TextConst.AName.Column, dimName + TextConst.Pfx.CumulNext))
-                //                                       )
-                //                                   )
-                //                                 ),
-                //                                 new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunc.IsNull),
-                //                                     new XElement(TextConst.AName.Column, new XAttribute(TextConst.AName.Table, qubeName), new XAttribute(TextConst.AName.Column, dimName))
-                //                                   )
-                //                             )
-                //                             );
-
-                //        expr.Add(
-                //             new XElement(TextConst.AName.Column, new XAttribute(TextConst.AName.Table, col.Attribute(TextConst.AName.Table).Value), new XAttribute(TextConst.AName.Column, colName))
-                //            );
-                //        Cmn.CopyOrReplaceAttributes(col, expr, TextConst.ANameArray.ColumnRecoveredAttributes);
-                //        expr.SetAttributeValue(TextConst.AName.DataType, sourceExpr.XDataType());
-                //        expr.SetAttributeValue(TextConst.AName.As, colIndName);
-                //        expr.SetAttributeValue(TextConst.AName.Group, sourceExpr.P_AggregationS);
-
-                //        scopeLevelQuery.Element(TextConst.EName.Select).Add(expr);
-                //    }
-                //}
-                //else
                 #endregion
                 {
                     if (fact.Attribute(TextConst.AName.Column).Value == "kod_ur_state")
@@ -1938,18 +1371,6 @@ namespace sql.builder.DataApi
         
         public static void CacheQubeIfNeed(VQuery query)
         {
-            // чтобы не запускалось из ipsupport 
-
-            
-            //if (!XmlReports.IsDeveloperMode() || Application.ProductName != XmlReports.NativeProductName) return;
-
-            //var qube_time = Cache.GetLastQubeCacheTime(query.P_Name);
-            //var scheme_time = XmlReports.Environment.GetLastSchemeAssembleTime();
-            //if (qube_time == DateTime.MinValue || qube_time < scheme_time)
-            //{
-            //    var qi = GetQubeInfo(query);
-            //    Cache.SaveQubeInfoToCache(qi, query.P_Name);
-            //}
         }
 
         private static SortedList<string, VFact.FactSourceQueryInfo> GetSourceQueryInfoList(VEnvironment env, List<VQubeUtils.DimensionCollection> dimCollections)
@@ -2001,61 +1422,10 @@ namespace sql.builder.DataApi
             {
                 dimensionNames.Add(dimName, allDimensionNames[dimName]);
             }
-
-            //foreach (string dimName in outerDimensionNames.Keys)
-            //{
-            //    dimensionNames.Add(dimName, outerDimensionNames[dimName]);
-            //}
-
-            //foreach (string dimName in dimCollection.Dimensions)
-            //{
-            //    if (!dimensionNames.ContainsKey(dimName))
-            //    {
-            //        dimensionNames.Add(dimName, dimName);
-            //    }
-            //}
-
-            //var innerDimensionNames = new List<string>();
-
-            //innerDimensionNames.AddRange(dimCollection.Dimensions);
-            /////////
-            //var localFactSources = dimCollection.Facts.Select(e => factSources[e.Name]).ToList();// !!! ???
-            //var factColumns = localFactSources.SelectMany(f => f.GetFactColumns()).Distinct().ToList();
-            //var factSourceQueriesColumns = new SortedList<string, List<VSXElement>>();
-            //var factSourceQueries = new List<VSourcedElement>();
-            //foreach (VSXElement factColumn in factColumns)
-            //{
-            //    var factSourceQuery = factColumn.RootQuery().GetMainE();
-            //    if (!factSourceQueriesColumns.ContainsKey(factSourceQuery.P_IdName))
-            //    {
-            //        factSourceQueriesColumns.Add(factSourceQuery.P_IdName, new List<VSXElement>());
-            //        factSourceQueries.Add(factSourceQuery);
-            //    }
-            //    factSourceQueriesColumns[factSourceQuery.P_IdName].Add(factColumn);
-            //}
-
-
             var dimCollections = new List<DimensionCollection>();
             dimCollections.Add(dimCollection);
 
             var srcQueryInfoList_N = GetSourceQueryInfoList(XmlReports.Environment, dimCollections);
-            
-
-            
-
-            //!!! ???
-            //if (allRowsQuery != null && dcIndex == 1)
-            //{
-            //    var factSourceQuery = allRowsQuery;
-            //    if (!factSourceQueriesColumns.ContainsKey(factSourceQuery.P_IdName))
-            //    {
-            //        factSourceQueriesColumns.Add(factSourceQuery.P_IdName, new List<VSXElement>());
-            //        factSourceQueries.Add(factSourceQuery);
-            //    }
-
-
-            //}
-
             XElement xQubeQuery = new XElement(TextConst.EName.Query);
             xQubeQuery.Add(new XElement(TextConst.EName.Select));
             xQubeQuery.Add(new XElement(TextConst.EName.From));
@@ -2523,60 +1893,10 @@ namespace sql.builder.DataApi
                             dimFromQuery.Add(alink.Elements());
                         }
                     }
-
-
-
-
-                    //XElement commonWhere = qubeElement.GetElementsApplyingParts(TextConst.EName.Where).FirstOrDefault();
-
-                    //if (commonWhere != null)
-                    //{
-                    //    commonWhere = new XElement(commonWhere);
-                    //}
-
-
-
-
-                    //if (addWhere != null)
-                    //{
-                    //    if (commonWhere == null)
-                    //    {
-                    //        commonWhere = addWhere;
-                    //    }
-                    //    else
-                    //    {
-                    //        Compiler.extendWhereByAnd(commonWhere, new XElement(addWhere.Elements().First()));
-                    //    }
-                    //}
-
-
-                    //if (commonWhere != null)
-                    //{
-                    //    commonWhere = new XElement(commonWhere);
-                    //}
-
-                    
-
-
-
                     if (isSimpleRout)
                     {
 
                         element.Add(commonWhere);
-
-                        //if (factSourceQuery.GetQubeElement() != null) // Обработан тоько частный случай пропихивания условий
-                        //{
-
-                        //    var qc = new XElement(TextConst.EName.QubeContent);
-                        //    if (commonWhere != null)
-                        //    {
-                        //        var cw = new XElement(commonWhere);
-
-                        //        qc.Add(cw);
-                        //    }
-                        //    dimFromQuery.Add(qc);
-
-                        //}
                         columnsForSimpleRout = new Dictionary<string, XElement>();
                         foreach (string name in dimensionNames.Keys)
                         {
@@ -2611,20 +1931,6 @@ namespace sql.builder.DataApi
                   //  dimFromQuery.Add(qc);
 
                     element.Element(TextConst.EName.From).Add(qc);
-                    //if (isSimpleRout)
-                    //{
-
-                       
-
-                    //    dimFromQuery.Add(qc);
-                    //}
-                    //else
-                    //{
-
-                    //    xDimQry.Add(qc);
-                    //}
-
-
                     string colAlias = null;
                     var keyCol = factSourceQuery.KeyColumn();
                     VDimension dim = factSourceQuery.GetDimension();
@@ -2992,33 +2298,6 @@ namespace sql.builder.DataApi
                     }
                 }
             }
-           
-
-
-
-            //foreach (var link in allLinks)
-            //{
-            //    XElement col1 = null;
-
-            //    //if (outerDimensionNames.Keys.Contains(link.P_CalledQuery))
-            //    if (dimCollection.Dimensions .Contains(link.P_CalledQuery))
-            //    {
-            //        col1 = new XElement(TextConst.EName.Column);
-            //        col1.SetAttributeValue(TextConst.AName.Table, qubeName);
-            //        col1.SetAttributeValue(TextConst.AName.Column, link.P_CalledQuery);
-            //    }
-            //    else
-            //    {
-            //        col1 = new XElement(TextConst.EName.Const);
-            //        col1.Value = "null";
-            //        col1.SetAttributeValue(TextConst.AName.As, link.P_CalledQuery);
-            //    }
-
-                
-            //    xQubeQuery.Element(TextConst.EName.Select).Add(col1);
-
-
-            //}
             foreach (string name in allDimensionNames.Keys)
             {
                 XElement col = null;
@@ -3307,27 +2586,6 @@ namespace sql.builder.DataApi
                         }
                     }
                     SearchSourceLinksEndStep(source, wached, wachedLocal,ref dimsToSearch, foundNames, secondaryRoots,ref list, dimensionNames,qubeElement);
-                    //wached.AddRange(wachedLocal);
-                    //wachedLocal.Clear();
-                    //dimsToSearch = dimsToSearch.Where(e => !foundNames.Contains(e)).ToList();
-                    //foreach (var v in secondaryRoots.Values)
-                    //{
-                    //    v.Found = v.FoundOne;
-                    //}
-
-                   
-
-                    //list = list.SelectMany(e => e.Childs).ToList();
-
-
-                    //if (list.Count == 0)
-                    //{
-                    //    var msg = string.Format(@"Для {0} не найдены измерения: {1}",
-                    //        source.Attribute(TextConst.AName.Name).Value,
-                    //        string.Join(", ", dimensionNames.Keys.Where(e => !foundNames.Contains(e))));
-
-                    //    throw new VCompilerException(msg, source, null);
-                    //}
                 }
             }
             //if (source.XName == "ur_inkasso")
@@ -3368,119 +2626,6 @@ namespace sql.builder.DataApi
                 SetUnused(child);
             }
         }
-
-
-
-
-
-        //private static List<LookUpTreeNode> BuildRouts(LookUpTreeNode rout, List<LookUpTreeNode> found)
-        //{
-        //    SetUsed(found);
-        //    RemoveUnusedLooUpNodes(rout);
-
-        //    var foundCombined = new SortedList<string, List<LookUpTreeNode>>();
-
-        //    foreach (LookUpTreeNode node in found)
-        //    {
-        //        if (!foundCombined.ContainsKey(node.DimensionName))
-        //        {
-        //            foundCombined.Add(node.DimensionName, new List<LookUpTreeNode>());
-        //        }
-        //        foundCombined[node.DimensionName].Add(node);
-        //    }
-        //    var routPoints = new List<List<LookUpTreeNode>>();
-
-        //    CombileRootPoints(foundCombined, routPoints, null, 0);
-
-        //    var routs = new List<LookUpTreeNode>();
-
-
-        //    //var cnt = CalculateRootsCount(parentLookUpNode);
-
-
-        //    var  routs1 = new List<LookUpTreeNode>();
-
-        //    foreach (List<LookUpTreeNode> routPoint in routPoints)
-        //    {
-        //        SetUnused(rout);
-        //        SetUsed(routPoint);
-
-        //        var rout1 = CopyUsed(rout);
-        //        routs1.Add(rout1);
-        //    }
-        //    return routs1;
-        //}
-
-        //private static void CombileRootPoints(SortedList<string, List<LookUpTreeNode>> foundCombined, List<List<LookUpTreeNode>> rootPoints,List<LookUpTreeNode> rootPoint, int level)
-        //{
-
-        //    if (foundCombined.Count ==level)
-        //    {
-        //        return;
-        //    }
-
-        //    var nodeGroup = foundCombined.ElementAt(level).Value;
-        //    if (rootPoint == null)
-        //    {
-        //        rootPoint = new List<LookUpTreeNode>();
-        //        rootPoints.Add(rootPoint);
-        //    }
-
-        //    var inRootPoint = new List<LookUpTreeNode>();
-
-        //    foreach (LookUpTreeNode node in rootPoint)
-        //    {
-        //        inRootPoint.Add(node);
-        //    }
-
-
-        //    int i = 0;
-        //    foreach (LookUpTreeNode node in nodeGroup)
-        //    {
-        //        if (i != 0)
-        //        {
-        //            rootPoint = new List<LookUpTreeNode>();
-        //            rootPoints.Add(rootPoint);
-        //            foreach (LookUpTreeNode node1 in inRootPoint)
-        //            {
-        //                rootPoint.Add(node1);
-        //            }
-        //        }
-        //        rootPoint.Add(node);
-        //        CombileRootPoints(foundCombined, rootPoints, rootPoint, level + 1);
-        //        i++;
-        //    }
-
-
-        //}
-
-
-        //private static int CalculateRootsCount(LookUpTreeNode node)
-        //{
-        //   var list=new SortedList<string, int>();
-        //    int cnt=1;
-        //   foreach (var child in node.Childs.ToList())
-        //   {
-        //       var i = CalculateRootsCount(child);
-        //       if (!list.ContainsKey(child.DimensionName))
-        //       {
-        //           list.Add(child.DimensionName, i);
-        //       }
-        //       else
-        //       {
-        //           list[child.DimensionName] = list[child.DimensionName] + i;
-        //       }
-
-        //   }
-        //   foreach (int i in list.Values)
-        //   {
-        //       cnt = cnt * i;
-        //   }
-
-        //    return cnt;
-        //}
-
-
         private static List<DimensionPathTreeNode> GetLeavs(DimensionPathTreeNode node)
         {
 
@@ -3519,29 +2664,6 @@ namespace sql.builder.DataApi
                 }
             }
         }
-
-        //private static Stack<XElement> _qubeContent = new Stack<XElement>();
-
-        //public static void ResetQubeContent()
-        //{
-        //    _qubeContent = new Stack<XElement>();
-        //}
-
-        //public static void PopQubeContent()
-        //{
-        //    if (_qubeContent.Any())
-        //    {
-        //        _qubeContent.Pop();
-        //    }
-        //}
-        //public static XElement PeekQubeContent()
-        //{
-        //    if (_qubeContent.Any())
-        //    {
-        //        _qubeContent.Pop();
-        //    }
-        //}
-
         private static void AddLinksXml(DimensionPathTreeNode node, XElement element, List<VQueryCall> links, XElement fromNode, XElement commonWhere)
         {
             foreach (DimensionPathTreeNode childNode in node.Childs)
@@ -3572,24 +2694,6 @@ namespace sql.builder.DataApi
                                     eName = TextConst.EName.ELink;
                                 }
                                 linkRoot = new XElement(eName);
-
-                                // Это убираю, вроде сделал универсально.
-
-                                //if ((parent is VELink))  
-                                //{
-
-                                //    if ((parent as VELink).Query().GetQubeElement() != null) // Обработан тоько частный случай пропихивания условий 2
-                                //    {
-                                //        var qc = new XElement(TextConst.EName.QubeContent);
-                                //        var cw = new XElement(commonWhere);
-                                       
-                                //        qc.Add(cw);
-                                //        linkRoot.Add(qc);
-
-                                //    }
-                                //}
-
-
                                 Cmn.copyAttributes(parent, linkRoot);
                                 linkRoot.Add(link1);
                                 link1 = linkRoot;
@@ -3681,31 +2785,6 @@ namespace sql.builder.DataApi
            public bool IsFinalDimension = false;
            
         }
-
-
-        //private static bool IsSecondaryPathPart(SortedList<string, SecondaryLinkInfo> secondaryRoots, DimensionPathTreeNode node)
-        //{
-        //    var path = node.GetPath();
-        //    var v = secondaryRoots.Values.Where(e => e.FinalPath != path && e.FinalPath.StartsWith(path)).Any();
-        //    return v;
-
-        //}
-
-        //private static bool IsNotFinalSecondaryPathPart(SortedList<string, SecondaryLinkInfo> secondaryRoots, DimensionPathTreeNode node)
-        //{
-        //    var path = node.GetPath();
-        //    var v= secondaryRoots.Values.Where(e =>e.FinalPath!=path && e.FinalPath.StartsWith(path)).Any();
-        //    if (!v)
-        //    {
-        //        var si = secondaryRoots.Values.Where(e => e.FinalPath != path).FirstOrDefault();
-        //        if (si != null)
-        //        {
-        //            v = si.IsFinalDimension;
-        //        }
-        //    }
-        //    return v;
-          
-        //}
         private static bool IsSecondaryPathPart(SortedList<string, SecondaryLinkInfo> secondaryRoots,DimensionPathTreeNode parent, string dimName)
         {
             var path = parent.GetPath() + "." + dimName;
@@ -3896,68 +2975,6 @@ namespace sql.builder.DataApi
                         {
                          
                             processSecondaryLink(rel,wachedLocal,secondaryRoots,parentLookUpNode);
-                            //string parentPath = "";
-                            //wachedLocal.Add(rel.GetUniqueKey());
-                            //var parentLink = (rel.GetParent() as VQueryCall);
-                            //DimensionPathTreeNode parentlookUpNode2 = null;
-                            //var pdimName = parentLink.P_Dimension;
-
-                            //if (parentLink is VDimLink && pdimName != "")
-                            //{
-                            //    parentPath = secondaryRoots[pdimName].FinalPath;
-
-                            //}
-                            //else
-                            //{
-                            //    if (pdimName == "")
-                            //    {
-                            //        pdimName = parentLink.Query().GetDimension().XName;
-
-
-                            //    }
-                            //    //parentlookUpNode2 = parentLookUpNode.Childs.Where(c => c.DimensionName == pdimName).FirstOrDefault();
-                            //    //if (parentlookUpNode2 == null)
-                            //    //{
-                            //    //    throw new InvalidOperationException(TextConst.EName.DimLink + " может находиться только под ссылкой, для которой определено измерение");
-                            //    //    // доделать при необходимости
-
-
-                            //    //}
-
-                            //    if (pdimName == "")
-                            //    {
-                            //        throw new InvalidOperationException(TextConst.EName.DimLink + " может находиться только под ссылкой, для которой определено измерение");
-                            //        // доделать при необходимости
-                            //    }
-                            //    parentPath = parentLookUpNode.GetPath() + "." + pdimName;
-                            //}
-
-                            //var path = parentPath + "." + rel.P_Dimension;
-
-                            //if (secondaryRoots.ContainsKey(rel.P_Dimension))
-                            //{
-                            //    if (secondaryRoots[rel.P_Dimension].FinalPath == parentLookUpNode.GetPath() + "." + rel.P_Dimension)
-                            //    {// когда dimlink ссылается на dimlink
-
-                            //        if (rel.P_Dimension == "kod_folders")
-                            //        {
-                            //        }
-                            //        secondaryRoots[rel.P_Dimension].FinalPath = path;// = new Tuple<string, string>(secondaryRoots[rel.P_Dimension].Item1, path);
-                            //    }
-                            //}
-                            //else
-                            //{
-                            //    var sli = new SecondaryLinkInfo();
-                            //    sli.InitialPath = parentLookUpNode.GetPath() + "." + rel.P_Dimension;
-                            //    sli.FinalPath = path;
-                            //    sli.DimName = rel.P_Dimension;
-                            //    if (rel.P_IsFinalDimension == TextConst.AVBool.True)
-                            //    {
-                            //        sli.IsFinalDimension = true;
-                            //    }
-                            //    secondaryRoots.Add(rel.P_Dimension, sli);
-                            //}
-
                         }
                     }
                     else
@@ -4324,18 +3341,6 @@ namespace sql.builder.DataApi
                     Cmn.GetAttrValue(e, TextConst.AName.Function) == TextConst.AVFunction.Or
                   || Cmn.GetAttrValue(e, TextConst.AName.Optional) == TextConst.AVBool.True
                     ).LastOrDefault();
-
-
-                //Убрал - вроде не нужно , выкидывались все условия в poisk_byt1
-
-                //if (prtToRem != null)
-                //{
-                //    if (prtToRem.Parent.Elements(TextConst.EName.Call).Where(e => TextConst.AVFuncArray.TrueFalse.Contains(Cmn.GetAttrValue(e, TextConst.AName.Function))).Any())
-                //    {
-                //        prtToRem = prtToRem.Parent;
-                //    }
-                //}
-
                 if (prtToRem == null)
                 {
                     prtToRem = fact.Ancestors(TextConst.EName.Call).Where(e => e.Parent != null && Cmn.GetAttrValue(e.Parent, TextConst.AName.Function) == TextConst.AVFunction.And).FirstOrDefault();
@@ -4671,17 +3676,6 @@ namespace sql.builder.DataApi
                     {
                         if (list.Count > 1)
                         {
-                            //var list1 =new  List<LookUpTreeNode>();
-                            //foreach (LookUpTreeNode node1 in AllNodes())
-                            //{
-
-                            //    if (node1.DimensionName == list[0].DimensionName && node1.Depth()==list[0].Depth())
-                            //    {
-                            //        list1.Add(node1);
-
-                            //    }
-                            //}
-                            //return list1;
                             return list;
                         }
                     }
@@ -4705,20 +3699,6 @@ namespace sql.builder.DataApi
                 }
 
             }
-
-
-            //private int Level()
-            //{
-            //    int i = 0;
-            //    var node=this;
-            //    while (node.Parent != null)
-            //    {
-            //        node = node.Parent;
-            //        i++;
-            //    }
-            //    return i;
-            //}
-
             public static string PathFromTo(DimensionPathTreeNode parent, DimensionPathTreeNode child)
             {
                 string s = child.DimensionName;
@@ -4816,119 +3796,6 @@ namespace sql.builder.DataApi
             public List<string> Dimensions = new List<string>();
             public SortedList<string, VFact.FactDependantceInfo> Facts = new SortedList<string, VFact.FactDependantceInfo>();
         }
-
-
-
-        //public class DimensionNameInfo
-        //{
-        //    public static string BuildName(string dimension, string isNonOutput)
-        //    {
-        //        if (isNonOutput == "")
-        //        {
-        //            return dimension;
-        //        }
-        //        else
-        //        {
-        //            return dimension + "|" + isNonOutput;
-        //        }
-        //    }
-
-        //    public static string GetDimNameFromFullName(string fullName)
-        //    {
-        //        return fullName.Split('|')[0];
-        //    }
-
-        //    public static bool IsNonoutput(string fullName)
-        //    {
-        //        return fullName.Split('|').Count() > 1;
-        //    }
-        //}
-
-        
-        //public class FactInfo
-        //{
-        //    public string Name;
-        //    public string Cumulate;
-        //    public string Dimset;
-        //    public FactInfo()
-        //    {
-
-        //    }
-        //    public FactInfo(string name, string cumul, string dimset)
-        //    {
-        //        Name = name;
-        //        Cumulate = cumul;
-        //        Dimset = dimset;
-
-        //        if (dimset != null)
-        //        {
-
-        //        }
-        //    }
-        //    public static FactInfo FromString(string s)
-        //    {
-        //        var fi = new FactInfo();
-        //        var ss = s.Split(',');
-
-
-        //        string[] ss1 = null;
-        //        if (ss.Count() > 1)
-        //        {
-        //            fi.Name = ss[0];
-        //            ss1 = ss[1].Split('|');
-        //            fi.Cumulate = ss1[0];
-
-        //        }
-        //        else
-        //        {
-
-        //            ss1 = ss[0].Split('|');
-        //            fi.Name = ss1[0];
-        //        }
-        //        if (ss1.Count() > 1)
-        //        {
-        //            fi.Dimset = ss1[1];
-        //        }
-        //        return fi;
-        //    }
-
-        //    public string BuildName(string fact, string cumul, string dimset)
-        //    {
-        //        string name = fact;
-        //        if (!string.IsNullOrEmpty(cumul))
-        //        {
-        //            name += TextConst.Pfx.ScopeExp + cumul;
-        //        }
-        //        if (!string.IsNullOrEmpty(dimset))
-        //        {
-        //            name += TextConst.Pfx.DsExp + dimset;
-        //        }
-        //        return name;
-        //    }
-        //    public bool IsCumulate()
-        //    {
-        //        return !string.IsNullOrEmpty(Cumulate);
-        //    }
-
-        //    public bool IsDimset()
-        //    {
-        //        return !string.IsNullOrEmpty(Dimset);
-        //    }
-
-        //    public string BuildName()
-        //    {
-        //        return BuildName(Name, Cumulate, Dimset);
-        //    }
-        //    public string BuildPfx()
-        //    {
-        //        return BuildName("", Cumulate, Dimset);
-        //    }
-        //}
-
-
-        
-
-
     }
 
 

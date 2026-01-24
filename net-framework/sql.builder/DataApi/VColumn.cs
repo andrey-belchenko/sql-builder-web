@@ -257,51 +257,6 @@ namespace sql.builder.DataApi
             }
             return null;
         }
-        //public VRelation TypeRelation()
-        //{
-        //    var col = this;
-        //    while (col != null)
-        //    {
-        //        VQuery query = col.SourceQuery().FirstOrDefault();
-        //        if (query != null)
-        //        {
-        //            VEntityType et = query.EntityType;
-        //            VRelation rel = null;
-        //            if (et != null)
-        //            {
-        //                rel = et.ParentLink(col.XName);
-        //            }
-        //            if (rel != null)
-        //            {
-        //                return rel;
-        //            }
-        //            else
-        //            {
-        //                var col1 = col.SourceColumn().FirstOrDefault();
-        //                if (col1 is VColumn)
-        //                {
-        //                    if (col != col1)
-        //                    {
-        //                        col = (VColumn)col1;
-        //                    }
-        //                    else
-        //                    {
-        //                        col = null;
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    col = null;
-        //                }
-        //            }
-        //        }
-        //        else
-        //        {
-        //            col = null;
-        //        }
-        //    }
-        //    return null;
-        //}
         internal VQuery TypeQuery()
         {
             VRelation parentLink = this.TypeRelation();
@@ -516,26 +471,6 @@ namespace sql.builder.DataApi
             AddCashValue(s, MethodBase.GetCurrentMethod().ToString(), null);
             return s;
         }
-        //public override string XTitle()
-        //{
-        //        string s = GetAttrValue("title");
-        //        if (s == "")
-        //        {
-        //                VSXElement sourceColumn = SourceColumnNoCycle().FirstOrDefault();
-        //                if (sourceColumn != null)
-        //                {
-        //                    s= sourceColumn.XTitle();
-        //                }
-        //        }
-        //        if (s == "")
-        //        {
-        //            if (RootQuery() is VForm)
-        //            {
-        //                s = TypeTitle();
-        //            }
-        //        }
-        //        return s;
-        //}
         private bool IsUnderUsing()
         {
             VSXElement parent = this.GetParent();
@@ -1104,20 +1039,6 @@ namespace sql.builder.DataApi
             return true;
         }
         #endregion
-        //#region ParentFieldName
-        //public override bool P_ParentFieldName_Exists()
-        //{
-        //    return GetParent() is VOutputElement;
-        //}
-        //public override void P_ParentFieldName_ListRefresh(VDataTable table)
-        //{
-        //    table.Rows.Clear();
-        //    foreach (VSXElement el in TypeQuery().Columns())
-        //    {
-        //        table.Rows.Add(el.XName, el.XName);
-        //    }
-        //}
-        //#endregion
         #region Index
         public override bool P_Index_Exists()
         {

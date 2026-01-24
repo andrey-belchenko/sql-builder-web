@@ -131,61 +131,7 @@ namespace sql.builder.UI
 
         private void AddColumn(string columnName, string columnTitle, XElement xviewcolumn)
         {
-//            var tree = listEdit.GetList();
-//            var tcol = tree.CreateColumn();
-//            tree.AddColumnToView(null, tcol);
-//            //var tcol = treeWF.Columns.Add();
-//            tree.SetColumnFieldName(tcol, columnName);
-//            tree.SetColumnTitle(tcol, columnTitle);
-            
-
-//            if (columnName == "check")
-//            {
-//                tree.SetColumnFixedLeft(tcol);
-//               // tree.SetColumnVisible(tcol,true);
-               
-//            }
-//            if (xviewcolumn != null)
-//            {
-//                sql.builder.XmlHelpers.Parser.FillGridColumnFromXml(tree,tcol, null, xviewcolumn);
-//            }
-//            tree.SetColumnEditable(tcol, false);
-         
-
-//#if DX15
-//#else
-//            tree.SetColumnAutoFilterCondition_Contains(tcol);
-           
-//#endif
-
-
         }
-       
-//        private void AddColumn(string columnName, string columnTitle, XElement xviewcolumn)
-//        {
-//           var tcol= (listEdit as sql.builder.UI.WinForms.VListEdit).treeWFTmp.Columns.Add();
-
-//            //var tcol = treeWF.Columns.Add();
-//            tcol.FieldName = columnName;
-//            tcol.Caption = columnTitle;
-
-//            if (columnName == "check")
-//            {
-//                tcol.Fixed = FixedStyle.Left;
-//            }
-//            if (xviewcolumn != null)
-//            {
-//                sql.builder.XmlHelpers.Parser.FillTreeColumnFromXml(tcol, null, xviewcolumn);
-//            }
-//            tcol.OptionsColumn.AllowEdit = false;
-
-//#if DX15
-//#else
-//            tcol.OptionsFilter.AutoFilterCondition = AutoFilterCondition.BeginsWith;
-//#endif
-
-
-//        }
         protected override void InitControlList()
         {
             VDataTable dt = this.DataTableList;
@@ -270,22 +216,6 @@ namespace sql.builder.UI
             this.InitControl();
             this.BindData();
         }
-        //public void UpdateTreeView()
-        //{
-        //    if (Form.NoData) return;
-        //    tree.ForceInitialize();
-        //    // состояние потомков влияет на состояние родителей
-        //    if (AutoCheck)
-        //    {
-        //        foreach (TreeListNode node in tree.Nodes)
-        //        {
-        //            UpdateNodesStates(node);
-        //        }
-        //    }
-        //    if (SourceType == ReturnType.Array) UpdateCheckColumnWidth();
-        //    UpdateSelectedString();
-        //    if(Form.FormUseType == UIFormC.UseType.SchemeEditor) tree.ClearColumnsFilter();
-        //}
         private Tuple<object, string> foundSimpleValue = new Tuple<object, string>(null, string.Empty);
         public IEnumerable<string> GetSelectedValues(bool getNames)
         {
@@ -447,25 +377,6 @@ namespace sql.builder.UI
             } else {
                 height = 0;
             }
-            //listEdit.SetPopupHeight(height);
-            //if (popupContainerControl.Height < 60)// Может быть это и не нужно
-            //{
-            //    popupContainerControl.Height = 60;
-            //}
-            //if (SingleValue)
-            //{
-            //    if (table.RowCount > 1)
-            //    {
-            //        foreach (Control ctrl in tree.Parent.Controls.Cast<Control>().ToList())
-            //        {
-            //            if (ctrl != tree)
-            //            {
-            //                tree.Parent.Controls.Remove(ctrl);
-            //            }
-            //        }
-            //        table.RowCount = 1;
-            //    }
-            //}
         }
         /*private void ClosePopup()
         {
@@ -547,95 +458,8 @@ namespace sql.builder.UI
                 }
             }
         }*/
-        //public void ListItemSelected(object[] changedNodes)
-        //{
-        //    if (tree.FocusedNode == null || tree.FocusedNode is TreeListAutoFilterNode) return;
-        //    _need_get_data = false;
-        //    tree.PostEditor();
-        //    tree.BeginUpdate();
-        //    listEdit.BeginUpdate();
-        //    TreeListNode[] selected_nodes = null;
-        //    if (AutoCheck)
-        //    {
-        //        selected_nodes = tree.Selection.Cast<TreeListNode>().ToArray();
-        //        var visible_nodes = selected_nodes.Where(node => node.ParentNode == null || !selected_nodes.Contains(node.ParentNode)).Reverse();
-        //        selected_nodes = visible_nodes.ToArray();
-        //    }
-        //    else
-        //    {
-        //        selected_nodes = tree.Selection.Cast<TreeListNode>().Reverse().ToArray();
-        //    }
-        //    foreach (TreeListNode selected_node in selected_nodes)
-        //    {
-        //        CheckWithChilds(selected_node, (int)tree.FocusedNode["check"]);
-        //        if (AutoCheck) UpdateNodesStates(GetRootNode(selected_node), selected_node);
-        //    }
-        //    listEdit.EndUpdate();
-        //    tree.EndUpdate();
-        //    tree.EndCurrentEdit();
-        //    UpdateSelectedString();
-        //    //OnEditValueChanged(this, EventArgs.Empty);  // вроде не используется
-        //    _need_get_data = true;
-        //}
-        //private void popupContainerEdit_Popup(object sender, EventArgs e)
-        //{
-        //    SetFocusIfNeed();
-        //    if (!String.IsNullOrEmpty(ParentFieldName) && !ExpandAll)
-        //    {
-        //        ExpandCheckedNodes();
-        //    }
-        //    else if (ExpandAll)
-        //    {
-        //        tree.ExpandAll();
-        //    }
-        //    if (SourceType == ReturnType.Simple)
-        //    {
-        //        var cur_value = GetSimpleSourceValue();
-        //        if (cur_value == DBNull.Value) ClearFocus();
-        //        else
-        //        {
-        //            var node = tree.FindNodeByKeyID(cur_value);
-        //            if (node != null) tree.FocusedNode = node;
-        //            else ClearFocus();
-        //        }
-        //    }
-        //}
         public void SetFocusIfNeed()
         {
-            // Емцов - костыль для населенного пункта, если что переделать нормально
-            //var tree = (listEdit as sql.builder.UI.WinForms.VListEdit).treeWFTmp;
-            //if (_need_set_focus) {
-            //    _need_set_focus = false;
-            //    if (QueryName == "adr_m_list") {
-            //        object val = DBNull.Value;
-            //        //Если кода отделения нет, то для СК Казань делаем фокус на "Республика Татарстан"
-            //        if (XmlReports.customerId == "102") { // Ильина А. 27.10.2017
-            //            val = db.ExecuteDataTable("select kod_m_reg from rs_esys").Rows[0][0];
-            //        } else if (XmlReports.customerId == "17") { // у ленэнерго ks_zbd это view на k_zbd где колонки begin_kod_m нет :\
-            //            val = 31M; // СПб
-            //        } else {
-            //            object dep = XmlReports.GetGlobalParValue("dep");
-            //            if (!Cmn.IsNullOrDBNull(dep)) {
-            //                val = db.ExecuteDataTable("select max(begin_kod_m) from ks_zbd where kodp = " + dep).Rows[0][0];
-            //            }
-            //        }
-            //        if (val != DBNull.Value) {
-            //            decimal kod_m = Convert.ToDecimal(val);
-            //            var node = tree.FindNodeByKeyID(kod_m);
-            //            if (node != null) {
-            //                tree.FocusedNode = node;
-            //            }
-            //        }
-            //    } else {
-            //        // Борьба с багом - фокус ствится на первую запись из DataTable, которая не соответствует верхнему узлу дерева
-            //        if (ParentFieldName != null) {
-            //            tree.CollapseAll();
-            //            if (tree.Nodes.FirstNode != null) {
-            //                tree.FocusedNode = tree.Nodes.FirstNode;
-            //            }
-            //        }
-            //    }
-            //}
         }
         public void PopupContainerEdit_Closed()
         {
@@ -724,146 +548,6 @@ namespace sql.builder.UI
                 this.ClearSourceValues();
             }
         }
-        //private void popupContainerEdit_KeyDown(object sender, KeyEventArgs e) // пока оставил для repository
-        //{
-        //    if (e.KeyCode == Keys.Delete) {
-        //        this.PopupContainerEdit_DeleteValue();
-        //    }
-        //}
-        //private void popupContainerEdit_KeyPress(object sender, KeyPressEventArgs e)
-        //{
-        //    bool ctrl_pressed = ((Control.ModifierKeys & Keys.Control) == Keys.Control);
-        //    bool ctrl_v_pressed = (e.KeyChar == 22);
-        //    if (ctrl_pressed && !ctrl_v_pressed) return;
-
-        //    //if ((Keys)e.KeyChar == Keys.Back) return;
-
-        //    // режим readonly
-        //    var read_only = GetSourceReadOnly();
-        //    if (read_only) return;
-
-        //    if (_need_refresh && !_custom_buttons)// Временное решение - если _custom_buttons то список не обновляется. Пока нет , но может быть _custom_buttons и список- обработать такую ситуацию когда понадобится
-        //    {
-        //        tree.BeginUpdate();
-        //        ReloadDataLocal();
-        //        if (SourceType == ReturnType.Array) ReloadArrayEditValue();
-        //        tree.EndUpdate();
-        //        UpdateTreeView();
-        //    }
-
-        //    // важно взять колонку после refresh, иначе её AbsoluteIndex = -1 И ShowEditor не работает
-        //    var first_column = tree.VisibleColumns.Cast<TreeListColumn>().FirstOrDefault(col =>
-        //        // col.ColumnType == typeof(string) && 
-        //        col.FieldName == SearchFieldName);
-        //    if (first_column == null) return;
-
-        //    string text;
-        //    int pos = -1;
-        //    // отдельно обрабатываем ситуацию с нажатым ctrl+v
-        //    if (ctrl_v_pressed)
-        //    {
-        //        text = Clipboard.GetText();
-
-        //        var nodes = tree.Nodes.Where(n => n[first_column].ToString().StartsWith(text, StringComparison.CurrentCultureIgnoreCase));
-        //        // если найдено единственное соответствие, сразу устанавлваем его как выбранное
-        //        if (nodes.Count() == 1)
-        //        {
-        //            SingeValueSelect(nodes.First());
-        //            return;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (SourceType == ReturnType.Simple)
-        //        {
-        //            text = listEdit.GetText();// popupContainerEdit.Text;
-        //            if ((Keys) e.KeyChar == Keys.Back)
-        //            {
-        //                if (!string.IsNullOrEmpty(text))
-        //                {
-        //                    pos = (popupContainerEdit.SelectionStart > 0) ? popupContainerEdit.SelectionStart - 1 : 0;
-        //                    text = text.Substring(0, (popupContainerEdit.SelectionStart > 0) ? popupContainerEdit.SelectionStart - 1 : 0) +
-        //                           text.Substring(popupContainerEdit.SelectionStart + popupContainerEdit.SelectionLength, text.Length - (popupContainerEdit.SelectionStart + popupContainerEdit.SelectionLength));
-        //                }
-        //            }
-        //            else if (!Char.IsControl(e.KeyChar))
-        //            {
-        //                if (!string.IsNullOrEmpty(text))
-        //                {
-        //                    pos = popupContainerEdit.SelectionStart + 1;
-        //                    text = text.Substring(0, popupContainerEdit.SelectionStart) + 
-        //                           e.KeyChar.ToString() + 
-        //                           text.Substring(popupContainerEdit.SelectionStart + popupContainerEdit.SelectionLength, text.Length - (popupContainerEdit.SelectionStart + popupContainerEdit.SelectionLength));
-        //                }
-        //                else
-        //                {
-        //                    text = e.KeyChar.ToString();
-        //                }
-        //            }
-        //            else
-        //            {
-        //                // управляющий символ
-        //                return;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (!Char.IsControl(e.KeyChar))
-        //            {
-        //                text = e.KeyChar.ToString();
-        //            }
-        //            else
-        //            {
-        //                // управляющий символ
-        //                return;
-        //            }
-        //        }
-
-        //    }
-
-        //    (sender as PopupContainerEdit).ShowPopup();
-
-        //    //first_column.AbsoluteIndex = 0;
-        //    //tree.ForceInitialize();    
-        //    tree.FocusedNode = tree.Nodes.AutoFilterNode;
-        //    tree.FocusedColumn = first_column;
-        //    tree.FocusedNode[first_column] = text;
-        //    tree.ShowEditor();
-        //    //System.Threading.Thread.Sleep(1000);
-        //    var te = (tree.ActiveEditor as TextEdit);
-        //    if (te == null) return;
-
-        //    te.EditValue = text;
-        //    if (pos == -1) te.SelectionStart = text.Length;
-        //    else te.SelectionStart = pos;
-        //    te.SelectionLength = 0;
-
-        //    if(RowsLimit > 0) StartFiltering(null, null);
-        //}
-
-
-        //private void tree_BeforeFocusNode(object sender, BeforeFocusNodeEventArgs e)
-        //{
-        //    if (SourceType == ReturnType.Array)
-        //    {
-        //        if (Control.ModifierKeys == Keys.Control || Control.ModifierKeys == Keys.Shift) return;
-
-        //        var hitInfo = tree.CalcHitInfo(tree.PointToClient(Control.MousePosition));
-        //        if (hitInfo.Column != null && hitInfo.Column.FieldName == "check") return;
-
-        //        tree.Selection.Clear();
-        //    }
-        //}
-        //private void tree_GetNodeDisplayValue(object sender, GetNodeDisplayValueEventArgs e)
-        //{
-        //    if (e.Column.FieldName == NameFieldName)
-        //    {
-        //        if (e.Node != null)
-        //        {
-        //            e.Value = new string('\t', e.Node.Level) + e.Value;
-        //        }
-        //    }
-        //}
         public Color GetListCellColor(object rowId, string columnName) // временно. вместо этого нужно обсчитывать цвета заранее и отправлять контролу
         {
             DataTable dt = this.DataTableList;
@@ -881,24 +565,6 @@ namespace sql.builder.UI
             }
             return color;
         }
-        //private void tree_CustomDrawNodeCell(object sender, CustomDrawNodeCellEventArgs e)
-        //{
-        //    if (e.Node is TreeListAutoFilterNode) return;
-
-        //    if ((bool)e.Node["absent"]) e.Appearance.ForeColor = Color.DarkRed;
-        //    else if (UseType == UIFormC.UseType.SchemeEditor && FieldName == "Color")
-        //    {
-        //        e.Appearance.ForeColor = Cmn.GetColor(e.Node["rgb"].ToString());
-        //    }
-        //}
-        //private void tree_CellValueChanging(object sender, CellValueChangedEventArgs e) // вроде бы лишнее
-        //{
-        //    if (RowsLimit == 0 || e.Column.FieldName == "check" || !(e.Node is TreeListAutoFilterNode)) return;
-
-        //   StartFiltering(e.Column, e.Value);
-        //}
-
-        //bool _auto_filtering = true;
         public void ProcessFilter()
         {
             if (this.rows_limit > 0) {
@@ -917,42 +583,6 @@ namespace sql.builder.UI
         }
         private void StartFiltering(string column, object value)
         {
-            ////_auto_filtering = false;
-
-
-
-            ////if (timer.Enabled) timer.Stop();
-            ////timer.Start();
-
-            //FilterValues.Clear();
-
-            //var fvls = listEdit.GetFilterValues();
-            //foreach (var fv in fvls)
-            //{
-            //    if (fv.Key == "check") continue;
-
-            //    var val = (column != null && column == fv.Key) ? value : fv.Value;
-            //    if (val != null)
-            //    {
-            //        FilterValues.Add(fv.Key + "_filter", val.ToString());
-            //    }
-            //}
-
-            ////if (FilterValues.Any())
-            ////{
-
-            //if (!UIStatic.IsWeb())
-            //{
-            //    (listEdit as sql.builder.UI.WinForms.VListEdit).tmp_RestartTimer();
-            //}
-            //else
-            //{
-            //    listEdit_AutoFilterChanged();
-            //}
-
-            ////}
-
-            ////FilterValues.Add("current_column", e.Column.FieldName);
         }
         public bool IsServerFilter()
         {
@@ -973,34 +603,6 @@ namespace sql.builder.UI
                 }
             }
         }
-        ////Не работает и не нужно - убрал
-        //private void tree_DoubleClick(object sender, EventArgs e)
-        //{
-        //    if (Control.ModifierKeys == Keys.Control || Control.ModifierKeys == Keys.Shift) return;
-        //    var hitInfo = tree.CalcHitInfo(tree.PointToClient(Control.MousePosition));
-        //    if (hitInfo.Node == null || hitInfo.Node is TreeListAutoFilterNode) return;
-        //    if (SourceType == ReturnType.Array)
-        //    {
-        //        hitInfo.Node["check"] = hitInfo.Node["check"].Equals(1) ? 0 : 1;
-        //        ListItemSelected();
-        //    }
-        //}
-        //private void tree_Click(object sender, EventArgs e)
-        //{
-        //    var tree = sender as TreeList;
-        //    var info = tree.CalcHitInfo(tree.PointToClient(Control.MousePosition));
-        //    if (info.HitInfoType == HitInfoType.Cell)
-        //    {
-        //        SingeValueSelect(tree.FocusedNode);
-        //    }
-        //}
-        //private void tree_KeyDown(object sender, KeyEventArgs e)
-        //{
-        //    if (e.KeyCode == Keys.Enter)
-        //    {
-        //        SingeValueSelect(tree.FocusedNode);
-        //    }
-        //}
         private void processAutoFilter()
         {
             //listEdit.BeginUpdate();
@@ -1104,26 +706,6 @@ namespace sql.builder.UI
                EndUpdate();
                 UpdateTreeView();
             }
-
-            //// ??? важно взять колонку после refresh, иначе её AbsoluteIndex = -1 И ShowEditor не работает
-            //var first_column = tree.VisibleColumns.Cast<TreeListColumn>().FirstOrDefault(col =>
-            //    col.FieldName == GetSearchFieldName());
-            //if (first_column == null) return false;
-
-
-
-            //var nodes = tree.Nodes.Where(n => n[first_column].ToString().StartsWith(text, StringComparison.CurrentCultureIgnoreCase));
-
-            //if (nodes.Count() == 1)
-            //{
-            //    SingeValueSelect(nodes.First()[key_field_name]);
-            //    return true;
-            //}
-            //else
-            //{
-            //    return false;
-            //}
-
             return true;
         }
         public void SingeValueSelect(object id)
@@ -1145,85 +727,6 @@ namespace sql.builder.UI
                 //this.listEdit.Close_Popup();
             }
         }
-        //private TreeListNode GetRootNode(TreeListNode node)
-        //{
-        //    var root_node = node;
-        //    while (root_node.ParentNode != null)
-        //    {
-        //        root_node = root_node.ParentNode;
-        //    }
-        //    return root_node;
-        //}
-        //private IEnumerable<TreeListNode> GetAllNodes()
-        //{
-        //    return tree.Nodes.SelectMany(Cmn.GetNodeBranch);
-        //}
-        //private void CheckWithChilds(TreeListNode node, int state)
-        //{
-        //    node["check"] = state;
-        //    // Режим, когда чек родителя означает, что должны быть чекнуты все потомки
-        //    if (AutoCheck)
-        //    {
-        //        foreach (TreeListNode child_node in node.Nodes)
-        //        {
-        //            CheckWithChilds(child_node, state);
-        //        }
-        //    }
-        //}
-        //private void UpdateNodesStates(TreeListNode parent_node, TreeListNode border_node = null)
-        //{
-        //    // обходим дерево снизу вверх
-        //    if (border_node != null && !parent_node.Nodes.Contains(border_node))
-        //    {
-        //        foreach (TreeListNode child_node in parent_node.Nodes)
-        //        {
-        //            UpdateNodesStates(child_node, border_node);
-        //        }
-        //    }
-        //    if (parent_node.Nodes.Count == 0) return;
-        //    if (parent_node.Nodes.All(node => (int)node["check"] == 1))
-        //    {
-        //        if ((int)parent_node["check"] != 1) parent_node["check"] = 1;
-        //    }
-        //    else if (parent_node.Nodes.All(node => (int)node["check"] == 0))
-        //    {
-        //        if ((int)parent_node["check"] != 0) parent_node["check"] = 0;
-        //    }
-        //    else
-        //    {
-        //        if ((int)parent_node["check"] != -1) parent_node["check"] = -1;
-        //    }
-        //}
-        //private void ExpandCheckedNodes()
-        //{
-        //    tree.BeginUpdate();
-        //    HasCheckedChildren(tree.Nodes);
-        //    tree.MakeNodeVisible(tree.FocusedNode);
-        //    tree.EndUpdate();
-        //}
-        //private bool HasCheckedChildren(TreeListNodes nodes)
-        //{
-        //    bool has_checked_child = false;
-        //    bool any_checked = false;
-        //    foreach (TreeListNode node in nodes)
-        //    {
-        //        if (HasCheckedChildren(node.Nodes))
-        //        {
-        //            has_checked_child = true;
-        //        }
-        //        if (Convert.ToDecimal(node["check"]) == 1M)
-        //        {
-        //            any_checked = true;
-        //        }
-        //    }
-        //    if (has_checked_child) return true;
-        //    else if (any_checked)
-        //    {
-        //        tree.MakeNodeVisible(nodes[0]);
-        //        return true;
-        //    }
-        //    else return false;
-        //}
         #endregion
         #region Override
         public override void Initialize(XElement xfield, UIFormC form)
@@ -1293,20 +796,6 @@ namespace sql.builder.UI
                     {
                         RaiseChanged();
                     }
-                    //this.ArrayEditValue.ResumeChangeEvent();
-                    //UpdateBaseEditValue();
-                    //UpdateSimpleValueForArray();
-
-                    //this.ArrayEditValue.SuppressChangeEvent();
-                    //ClearSourceValues();
-                    //foreach (var row in DataTableDefault.AsEnumerable())
-                    //{
-                    //    var name = (row.ItemArray.Count() > 1 ? row[1].ToString() : row[0].ToString());
-                    //    SetSourceValue(new Tuple<object, string, bool>(row[0], name, true));
-                    //}
-                    //this.ArrayEditValue.ResumeChangeEvent();
-                    //UpdateBaseEditValue();
-
                 }
             } else if (this.mandatory && Form.DefaultParams == null) {
                 ReloadListData();
@@ -1339,44 +828,6 @@ namespace sql.builder.UI
             }
             return names.Distinct();
         }
-
-        //public override RepositoryItem GetRepositoryItem()
-        //{
-        //    var rep = new RepositoryItemPopupContainerEdit
-        //    {
-        //        CloseUpKey = KeyShortcut.Empty,
-        //        TextEditStyle = TextEditStyles.Standard,
-        //        AllowDropDownWhenReadOnly = DefaultBoolean.True,
-        //        ReadOnly = true,
-        //        UseReadOnlyAppearance = false
-        //    };
-        //    //rep.ButtonClick += popupContainerEdit_ButtonClick;
-        //    //rep.Buttons.Add(createWarningButton());
-        //    addRepositoryButtons(rep.Buttons);
-        //    //rep.Buttons[0].IsLeft = true;
-        //  //  rep.Popup += (listEdit as sql.builder.UI.WinForms.VListEdit).popupContainerEdit_Popup;
-        //    rep.QueryPopUp += rep_QueryPopUp;
-        //    rep.KeyDown += popupContainerEdit_KeyDown;
-        //    rep.KeyPress += rep_KeyPress;
-        //  //  rep.KeyPress += (listEdit as sql.builder.UI.WinForms.VListEdit).popupContainerEdit_KeyPress;
-
-        //    rep.Closed += (listEdit as sql.builder.UI.WinForms.VListEdit).popupContainerEdit_Closed;
-        //    rep.Tag = this;
-        //    // rep.ButtonsStyle = BorderStyles.NoBorder;
-        //    //_repository = rep;
-
-
-
-
-        //    return rep;
-        //}
-
-        //void rep_KeyPress(object sender, KeyPressEventArgs e)
-        //{
-        //    PopupContainerEdit_ComboButtonClick_pr();
-        //    (listEdit as sql.builder.UI.WinForms.VListEdit).popupContainerEdit_KeyPress(sender, e);
-        //}
-     
         void rep_QueryPopUp(object sender, CancelEventArgs e)
         {
             //if ((listEdit as sql.builder.UI.WinForms.VListEdit).currentEdit != (sender as PopupContainerEdit))
@@ -1431,17 +882,6 @@ namespace sql.builder.UI
         }
         protected override void SaveUserSettings()
         {
-            //this.UserSettings.Clear();
-            //int h = listEdit.GetPopupHeight();
-            //int w = listEdit.GetPopupWidth();
-            //if (h > 0 && w > 0) {
-            //    this.UserSettings.Add("popup_width", w);
-            //    this.UserSettings.Add("popup_height", h);
-            //}
-            //foreach (var cv in listEdit.GetList().GetColumnsWidth()) {
-            //    this.UserSettings.Add("colw_" + cv.Key, cv.Value);
-            //}
-            // tree.Columns.ForEach(col => UserSettings.Add("colw_" + col.FieldName, col.Width));
         }
         public override void SetError(string text, int index = 1)
         {
@@ -1474,22 +914,6 @@ namespace sql.builder.UI
         }
 
         #endregion
-
-        //private void BeginUpdate()
-        //{
-        //    treeWF.PostEditor();// можно ли всегда вызывать???
-        //    treeWF.BeginUpdate();
-        //    treeWF.LockReloadNodes();
-        //}
-
- 
-        //private void EndUpdate()
-        //{
-        //    treeWF.UnlockReloadNodes();
-        //    treeWF.EndUpdate();
-        //    treeWF.EndCurrentEdit();
-        //}
-
         protected override void BeginUpdate()
         {
             //listEdit.GetList().CloseEditor();
@@ -1534,29 +958,6 @@ namespace sql.builder.UI
         {
             return _hasCustomButtons;
         }
-        //public override void AddEditorButton(IVEditorButton btn, EditorButton btn_rep, ValueChangeEventHandler on_click)
-        //{
-        //    // var rep = (_repository ?? GetRepositoryItem()) as RepositoryItemPopupContainerEdit;
-        //    if (!_hasCustomButtons)
-        //    {
-        //        (listEdit as sql.builder.UI.WinForms.VListEdit).popupContainerEdit.Properties.Buttons.Clear();
-
-        //        _hasCustomButtons = true;
-
-        //        //popupContainerEdit.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-        //        //rep.TextEditStyle = TextEditStyles.DisableTextEditor;
-        //    }
-        //    base.AddEditorButton(btn, btn_rep, on_click);
-        //    //popupContainerEdit.Properties.Buttons.Add(btn);
-        //    //btn.Click += on_click;
-
-        //    //rep.Buttons.Add(btn_rep);
-        //    //// если кнопок несколько - не отличить по какой был клик!
-        //    //rep.Click += (sender, args) => (sender as Control).Tag = btn_rep.Tag;
-        //    //rep.Click += on_click;
-        //}
-       
-        
         /*private void popupContainerEdit_ButtonClick(object sender, ButtonPressedEventArgs e)// пока оставил для repository
         {
             //if (e.Button.Caption == "" && e.Button.Kind == ButtonPredefines.Combo)

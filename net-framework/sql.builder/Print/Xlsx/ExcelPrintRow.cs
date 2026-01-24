@@ -46,20 +46,6 @@ namespace sql.builder.Print.Xlsx
             if (this._varCellsNames == null) {
                 this._varCellsNames = new SortedList<string, string>();
                 foreach (IExcelPrintValue val in this._vals.Values) {
-                    //if (val.TableColumns.Count == 1) {
-                        //if (val.TableColumns.First().Value.Count == 1) {
-                        //    if (!this._varCellsNames.ContainsKey(val.TableColumns.First().Value[0])) {
-                        //        this._varCellsNames.Add(val.TableColumns.First().Value[0], new ExcelCellAddress(val.Cell.CellInfo.ColumnName, ""));
-                        //    }
-                        //}
-                    //     IList<string> column_names = val.TableColumns.Values[0];
-                    //     if (column_names.Count == 1) {
-                    //         string column_name = column_names[0];
-                    //         if (!this._varCellsNames.ContainsKey(column_name)) {
-                    //             this._varCellsNames.Add(column_name, val.Cell.CellInfo.ColumnName);
-                    //         }
-                    //     }
-                    //}
                     SingleExcelPrintValue single_val = val as SingleExcelPrintValue;
                     if (single_val != null) {
                         string column_name = single_val.ColumnName;

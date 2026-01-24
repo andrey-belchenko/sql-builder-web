@@ -153,29 +153,6 @@ namespace sql.builder
                         //  && !el.Ancestors("pivot").Any()
                     // колонки из подзапросов не берем
                           && el.Ancestors("query").First() == query);
-
-            //// TODO: использовать Compiler.getQueryColumnsSel, когда старый будет отключен
-            //// !!!Могут попасть лишние колонки из подзапроса query
-            //// список используемых колонок запроса с group = 1
-            //var query_cols_group = select.Descendants()
-            //    .Where(el => el.AttrOrDef("used", "") != "0"
-            //              && el.AttrOrDef("group", "") == "1"
-            //              // группировка под partition by не относится к запросу
-            //              && el.Parent.AttrOrDef("function", "") != "partition by"
-            //              // групировка под pivot не относится к запросу
-            //              && !el.Ancestors("pivot").Any()
-            //              // колонки из подзапросов не берем
-            //              && el.Ancestors("query").First() == query);
-            //// если нет колонок с группировкой - ничего делать не надо
-            //if (!query_cols_group.Any()) return;
-
-            //if (query.AttrOrDef("name", "") == "20498_cumulative")
-            //{
-            //}
-
-            //if (query_cols_group.First().AttrOrDef("column", "") == "kod_sbor_titul")
-            //{
-            //}
             if (query.Descendants("having").Any())
             {
                 
@@ -346,31 +323,6 @@ namespace sql.builder
                 qry.ReplaceWith(xtbl);
 
             }*/
-            // 2- часть сократила запрос еще на 80 строк, но исказился результат, странно, разобраться при необходимости
-
-            //foreach (XElement qry in elements.Descendants(TextConst.EName.Query).ToArray())
-            //{
-
-
-            //    if (qry.Elements(TextConst.EName.Select).Elements().Where(e => e.Name.LocalName!=TextConst.EName.Column).Any()) continue;
-
-            //    if (qry.Elements(TextConst.EName.Select).Elements().Where(e => e.Attribute(TextConst.AName.Group)!=null).Any()) continue;
-
-            //    var tnames=qry.Elements(TextConst.EName.Select).Elements().Select(e=>e.Attribute(TextConst.AName.Table).Value).Distinct().ToArray();
-            //    if (tnames.Count()!=1) continue;
-
-            //    if (qry.Elements(TextConst.EName.Select).Elements().Where(e => e.Attribute(TextConst.AName.Column).Value != e.Attribute(TextConst.AName.As).Value).Any()) continue;
-
-
-            //    var xcol = new XElement(TextConst.EName.Column);
-            //    xcol.SetAttributeValue(TextConst.AName.Table, tnames[0]);
-            //    xcol.SetAttributeValue(TextConst.AName.Column, "*");
-            //    qry.Elements(TextConst.EName.Select).Elements().Remove();
-            //    qry.Element(TextConst.EName.Select).Add(xcol);
-             
-
-            //}
-            
         }
 
         public static void CutIdentifiersTo30(XElement elements)

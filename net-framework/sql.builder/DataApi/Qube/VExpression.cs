@@ -96,24 +96,6 @@ namespace sql.builder.DataApi
             var parentExp = (VExpression)dimension.GetAncestorsAndSelf(EName.call).Last();
             return parentExp.GetFactColumns();
         }
-        //public void GetFactDimDependanceInfo(SortedList<string, VFact.FactDependantceInfo> infoList, List<string> conditions, List<string> outputDimensions, List<string> nonOutputDimensions)
-        //{
-        //    var list = new SortedList<string, VFact.FactDependantceInfo>();
-        //    var dims = GetDimensions();
-        //    var odims = outputDimensions.ToList();
-        //    foreach (VSXElement dim in dims)
-        //    {
-        //        if (!odims.Contains(dim.P_Table))
-        //        {
-        //            odims.Add(dim.P_Table);
-        //        }
-        //    }
-        //    var facts = GetFacts();
-        //    foreach (VFact fact in facts)
-        //    {
-        //        fact.GetFactDimDependanceInfo(infoList, conditions, odims, nonOutputDimensions);               
-        //    }
-        //}
         internal XElement BuildExpression(XElement factPars, SortedList<string, VFact.FactDependantceInfo> infoList, List<string> conditions, List<string> outputDimensions, List<string> nonOutputDimensions, SortedList<string, int> names)
         {
             XElement elExpr = new XElement(this.Name);
@@ -131,31 +113,6 @@ namespace sql.builder.DataApi
             BuildExpressionLevel(expr, elExpr, infoList, conditions, odims, nonOutputDimensions, names);
             return elExpr;
         }
-        //public SortedList<string, List<string>> GetFactDimDependanceInfo()
-        //{
-        //    var list = new SortedList<string, List<string>>();
-        //    var dims = GetDimensionsWithChilds();
-        //    var facts = GetFactColumns();
-        //    foreach (VSXElement fact in facts)
-        //    {
-        //        if (!list.ContainsKey(fact.P_Fact))
-        //        {
-        //            list.Add(fact.P_Fact, new List<string>());
-        //        }
-        //    }
-        //    foreach (VSXElement dim in dims)
-        //    {
-        //        var depFacts = GetDimensionDependentFacts(dim);
-        //        foreach (VSXElement fact in depFacts)
-        //        {
-        //            if (!list[fact.P_Fact].Contains(dim.P_Table))
-        //            {
-        //                list[fact.P_Fact].Add(dim.P_Table);
-        //            }
-        //        }
-        //    }
-        //    return list;
-        //}
         /*internal IList<string> GetCumulateDimensionsNames()
         {
             IList<VFact> facts = this.GetFacts();
@@ -172,17 +129,6 @@ namespace sql.builder.DataApi
             }
             return names;
         }*/
-        //public XElement BuildExpressionOld(XElement factPars, string pfx)
-        //{
-        //    var elExpr = new XElement(this.Name.LocalName);
-        //    var expr = VSXElement.Get(new XElement(this));
-        //    expr.VirtualParent = this.GetParent();
-        //    expr.environment = this.GetEnvironment();
-        //    VPart.ApplyParams(expr, factPars, expr.GetElementsApplyingParts(TextConst.EName.Params).FirstOrDefault());
-        //    Cmn.copyAttributes(expr, elExpr);
-        //    BuildExpressionLevel(expr, elExpr, pfx);
-        //    return elExpr;
-        //}
         internal IList<VParam> FormalParams()
         {
             IList<VSXElement> pars = this.GetElementsP(EName.@params);

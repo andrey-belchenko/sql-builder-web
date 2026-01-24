@@ -103,18 +103,6 @@ namespace sql.builder.DataApi
                 if (query.Element(EName.columns) != null) {
                     qryCall.Add(query.Elements(EName.columns));
                 }
-                //if (query.Elements(TextConst.EName.ViewColumns).Any()) //TextConst.EName.Columns  TextConst.EName.ViewColumns TextConst.EName.ColumnsPreset вроде все похоже по смыслу навести порядок
-                //{
-                //    qryCall.Add(new XElement(TextConst.EName.Columns));
-                //    qryCall.Element(TextConst.EName.Columns).Add(query.Elements(TextConst.EName.ViewColumns).Elements());
-                //}
-                //if (qryCall.Elements(TextConst.EName.Columns).Any())
-                //{
-                //    foreach (XElement col in qryCall.Elements(TextConst.EName.Columns).Descendants(TextConst.EName.Column))
-                //    {
-                //        col.SetAttributeValue(TextConst.AName.Table, "a");
-                //    }
-                //}
                 if (query.Element(EName.columnspreset) != null) {
                     qryCall.Add(query.Elements(EName.columnspreset));
                     foreach (XElement col in qryCall.Elements(EName.columnspreset).Descendants(EName.column)) {
@@ -295,19 +283,6 @@ namespace sql.builder.DataApi
                             arrayStorage.SetValues(arrVal, par_mode);
                             val1 = arrVal;
                             val = arrayStorage.GetSql();
-                            //// сохранение значений в бд
-                            //if (factParam.AttrOrDef(TextConst.AName.StoreInDB, "0") == "1")
-                            //{
-                            //    var arrayStorage = new ArrayStorage(par.Attribute("name").Value);
-                            //    //arrayStorage.Clear();
-                            //    object[] vals = factParam.Descendants("const").Select(e => (object)decimal.Parse(e.Value)).ToArray();
-                            //    arrayStorage.SetValues(vals);
-                            //    val = arrayStorage.GetSql();
-                            //}
-                            //else
-                            //{
-                            //    val = "(" + string.Join(",", factParam.Descendants("const").Select(e => e.Value)) + ")";   
-                            //}
                         } else if (dbPar.DbType == DbType.Decimal) {
                             val = Cmn.ToDecimal(factParam.Value);
                         } else {
@@ -675,100 +650,11 @@ namespace sql.builder.DataApi
                             table.DataAdapter.SelectCommand.CommandText = getQuerySelectText(compiledQuery, dataSet.UseTempTable);
                         }
                     }
-                    //XElement columns = null;
-                    //if (Compiler.getAttrValue(this, "editable") == "1")
-                    //{
-                    //    columns = getEditableColumns(compiledQuery);
-                    //}
-                    //if (columns != null)
-                    //{
-                    //    table.EditableOld = true;
-                    //    XElement keyColumn = columns.Elements().Where(e => Compiler.getAttrValue(e, "key") == "1").FirstOrDefault();
-                    //    List<XElement> listColumns = columns.Elements().ToList();
-                    //    string tableName = columns.Attribute("table").Value;
-                    //    //table.DataAdapter.UpdateCommand = getUpdateCommand(listColumns, keyColumn, tableName);
-                    //    //table.DataAdapter.InsertCommand = getInsertCommand(listColumns, keyColumn, tableName);
-                    //    //table.DataAdapter.DeleteCommand = getDeleteCommand(keyColumn, tableName);
-                    //    foreach (XElement col in columns.Elements())
-                    //    {
-                    //        VDataColumn dcol = (VDataColumn)table.Columns[col.Attribute("as").Value];
-                    //        if (col.Attribute("reference") != null)
-                    //        {
-                    //            dcol.ReferenceName = col.Attribute("reference").Value;
-                    //        }
-                    //        if (col.Attribute("refcol") != null)
-                    //        {
-                    //            dcol.ReferenceColumnName = col.Attribute("refcol").Value;
-                    //        }
-                    //        dcol.EditableOld = true;
-                    //        dcol.MakeAttributes();
-                    //    }
-                    //    table.EditableOld = true;
-                    //}
-                    //else
-                    //{
-                    //    table.EditableOld = false;
-                    //}
                     table.EditableOld = false;
                 }
             }
             return dataSet;
         }
-        // getDeleteCommand, getUpdateCommand ,getInsertCommand - методы  д быть переписаны в VForm
-        //, эти методы и вообще функционал в Vreport отвечающий за редатирование должны стать неактуальными
-        // public OracleCommand getDeleteCommand( XElement keyColumn,string tableName)
-        // {
-        //     OracleCommand cmd = new OracleCommand();
-        //     //XElement keyColumn = columns.Elements().Where(e => Compiler.getAttrValue(e, "key") == "1").FirstOrDefault();
-        //     OracleParameter par = cmd.Parameters.Add(":" + keyColumn.Attribute("as").Value, GetDBType(keyColumn.Attribute("type").Value));
-        //     par.SourceColumn = keyColumn.Attribute("as").Value;
-        //     cmd.CommandText = string.Format("delete from  {0}  where {1}={2}", tableName, keyColumn.Attribute("sourcecolumn").Value, ":" + keyColumn.Attribute("as").Value);
-        //     return cmd;
-        // }
-        // public OracleCommand getUpdateCommand(List<XElement> columns, XElement keyColumn, string tableName)
-        // {
-        //     OracleCommand cmd = new OracleCommand();
-        //     string cols = "";
-        ////     string pars = "";
-        //     string q="";
-        //     foreach (XElement col in columns)
-        //     {
-        //         cols += q + col.Attribute("sourcecolumn").Value+"=";
-        //         string parName=":"+ col.Attribute("as").Value;
-        //         cols += parName;
-        //         q=",";
-        //         OracleParameter par = cmd.Parameters.Add(parName, GetDBType(col.Attribute("type").Value));
-        //         par.SourceColumn = col.Attribute("as").Value;
-        //     }
-        //   //  XElement keyColumn=columns.Elements().Where(e=>Compiler.getAttrValue(e,"key")=="1").FirstOrDefault();
-        //     cmd.CommandText = string.Format("update {0} set {1} where {2}={3}", tableName, cols, keyColumn.Attribute("sourcecolumn").Value, ":" + keyColumn.Attribute("as").Value);
-        //     return cmd;
-        // }
-        // public OracleCommand getInsertCommand(List<XElement> columns, XElement keyColumn, string tableName)
-        // {
-        //     OracleCommand cmd = new OracleCommand();
-        //     string cols = "";
-        //     string pars = "";
-        //     string q = "";
-        //     OracleParameter keyPar=null;
-        //     //XElement keyColumn = columns.Elements().Where(e => Compiler.getAttrValue(e, "key") == "1").FirstOrDefault();
-        //     foreach (XElement col in columns)
-        //     {
-        //         cols += q + col.Attribute("sourcecolumn").Value;
-        //         string parName = ":" + col.Attribute("as").Value;
-        //         pars += q+parName;
-        //         q = ",";
-        //         OracleParameter par = cmd.Parameters.Add(parName, GetDBType(col.Attribute("type").Value));
-        //         par.SourceColumn = col.Attribute("as").Value;
-        //         if (col.Attribute("as").Value == keyColumn.Attribute("as").Value)
-        //         {
-        //             keyPar = par;
-        //         }
-        //     }
-        //     keyPar.Direction = ParameterDirection.InputOutput;
-        //     cmd.CommandText = string.Format("insert into {0} ({1}) values ({2}) returning {3} into {4}", tableName, cols, pars, keyPar.SourceColumn, ":" + keyPar.ParameterName);
-        //     return cmd;
-        // }
         internal static string GetStringType(OracleDbType type)
         {
             switch (type) {

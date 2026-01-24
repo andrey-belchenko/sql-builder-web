@@ -212,22 +212,6 @@ namespace sql.builder.UI
                 WaitUIHelper.LastUsedUIHelper.Hide();
             }
         }
-        //internal static object[] CreatePars(VForm vform)
-        //{
-        //    var parsList = new List<object>();
-        //    foreach (VParam par in vform.Params())
-        //    {
-        //        object val = null;
-        //        var cnst = par.GetElementsApplyingParts(TextConst.EName.Const).FirstOrDefault();
-        //        if (cnst != null)
-        //        {
-        //            val = cnst.GetRuntimeValue(null, null, null);
-        //        }
-        //        parsList.Add(val);
-        //    }
-        //    return parsList.ToArray();
-        //}
-
         internal static object[] CreatePars(XElement xpars)
         {
 

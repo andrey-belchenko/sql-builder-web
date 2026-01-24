@@ -24,18 +24,6 @@ namespace sql.builder.DataApi
 {
     internal partial class VDataSet : DataSet
     {
-        //public bool HasTitlesVariables = true;// тест
-        //public void UpdateTitles(VDataSet pars)
-        //{
-        //    if (!HasTitlesVariables) return;
-        //    foreach (VDataTable t in Tables)
-        //    {
-        //        foreach (VDataColumn col in t.Columns)
-        //        {
-        //            col.UpdateTitle(pars);
-        //        }
-        //    }
-        //}
         private bool _refreshed;
         private XElement _scheme;
         private List<VDataTable> _top_tables;
@@ -430,19 +418,6 @@ namespace sql.builder.DataApi
                                 ArrayStorage arrayStorage = new ArrayStorage(factParam.Attribute(AName.name).Value);
                                 arrayStorage.SetValues(arrVal);
                                 val = arrayStorage.GetSql();
-                                //// сохранение значений в бд
-                                //if (factParam.AttrOrDef(TextConst.AName.StoreInDB, "0") == "1")
-                                //{
-                                //    var arrayStorage = new ArrayStorage(factParam.Attribute("name").Value);
-                                //   // arrayStorage.Clear();
-                                //    arrayStorage.SetValues(factParam.Descendants("const").Select(e => (object)decimal.Parse(e.Value)).ToArray());
-                                //    val = arrayStorage.GetSql();
-                                //}
-                                //else
-                                //{
-                                //    val = ArrayParamXElementContentToString(factParam.Elements().First());
-                                //}
-                                //val = "(" + string.Join(",", factParam.Descendants("const").Select(e => e.Value)) + ")";
                             } else {
                                 if (dbPar.OracleDbType == OracleDbType.Date) {
                                     val = Cmn.ExtractDateFromOracleToDateString(factParam.Value);
@@ -682,26 +657,6 @@ namespace sql.builder.DataApi
                 }
 
             }
-
-
-            //foreach (XElement tbl in SchemeNative.Descendants("table").ToArray()) //Меняем обратно, чтобы не переписывать то, что ниже
-            //{
-
-            //    foreach (XElement col in tbl.Elements("viewcolumns").Descendants("column").Where(e => e.Attribute("dimension") != null).ToArray())
-            //    {
-            //        if (!dimNames[tbl.Attribute(TextConst.AName.As).Value].Contains(col.Attribute("dimension").Value))
-            //        {
-            //            dimNames[tbl.Attribute(TextConst.AName.As).Value].Add(col.Attribute("dimension").Value);
-            //        }
-            //        XElement newCol = new XElement(col);
-            //        newCol.SetAttributeValue("title", Cmn.GetAttrValue(col.Parent, "title"));
-            //        newCol.Attributes("dimension").Remove();
-            //        col.Parent.ReplaceWith(newCol);
-
-            //    }
-            //}
-
-
             foreach (XElement table in Scheme.Descendants("table"))
             {
                 XElement viewColumns = table.Element("viewcolumns");
@@ -1115,25 +1070,6 @@ namespace sql.builder.DataApi
             }
             return list.ToArray();
         }
-        //private string ArrayParamXElementContentToString(XElement factParamContent)
-        //{
-        //    string val = string.Join(",", factParamContent.DescendantsAndSelf("const").Select(e => e.Value));
-        //    if (Cmn.GetAttrValue(factParamContent, TextConst.AName.Function) != "sarray")
-        //    {
-        //        val = "(" + val + ")";
-        //    }
-        //    else
-        //    {
-        //        val = "'" + val + "'";
-        //    }
-        //    return val;
-        //}
-        //private string ArrayTableParamValueToString(VDataTable tbl)
-        //{
-        //    return ArrayParamXElementContentToString(
-        //        ArrayTableParamValueAsParamXelementContent(tbl)
-        //        );
-        //}
         private static object[] ArrayTableParamValueToObjectArray(DataTable tbl)
         {
             int count = tbl.Rows.Count;
@@ -1207,18 +1143,6 @@ namespace sql.builder.DataApi
                 return (col as VDataColumn).GetValue(row1);// row1[col];
             }
             return null;
-            //if (dbPar == null)
-            //{
-            //    dbPar = ((VDataSet)this.DataSet).GetParamAsOracleParametr(parName1);
-            //}
-            //if (dbPar.OracleDbType == OracleDbType.Array || Cmn.Nvl(dbPar.Value, "").ToString() == Cmn.undefinedString)
-            //{
-            //    command.CommandText = DataAdapter.SelectCommand.CommandText.Replace(":" + parName, dbPar.Value.ToString());
-            //}
-            //else
-            //{
-            //    command.Parameters.Add(dbPar);
-            //}
         }
         internal OracleParameter GetParamAsOracleParametr(string paramName)
         {
@@ -1624,22 +1548,6 @@ namespace sql.builder.DataApi
                 {
                     dt.Rows.Add(row);
                 }
-                ////вынес ключ arrayeditvalue в отдельную колонку, заплатка для совместимости со старыми сохраненными параметрами
-                //передумал
-                //if (dt.HasPrimaryKey())
-                //{
-                //    if (dt.PrimaryKey[0].ColumnName == "key")
-                //    {
-                //        if (Cmn.Nvl(row[dt.PrimaryKey[0]], "").ToString() == "")
-                //        {
-                //            if (dt.Columns.Contains("value"))
-                //            {
-                //                row[dt.PrimaryKey[0]] = row["value"];
-                //            }
-                //        }
-                //    }
-                //}
-                
             }
 
             //if (dt.StructureType == "table" && dt.TableName == "Table1" && dt.Rows.Count == 0)

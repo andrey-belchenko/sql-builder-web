@@ -56,18 +56,6 @@ namespace sql.builder.DataApi
         internal VForm GetProcessed()
         {
             return this;
-            //if (IsCashValueExists())
-            //{
-            //    return (GetCashValue() as VForm);
-            //}
-            //var frm = (VForm)VSXElement.Get(new XElement(this));
-            //frm.environment = this.environment;
-            //frm.VirtualParent = this.GetParent();
-            //foreach (VQueryCall link in AllSources().Where(e => e is VLink && e.P_ColumnEditable != ""))
-            //{
-            //}
-            //AddCashValue(frm);
-            //return frm;
         }
         // Емцов - попытка делать это асинхронно
         private static object lock_obj = new object();
@@ -93,36 +81,6 @@ namespace sql.builder.DataApi
             }
             return dataSet;
         }
-        //public Tuple<XElement, VDataSet> GetFormXelementAndDataSet()
-        //{
-        //    lock (lock_obj)
-        //    {
-        //        var xroot = CreateDataSetAndFormInfo();
-        //        var xds = xroot.Element(TextConst.DsEName.DataSet);
-        //        VDataSet dataSet = getDataSet(xds);
-        //        var xform = xroot.Element(TextConst.AName.Form);
-        //        return new Tuple<XElement, VDataSet>(xform, dataSet);
-        //    }
-        //}
-        //public VDataSet ProcessAndCreateDataSet()
-        //{
-        //    lock(lock_obj)
-        //    {
-        //        var frm = GetProcessed();
-        //        return frm.CreateDataSet();
-        //    }
-        //}
-        //private VDataSet CreateDataSet()
-        //{
-        //    var xds = CreateDataSetAndFormInfo();
-        //    VDataSet dataSet = CreateDataSetPre(xds);
-        //    foreach (var xtbl1 in xds.Elements(TextConst.EName.Table).ToArray())
-        //    {
-        //        var dataTable = dataSet.Tables[xtbl1.Attribute(TextConst.AName.Name).Value] as VDataTable;
-        //        createDataAtapter(dataTable, xtbl1);
-        //    }
-        //    return dataSet;
-        //}
         private static void AddParamTableToDataSet(XElement xds, VDataSet dataSet)
         {
             VDataTable tbl = new VDataTable(true);
@@ -151,43 +109,6 @@ namespace sql.builder.DataApi
             dataSet.ParamsTable.Rows.Add();
             dataSet.ParamsTable.CurrentRow = dataSet.ParamsTable.Rows[0];
         }
-        //private void AddParamTableToDataSet(VDataSet dataSet)
-        //{
-        //    VDataTable tbl = new VDataTable(true);
-        //    dataSet.Tables.Add(tbl);
-        //    dataSet.ParamsTable = tbl;
-        //    foreach (VSXElement fld in Fields())
-        //    {
-        //        //if (fld.P_ControlType != "UIList")
-        //        //{
-        //            Type valType = VDataSet.GetTypeFromStringType(fld.XDataType(), null);
-        //            var column = new VDataColumn(fld.P_FormalParNameS) { DataType = valType };
-        //            tbl.Columns.Add(column);
-        //        //}
-        //            if (fld.P_ColumnEditable != "")
-        //            {
-        //                column.ColumnEditableSource = fld.P_ColumnEditable;
-        //            }
-        //    }
-        //    dataSet.ParamsTable.Rows.Add();
-        //    dataSet.ParamsTable.CurrentRow = dataSet.ParamsTable.Rows[0];
-        //}
-        //public VDataSet CreateDataSetSelectorUse(VColumn column)// Вроде устаревший метод...
-        //{
-        //    var retTable = GetReturnTable();
-        //    VDataSet dataSet = new VDataSet();
-        //    AddParamTableToDataSet(dataSet);
-        //    dataSet.SchemeNative = VSXElement.Get(new XElement(TextConst.EName.SchemeNative));
-        //    var mainQuery = MainQueries().First();
-        //    var dataTable = createDataTable(MainQueries().First(), dataSet, column, retTable == mainQuery);
-        //    dataSet.AddTopTable(dataTable);
-        //    foreach (VELink elink in GetDescedantsApplyingParts(TextConst.EName.ELink))
-        //    {
-        //        dataTable = createDataTable(elink, dataSet, column, retTable == elink);
-        //    }
-        //    return dataSet;
-        //}
-        //перенести в dataTable
         private static void dataTableRowChanged(object sender, DataRowChangeEventArgs e)
         {
             var tbl = (e.Row.Table as VDataTable);
@@ -196,41 +117,7 @@ namespace sql.builder.DataApi
             if (e.Row.RowState == DataRowState.Added)
             {
                 tbl.ProcessNewRow(e.Row);
-                //if (e.Row[e.Row.Table.PrimaryKey[0]] == DBNull.Value)
-                //{
-                //    var ctu = tbl.CancelTempUpdate;
-                //    tbl.CancelTempUpdate = true;
-                //    e.Row[e.Row.Table.PrimaryKey[0]] = (e.Row.Table as VDataTable).KeyCounter;
-                //    e.Row[TextConst.AVColumn.IsNew] = 1;
-                //    e.Row[TextConst.AVColumn.IsNotNew] = 0;
-                //    tbl.KeyCounter--;
-                //    tbl.SetForeignKey(e.Row);
-                //    tbl.ApplyDefaultValues(e.Row);
-                //    tbl.CancelTempUpdate = ctu;
-                //    tbl.UpdateTempRow(e.Row);
-                //    tbl.RefreshCalulatedValues(e.Row);
-                //    tbl.UpdateValidation(e.Row);
-                //}
             }
-            //else
-            //{
-                //if (e.Row.RowState != DataRowState.Detached)
-                //{
-                //    int key = Convert.ToInt32(e.Row[e.Row.Table.PrimaryKey[0]]);
-                //    //if (tbl.KeyCounter < key)
-                //    //{
-                //    //    tbl.KeyCounter = key;
-                //    //}
-                //    //if (tbl.KeyCounter == 0)
-                //    //{
-                //    //    tbl.KeyCounter = -1;
-                //    //}
-                //    if (tbl.KeyCounter > key)
-                //    {
-                //        tbl.KeyCounter = key;
-                //    }
-                //}
-            //}
         }
         private static void createDataTable_SetBehavior(XElement xtbl, VDataSet dataSet,VDataTable dataTable)
         {
@@ -497,40 +384,6 @@ namespace sql.builder.DataApi
             {
                 dataCol.AddDependantProp(dataCol, propName);
             }
-            //switch (stype)
-            //{
-            //    case TextConst.EName.Query:
-            //        xcol.SetAttributeValue(TextConst.Pfx.BehaviorPropCol + propName, sval);
-            //        break;
-            //    case TextConst.EName.Column:
-            //        xcol.SetAttributeValue(propName, sval);
-            //        break;
-            //    case TextConst.EName.Param:
-            //        xcol.SetAttributeValue(TextConst.Pfx.BehaviorClient + propName, sval);
-            //        break;
-            //}
-            //if (dataCol.ColumnVisibleSource == null)
-            //{
-            //    bval = col.P_Visible;
-            //    if (bval != "")
-            //    {
-            //        dataCol.ClientVisibleSource = bval;
-            //        var masterCol = dataSet.GetVariableColumn(bval);
-            //        if (masterCol != null)
-            //        {
-            //            masterCol.AddDependantVisible(dataCol);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        bval = src.P_Visible;
-            //        if (bval != "")
-            //        {
-            //            dataCol.VisibleSource = bval;
-            //            dataTable.GetColumn(bval).AddDependantVisible(dataCol);
-            //        }
-            //    }
-            //}
         }
         private static List<XElement> GetCoreTableListFromCompiledQuery(XElement query, string tableName, bool isEditorMain, string keyDimension)
         {
@@ -679,33 +532,6 @@ namespace sql.builder.DataApi
                 }
             }
         }
-        //private void setUpdateable(VDataTable table, VQueryCall queryCall, List<VColumn> columns)
-        //{
-        //    var allColumns = columns;
-        //    var updateableColumns = GetUpdateableColumns( queryCall, columns);
-        //    var updateableColumnsExt = GetUpdateableColumnsExt(table, queryCall, columns);
-        //    foreach (VColumn col in updateableColumns)
-        //    {
-        //        var dataCol = table.GetColumn(col.XName);
-        //        dataCol.IsUpdateable = true;
-        //        //if (dataCol.ColumnName== "result_kod_post")
-        //        //{
-        //        //}
-        //    }
-        //    SortedList<string, int> typesInd = new SortedList<string, int>();
-        //    foreach (VColumn col in updateableColumnsExt)
-        //    {
-        //        string tpr = Compiler.getTyprPr(col.XDataType());
-        //        if (!typesInd.ContainsKey(tpr))
-        //        {
-        //            typesInd.Add(tpr, 0);
-        //        }
-        //        typesInd[tpr]++;
-        //        var dataCol = table.GetColumn(col.XName);
-        //        dataCol.TempColumnName = tpr + typesInd[tpr].ToString();
-        //        dataCol.DbColumnName = col.SourceColumn().First().XName;
-        //    }
-        //}
         private XElement GetCompiledQuery(XElement qry, string cashId)
         {
             string method_name = MethodBase.GetCurrentMethod().ToString();
@@ -808,76 +634,6 @@ namespace sql.builder.DataApi
                     curDataCol.ColumnEditableSource = TextConst.AVBool.False;
                 }
             }
-            //foreach (VColumn col in refreshedColumns)
-            //{
-            //    var curDataCol = (VDataColumn)table.Columns[col.XName];
-            //    if (curDataCol.DependantsText != null)
-            //    {
-            //        var depCol = (VDataColumn)table.Columns[curDataCol.DependantsText[0]];
-            //        if (!depCol.IsUpdateable &&  depCol.ColumnEditableSource != TextConst.AVBool.False)
-            //        {
-            //            var typeQ = col.TypeQuery();
-            //            if (typeQ != null)
-            //            {
-            //                var xquery = typeQ.CreateNameByKeyQuery();
-            //            }
-            //        }
-            //    }
-            //}
-            //var updatebleColumns = GetUpdateableColumns(queryCall, columns);
-            //var refreshedColumns = GetRefreshedColumns(queryCall, columns);
-            //var keyColumn = updatebleColumns.Where(e => e.IsKey).FirstOrDefault();
-            ////pars = getOracleParams(updatebleColumns).ToArray();
-            //VColumn keySource = (keyColumn.SourceColumn().First() as VColumn);
-            //string tableName = keySource.Source().Attribute(TextConst.AName.Name).Value;
-            ////XElement qry = createTableQuery(queryCall, columns, false);
-            //XElement preCompiledQuery = GetCompiledQuery(qry, queryCall.XName);
-            //var singleRowQuery = new XElement(qry);
-            //var singleRowPreCompiledQuery = new XElement(preCompiledQuery);
-            //string keyParName = keyColumn.XName + TextConst.Pfx.PrimaryKeyParam;
-            //XElement xKeyPar;
-            //xKeyPar = new XElement(TextConst.EName.Param);
-            //xKeyPar.SetAttributeValue(TextConst.AName.Name, keyParName);
-            //xKeyPar.SetAttributeValue(TextConst.AName.DataType, TextConst.AVType.Number);
-            ////if (singleRowQuery.Element(TextConst.EName.Params) == null)
-            ////{
-            ////    singleRowQuery.AddFirst(new XElement(TextConst.EName.Params));
-            ////}
-            ////singleRowQuery.Element(TextConst.EName.Params).Add(xKeyPar);
-            ////  //XElement xpar = new XElement(xKeyPar);
-            ////  //if (singleRowQuery.Element(TextConst.EName.Params) == null)
-            ////  //{
-            ////  //    singleRowQuery.AddFirst(new XElement(TextConst.EName.Params));
-            ////  //}
-            ////  //singleRowQuery.Element(TextConst.EName.Params).Add(xpar);
-            //XElement xpar;
-            ////  xpar = new XElement(TextConst.EName.Param);
-            ////  xpar.SetAttributeValue(TextConst.AName.Name, TextConst.DBParams.IsNewRowParam);
-            ////  xpar.SetAttributeValue(TextConst.AName.DataType, TextConst.AVType.Number);
-            ////  singleRowQuery.Element(TextConst.EName.Params).Add(xpar);
-            ////  xpar = new XElement(TextConst.EName.Param);
-            ////  xpar.SetAttributeValue(TextConst.AName.Name, TextConst.DBParams.FormId);
-            ////  xpar.SetAttributeValue(TextConst.AName.DataType, TextConst.AVType.Number);
-            ////  singleRowQuery.Element(TextConst.EName.Params).Add(xpar);
-            ////  xpar = new XElement(TextConst.EName.Param);
-            ////  xpar.SetAttributeValue(TextConst.AName.Name, TextConst.DBParams.TempRowId);
-            ////  xpar.SetAttributeValue(TextConst.AName.DataType, TextConst.AVType.Number);
-            ////  singleRowQuery.Element(TextConst.EName.Params).Add(xpar);
-            ////  singleRowQuery.Elements(TextConst.EName.Where).Remove();
-            ////  singleRowQuery.Elements(TextConst.EName.Having).Remove();
-            ////  VReport.PreprocessSimpleParams(singleRowQuery);
-            //  var keyDimension = queryCall.Query().KeyDimension().P_KeyDimension;
-            ////  ChangeQueryTableForUsingTemp(singleRowPreCompiledQuery, tableName, table, null, true, keyParName, keyDimension);
-            ////  foreach (VDataTable tbl in table.DataSet.Tables)
-            ////  {
-            ////      if (!string.IsNullOrEmpty(tbl.UpdateableTableName))
-            ////      {
-            ////          // var otherQueryCall = queryCalls[tbl.TableName];
-            ////          ChangeQueryTableForUsingTemp(singleRowPreCompiledQuery, tbl.UpdateableTableName, tbl, null, false, null, keyDimension);
-            ////      }
-            ////  }
-            ////var singleRowCompiledQuery = Compiler.FinalProcessingQuery(singleRowPreCompiledQuery);
-            ////table.SingleRowRefreshCommand = new VDBSelectCommand(singleRowQuery, singleRowCompiledQuery);
             XElement xml = ReadAttrAsElem(xtable, EName.single_row_refresh_cmd);
             if (xml != null)
             {
@@ -909,55 +665,6 @@ namespace sql.builder.DataApi
                     dataCol.ValueResetCommand = VDBSelectCommand.FromXml(xml);
                 }
             }
-            //foreach (VColumn col in refreshedColumns)
-            //{
-            //    XElement colValQuery = createTableQueryForSpcifiedColumn(col, keyColumn);
-            //     xpar = new XElement(xKeyPar);
-            //    if (colValQuery.Element(TextConst.EName.Params) == null)
-            //    {
-            //        colValQuery.AddFirst(new XElement(TextConst.EName.Params));
-            //    }
-            //    colValQuery.Element(TextConst.EName.Params).Add(xpar);
-            //    xpar = new XElement(TextConst.EName.Param);
-            //    xpar.SetAttributeValue(TextConst.AName.Name, TextConst.DBParams.IsNewRowParam);
-            //    xpar.SetAttributeValue(TextConst.AName.DataType, TextConst.AVType.Number);
-            //    colValQuery.Element(TextConst.EName.Params).Add(xpar);
-            //    xpar = new XElement(TextConst.EName.Param);
-            //    xpar.SetAttributeValue(TextConst.AName.Name, TextConst.DBParams.FormId);
-            //    xpar.SetAttributeValue(TextConst.AName.DataType, TextConst.AVType.Number);
-            //    colValQuery.Element(TextConst.EName.Params).Add(xpar);
-            //    xpar = new XElement(TextConst.EName.Param);
-            //    xpar.SetAttributeValue(TextConst.AName.Name, TextConst.DBParams.TempRowId);
-            //    xpar.SetAttributeValue(TextConst.AName.DataType, TextConst.AVType.Number);
-            //    colValQuery.Element(TextConst.EName.Params).Add(xpar);
-            //    colValQuery.Elements(TextConst.EName.Where).Remove();
-            //    colValQuery.Elements(TextConst.EName.Having).Remove();
-            //    VReport.PreprocessSimpleParams(colValQuery);
-            //    XElement compiledColValQuery = GetCompiledQuery(colValQuery, queryCall.XName + "-" + col.XName);
-            //    var curDataCol = (VDataColumn)table.Columns[col.XName];
-            //    ChangeQueryTableForUsingTemp(compiledColValQuery, tableName, table, curDataCol, true, keyParName, keyDimension);
-            //    foreach (VDataTable tbl in table.DataSet.Tables)
-            //    {
-            //        if (!string.IsNullOrEmpty(tbl.UpdateableTableName))
-            //        {
-            //           // var otherQueryCall = queryCalls[tbl.TableName];
-            //            ChangeQueryTableForUsingTemp(compiledColValQuery, tbl.UpdateableTableName, tbl, curDataCol, false, null, keyDimension);
-            //        }
-            //    }
-            //    compiledColValQuery = Compiler.FinalProcessingQuery(compiledColValQuery);
-            //    var cmd = new VDBSelectCommand(colValQuery, compiledColValQuery);
-            //    curDataCol.ValueRefreshCommand = cmd;
-            //}
-            //foreach (VColumn col in updatebleColumns)
-            //{
-            //    var defaultExpr = (col.SourceColumn().First() as VColumn).DefaultExpression();
-            //    if (defaultExpr != null)
-            //    {
-            //        var curDataCol = (VDataColumn)table.Columns[col.XName];
-            //        var cmd = GenerateCommandForExpression(queryCall, keyColumn, defaultExpr, col.GetParent(), allColumns);
-            //        curDataCol.DefaultValueCommand = cmd;
-            //    }
-            //}
         }
         public static void ChangeQueryTableForUsingTemp(XElement compiledQuery, string tableName, VDataTable table, VDataColumn curDataCol, bool isEditorMain, string keyParNameIn, string keyDimension, bool nativeOnly=false,string dbKeyName=null,string subKeyParName=null,string subTempRowIdCol=null)
         {
@@ -1104,41 +811,6 @@ namespace sql.builder.DataApi
                 string newTextReal = "";
                 string newTextDual = "";
                 string newTextMix = "";
-                //foreach (XElement xcol in xcols)
-                //{
-                //    string colName=xcol.Attribute(TextConst.AName.Column).Value;
-                //    VSXElement vparentCol = allColumns.Where(e => e.P_Column == colName).FirstOrDefault();
-                //    bool usePar = false;
-                //    if (vparentCol != null)
-                //    {
-                //        string curValParName = vparentCol.XName + TextConst.Pfx.CurValParam;
-                //        newTextDual += q + TextConst.Pfx.Param + curValParName;
-                //        usePar = true;
-                //    }
-                //    if (!usePar)
-                //    {
-                //        newTextDual += q + "null";
-                //    }
-                //    var v = VSourcedElement.GetSysColDefaultValue(colName);
-                //    if (v == null)
-                //    {
-                //        v = colName;
-                //    }
-                //    else
-                //    {
-                //    }
-                //    newTextReal += q  +v+" as  "+colName;
-                //    q = ",";
-                //}
-                //newText += "(select ";
-                //newText += newTextReal;
-                //newText += "  from ";
-                //newText += tableName;
-                //newText += " where " + keySource.P_Column + "=" + TextConst.Pfx.Param + keyParName + " and " + TextConst.Pfx.Param + TextConst.DBParams.IsNewRowParam + "=0 ";
-                //newText += " union select ";
-                //newText += newTextDual;
-                //newText += " from dual where "  +TextConst.Pfx.Param+TextConst.DBParams.IsNewRowParam+ "=1)";
-                //var newText1 = newText;
                 string newTextNative = "";
                 string aliasOrig = "a";
                 string aliasTemp = "t";
@@ -1212,21 +884,6 @@ namespace sql.builder.DataApi
                             }
                             vDual = "null";
                         }
-                        //if (vReal == null)
-                        //{
-                        //string vMix = "";
-                        //if (prKeyCol.DbColumnName!=colName && vNative != vReal)
-                        //{
-                        //    vMix = string.Format("(case when ({0}) then {1} else {2} end)"
-                        //        , aliasTemp + "." + TextConst.DBObjects.TempTableTableIdColumn + " is not null" 
-                        //        , vReal
-                        //        , vNative
-                        //        );
-                        //}
-                        //else
-                        //{
-                        //    vMix = vNative;
-                        //}
                         string vMix = string.Format("(case when ({0}) then {1} else {2} end)",
                                 aliasTemp + "." + TextConst.DBObjects.TempTableTableIdColumn + " is not null",
                                 vReal,
@@ -1250,97 +907,6 @@ namespace sql.builder.DataApi
                     }
                 }
                 newText += "(";
-                //    newText += "select ";
-                //    newText += newTextNative;
-                //    newText += "  from ";
-                //    newText += tableName + " " + aliasOrig;
-                //    newText += " where not exists (select * from " + TextConst.DBObjects.TempTable + " " + aliasTemp;
-                //newText += " where " + aliasOrig + "." + prKeyCol.DbColumnName + "=" + aliasTemp + "." + TextConst.DBObjects.TempTableRowIdColumn;
-                //    newText += " and " + aliasTemp + "." + TextConst.DBObjects.TempTableTableIdColumn + " ='" + table.TableName + "'";
-                //    newText += " and " + aliasTemp + "." + TextConst.DBObjects.TempTableFormIdColumn + "=" + TextConst.Pfx.Param + TextConst.DBParams.FormId;
-                //        newText += " and " + aliasTemp + "." + TextConst.DBObjects.TempTableStateColumn + "!=1";
-                //newText += ")";
-                //if (keyParName != null)
-                //{
-                //    newText += " and  " + aliasOrig + "." + prKeyCol.DbColumnName + "=" + TextConst.Pfx.Param + keyParName;// 
-                //}
-                //    newText += " union all ";
-                //#region v2
-                //if (!table.NewRowsVisForOtherTbls || !(Cmn.GetAttrValue(xtable, TextConst.AName.NewRowsVisForOtherTbls) == TextConst.AVBool.True))
-                //{
-                //    newText += "select ";
-                //    //newText += newTextReal;
-                //    newText += newTextMix;
-                //    newText += "  from ";
-                //    newText += tableName + " " + aliasOrig;
-                //    // newText += "(select * from " + tableName + " union all select * from " + tableName  +"_tmp1 )" + aliasOrig;
-                //    //newText += " inner  join " + TextConst.DBObjects.TempTable + " " + aliasTemp + " on ";
-                //    newText += " left outer  join " + TextConst.DBObjects.TempTable + " " + aliasTemp + " on ";
-                //    newText += "(" + aliasOrig + "." + prKeyCol.DbColumnName + "=" + aliasTemp + "." + TextConst.DBObjects.TempTableRowIdColumn;
-                //    //if (keyParName == null)
-                //    //{
-                //    newText += " and " + aliasTemp + "." + TextConst.DBObjects.TempTableStateColumn + "!=1";
-                //    //}
-                //    newText += " and " + aliasTemp + "." + TextConst.DBObjects.TempTableTableIdColumn + " ='" + tableAlias + "'";
-                //    newText += " and " + aliasTemp + "." + TextConst.DBObjects.TempTableFormIdColumn + "=" + TextConst.Pfx.Param + TextConst.DBParams.FormId;
-                //    newText += ")";
-                //    if (keyParName != null)
-                //    {
-                //        newText += " where ";
-                //        newText += "  " + aliasOrig + "." + prKeyCol.DbColumnName + "=" + TextConst.Pfx.Param + keyParName;// 
-                //        newText += " and " + TextConst.Pfx.Param + TextConst.DBParams.IsNewRowParam + "=0 ";
-                //    }
-                //    if (keyParName != null)
-                //    {
-                //        newText += "  union all ";
-                //    }
-                //}
-                //if (keyParName != null || (table.NewRowsVisForOtherTbls && Cmn.GetAttrValue(xtable,TextConst.AName.NewRowsVisForOtherTbls)==TextConst.AVBool.True))
-                //{
-                //    newText += " select ";
-                //    newText += newTextDual;
-                //    //newText += " from dual  where " + TextConst.Pfx.Param + TextConst.DBParams.IsNewRowParam + "=1)";
-                //    newText += "  from ";
-                //    newText += TextConst.DBObjects.TempTable + " " + aliasTemp;
-                //    newText += " where " + aliasTemp + "." + TextConst.DBObjects.TempTableTableIdColumn + " ='" + tableAlias + "'";
-                //    newText += " and " + aliasTemp + "." + TextConst.DBObjects.TempTableFormIdColumn + "=" + TextConst.Pfx.Param + TextConst.DBParams.FormId;
-                //    if (keyParName != null)
-                //    {
-                //        newText += " and " + aliasTemp + "." + TextConst.DBObjects.TempTableRowIdColumn + "=" + TextConst.Pfx.Param + TextConst.DBParams.TempRowId;// 
-                //        newText += " and " + TextConst.Pfx.Param + TextConst.DBParams.IsNewRowParam + "=1 ";
-                //    }
-                //    else
-                //    {
-                //        newText += " and " + aliasTemp + "." + TextConst.DBObjects.TempTableStateColumn + "=1 ";
-                //    }
-                //}
-                //#endregion
-                //string join=" left outer ";
-                //if (table.NewRowsVisForOtherTbls || keyParName != null)
-                //{
-                //    join = " full outer ";
-                //}
-                //var ttbl = "(select * from ";
-                //ttbl += TextConst.DBObjects.TempTable + " " + aliasTemp + " where ";
-                ////  ttbl +=   aliasTemp + "." + TextConst.DBObjects.TempTableStateColumn + "!=3";
-                //ttbl += aliasTemp + "." + TextConst.DBObjects.TempTableTableIdColumn + " ='" + tableAlias + "'";
-                //ttbl += " and " + aliasTemp + "." + TextConst.DBObjects.TempTableFormIdColumn + "=" + TextConst.Pfx.Param + TextConst.DBParams.FormId;
-                //ttbl += ")";
-                //newText += "select ";
-                //newText += newTextMix;
-                //newText += "  from ";
-                //newText += tableName + " " + aliasOrig;
-                //newText += join + " join " + ttbl + " " + aliasTemp + " on ";
-                //newText += "(" + aliasOrig + "." + prKeyCol.DbColumnName + "=" + aliasTemp + "." + TextConst.DBObjects.TempTableRowIdColumn;
-                //newText += ")";
-                //if (keyParName != null)
-                //{
-                //    newText += " where ";
-                //    newText += "  "   + mixKeyExpr + "=" + TextConst.Pfx.Param + keyParName;// 
-                //   // newText += " and " + TextConst.Pfx.Param + TextConst.DBParams.IsNewRowParam + "=0 ";
-                //}
-                //if (keyParName != null || !(Cmn.GetAttrValue(xtable, TextConst.AName.NewRowsVisForOtherTbls) == TextConst.AVBool.True))
-                //{
                 if (keyParName != null || xtable.AttrOrDefault(_AName.is_from_temp, string.Empty) == TextConst.AVBool.False)
                 {
                     newText += "select ";
@@ -1359,18 +925,6 @@ namespace sql.builder.DataApi
                         newText += aliasOrig + "." + dbKeyName + "=" + aliasTemp + "." + subTempRowIdCol;
                         newText += " )";
                     }
-                    // newText += "(select * from " + tableName + " union all select * from " + tableName  +"_tmp1 )" + aliasOrig;
-                    //newText += " inner  join " + TextConst.DBObjects.TempTable + " " + aliasTemp + " on ";
-                    /////////////////
-                    //newText += " left outer  join " + TextConst.DBObjects.TempTable + " " + aliasTemp + " on ";
-                    //newText += "(" + aliasOrig + "." + prKeyCol.DbColumnName + "=" + aliasTemp + "." + TextConst.DBObjects.TempTableRowIdColumn;
-                    ////if (keyParName == null)
-                    ////{
-                    //newText += " and " + aliasTemp + "." + TextConst.DBObjects.TempTableStateColumn + "!=1";
-                    ////}
-                    //newText += " and " + aliasTemp + "." + TextConst.DBObjects.TempTableTableIdColumn + " ='" + tableAlias + "'";
-                    //newText += " and " + aliasTemp + "." + TextConst.DBObjects.TempTableFormIdColumn + "=" + TextConst.Pfx.Param + TextConst.DBParams.FormId;
-                    //newText += ")";
                     if (keyParName != null)
                     {
                         if (!nativeOnly)
@@ -1440,98 +994,6 @@ namespace sql.builder.DataApi
             }
             return originalParams;
         }
-        //private XElement extendTableQueryForSelection(VQueryCall queryCall, XElement query, VColumn column, XElement keyColumn)
-        //{
-        //    var columnQuery = (column.RootQuery() as VForm).createTableQueryForSpcifiedColumn(column);
-        //    query.Elements(TextConst.EName.Params).Remove();
-        //    query.AddFirst(
-        //    CreateTableQueryParamsExtendedForSelection(queryCall, column)
-        //    );
-        //    //if (query.Element(TextConst.EName.Params) == null)
-        //    //{
-        //    //    query.AddFirst(columnQuery.Elements(TextConst.EName.Params));
-        //    //}
-        //    //else
-        //    //{
-        //    //    query.Element(TextConst.EName.Params).Add(columnQuery.Elements(TextConst.EName.Params).Elements());
-        //    //}
-        //    columnQuery.Elements(TextConst.EName.Params).Remove();
-        //    XElement originalQuery = new XElement(query);
-        //    XElement originalColumnQuery = new XElement(columnQuery);
-        //    columnQuery.SetAttributeValue(TextConst.AName.As, TextConst.SpecCols.Check);
-        //    columnQuery.SetAttributeValue(TextConst.AName.Join, TextConst.AVJoin.LeftOuter);
-        //    var xcall = new XElement(TextConst.EName.Call);
-        //    xcall.SetAttributeValue(TextConst.AName.Function, TextConst.AVFunc.Equal);
-        //    var xcol = new XElement(keyColumn);
-        //    xcall.Add(xcol);
-        //    xcol = new XElement(TextConst.EName.Column);
-        //    xcol.SetAttributeValue(TextConst.AName.Table, TextConst.SpecCols.Check);
-        //    xcol.SetAttributeValue(TextConst.AName.Column, column.XName);
-        //    xcall.Add(xcol);
-        //    columnQuery.Add(xcall);
-        //    xcol = new XElement(TextConst.EName.Column);
-        //    xcol.SetAttributeValue(TextConst.AName.Table, TextConst.SpecCols.Check);
-        //    xcol.SetAttributeValue(TextConst.AName.Column, column.XName);
-        //    xcall = new XElement(TextConst.EName.Call);
-        //    xcall.SetAttributeValue(TextConst.AName.Function, TextConst.AVFunc.IsNotNull);
-        //    xcall.Add(new XElement(xcol));
-        //    var xif = new XElement(TextConst.EName.Call);
-        //    xif.SetAttributeValue(TextConst.AName.Function, TextConst.AVFunc.If);
-        //    if (query.Elements(TextConst.EName.Select).Elements().Where(e => e.Attribute(TextConst.AName.Group) != null).Any())
-        //    {
-        //        xif.SetAttributeValue(TextConst.AName.Group, TextConst.AVGroup.Max);
-        //    }
-        //    xif.SetAttributeValue(TextConst.AName.As, TextConst.SpecCols.Check);
-        //    xif.Add(xcall);
-        //    xif.Add(new XElement(TextConst.EName.Const, new XText("1")));
-        //    xif.Add(new XElement(TextConst.EName.Const, new XText("0")));
-        //    query.Element(TextConst.EName.Select).AddFirst(xif);
-        //    query.Element(TextConst.EName.From).Add(columnQuery);
-        //    XElement fromQuery = originalQuery.Elements(TextConst.EName.From).Elements().First();
-        //    if (fromQuery.Attribute(TextConst.AName.As).Value != queryCall.XName)//вывернутый запрос с кубом , для остальных вариантов доделать
-        //    {
-        //        fromQuery.Elements(TextConst.EName.ExtendLinks).Remove();
-        //        fromQuery.Element(TextConst.EName.ExtendWhere).Elements().Remove();
-        //        xcall = new XElement(TextConst.EName.Call);
-        //        xcall.SetAttributeValue(TextConst.AName.Function, TextConst.AVFunc.In);
-        //        xcol = new XElement(TextConst.EName.Column);
-        //        xcol.SetAttributeValue(TextConst.AName.Table, fromQuery.Element(TextConst.EName.Link).Attribute(TextConst.AName.Name).Value);
-        //        xcol.SetAttributeValue(TextConst.AName.Column, column.XName);
-        //        xcall.Add(xcol);
-        //        xcall.Add(originalColumnQuery);
-        //        fromQuery.Element(TextConst.EName.ExtendWhere).Add(xcall);
-        //        XElement xconst = new XElement(TextConst.EName.Const, new XText("1"));
-        //        xconst.SetAttributeValue(TextConst.AName.As, TextConst.SpecCols.Check);
-        //        originalQuery.Element(TextConst.EName.Select).AddFirst(xconst);
-        //        originalQuery.Elements(TextConst.EName.Having).Remove();
-        //    }
-        //    var xpars = new XElement(query.Element(TextConst.EName.Params));
-        //    query.Elements(TextConst.EName.Params).Remove();
-        //    originalQuery.Elements(TextConst.EName.Params).Remove();
-        //    query.SetAttributeValue(TextConst.AName.As, "a");
-        //    originalQuery.SetAttributeValue(TextConst.AName.As, "a");
-        //    //XElement unionQuery = new XElement(TextConst.EName.Query
-        //    //    ,new XElement(TextConst.EName.Union
-        //    //        ,query
-        //    //        ,originalQuery
-        //    //        )
-        //    //    );
-        //    XElement unionQuery = new XElement(TextConst.EName.Query
-        //      , xpars
-        //      , new XElement(TextConst.EName.Select
-        //          , new XElement(TextConst.EName.Column, new XAttribute(TextConst.AName.Table, "a"), new XAttribute(TextConst.AName.Column, TextConst.AVColumn.All))
-        //          )
-        //          , new XElement(TextConst.EName.From
-        //              , new XElement(TextConst.EName.Query, new XAttribute(TextConst.AName.As, "a")
-        //                  , new XElement(TextConst.EName.Union, new XAttribute(TextConst.AName.All, TextConst.AVBool.False)
-        //                       , originalQuery
-        //                      , query
-        //                      )
-        //              )
-        //          )
-        //      );
-        //    return unionQuery;
-        //}
         public XElement CreateTableQuery(VQueryCall queryCall)
         {
             List<VColumn> columns = this.getColumns(queryCall);
@@ -1616,54 +1078,11 @@ namespace sql.builder.DataApi
             mainFromQuery.Elements(TextConst.EName.Qube).Remove();
             mainFromQuery.Elements(TextConst.EName.ELink).Remove();
             from.Add(fromQuery);
-            //else
-            //{
-            //    fromQuery.Add(
-            //           new XAttribute(TextConst.AName.Name, qube.Query().P_IdName),
-            //           new XAttribute(TextConst.AName.As, qube.XName)
-            //       );
-            //    mainFromQuery = new XElement(TextConst.EName.Link);
-            //    mainFromQuery.SetAttributeValue(TextConst.AName.Name, qube.GetRelation().XName);
-            //    mainFromQuery.SetAttributeValue(TextConst.AName.As, queryCall.XName);
-            //    mainFromQuery.Add(queryCall.Elements().Where(e1 => e1 != qube).Select(e => new XElement(e)));
-            //    fromQuery.Add(mainFromQuery);
-            //}
-            //VSXElement keyCol = null;
-            //keyCol = columns.Where(e => e.IsKey).FirstOrDefault();
-            //if (qube != null)
-            //{
-            //    query.Element(TextConst.EName.Select).Add(
-            //      new XElement(TextConst.EName.Column
-            //                   , new XAttribute(TextConst.AName.Table, fromQuery.Attribute(TextConst.AName.As).Value)
-            //                     , new XAttribute(TextConst.AName.Column, qube.GetRelation().XName + TextConst.Pfx.QubeCounter)
-            //                         , new XAttribute(TextConst.AName.As, queryCall.XName + TextConst.Pfx.QubeCounter)
-            //                         , new XAttribute(TextConst.AName.Group, TextConst.AVGroup.Sum)
-            //                   )
-            //        );
-            //}
             foreach (VSXElement col in columns)
             {
                 XElement xcol = new XElement(col.GetDummyOrSelf());
                 xcol.Elements(EName.listquery).Remove();
                 select.Add(xcol);
-                //if (qube != null)
-                //{
-                //    if (keyCol == col)
-                //    {
-                //        xcol.SetAttributeValue(TextConst.AName.Group, TextConst.AVGroup.Group);
-                //    }
-                //    else
-                //    {
-                //        if (col.P_Table == qube.XName)
-                //        {
-                //            xcol.SetAttributeValue(TextConst.AName.Group, col.SourceColumns().First().P_AggregationS); // заменить на agg
-                //        }
-                //        else
-                //        {
-                //            xcol.SetAttributeValue(TextConst.AName.Group, keyCol.XName);
-                //        }
-                //    }
-                //}
             }
             XElement xwhere = null;
             XElement xpars = createTableQueryParams(queryCall);
@@ -1689,23 +1108,6 @@ namespace sql.builder.DataApi
             }
             else
             {
-                //if (queryCall is VELink )
-                //{
-                //}
-                //if (queryCall is VParam)
-                //{
-                //    xwhere = new XElement(TextConst.EName.Where
-                //        , new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunc.Equal)
-                //        , new XElement(TextConst.EName.Column
-                //            , new XAttribute(TextConst.AName.Table, queryCall.Attribute(TextConst.AName.As).Value)
-                //            , new XAttribute(TextConst.AName.Column, keyCol.P_Column)
-                //            )
-                //            , new XElement(TextConst.EName.UseParam, new XAttribute(TextConst.AName.Name, queryCall.P_FormalParName))
-                //            )
-                //        );
-                //}
-                //else
-                //{
                     xwhere = queryCall.GetElementsP(EName.where).FirstOrDefault();
                     //var fqw = fromQuery.Elements(TextConst.EName.Where).ToArray();
                     //if (fqw.Any())
@@ -1721,67 +1123,6 @@ namespace sql.builder.DataApi
             //if (qube == null)
             //{
                 query.Add(xwhere);
-            //}
-            //else
-            //{
-            //    if (xwhere != null)
-            //    {
-            //        XElement xextwhere = new XElement(TextConst.EName.ExtendWhere);
-            //        xextwhere.Add(xwhere.Elements());
-            //        fromQuery.Add(xextwhere);
-            //        foreach (XElement col in xextwhere.Descendants(TextConst.EName.Column).Where(e => e.Attribute(TextConst.AName.Table).Value == mainFromQuery.Attribute(TextConst.AName.As).Value).ToArray())
-            //        {
-            //            col.SetAttributeValue(TextConst.AName.Table, mainFromQuery.Attribute(TextConst.AName.Name).Value);
-            //        }
-            //        foreach (XElement col in xextwhere.Descendants(TextConst.EName.Column).Where(e => e.Attribute(TextConst.AName.Table).Value == fromQuery.Attribute(TextConst.AName.As).Value).ToArray())
-            //        {
-            //            XElement parentCall = col.Ancestors().Where(
-            //                e => TextConst.AVFuncArray.AndOr.Contains(Cmn.GetAttrValue(e.Parent, TextConst.AName.Function))
-            //                    || e.Parent.Name.LocalName == TextConst.EName.Where).First();
-            //            parentCall.Remove();       
-            //        }
-            //        XElement xhaving = new XElement(TextConst.EName.Having);
-            //        xhaving.Add(xwhere.Elements());
-            //        foreach (XElement call in xhaving.Descendants(TextConst.EName.Call).ToArray())
-            //        {
-            //            if (!TextConst.AVFuncArray.AndOr.Contains(call.Attribute(TextConst.AName.Function).Value))
-            //            {
-            //                if (!call.Descendants(TextConst.EName.Column).Where(e => e.Attribute(TextConst.AName.Table).Value == fromQuery.Attribute(TextConst.AName.As).Value).Any())
-            //                {
-            //                    call.Remove();
-            //                }
-            //            }
-            //        }
-            //        foreach (XElement col in xhaving.Descendants(TextConst.EName.Column).Where(e => e.Attribute(TextConst.AName.Table).Value == fromQuery.Attribute(TextConst.AName.As).Value).ToArray())
-            //        {
-            //            col.SetAttributeValue(TextConst.AName.Group, TextConst.AVGroup.Sum);//заменить на agg
-            //        }
-            //        if (xhaving.Descendants().Where(e => !TextConst.AVFuncArray.AndOr.Contains(e.Attribute(TextConst.AName.Function).Value)).Any())
-            //        {
-            //            //XElement xwhereold = query.Element(TextConst.EName.Where);
-            //            //if (xwhereold == null)
-            //            //{
-            //            //    query.Add(xwhere);
-            //            //}
-            //            //else
-            //            //{
-            //            //    XElement xand = new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunc.And));
-            //            //    xand.Add(xwhereold.Elements());
-            //            //    xand.Add(xwhere.Elements());
-            //            //    xwhereold.Elements().Remove();
-            //            //    xwhereold.Add(xand);
-            //            //}
-            //            query.Add(xhaving);
-            //        }
-            //    }
-            //    var links = mainFromQuery.Elements().Where(e => TextConst.ENameArray.ALinksButElink.Contains(e.Name.LocalName)).ToList();
-            //    if (links.Count > 0)
-            //    {
-            //        var exlinks = new XElement(TextConst.EName.ExtendLinks, new XAttribute(TextConst.AName.Target, mainFromQuery.Attribute(TextConst.AName.Name).Value));
-            //        fromQuery.Add(exlinks);
-            //        exlinks.Add(links);
-            //    }
-            //}
             query.Descendants(EName.elink).Remove();
             if (where1 != null)
             {
@@ -1826,17 +1167,6 @@ namespace sql.builder.DataApi
                 VSXElement childCol = rel.ChildColumnSource();
                 AddNewParam(xpars, "fk_" + childCol.XName, childCol.XDataType());
             }
-            //else
-            //{
-            //    if (Element(TextConst.EName.Params) != null)
-            //    {
-            //        xpars = new XElement(Element(TextConst.EName.Params));
-            //    }
-            //    else
-            //    {
-            //        xpars = new XElement(TextConst.EName.Params);
-            //    }
-            //}
             VForm form = (queryCall.RootQuery() as VForm);
             foreach (VSXElement el in form.ParamFields())
             {
@@ -2046,22 +1376,6 @@ namespace sql.builder.DataApi
         {
             return getModifiedRowSelectText(columns.Attributes(_AName.name).Select(APredicate.AttributeValue), joinInfo);
         }
-        //private string getOriginalRowSelectText(string tableName, List<VColumn> columns)
-        //{
-        //    var sql = new StringBuilder();
-        //    var sqlPars = new StringBuilder();
-        //    var q = "";
-        //    foreach (VColumn col in columns)
-        //    {
-        //        sqlPars.Append(q);
-        //        sqlPars.AppendLine(col.P_Column);
-        //        q = ",";
-        //    }
-        //    sql.AppendLine(" ( select ");
-        //    sql.AppendLine(sqlPars.ToString());
-        //    sql.AppendLine("from " + tableName + " )");
-        //    return sql.ToString();
-        //}
         private static string getMergeText(VQueryCall query, List<VColumn> columns, ref Dictionary<string, string> joinInfo)//все алиасы у колонок должны совпадать, пока так
         {
             var sql = new StringBuilder();
@@ -2275,115 +1589,6 @@ namespace sql.builder.DataApi
             sql.Append(keyCol.XName);
             return sql.ToString();
         }
-        //private List<VQueryCall> getUpdatebleTables(VQueryCall queryCall)
-        //{
-        //    var list = new List<VQueryCall>();
-        //  //  list.Add(queryCall);
-        //    list.AddRange(queryCall.SelfAndAllMasterLinks().Where(e => e == queryCall || e.P_ColumnEditable != "").ToArray());
-        //    return list;
-        //}
-        //private List<VQueryCall> getOtherUpdatebleTables(VQueryCall queryCall)
-        //{
-        //    var list = new List<VQueryCall>();
-        //    //  list.Add(queryCall);
-        //    list.AddRange(queryCall.SelfAndAllMasterLinks().Where(e => e != queryCall && e.P_ColumnEditable != "").ToArray());
-        //    return list;
-        //}
-        //private string getUpdateTempText(VQueryCall queryCall, List<XElement> columns, VColumn keyCol)
-        //{
-        //    //var list = getUpdatebleTables(queryCall);
-        //    return getUpdateTempTextSingle(queryCall, columns, keyCol);
-        //    //if (list.Count() == 1)
-        //    //{
-        //    //    return getUpdateTempTextSingle(queryCall, columns, keyCol);
-        //    //}
-        //    //else
-        //    //{
-        //    //    var sql = new StringBuilder();
-        //    //    sql.AppendLine("begin");
-        //    //    foreach (VQueryCall qry in list)
-        //    //    {
-        //    //        var cols1 = columns.Where(e => e.Attribute(TextConst.AName.Table).Value==qry.XName).ToList();
-        //    //        var s = getUpdateTempTextSingle(qry, cols1, keyCol);
-        //    //        sql.AppendLine(s);
-        //    //    }
-        //    //    sql.AppendLine("end;");
-        //    //    return sql.ToString() ;
-        //    //}
-        //}
-        //private string getUpdateTempTextSingle( VQueryCall queryCall, List<XElement> columns, VColumn keyCol)
-        //{
-        //    string tableName = queryCall.Query().Name;
-        //    string tableAlias = queryCall.XName;
-        //    var sql = new StringBuilder();
-        //    sql.AppendLine("begin");
-        //    sql.AppendLine("delete from " + TextConst.DBObjects.TempTable);
-        //    sql.AppendLine("where");
-        //    sql.AppendLine(TextConst.DBObjects.TempTableTableIdColumn + "='" + tableAlias + "'");
-        //    sql.AppendLine("and");
-        //    sql.AppendLine(TextConst.DBObjects.TempTableFormIdColumn + "=" + TextConst.Pfx.Param + TextConst.DBParams.FormId);
-        //    sql.AppendLine("and");
-        //    sql.AppendLine(TextConst.DBObjects.TempTableRowIdColumn + "=" + TextConst.Pfx.Param + keyCol.XName + ";");
-        //   // sql.AppendLine("end;");
-        //    var sqlCols = new StringBuilder();
-        //    var sqlVals = new StringBuilder();
-        //    var cursor = "r";
-        //    var q = "";
-        //    sqlCols.AppendLine(TextConst.DBObjects.TempTableTableIdColumn);
-        //    sqlVals.AppendLine("'" + tableAlias + "'");
-        //    q = ",";
-        //    sqlCols.Append(q);
-        //    sqlCols.AppendLine(TextConst.DBObjects.TempTableFormIdColumn);
-        //    sqlVals.Append(q);
-        //    sqlVals.AppendLine(TextConst.Pfx.Param + TextConst.DBParams.FormId);
-        //    sqlCols.Append(q);
-        //    sqlCols.AppendLine(TextConst.DBObjects.TempTableRowIdColumn);
-        //    sqlVals.Append(q);
-        //    sqlVals.AppendLine(TextConst.Pfx.Param + keyCol.XName);
-        //    sqlCols.Append(q);
-        //    sqlCols.AppendLine(TextConst.DBObjects.TempTableStateColumn);
-        //    sqlVals.Append(q);
-        //    sqlVals.AppendLine(TextConst.Pfx.Param + TextConst.DBParams.RowStateId);
-        //    foreach (XElement col in columns)
-        //    {
-        //        sqlCols.Append(q);
-        //        sqlCols.AppendLine(col.Attribute(TextConst.DsAName.TempColumnName).Value);
-        //        sqlVals.Append(q);
-        //        sqlVals.AppendLine(cursor + "." + col.Attribute(TextConst.AName.Name).Value);
-        //        q = ",";
-        //    }
-        //   // sql.AppendLine("begin");
-        //    sql.AppendLine("for " + cursor + " in ");
-        //    sql.AppendLine(getModifiedRowSelectText(columns));
-        //    sql.AppendLine("loop");
-        //    sql.AppendLine("insert into " + TextConst.DBObjects.TempTable);
-        //    sql.AppendLine("(" + sqlCols.ToString() + ")");
-        //    sql.AppendLine(" values ");
-        //    sql.AppendLine("(" + sqlVals.ToString() + ");");
-        //    sql.AppendLine("end loop;");
-        //    sql.AppendLine("end;");
-        //   // var origRow = getOriginalRowSelectText(tableName, columns);
-        //    //sql.AppendLine("begin");
-        //    //sql.AppendLine("for " + cursor + " in ");
-        //    //sql.AppendLine(origRow);
-        //    //sql.AppendLine("loop");
-        //    //sql.AppendLine("insert into " + TextConst.DBObjects.TempTable);
-        //    //sql.AppendLine("("+TextConst.DBObjects.TempTableClassIdColumn+"," + sqlCols.ToString() + ")");
-        //    //sql.AppendLine(" values ");
-        //    //sql.AppendLine("("+keyCol.P_Column+ + sqlVals.ToString() + ")");
-        //    //sql.AppendLine("end loop;");
-        //    //sql.AppendLine("end;");
-        //    //var modRow = getModifiedRowSelectText(columns);
-        //    //sql.AppendLine("update " + TextConst.DBObjects.TempTable + " set ");
-        //    //sql.AppendLine("(" + sqlCols.ToString() + ")");
-        //    //sql.AppendLine("=");
-        //    //sql.AppendLine(modRow);
-        //    //sql.AppendLine("where");
-        //    //sql.AppendLine(TextConst.DBObjects.TempTableTableIdColumn + "=" + TextConst.Pfx.Param + TextConst.DBObjects.TempTableTableIdColumn);
-        //    //sql.AppendLine("and");
-        //    //sql.AppendLine(TextConst.DBObjects.TempTableRowIdColumn + "=" + TextConst.Pfx.Param + keyCol.XName);
-        //    return sql.ToString();
-        //}
         private static string getUpdateTempText(VQueryCall queryCall, List<XElement> columns, List<XElement> otherColumns, VColumn keyCol, VColumn subKeyCol = null, string tableAlias = null, Dictionary<string, string> joinInfo=null)
         {
             return getUpdateTempTextSingle(queryCall, columns, otherColumns, keyCol, subKeyCol, tableAlias, joinInfo);

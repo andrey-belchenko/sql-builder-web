@@ -172,50 +172,6 @@ namespace sql.builder.DataApi
                             newGrSet.Attributes(TextConst.AName.Parent).Remove();
                             newGrSet.Attributes(TextConst.AName.ParentKey).Remove();
                         }
-                        //if (lev + 1 < levels)
-                        //{
-                        //    foreach (XElement gr in newGrSet.Elements(TextConst.EName.Grset))
-                        //    {
-
-
-                        //        var xwhere = gr.Element(TextConst.EName.Where
-
-
-                        //            );
-                        //        XElement prt = null;
-                        //        if (xwhere == null)
-                        //        {
-                        //            xwhere = new XElement(TextConst.EName.Where  );
-                        //            prt = xwhere;
-                                   
-                        //            gr.Add(xwhere);
-                        //        }
-                        //        else
-                        //        {
-                        //            var els = xwhere.Elements();
-                        //            els.Remove();
-                        //            xwhere.Add(
-                        //                new XElement(TextConst.EName.Call
-                        //                   , new XAttribute(TextConst.AName.Function, TextConst.AVFunc.And)
-                        //                   )
-                        //            );
-                        //            prt = xwhere.Elements().First();
-                        //            prt.Add(els);
-                        //        }
-                        //        var xcond = new XElement(TextConst.EName.Call);
-                        //        xcond.SetAttributeValue(TextConst.AName.Function, TextConst.AVFunc.IsNull);
-
-                        //        prt.Add(xcond);
-                        //        xcol = new XElement(TextConst.EName.Column);
-                        //        xcol.SetAttributeValue(TextConst.AName.Table, TextConst.AVTable.Ths);
-                        //        xcol.SetAttributeValue(TextConst.AName.Column, keyAlias + LvlPfx + (lev+1).ToString());
-                        //        xcond.Add(xcol);
-                             
-                        //    }
-                        //}
-
-                        //foreach (XElement gr1 in newGrSet.DescendantsAndSelf(TextConst.EName.Grset))
-                        //{
                             var gr1 = newGrSet;
                             var alias = gr1.Attribute(TextConst.AName.As).Value;
                             var newAlias1 = alias + LvlPfx + lev.ToString();

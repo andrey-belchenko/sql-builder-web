@@ -135,27 +135,6 @@ namespace sql.builder.UI
                 {
                     SetError(error_text);
                 }
-                // для репозиториев
-                //if (column.TextSource != null)
-                //{
-                //    row.SetColumnError(column.TextSource, error_text);
-                //}
-                //else
-                //{
-                //    row.SetColumnError(column, error_text);
-
-                //}
-
-                // для репозиториев
-                //if (Form.Grids.ContainsKey(column.Table.TableName))
-                //{
-                //    var grid = Form.Grids[column.Table.TableName];
-                //    int row_index = column.Table.Rows.IndexOf(row);
-                //    if (row_index > 0)
-                //    {
-                //        grid.UpdateCellValidation(column.ColumnName, row_index);
-                //    }
-                //}
             }
 
 
@@ -207,17 +186,6 @@ namespace sql.builder.UI
 
                 //}
                 Form.ItemVisibleChanged(this);
-
-
-                //this.ReadOnly = read_only;
-
-                //// для репозиториев
-                //if (Form.Grids.ContainsKey(column.Table.TableName))
-                //{
-                //    var grid = Form.Grids[column.Table.TableName];
-                //    int row_index = column.Table.Rows.IndexOf(row);
-                //    grid.SetCellReadOnly(column.ColumnName, row_index, read_only);
-                //}
             }
 
 
@@ -275,20 +243,6 @@ namespace sql.builder.UI
 
                     //}
                 }
-                // для репозиториев
-                //if (row != null)
-                //{
-                //    if (Form.Grids.ContainsKey(column.Table.TableName))
-                //    {
-                //        var grid = Form.Grids[column.Table.TableName];
-                //        int row_index = column.Table.Rows.IndexOf(row);
-
-                //        if (grid.Editable)
-                //        {
-                //            grid.UpdateCellEditable(column.ColumnName, row_index);
-                //        }
-                //    }
-                //}
             }
         }
 
@@ -672,24 +626,6 @@ namespace sql.builder.UI
                 }
             }
         }
-
-        //protected string GetSourceError(int index = 1)
-        //{
-        //    if (SourceType == BaseSourceType.Simple)
-        //    {
-        //        var table = Form.DataSource.ParamsTableOrSpecifiedTable(TableName);
-        //        return GetBoundColumn().GetCellError(table.CurrentRow);
-        //    }
-        //    if (SourceType == BaseSourceType.SimpleRange)
-        //    {
-        //        var table = Form.DataSource.ParamsTableOrSpecifiedTable(TableName);
-        //        return GetBoundColumn(index).GetCellError(table.CurrentRow);
-        //    }
-        //    return "";
-        //}
-
-        // Array
-
         public  void ReloadListDataIfNeed(bool onlyForselectedValue = false, bool allowAsync = true)
         {
             if (_need_refresh)
@@ -1168,30 +1104,6 @@ namespace sql.builder.UI
                 }
 
             }
-            //Переделал чтобы восстановленные из сохраненных параметров значения попадали в список
-
-            //if (SourceType == ReturnType.Simple)
-            //{
-            //    if (UseType == UIFormC.UseType.DataEditor &&  RowsLimit!=0)
-            //    {
-            //        var value = GetSimpleSourceValue();
-            //        if (value != DBNull.Value)
-            //        {
-            //            var row = DataLocal.Rows.Find(value);
-            //            TempTable.ImportRow(row);
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    var temp_rows = DataLocal.AsEnumerable().Where(row => (int)row["check"] == 1 || row[KeyFieldName] == DBNull.Value);
-            //    foreach (var row in temp_rows)
-            //    {
-            //        // для строк с непустым полем key_field_name устанавливаем absent = true
-            //        row["absent"] = (row[KeyFieldName] != DBNull.Value);
-            //        TempTable.ImportRow(row);
-            //    }
-            //}
         }
         private void LoadTempValues()
         {
@@ -1287,18 +1199,6 @@ namespace sql.builder.UI
 
             UpdateBaseEditValue(column, column.GetValue(row));
         }
-        //private void VDataTable_OnColumnChanged(object sender, DataColumnChangeEventArgs args)
-        //{
-        //    //if (((VDataTable)args.Column.Table).SuppressChangedEvent) return;
-        //    if (this.isInGrid) return;
-        //    var row = ((VDataTable)args.Column.Table).CurrentRow;
-        //    if (args.Row != row) return;
-
-        //    var column = (VDataColumn)args.Column;
-        //    if (column != GetBoundColumn()) return;
-
-        //    UpdateBaseEditValue(column, args.ProposedValue);
-        //}
         public void ColumnEditableChanged(DataRow row)
         {
 
@@ -1345,18 +1245,6 @@ namespace sql.builder.UI
 
 
         }
-        //private void VDataTable_OnCurrentRowChanged(object sender, DataRowChangeEventArgs args)
-        //{
-        //    var table = (VDataTable)sender;
-        //    foreach (VDataColumn column in table.Columns)
-        //    {
-        //        //UpdateBaseEditValue(column, (args.Row != null) ? args.Row[column] :  DBNull.Value);
-        //    }
-
-        //    //UpdateControlEditable();
-        //    //UpdateControlValidation();
-        //}
-        // Array
         private void VDataTable_Changed(object sender, EventArgs e)
         {
             //if (UseType != UIFormC.UseType.DataEditor)

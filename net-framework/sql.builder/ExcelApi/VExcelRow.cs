@@ -113,36 +113,6 @@ namespace sql.builder.ExcelApi
             prevElement.AddAfterSelf(xcell);
             VExcelCommon.IncrementIndexAfter(xcell);
             VExcelCell newCell = this.Cell(index, ref ret);
-            //VExcelCell cell2 = null;
-            //if (prevCell != null)
-            //{
-            //    VExcelCell prev = new VExcelCell(prevCell.Element.ElementsBeforeSelf().Last());
-            //    if (!Cmn.Nvl(prev.Value, "").ToString().Contains("[merge]"))
-            //    {
-            //        prevCell = this.Cell(index, ref ret);
-            //        cell2 = prevCell;
-            //    }
-            //    else
-            //    {
-            //        VExcelCommon.SetMergeAcrossAttrVal(prev.Element, VExcelCommon.GetMergeAcrossAttrVal(prev.Element) + 1);
-            //        VExcelCommon.IncrementIndexAfter(prevCell.Element);
-            //        cell2 = prevCell;
-            //        prevCell = null;
-            //    }
-            //}
-            //else
-            //{
-            //    //  VExcelCell 
-            //    cell2 = new VExcelCell(ret);
-            //    // int i =cell2.Index();
-            //    VExcelCommon.SetMergeAcrossAttrVal(ret, VExcelCommon.GetMergeAcrossAttrVal(ret) + 1);
-            //    VExcelCommon.IncrementIndexAfter(ret);
-            //    for (int i = 1; i <= VExcelCommon.GetMergeDownAttrVal(cell2.Element); i++)
-            //    {
-            //        VExcelRow r = this.Sheet.Row(i + this.Index());
-            //        VExcelCommon.IncrementIndexAfter(r, index);
-            //    }
-            //}
             return newCell;
         }
        public VExcelCell InsertCell(int index, VExcelCell cell)
@@ -152,24 +122,6 @@ namespace sql.builder.ExcelApi
                cell1 = this.insertCell(index);
                if (cell1 != null) {
                    cell1.SetValue(cell);
-                   //VExcelCommon.SetMergeDownAttrVal(cell1.Element, VExcelCommon.GetMergeDownAttrVal(cell.Element));
-                   //int ma = VExcelCommon.GetMergeAcrossAttrVal(cell1.Element);
-                   //if (ma > 0) {
-                       //VExcelCommon.IncrementIndexAfter(cell1.Row,index+ma, ma);
-                       //var ee = 888;
-                       //int ii = VExcelCommon.GetMergeAcrossAttrVal(cell.Element);
-                       //IEnumerable<XElement> cells = cell.Row.Element.Elements().Where(e => VExcelCommon.GetIndexAttrVal(e) >= index + 1);
-                       //foreach (XElement el in cells)
-                       //{
-                       //    int index1 =VExcelCommon.GetIndexAttrVal(el);
-                       //    el.SetAttributeValue(VExcelNS.SpreadSheet.Index, index1 + ii);
-                       //}
-                   //}
-                   //for (int i = 1; i <= VExcelCommon.GetMergeDownAttrVal(cell.Element); i++)
-                   //{
-                   //    VExcelRow r = this.Sheet.Row(i + this.Index());
-                   //    VExcelCommon.IncrementIndexAfter(r, index+ma, ma+ 1);
-                   //}
                }
            }
             return cell1;

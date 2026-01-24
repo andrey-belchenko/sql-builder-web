@@ -91,21 +91,6 @@ namespace sql.builder
         }
         internal static void SaveTextWithCheckOut(string text, string filename)
         {
-            //bool exists = File.Exists(filename);
-            //TFSHelper.CheckOutFile(filename);
-            //SaveText(text, filename, Encoding.UTF8);
-            //if (!exists) {
-            //    bool success = false;
-            //    while (!success) {
-            //        using (var tfs = new TFSServer()) {
-            //            success = tfs.AddFile(filename);
-            //        }
-            //        if (!success) {
-            //            var res = ShowMessage.ShowQuestion("Не удалось добавить файл в TFS. Повторить попытку?");
-            //            if (res != DialogResult.Yes) break;
-            //        }
-            //    }
-            //}
         }
      
         internal static void SaveText(string text, string filename, Encoding encoding)
@@ -466,17 +451,6 @@ namespace sql.builder
                     formalParam.Elements().Remove();
                     Compiler.copyContent(factParam, formalParam);
                 } else if (useDefaults) {
-                    //// Емцов - глобальные параметры подтягиваются из системных глобальных переменных
-                    //if (param_name == "dep" && infoenergo.sys.Global.DepartmentKodp.HasValue) {
-                    //    formalParam.GetOrCreateXElement(EName.@const).SetValue(infoenergo.sys.Global.DepartmentKodp);
-                    //} else if (param_name == "tep_el" && infoenergo.sys.Global.Tep_el.HasValue) {
-                    //    formalParam.GetOrCreateXElement(EName.@const).SetValue(infoenergo.sys.Global.Tep_el);
-                    //} else if (param_name == "ym" && infoenergo.sys.Global.Ym.HasValue) {
-                    //    formalParam.GetOrCreateXElement(EName.@const).SetValue(infoenergo.sys.Global.Ym);
-                    //} else {
-                    //    formalParam.Elements().Remove();
-                    //    formalParam.Add(new XElement(EName.undefined));
-                    //}
                     formalParam.Elements().Remove();
                     formalParam.Add(new XElement(EName.undefined));
                 } else {
@@ -959,80 +933,6 @@ namespace sql.builder
 
 
         }
-        //#region DevExpress.XtraTreeList.Nodes.TreeListNode
-        //internal static T Field<T>(this TreeListNode node, object field)
-        //{
-        //    Contract.Assume(node != null);
-        //    object value = node[field];
-        //    return (T)value;
-        //}
-        //internal static bool IsDBNull(this TreeListNode node, object field)
-        //{
-        //    Contract.Assume(node != null);
-        //    return Convert.IsDBNull(node[field]);
-        //}
-        //internal static IEnumerable<TreeListNode> GetNodeBranch(TreeListNode node)
-        //{
-        //    Contract.Assume(node != null);
-        //    yield return node;
-        //    for (int index = 0; index < node.Nodes.Count; index++) {
-        //        TreeListNode child = node.Nodes[index];
-        //        foreach (TreeListNode childChild in GetNodeBranch(child)) {
-        //            yield return childChild;
-        //        }
-        //    }
-        //}
-        //internal static DataRow GetNodeRow(TreeListNode node)
-        //{
-        //    object obj = node.TreeList.GetDataRecordByNode(node);
-        //    if (obj != null) {
-        //        return (obj as DataRowView).Row;
-        //    }
-        //    return null;
-        //}
-        //private static TreeListNode GetNodeByRowRecurcive(TreeListNode node, DataRow row)
-        //{
-        //    DataRow r = GetNodeRow(node);
-        //    if (r == row) {
-        //        return node;
-        //    }
-        //    foreach (TreeListNode node2 in node.Nodes) {
-        //        TreeListNode node1 = GetNodeByRowRecurcive(node2, row);
-        //        if (node1 != null) {
-        //            return node1;
-        //        }
-        //    }
-        //    return null;
-        //}
-        //internal static TreeListNode GetNodeByRowRecursive(TreeList tree, DataRow row)
-        //{
-        //    foreach (TreeListNode node2 in tree.Nodes) {
-        //        TreeListNode node1 = GetNodeByRowRecurcive(node2, row);
-        //        if (node1 != null) {
-        //            return node1;
-        //        }
-        //    }
-        //    return null;
-        //}
-        //internal static IEnumerable<TreeListNode> GetAllTreeNodes(TreeList tree)
-        //{
-        //    return GetAllTreeNodesRecursive(tree.Nodes);
-        //}
-        //private static IEnumerable<TreeListNode> GetAllTreeNodesRecursive(IEnumerable<TreeListNode> nodes)
-        //{
-        //    foreach (TreeListNode node in nodes) {
-        //        yield return node;
-        //        foreach (TreeListNode child in GetAllTreeNodesRecursive(node.Nodes)) {
-        //            yield return child;
-        //        }
-        //    }
-        //}
-        //#endregion
-        /// <summary>
-        /// Возвращает true, если параметр <paramref name="val"/> null, DBNull.Value или пустая строка
-        /// </summary>
-        /// <param name="val"></param>
-        /// <returns>true, если параметр <paramref name="val"/> null, DBNull.Value или пустая строка</returns>
         internal static bool IsNull(object val)
         {
             return val == null || val == DBNull.Value || string.Empty.Equals(val);
@@ -1056,28 +956,6 @@ namespace sql.builder
         /// <param name="file_name">наименование файла</param>
         internal static void SaveXmlWithCheckOut(XNode node, string file_name)
         {
-            //bool exists = File.Exists(file_name);
-            //TFSHelper.CheckOutFile(file_name);
-            //XmlWriterSettings settings = new XmlWriterSettings();
-            //settings.Indent = true;
-            //using (XmlWriter writer = XmlWriter.Create(file_name, settings)) {
-            //    node.WriteTo(writer);
-            //    writer.Close();
-            //}
-            //if (!exists) {
-            //    bool success = false;
-            //    while (!success) {
-            //        using (var tfs = new TFSServer()) {
-            //            success = tfs.AddFile(file_name);
-            //        }
-            //        if (!success) {
-            //            DialogResult res = ShowMessage.ShowQuestion("Не удалось добавить файл в TFS. Повторить попытку?");
-            //            if (res == DialogResult.No) {
-            //                break;
-            //            }
-            //        }
-            //    }
-            //}
         }
         internal static VDataTable CopyTableStructure(VDataTable source)
         {
@@ -1123,95 +1001,6 @@ namespace sql.builder
             target.Merge(source);
 
         }
-
-        //private static RepositoryItemRichTextEdit createHtmlControl()
-        //{
-        //    RepositoryItemRichTextEdit ctrl = new RepositoryItemRichTextEdit();
-        //    ctrl.DocumentFormat = DocumentFormat.Html;
-        //    ctrl.ShowCaretInReadOnly = false;
-        //    return ctrl;
-        //}
-
-        //internal static void AddHtmlEditors(GridControl grid, DataTable tbl)
-        //{
-
-
-        //    //     this.tlQueryScheme.RepositoryItems
-        //    RepositoryItemRichTextEdit ctrl = null;
-        //    foreach (VDataColumn col in tbl.Columns)
-        //    {
-        //        if (col.IsHtml)
-        //        {
-
-        //            if (ctrl == null)
-        //            {
-        //                var octrl = grid.RepositoryItems.Cast<RepositoryItem>().Where(i => i is RepositoryItemRichTextEdit).FirstOrDefault();
-        //                if (octrl == null)
-        //                {
-        //                    ctrl = createHtmlControl();
-        //                    grid.RepositoryItems.Add(ctrl);
-        //                    GridView gw = (GridView)grid.MainView;
-        //                    gw.CustomRowCellEdit += (object sender, CustomRowCellEditEventArgs e) =>
-        //                        {
-        //                            if (e.RowHandle == GridControl.AutoFilterRowHandle && e.RepositoryItem is RepositoryItemRichTextEdit)
-        //                            {
-        //                                e.RepositoryItem = new RepositoryItemTextEdit();
-        //                            }
-        //                        };
-        //                }
-        //                else
-        //                {
-        //                    ctrl = (RepositoryItemRichTextEdit)octrl;
-        //                }
-        //            }
-        //            (grid.MainView as GridView).Columns[col.ColumnName].ColumnEdit = ctrl;
-        //            //(grid.MainView as GridView).Columns[col.ColumnName];
-
-        //        }
-        //    }
-        //}
-
-        //internal static void AddHtmlEditors(TreeList tree, DataTable tbl)
-        //{
-
-
-        //    //     this.tlQueryScheme.RepositoryItems
-        //    RepositoryItemRichTextEdit ctrl = null;
-        //    foreach (VDataColumn col in tbl.Columns)
-        //    {
-        //        if (col.IsHtml)
-        //        {
-
-        //            if (ctrl == null)
-        //            {
-        //                var octrl = tree.RepositoryItems.Cast<RepositoryItem>().Where(i => i is RepositoryItemRichTextEdit).FirstOrDefault();
-        //                if (octrl == null)
-        //                {
-        //                    ctrl = createHtmlControl();
-        //                    tree.RepositoryItems.Add(ctrl);
-
-        //                }
-        //                else
-        //                {
-        //                    ctrl = (RepositoryItemRichTextEdit)octrl;
-        //                }
-        //            }
-        //            tree.Columns[col.ColumnName].ColumnEdit = ctrl;
-
-        //            tree.CustomNodeCellEdit += (object sender, GetCustomNodeCellEditEventArgs e) =>
-        //            {
-        //                if (e.Node.Id == TreeList.AutoFilterNodeId && e.RepositoryItem is RepositoryItemRichTextEdit)
-        //                {
-        //                    e.RepositoryItem = new RepositoryItemTextEdit();
-        //                }
-        //            };
-
-        //        }
-        //    }
-
-
-        //}
-
         internal static XElement GetFakeGlobalParams()
         {
             return XElement.Parse("<params><param name=\"dep\"><const>null</const></param><param name=\"tep_el\"><const>1</const></param></params>");
@@ -1303,20 +1092,6 @@ namespace sql.builder
             Registry.CurrentUser.DeleteSubKeyTree(_reg_path);
         }*/
         #endregion
-        //internal static void OpenPrintedFile(string fullPath)
-        //{
-        //    if (!string.IsNullOrEmpty(fullPath)) {
-        //        if (XtraMessageBox.Show("Открыть файл " + fullPath + "?", "Выгрузка завершена", MessageBoxButtons.YesNo) == DialogResult.Yes) {
-        //            Process.Start(fullPath);
-        //        }
-        //    }
-        //}
-        /// <summary>
-        /// Возвращает список подстановочных символов в строке <paramref name="str"/>.
-        /// Например, для строки "[:A]=[:B]=[:C]=[:A]" возвращает "A", "B" и "C".
-        /// </summary>
-        /// <param name="str">строка с подстановочными символами</param>
-        /// <returns>список подстановочных символов</returns>
         internal static List<string> ExtractParamsFromString(string str)
         {
             if (str == null) {
@@ -1481,106 +1256,11 @@ namespace sql.builder
                 SyncWithVForm(xitem, applying_parts);
             }
         }
-        //internal static void CloseExcel(ref Microsoft.Office.Interop.Excel.Application excel)
-        //{
-        //    try
-        //    {
-        //        // Вызывает задержки в 2 мин на сервере ТатТепла!
-        //        //GC.Collect();
-
-        //        excel.DisplayAlerts = false;
-        //        excel.Visible = false;
-        //        excel.Quit();
-        //    }
-        //    finally
-        //    {
-        //        foreach (Workbook workbook in excel.Workbooks)
-        //        {
-        //            foreach (Worksheet worksheet in workbook.Worksheets)
-        //            {
-        //                Marshal.ReleaseComObject(worksheet);
-        //                Marshal.FinalReleaseComObject(worksheet);
-        //            }
-
-        //            Marshal.ReleaseComObject(workbook.Worksheets);
-        //            Marshal.FinalReleaseComObject(workbook.Worksheets);
-
-        //            Marshal.ReleaseComObject(workbook);
-        //            Marshal.FinalReleaseComObject(workbook);
-        //        }
-
-        //        Marshal.ReleaseComObject(excel.Workbooks);
-        //        Marshal.FinalReleaseComObject(excel.Workbooks);
-
-        //        Marshal.ReleaseComObject(excel);
-        //        Marshal.FinalReleaseComObject(excel);
-
-        //        excel = null;
-        //    }
-        //}
-        
-        
         internal static bool OSWin7AndNewer()
         {
             return ((Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1) ||
                     Environment.OSVersion.Version.Major >= 10);
         }
-
-        //public static string SourcePath()
-        //{
-        //    string path = Path.Combine(XmlReports.GetVSProjectPath(), XmlReports.NativeProductName, XmlReports.SourceFolderName);
-        //    if (!Path.IsPathRooted(path))
-        //    {
-        //        string part = Application.StartupPath;
-        //        string dir_new = Path.Combine(part, XmlReports.NativeProductName, path);
-        //        while (!Directory.Exists(dir_new))
-        //        {
-        //            part = Directory.GetParent(part).FullName;
-        //            dir_new = Path.Combine(part, XmlReports.NativeProductName, path);
-        //        }
-        //        return dir_new;
-        //    }
-        //    return path;
-        //}
-
-        //internal static IEnumerable<T> GetChildControlsOfType<T>(Control parent, bool with_self = false) where T : Control
-        //{
-        //    var queue = new Queue<Control>();
-        //    queue.Enqueue(parent);
-
-        //    if (with_self)
-        //    {
-        //        var parent_t = parent as T;
-        //        if (parent_t != null) yield return parent_t;
-        //    }
-
-        //    while (queue.Count > 0)
-        //    {
-        //        var ctrl = queue.Dequeue();
-        //        foreach (Control control in ctrl.Controls)
-        //        {
-        //            queue.Enqueue(control);
-
-        //            var child = control as T;
-        //            if (child != null) yield return child;
-        //        }
-        //    }
-        //}
-        //internal static IEnumerable<Control> GetChildControls(Control parent)
-        //{
-        //    var queue = new Queue<Control>();
-        //    queue.Enqueue(parent);
-
-        //    while (queue.Count > 0)
-        //    {
-        //        var ctrl = queue.Dequeue();
-        //        foreach (Control control in ctrl.Controls)
-        //        {
-        //            queue.Enqueue(control);
-        //            yield return control;
-        //        }
-        //    }
-        //}
         internal static string GetAvgReportFormingTime(string repname)
         {
             #if DEBUG
@@ -1613,184 +1293,10 @@ namespace sql.builder
                 (int)(source.B * amountSource + target.B * percent));
 
         }
-
-
-
-        //internal static int GetLeftButtonsSize(/*int rowHandle,*/ string сolumnName, RepositoryItem rep)
-        //{
-        //    var rep1 = rep as RepositoryItemButtonEdit;
-        //    if (rep1 == null) return 0;// системная колонка с чекбоксом
-        //    int leftButtonsCount = rep1.Buttons.Cast<EditorButton>().Where(b => b.Visible && b.IsLeft).Count();
-        //    int shift = leftButtonsCount * 17;
-        //    return shift;
-        //}
-
-        //internal static void UpdateToolbar(BarManager barMngr, IVBar bar, XElement xtoolbar, ValueChangeEventHandler handler,
-        //    EventHandler ctrlEditValueChangedHandler, EventHandler repEditValueChangedHandler, UIFormC form, VVariableDepandantceController vdc)
-        //{
-        //    if (barMngr != null)
-        //    {
-        //        barMngr.ForceLinkCreate();
-        //    }
-
-        //    var items = CreateBarItems(xtoolbar, barMngr, handler, ctrlEditValueChangedHandler, repEditValueChangedHandler, form, vdc);
-        //    foreach (var item in items)
-        //    {
-        //        //var link = 
-        //            bar.AddBarButton(item,true);
-        //            item.SetVisible(true);
-        //       // link.BeginGroup = true;
-        //    }
-        //    if (barMngr != null)
-        //    {
-        //        barMngr.ForceInitialize();
-        //    }
-
-        //}
-
-        //internal static IVBarItem[] CreateBarItems(XElement xparent, BarManager bm, ValueChangeEventHandler handler,
-        //   EventHandler ctrlEditValueChangedHandler, EventHandler repEditValueChangedHandler, UIFormC form, VVariableDepandantceController vdc)
-        //{
-        //    var items = new List<IVBarItem>();
-
-        //    var grid = xparent.Ancestors(TextConst.EName.Grid).FirstOrDefault();
-        //    string tblName = null;
-        //    if (grid != null)
-        //    {
-        //        tblName = grid.Attribute(TextConst.AName.Table).Value;
-        //    }
-        //    foreach (var xcmd in xparent.Elements())
-        //    {
-
-        //        if (tblName != null)
-        //        {
-        //            xcmd.SetAttributeValue(TextConst.AName.UpdateTarget, tblName);
-        //        }
-        //        if (xcmd.Name.LocalName == TextConst.EName.UICommand)
-        //        {
-        //            // кроме дефолтных кнопок
-        //            if (xcmd.Attribute(TextConst.AName.ControlName) == null)
-        //            {
-        //                var btn = CreateBarButtonControl(xcmd, vdc, handler);
-        //                items.Add(btn);
-        //            }
-        //        }
-        //        else if (xcmd.Name.LocalName == TextConst.EName.Menu)
-        //        {
-        //            var menu = UIStatic.GetControlsfactory().CreateBarMenu();
-        //            menu.SetCaption(xcmd.Attribute(TextConst.AName.Title).Value);
-
-        //            if (!UIStatic.IsWeb())
-        //            {
-        //                (menu as sql.builder.UI.WinForms.VBarMenu).SetBarManager(bm);
-        //            }
-
-        //            items.Add(menu);
-        //            var children = CreateBarItems(xcmd, bm, handler, ctrlEditValueChangedHandler, repEditValueChangedHandler, form, vdc);
-        //            foreach (var cld in children)
-        //            {
-        //                menu.AddButton(cld, false);
-        //                cld.SetVisible(true);
-                       
-
-        //            }
-                   
-        //        }
-
-        //        else if (xcmd.Name.LocalName == TextConst.EName.Field)
-        //        {
-        //            if (!UIStatic.IsWeb())
-        //            {
-        //                var control = form.CreateUIControl(xcmd);
-
-
-        //                var rep = control.GetRepositoryItem();
-        //                rep.Tag = control;
-
-        //                bm.RepositoryItems.Add(rep);
-
-
-        //                var item = UIStatic.GetControlsfactory().CreateBarEditContainer();
-
-        //                //var item = new BarEditItem()
-        //                //{
-        //                //    Caption = xcmd.Attribute(TextConst.AName.Title).Value,
-        //                //    Manager = bm,
-        //                //    Edit = rep,
-        //                //    PaintStyle = BarItemPaintStyle.Caption
-        //                //};
-        //                item.SetCaption(xcmd.Attribute(TextConst.AName.Title).Value);
-        //                item.SetEdit(rep);
-        //                (control.GetRootControl() as Control).Tag = item; // временно
-
-        //                rep.EditValueChanged += repEditValueChangedHandler;
-        //                control.EditValueChanged += ctrlEditValueChangedHandler;
-
-        //                items.Add(item);
-        //            }
-        //        }
-        //    }
-
-        //    return items.ToArray();
-        //}
-
-
-
         private static IVBarButton CreateBarButtonControl(XElement xcmd, VVariableDepandantceController vdc,ValueChangeEventHandler  handler)
         {
             throw new NotImplementedException();
-            //var btn = UIStatic.GetControlsfactory().CreateBarButton();
-            //btn.SetCaption(xcmd.Attribute(TextConst.AName.Title).Value);
-            //btn.SetImage(GetIcon(xcmd));
-        
-
-            //var action = GetActionInfo(xcmd);
-            
-            //btn.Tag = action;
-
-
-            //btn.ButtonClick += handler;
-            //if (vdc != null)
-            //{
-
-            //    foreach (string attrName in TextConst.ANameArray.BehaviorColumns)
-            //    {
-            //        var attr = xcmd.Attribute(attrName);
-            //        if (attr != null)
-            //        {
-            //            vdc.AddVariableStateDependance(btn, attr.Value, attrName, GetAttrValue(xcmd, attrName + "-" + TextConst.AName.Invert) == TextConst.AVBool.True);
-            //        }
-            //    }
-            //}
-
-            //return btn;
         }
-       
-        //private static BarButtonItem CreateBarButtonControl(XElement xcmd, VVariableDepandantceController vdc, ItemClickEventHandler handler)
-        //{
-        //    var btn = new BarButtonItem(null, xcmd.Attribute(TextConst.AName.Title).Value);
-        //    btn.Glyph = GetIcon(xcmd);
-
-        //    var action = GetActionInfo(xcmd);
-        //    btn.Tag = action;
-
-
-        //    btn.ItemClick += handler;
-        //    if (vdc != null)
-        //    {
-
-        //        foreach (string attrName in TextConst.ANameArray.BehaviorColumns)
-        //        {
-        //            var attr = xcmd.Attribute(attrName);
-        //            if (attr != null)
-        //            {
-        //                vdc.AddVariableStateDependance(btn, attr.Value, attrName, GetAttrValue(xcmd, attrName + "-" + TextConst.AName.Invert) == TextConst.AVBool.True);
-        //            }
-        //        }
-        //    }
-
-        //    return btn;
-        //}
         internal static Image GetIcon(XElement xcmd)
         {
             XAttribute xicon = xcmd.Attribute(AName.icon);

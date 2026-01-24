@@ -1362,19 +1362,6 @@ namespace infoenergo.core.Data
         {
             c = A_0;
         }
-
-        //
-        // Summary:
-        //     Populates a SerializationInfo with the data needed to serialize the target object.
-        //
-        //
-        // Parameters:
-        //   info:
-        //     A System.Runtime.Serialization.SerializationInfo object to populate.
-        //
-        //   context:
-        //     The System.Runtime.Serialization.StreamingContext that contains contextual information
-        //     about the source or destination.
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
@@ -1575,18 +1562,6 @@ namespace infoenergo.core.Data
                 return a.Length;
             }
         }
-
-        //
-        // Summary:
-        //     Gets the error at the specified index. In C#, this property is the indexer for
-        //     the Devart.Data.Oracle.OracleErrorCollection class.
-        //
-        // Parameters:
-        //   index:
-        //     The zero-based index of the error to retrieve.
-        //
-        // Value:
-        //     An Devart.Data.Oracle.OracleError that contains the error at the specified index.
         public OracleError this[int index]
         {
             get
@@ -1625,18 +1600,6 @@ namespace infoenergo.core.Data
         {
             return a.GetEnumerator();
         }
-
-        //
-        // Summary:
-        //     Copies the elements of the Devart.Data.Oracle.OracleErrorCollection collection
-        //     into an System.Array starting at the specified index within the array.
-        //
-        // Parameters:
-        //   array:
-        //     The System.Array to copy elements into.
-        //
-        //   index:
-        //     The index from which to start copying into the array parameter.
         public void CopyTo(Array array, int index)
         {
             a.CopyTo(array, index);

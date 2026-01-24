@@ -55,29 +55,6 @@ namespace sql.builder.DataApi
             if (column != null) {
 
                 colCondname = column.ColumnName;
-                //XElement srccolCheck = null;
-                // srccolCheck = query.Elements(TextConst.EName.Select).Elements().FirstOrDefault(e => Cmn.GetAttrValue(e, TextConst.AName.As) == column.ColumnName + checkPfx);
-
-                //XElement exprCol = null;
-                //if (srccolCheck == null)
-                //{
-                //exprCol = query.Elements(TextConst.EName.Select).Elements().First(e => Cmn.GetAttrValue(e, TextConst.AName.As) == column.ColumnName);
-                //}
-                //else
-                //{
-                //    checkPfx1 = checkPfx;
-                //    exprCol = srccolCheck;
-                //    var srccol = srccolCheck.Descendants(TextConst.EName.Column).First(e =>Cmn.GetAttrValue(e, TextConst.AName.Table) ==TextConst.AVTable.Ths && Cmn.GetAttrValue(e, TextConst.AName.Column) == column.ColumnName);
-                //    ifCond = new XElement(TextConst.AName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunc.And));
-
-                //    var expr = new XElement(TextConst.AName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunc.If), ifCond, new XElement(srccol));
-
-                //    srccol.ReplaceWith(expr);
-
-                //    //ifCond = expr.Elements().First();
-
-                //}
-
                 IList<XElement> flds = query.Elements(EName.select).Elements().ToList();
                 XElement checkExpr = flds.SearchByAttribute(AName.@as, column.ColumnName);
                 string sAnyColumn = "[column]";
@@ -246,21 +223,6 @@ namespace sql.builder.DataApi
                 }
                 condTarg.Element(TextConst.EName.Where).Add(conds);
             }
-            //if (ifCond == null)
-            //{
-            //}
-            //else
-            //{
-            //    ifCond.Add(conds);
-            //    if (isOuterCond)
-            //    {
-            //        Compiler.AddQueryLevel(query, "a1");
-            //    }
-            //    if (!query.Elements(TextConst.EName.Where).Any())
-            //    {
-            //        query.Add(new XElement(TextConst.EName.Where));
-            //    }
-            //}
             foreach (var qc in colCondTargs) {
                 var qry1 = qc.Item1;
                 var condColName = qc.Item2;

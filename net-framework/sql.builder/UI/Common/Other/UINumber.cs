@@ -39,31 +39,6 @@ namespace sql.builder.UI
             setValue(value);
             //seControl.EditValue = value;
         }
-
-        //public override RepositoryItem GetRepositoryItem()
-        //{
-        //    var rep = new RepositoryItemSpinEdit();
-        //    //rep.Buttons.Add(createWarningButton());
-        //    addRepositoryButtons(rep.Buttons);
-        //    if (EditMask != null)
-        //    {
-        //        if (EditMask.StartsWith("n", true, CultureInfo.CurrentCulture)) rep.Mask.MaskType = MaskType.Numeric;
-        //        rep.Mask.EditMask = EditMask;
-        //    }
-        //    rep.Mask.UseMaskAsDisplayFormat = true;
-        //    if (this.step > 0) {
-        //        rep.Increment = this.step;
-        //    } else {
-        //        rep.Buttons[0].Visible = false;
-        //    }
-        //    rep.KeyDown += seControl_KeyDown;
-
-        //   // _repository = rep;
-
-        //    return rep;
-        //}
-        
-        
         public override void RefreshData()
         {
             if (this.UseDefaultQuery && this.data_set_default != null) {
@@ -100,24 +75,6 @@ namespace sql.builder.UI
            // SetError(seControl, text);
             //seControl.ErrorText = text;
         }
-
-        //private void seControl_KeyDown(object sender, KeyEventArgs e)
-        //{
-        //    // режим readonly
-        //    //var read_only = GetSourceReadOnly();
-        //    //if (read_only) return;
-
-        //    //if (!Mandatory && e.KeyCode == Keys.Delete)
-        //    //{
-        //    //    ClearSourceValues();
-        //    //}
-
-        //    if (e.KeyCode == Keys.Delete)
-        //    {
-        //        seControl_Cleared();
-        //    }
-        //}
-
         void seControl_Cleared()
         {
 
@@ -130,25 +87,5 @@ namespace sql.builder.UI
             }
             //throw new System.NotImplementedException();
         }
-        //protected override EditorButtonCollection buttonCollection()
-        //{
-        //    return (seControl as DevExpress.XtraEditors.SpinEdit).Properties.Buttons;
-        //}
-        //public override void AddEditorButton(EditorButton btn, EditorButton btn_rep, EventHandler on_click)
-        //{
-        //    _custom_buttons = true;
-
-        //    seControl.Properties.Buttons.Add(btn);
-        //    btn.Click += on_click;
-
-        //    var rep = (_repository ?? GetRepositoryItem()) as RepositoryItemButtonEdit;
-        //    rep.Buttons.Add(btn_rep);
-        //    // если кнопок несколько - не отличить по какой был клик!
-        //    rep.Click += (sender, args) => (sender as Control).Tag = btn_rep.Tag;
-        //    rep.Click += on_click;
-
-        //    //beControl.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-        //    //rep.TextEditStyle = TextEditStyles.DisableTextEditor;
-        //}
     }
 }

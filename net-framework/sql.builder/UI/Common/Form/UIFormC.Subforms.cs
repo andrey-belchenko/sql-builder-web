@@ -117,18 +117,6 @@ namespace sql.builder.UI
                     // item.IsFiller = true;
                     // Layout.RefreshLayoutIfNeed();
                     frm.Equip(tab);
-                    // 
-                    // (tabInfo.GetTypedControl() as Control).Visible = false;
-                    //Control gctrl = null;
-                    //if (!UIStatic.IsWeb())
-                    //{
-                    //     gctrl = (tabInfo.GetTypedControl() as Control);
-
-                    //    gctrl.Dock = DockStyle.None;
-                    //    // gctrl.Margin = new System.Windows.Forms.Padding(5000, 0, 0, 0);
-                    //    gctrl.Left = 5000;
-                    //}
-                        //    gctrl.Top = 5000;
                     Layout.RefreshLayout();
                     //if (!UIStatic.IsWeb())
                     //{
@@ -172,24 +160,6 @@ namespace sql.builder.UI
                     this.RefreshData();
                     this.dataSource.RefreshTopTable(false);
                 }
-                // чтобы не прыгало при загрузке
-                // !!! Когда Кресс сделает UID для загрузки настроек, не должна искаться форма, можно будет попробовать переделать без химии
-                //Controls[0].Dock = DockStyle.None;
-                //Controls[0].Left = 5000;
-                //Show();
-                //foreach (var node in Layout.GetMainGroup().GetVisibleNodes())
-                //{
-                //    (node.GetControl() as Control).Visible = false;
-                //}
-                //Controls[0].Dock = DockStyle.Fill;
-                //if (Layout != null)
-                //{
-                //    Layout.RefreshLayout();
-                //}
-                //foreach (var node in Layout.GetMainGroup().GetVisibleNodes())
-                //{
-                //    (node.GetControl() as Control).Visible = true;
-                //}
                 this.LayoutResume();
             }
             finally

@@ -41,18 +41,5 @@ namespace sql.builder
             //return _parsedSelectionColors[scolor];
                 return vcolor;
         }
-
-        //public static Color GetSelectionForeColor(Color color)
-        //{
-        //    if (color == Color.Black)
-        //    {
-        //        return Color.FromArgb(100, 100, 100);
-        //    }
-        //    else
-        //    {
-        //        return color;
-        //    }
-        //}
-       
     }
 }

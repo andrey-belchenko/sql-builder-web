@@ -28,97 +28,6 @@ namespace sql.builder.UI
         }
         public override void Show()
         {
-            //if (UIStatic.IsWeb())
-            //{
-            //    GetTypedControl().BeginLayoutChange();
-            //}
-
-            //if (oldExpanded != expanded)
-            //{
-            //    GetTypedControl().SetExpanded(expanded);
-            //}
-            //if (isBold != oldIsBold)
-            //{
-            //    oldIsBold = isBold;
-            //    GetTypedControl().SetBold(isBold);
-            //}
-
-            //// Емцов - показываем информацию, если нет прав на просмотр субформы
-            //if (Nodes.Count == 0)
-            //{
-            //    var form = GetProperty("form") as UIFormC;
-            //    if (form != null)
-            //    {
-            //        //ucAccessDenied ad = (form.TmpGetControlAsWinFormCtrl() as Control).Controls.OfType<ucAccessDenied>().FirstOrDefault();
-            //        //if(ad != null)
-            //        //{
-            //        //    WinForms.VLayoutGroup group = (GetTypedControl() as Control) as WinForms.VLayoutGroup;
-            //        //    group.panelControl2.Controls.Add(ad);
-            //        //}
-            //    }
-            //}
-           
-            //foreach (var node in Nodes)
-            //{
-
-
-            //    if (node.CanBeVisible() || node.visibleUndefined)
-            //    {
-            //        if (node.IsSelfVisible() != node.oldVisible || node.visibleUndefined)
-            //        {
-            //            node.visibleUndefined = false;
-            //            node.oldVisible = node.IsSelfVisible();
-            //            if (!node.IsSelfVisible())
-            //            {
-            //                GetTypedControl().HideNode(node);
-            //            }
-            //            else
-            //            {
-            //                GetTypedControl().ShowNode(node);
-            //            }
-            //        }
-
-            //        if (node.IsSelfVisible())
-            //        {
-            //            //(node.GetControl() as Control).Parent.SuspendLayout();
-            //            //(node.GetControl() as Control).Visible = false;
-
-            //            if (node.oldHeight != node.GetHeight() || node is VLayoutTabsInfo)
-            //            {
-            //                node.oldHeight = node.GetHeight();
-            //                GetTypedControl().SetNodeHeight(node);
-            //            }
-            //            if (node.oldWidth != node.GetWidth() || node is VLayoutTabsInfo)
-            //            {
-
-            //                node.oldWidth = node.GetWidth();
-            //                GetTypedControl().SetNodeWidth(node);
-            //            }
-            //            if (node.oldLeft != node.GetLeft() )
-            //            {
-            //                node.oldLeft = node.GetLeft();
-            //                GetTypedControl().SetNodeLeft(node);
-            //            }
-            //            if (node.oldTop != node.GetTop())
-            //            {
-            //                node.oldTop = node.GetTop();
-            //                GetTypedControl().SetNodeTop(node);
-            //            }
-
-            //            node.Show();
-
-            //            //(node.GetControl() as Control).Visible = true;
-            //            //(node.GetControl() as Control).Parent.ResumeLayout();
-            //        }
-
-                    
-            //    }
-            //}
-            //RaiseShowed();
-            //if (UIStatic.IsWeb())
-            //{
-            //    GetTypedControl().EndLayoutChange();
-            //}
         }
         public void Hide()
         {
@@ -290,26 +199,6 @@ namespace sql.builder.UI
         {
             Uncollapsible = value;
         }
-
-        //public override IVLayoutNode GetControl()
-        //{
-        //    if (control == null)
-        //    {
-            
-        //        //if (HasBorder)
-        //        //{
-        //        //    control = layoutController.GetControlsFactory().CreateBorderedGroup();
-        //        //}
-        //        //else
-        //        //{
-        //        //    control = layoutController.GetControlsFactory().CreateGroup(this);
-        //        //}
-        //        GetTypedControl().Init(this);
-        //        GetTypedControl().SetText(this.GetText());
-        //    }
-        //    return control;
-        //}
-
         private bool expanded = true;
         private bool oldExpanded = true;
         public void SetExpanded(bool value)
@@ -371,21 +260,6 @@ namespace sql.builder.UI
         public override int GetHeight()
         {
             return 0;
-            //if (expanded)
-            //{
-            //    int val = height;
-            //   //  val += GetControlsFactory().GroupBorderHeight();
-            //    //foreach (var node in nodes)
-            //    //{
-            //    //    val += node.GetHeight();
-            //    //}
-            //    return val;
-            //}
-            //else
-            //{
-            //    //return GetTypedControl().CollapsedHeight();
-            //}
-          
         }
    
         private bool isHeightOverflow = false;
@@ -419,40 +293,12 @@ namespace sql.builder.UI
         public override int GetClientWidth()
         {
             return 0;
-            //var val = 0;
-            //if (GetParent() == null)
-            //{
-            //    val += (GetControl() as IVLayoutGroup).ClientWidth(this);
-            //}
-            //else
-            //{
-            //    val += base.GetClientWidth();
-            //}
-            //val += (-GetPaddingLeft() - GetPaddingRight());
-            //if (isHeightOverflow)
-            //{
-            //    //val -= GetControlsFactory().ScrollBarWidth();
-            //}
-            
-            //return val;
         }
 
 
         public override int GetClientHeight()
         {
             return 0;
-            //var val = 0;
-            //if (GetParent() == null)
-            //{
-            //    val += (GetControl() as IVLayoutGroup).ClientHeight(this);
-            //}
-            //else
-            //{
-            //    val += base.GetClientHeight();
-            //}
-            //val += (-GetPaddingTop() - GetPaddingBottom());
-            
-            //return val;
         }
 
         public override int GetWidth()

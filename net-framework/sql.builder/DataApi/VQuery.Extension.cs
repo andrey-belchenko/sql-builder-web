@@ -156,122 +156,6 @@ namespace sql.builder.DataApi
             //}
             return xquery;
         }
-        //public static XElement CreateNameSearchQuery(XElement xquery,string keyName,string paramName, string columnName)
-        //{
-        //    xquery = new XElement(xquery);
-
-        //    var xcolKey= xquery.Element("select").Elements ().Where(e=>e.Attribute("as").Value!=keyName ).First();
-        //    var xcolName= xquery.Element("select").Elements ().Where(e=>e.Attribute("as").Value!=columnName ).First();
-        //       xquery.Element("select").Elements ().Remove();
-
-        //       xquery.Element("select").Add(xcolName);
-        //        xquery.Element("select").Add(xcolKey);
-        //    xquery.Attribute("name").Remove();
-        //    xquery.Attributes("inherit").Remove();
-
-        //    var xparams = xquery.Element("params");
-        //    if (xparams == null)
-        //    {
-        //        xparams = new XElement("params");
-        //        xquery.AddFirst(xparams);
-        //    }
-
-        //    var xwhere = xquery.Element("where");
-        //    if (xwhere == null)
-        //    {
-        //        xwhere = new XElement("where");
-        //        xquery.Element("from").AddAfterSelf(xwhere);
-        //    }
-
-        //    var xcall = new XElement("call", new XAttribute("function", "="));
-        //    xcall.Add(new XElement("column", new XAttribute("table", "this"), new XAttribute("column", keyName)));
-        //    xcall.Add(new XElement("useparam", new XAttribute("name", paramName)));
-        //    xwhere.RemoveAll();
-        //    xwhere.Add(xcall);
-
-
-        //    xparams.Add(
-        //          new XElement("param",
-        //              new XAttribute("name", paramName),
-        //                new XAttribute("type", "number"))
-        //              );
-
-        //    return xquery;
-        //}
-
-        //public XElement CreateNameByKeyQuery()
-        //{
-        //    string alias="a";
-        //    var key=KeyColumn();
-        //    var name=NameColumn();
-        //    var xkeyCol=new XElement(TextConst.EName.Column
-        //                ,new XAttribute(TextConst.AName.Table,alias)
-        //                    ,new XAttribute(TextConst.AName.Column,name.XName)
-        //                );
-
-        //    XElement xquery = new XElement(TextConst.EName.Query,
-        //         new XElement(TextConst.EName.Params,
-        //             new XElement(TextConst.EName.Param,
-        //                 new XAttribute(TextConst.AName.Name,key.XName)
-        //                 )
-        //             ),
-        //        new XElement(TextConst.EName.Select,
-        //            xkeyCol
-
-        //            ),
-        //            new XElement(TextConst.EName.From,
-
-        //                new XElement(TextConst.EName.Query,
-        //                    new XAttribute(TextConst.AName.Name,P_IdName),
-        //                    new XAttribute(TextConst.AName.As,alias)
-        //                )
-
-        //            ),
-        //            new XElement(TextConst.EName.Where,
-
-        //                new XElement(TextConst.EName.Call
-        //                    ,new XAttribute(TextConst.AName.Function,TextConst.AVFunc.Equal)
-        //                    ,xkeyCol
-        //                    ,new XElement(TextConst.EName.UseParam
-        //                        ,new XAttribute(TextConst.AName.Name,key.XName)
-        //                )
-        //               )
-        //               )
-
-        //      );
-
-
-
-        //    return xquery;
-
-
-
-        //}
-
-
-        //public static List<string> ExtractColNamesFromOrderStr(string s)
-        //{
-        //    //потом периписать по умному
-        //    var ss = s.Split(new char[] {',',' '});
-        //    var list = new List<string>();
-        //    foreach (var s1 in ss)
-        //    {
-        //        var s2 = s1;
-        //        var ss1 = s1.Split('.');
-        //        if (ss1.Length > 1)
-        //        {
-        //            s2 = ss1[1];
-        //        }
-        //        if (s2.ToLower() != "desc")
-        //        {
-        //            list.Add(s2);
-        //        }
-        //    }
-        //    list = list.Distinct().ToList();
-        //    return list;
-
-        //}
-
         public XElement AsListQuery()
         {
 
@@ -341,17 +225,6 @@ namespace sql.builder.DataApi
                         cols.Add(tpc);
                     }
                 }
-
-                //var ordCols = colsAll.Where(e => ordColsNames.Contains(e.XName)).ToList(); // не получилось
-                //foreach (var ocol in ordCols)
-                //{
-                //    if (!cols.Contains(ocol))
-                //    {
-                //        cols.Add(ocol);
-                //    }
-                //}
-
-                // bool wasKey = false;
                 foreach (VSXElement col in cols)
                 {
                     var tablename = "a";
@@ -411,44 +284,6 @@ namespace sql.builder.DataApi
                     xcol.SetAttributeValue(_AName.@as, keyCol.XName + "1");
                     xquery.Element(EName.select).Add(xcol);
                 }
-                // xquery = new XElement(this);
-                //var xselEls = xquery.Elements("select").Elements();
-                //xselEls.First().SetAttributeValue("mark", "1");
-                //var els = xselEls.Where(e => Cmn.GetAttrValue(e, "vid") == "1").ToList();
-
-                //if (els.Count() > 0)
-                //{
-                //    els.ForEach(e => e.SetAttributeValue("mark", "1"));
-                //}
-                //else
-                //{
-                //    var pcol = this.P_ParentFieldName;
-                //    foreach (XElement col in xselEls)
-                //    {
-                //        if (Cmn.GetAttrValue(col, TextConst.AName.Title) != "")
-                //        {
-                //            col.SetAttributeValue("mark", "1");
-                //        }
-                //        if (pcol != "")
-                //        {
-                //            var alias = Cmn.GetAttrValue(col, TextConst.AName.As);
-                //            if (alias == pcol)
-                //            {
-                //                col.SetAttributeValue("mark", "1");
-                //            }
-                //            else if (alias == "" && Cmn.GetAttrValue(col, TextConst.AName.Column)==pcol)
-                //            {
-                //                col.SetAttributeValue("mark", "1");
-                //            }
-
-
-                //        }
-                //    }
-
-
-                //}
-                //xselEls.Where(e1 => Cmn.GetAttrValue(e1, "mark") != "1").Remove();
-                //xselEls.Attributes("mark").Remove();
             }
             xquery.Attributes(TextConst.AName.Name).Remove();
             xquery.Attributes(TextConst.AName.Inherit).Remove();

@@ -65,30 +65,6 @@ namespace sql.builder.UI
 		{
 			return hint;
 		}
-
-        //public IVLayoutLabel GetTypedControl()
-        //{
-        //    var ctrl = GetControl() as IVLayoutLabel;
-        //    if (this.Item != null)
-        //    {
-        //        this.Item.GetTypedControl().SetLabel(ctrl);
-        //    }
-        //    return ctrl;
-        //}
-
-    //    public override IVLayoutNode GetControl()
-    //    {
-    //        if (control == null)
-    //        {
-    //            control = GetParent().GetLayoutController().GetControlsFactory().CreateLabel();
-    //            GetTypedControl().SetText(GetText());
-				//if (GetHint() != null)
-				//{
-				//	GetTypedControl().SetHint(GetHint());
-				//}
-    //        }
-    //        return control;
-    //    }
         public int GetTextWidth()
         {
             return 0;

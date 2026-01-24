@@ -51,34 +51,6 @@ namespace sql.builder.DataApi
             }
             return false;
         }
-        //public static VEnvironment SearchEnvironment(XElement element)
-        //{
-        //    VSXElement el;
-        //    if (element is VSXElement)
-        //    {
-        //        el = (element as VSXElement).GetBaseParent();
-        //    }
-        //    else
-        //    {
-        //        el = VSXElement.Get(element.Parent);
-        //    }
-        //    while (el != null)
-        //    {
-        //        if (el.environment != null)
-        //        {
-        //            return el.environment;
-        //        }
-        //        el = el.GetParent();
-        //    }
-        //    //foreach (XElement el in element.Ancestors())
-        //    //{
-        //    //    if (el is VXElement)
-        //    //    {
-        //    //        if ((el as VXElement).environment != null) return (el as VXElement).environment;
-        //    //    }
-        //    //}
-        //    return null;
-        //}
         public List<VAction> Events()
         {
             return this.GetElementsP(EName.events).SelectMany(VSXElement.GetElementsP).Cast<VAction>().ToList();
@@ -241,21 +213,6 @@ namespace sql.builder.DataApi
                 case TextConst.EName.Template:
                     newElement = new VPrintTemplate();
                     break;
-                //case TextConst.EName.ExcelTemplate:
-                //    newElement = new Documenting.VPrintTemplate(other1);
-                //    break;
-                //case TextConst.EName.ExcelSheet:
-                //    newElement = new VPrintSheet(other1);
-                //    break;
-                //case TextConst.EName.ExcelColumn:
-                //    newElement = new VPrintColumn(other1);
-                //    break;
-                //case TextConst.EName.NavigationItem:
-                //    newElement = new VNavigationItem(other1);
-                //    break;
-                //case TextConst.EName.NavigationField:
-                //    newElement = new VNavigationField(other1);
-                //    break;
                 case TextConst.EName.Action:
                     newElement = new VAction();
                     break;
@@ -475,20 +432,6 @@ namespace sql.builder.DataApi
             if (other == null) {
                 return null;
             }
-            //if (env == null)
-            //{
-            //    if (other.Parent != null)
-            //    {
-            //        if (other.Parent is VXElement)
-            //        {
-            //            env = ((VXElement)other.Parent).environment;
-            //        }
-            //        if (env == null)
-            //        {
-            //            env = SearchEnvironment(other);
-            //        }
-            //    }
-            //}
             VSXElement newElement = Create(other);
             //newElement.environment = env;
             if (newElement != null) {
@@ -765,68 +708,6 @@ namespace sql.builder.DataApi
         public void SaveInSourceFile()
         {
             throw new NotImplementedException();
-            ////if (this.GetEnvironment()!=XmlReports.Environment)
-            ////{
-            ////}
-            //////name="oborot" file="C:\tfs\all\sql.builder\sql.builder\source\scheme\common\functions.xml"
-            ////if (SourceFileName != "")
-            ////{
-            //SetTimeStamp();
-
-            //XElement el = ClearBeforeSaveCmn();
-            //if (SavedKey == "")
-            //{
-            //    SavedKey = this.AttrOrEmpty(this.KeyField);
-            //}
-            //if (SourceFileName != SavedSourceFileName)
-            //{
-            //    DeleteSaved();
-            //}
-
-            //if (!File.Exists(SourceFileName))
-            //{
-            //    Cmn.SaveText("<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine + "<root></root>", SourceFileName, Encoding.UTF8);
-
-            //    bool success = false;
-            //    while (!success)
-            //    {
-            //        using (var tfs = new TFSServer())
-            //        {
-            //            success = tfs.AddFile(SourceFileName);
-            //        }
-
-            //        if (!success)
-            //        {
-            //            var res = ShowMessage.ShowQuestion("Не удалось добавить файл в TFS. Повторить попытку?");
-            //            if(res != DialogResult.Yes) break;
-            //        }
-            //    }
-            //}
-
-            //XDocument doc = Cmn.OpenXmlClearNS(SourceFileName);
-
-            //// Емцов - родитель есть но в свойстве не прописан... 
-            //if (ParentName == "" && Parent != null) {
-            //    ParentName = Parent.Name.LocalName;
-            //}
-            //XElement item = doc.Root.Elements(this.ParentName).Elements(this.Name).SearchByAttribute(this.KeyField, this.SavedKey);
-
-            //if (item != null)
-            //{
-            //    item.ReplaceWith(new XElement(el));
-            //}
-            //else
-            //{
-
-            //    if (doc.Root.Elements(ParentName).FirstOrDefault() == null) {
-            //        doc.Root.Add(new XElement(this.Parent.Name));
-            //    }
-            //    doc.Root.Elements(ParentName).First().Add(new XElement(el));
-            //}
-
-            //Cmn.SaveXmlWithCheckOut(doc, SourceFileName);
-            //SavedKey = this.AttrOrEmpty(this.KeyField);
-            ////}
         }
         public void DeleteSaved()
         {
@@ -1718,22 +1599,6 @@ namespace sql.builder.DataApi
             }
             return uniqueKey;
         }
-
-        //public string GetFactId()
-        //{
-        //    if (GetElementsApplyingParts(TextConst.EName.WithParams).Any()) 
-        //    {
-        //        return GetUniqueKey().ToString(); // заменить на анализ значений параметров
-        //    }
-        //}
-        //public bool Excuded()
-        //{
-        //    return (P_Exclude == TextConst.AVBool.True);
-        //}
-        //public VExtendWhere GetParentExtendWhereElement()
-        //{
-        //    return (VExtendWhere)GetAncestorsAndSelf(TextConst.EName.ExtendWhere).FirstOrDefault();
-        //}
         public virtual VField Field()
         {
             return null;

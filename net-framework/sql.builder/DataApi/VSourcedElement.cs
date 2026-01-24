@@ -92,19 +92,6 @@ namespace sql.builder.DataApi
                             srcs.Add(el1);
                         }
                     }
-                    //if (this is VForm)
-                    //{
-                    //    foreach (VQube elqube in qel.GetElementsP(TextConst.EName.Qube))
-                    //    {
-                    //        foreach (VQueryCall el1 in elqube.AllLinks(heir))
-                    //        {
-                    //            if (!(el1 is VDimLink))
-                    //            {
-                    //                srcs.Add(el1);
-                    //            }
-                    //        }
-                    //    }
-                    //}
                 }
                 VQube qube = el as VQube;
                 if (qube != null) {

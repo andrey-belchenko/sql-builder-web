@@ -41,7 +41,7 @@ namespace sql.builder.Print.Xlsx
                 this.text = string.Empty;
             }
             this.has_formula = (xf != null);
-            // чтобы значения пересчитались при открытии
+            // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (this.has_formula && xv != null) {
                 xv.Remove();
             }
@@ -73,9 +73,9 @@ namespace sql.builder.Print.Xlsx
         internal ExcelCell Copy(ExcelRow row, string column_name)
         {
             XElement xml = new XElement(this.Xml);
-            // пока формулы будут теряться - не придумал как сделать по-нормальному
+            // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (this.has_formula) {
-                // реализовать copy для ExcelFormula!!
+                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ copy пїЅпїЅпїЅ ExcelFormula!!
                 xml.Element(ns.Main.f).Value = this.formula.GetText();
             }
             ExcelCell cell = new ExcelCell(xml, this.Env, row);
@@ -84,7 +84,7 @@ namespace sql.builder.Print.Xlsx
         }
         internal void ChangeColumnName(string colNameNew)
         {
-            // теперь не нужно
+            // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
             //if (HasFormula)
             //{
                 //int delta = ExcelUtils.GetColumnNumber(colNameNew) - ExcelUtils.GetColumnNumber(ColumnName);
@@ -120,7 +120,7 @@ namespace sql.builder.Print.Xlsx
                 xf.RemoveAttribute(ns.None.t);
                 this.has_shared_formula = false;
             }
-            // чтобы значения пересчитались при открытии
+            // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             this.Xml.RemoveElement(ns.Main.v);
         }
         internal void CopyValue(ExcelCell cellSource)
@@ -145,7 +145,7 @@ namespace sql.builder.Print.Xlsx
                 this.Xml.Element(ns.Main.v).Value = index.ToString();
                 this.value = index.ToString();
             } else {
-                // возможно нужна проверка, что значение число
+                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
                 this.Xml.Element(ns.Main.v).Value = value;
                 this.value = value;
             }
@@ -160,22 +160,5 @@ namespace sql.builder.Print.Xlsx
                 this.has_shared_formula = false;
             }
         }
-        //public void RenameColumnFormulaRef(string colNameOld, string colNameNew)
-        //{
-        //    if (FormulaRef == null) return;
-        //    FormulaRef.RenameColumn(colNameOld, colNameNew);
-        //    if (FormulaRef.Changed) Xml.Element(ns.main + "f").SetAttributeValue("ref", FormulaRef.GetText());
-        //}
-        //public void DeleteColumnFormulaRef(string colName)
-        //{
-        //    if (FormulaRef == null) return;
-        //    FormulaRef.DeleteColumn(colName);
-        //    if (FormulaRef.Changed) Xml.Element(ns.main + "f").SetAttributeValue("ref", FormulaRef.GetText());
-        //}
-        //public bool HasColumnFormulaRef(string colName)
-        //{
-        //    if (FormulaRef == null) return false;
-        //    return FormulaRef.RefsCells.Any(r => r.ColumnName == colName);
-        //}
     }
 }

@@ -99,20 +99,6 @@ namespace sql.builder.DataApi
                 return false;
             }
         }
-
-
-        //public SortedList<string, string> ColumnDimsQueries = null;
-
-        //public void GenerateColumnsDimsQueries(XElement compiled)
-        //{
-        //    if (!IsOnColsGrouping()) return;
-        //    ColumnDimsQueries = new SortedList<string, string>();
-
-        //    foreach (XElement xgrset in GetGroupingInfo().Element(TextConst.EName.OnColumns).Descendants(TextConst.EName.Grset).ToList())
-        //    {
-               
-        //    }
-        //}
         public ITransposeDataStructure TransposeStructure = null;
     }
 
@@ -513,21 +499,6 @@ namespace sql.builder.DataApi
             }
 
             dimTable.ReadAll();
-            //if (dimTable.IsReader)
-            //{
-            //    while (dimTable.Reader.Read())
-            //    {
-            //        var row = dimTable.NewRow();
-            //        foreach (DataColumn col in dimTable.Columns)
-            //        {
-            //            row[col.ColumnName] = dimTable.Reader[col.ColumnName];
-            //        }
-            //        addDimValFromRow(grset, row, row.Table.Columns[0].ColumnName,otherCols);
-            //    }
-
-            //}
-            //else
-            //{
                 foreach (DataRow row in table.GetDataSet().Tables[dimQryName].Rows)
                 {
                     addDimValFromRow(grset, row, row.Table.Columns[0].ColumnName, otherCols,null);
@@ -626,22 +597,6 @@ namespace sql.builder.DataApi
             copyColumn(table, factColName, newName, newTitle,bandTitle, prevColName);
             
         }
-        //private static string addColumnIfNeed(VDataTable table, GrsetData grset, string factColName, DimensionValue dval, string prevColName)
-        //{
-        //    var newName = combineColumnName(grset, factColName, dval);
-        //    if (!table.Columns.Contains(newName))
-        //    {
-        //        var newTitle = table.Columns[factColName].Caption;
-        //        foreach (string aval in dval.Atributes.Values)
-        //        {
-        //            newTitle += " | " + aval;
-        //        }
-        //        copyColumn(table, factColName, newName, newTitle, prevColName);
-        //    }
-        //    return newName;
-        //}
-
-
         private static void processColumns(VDataTable table, TransposeDataStructure data)
         {
             bool dimOnTop = false;
@@ -947,30 +902,6 @@ namespace sql.builder.DataApi
                     }
                 }
             }
-
-            //// merge бендов, работает, но пока убрал
-            //var go = true;
-            //while (go)
-            //{
-            //    XElement xel1 = null;
-            //    go = false;
-            //    foreach (var xel in viewcolumns.Elements().ToArray())
-            //    {
-
-            //        if (xel1 != null && xel1.Name.LocalName == TextConst.EName.Band &&
-            //            xel1.Name.LocalName == TextConst.EName.Band &&
-            //            Cmn.GetAttrValue(xel1, TextConst.AName.Title) == Cmn.GetAttrValue(xel, TextConst.AName.Title))
-            //        {
-            //            xel.Remove();
-            //            xel1.Add(xel.Elements());
-            //            go = true;
-            //        }
-            //        else
-            //        {
-            //            xel1 = xel;
-            //        }
-            //    }
-            //}
         }
 
         private static void copyColumn(VDataTable table,string name, string newName, string newTitle,string bandTitle,string prevColName=null)

@@ -245,20 +245,6 @@ namespace sql.builder.DataApi
             foreach (string name in addNames)
             {
                 VSXElement expr = getVirtcolumnExpr(sourceQuery,name);
-
-
-                //var ss = name.Split('.');
-
-                //if (ss[0] == TextConst.Pfx.QubeQueryAlias)
-                //{
-                //    expr = VSXElement.Get( new XElement(TextConst.EName.Fact));
-                //    expr.P_Column = ss[1];
-                //}
-                //else
-                //{
-
-                //    expr = sourceQuery.SearchColumn(name);
-                //}
                 var col1 = addVirtualColToListIfNeed(queryCall.XName, expr, list);
                 col1.P_Alias = expr.XName;
             //    col1.IsAddisionForName = true;

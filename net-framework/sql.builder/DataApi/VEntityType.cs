@@ -200,18 +200,5 @@ namespace sql.builder.DataApi
             AddCashValue(rel, MethodBase.GetCurrentMethod().ToString(), name);
             return rel;
         }
-        //public List<VRelation> ChildDimensionLinks()
-        //{
-        //    if (IsCashValueExists())
-        //    {
-        //        return (GetCashValue() as List<VRelation>);
-        //    }
-        //    var items = Query.GetEnvironment().GetElements(TextConst.EName.Queries).Select(q => (VQuery)q).SelectMany(q1 => q1.EntityType.ParentDimensionLinks())
-        //        .Where(
-        //        r =>r.P_AllowBackReference==TextConst.AVBool.True &&   r.P_Dimension == Query.GetDimension().P_IdName
-        //        ).Distinct().ToList();
-        //    AddCashValue(items);
-        //    return items;
-        //}
     }
 }

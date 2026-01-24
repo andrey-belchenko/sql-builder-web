@@ -45,50 +45,5 @@ namespace sql.builder.DataApi
 
         }
         #endregion
-
-
-        //#region DocDataType
-        //public override string P_DocDataType
-        //{
-        //    get
-        //    {
-        //        return
-        //            VDocumenting.GetQueryColumnType(
-        //            ((VColumn)GetElementsApplyingParts().FirstOrDefault())
-        //            );
-        //    }
-
-        //}
-        //public override bool P_DocDataType_Exists()
-        //{
-
-        //    return true;
-
-        //}
-        //#endregion
-
-
-        //#region DescriptionSearched
-        //public override string P_DescriptionSearched
-        //{
-        //    get
-        //    {
-        //        string s = base.P_DescriptionSearched;
-
-        //        if (s == "")
-        //        {
-        //            s = GetElementsApplyingParts().Where(e => e is VColumn).Select(e1 => (e1 as VColumn).P_Title).Where(s1=>Cmn.Nvl(s1,"").ToString()!="").FirstOrDefault();
-        //            if (s == null){
-        //                s = "";
-        //            }
-        //        }
-        //        return s;
-
-        //    }
-
-        //}
-
-        
-        //#endregion
     }*/
 }

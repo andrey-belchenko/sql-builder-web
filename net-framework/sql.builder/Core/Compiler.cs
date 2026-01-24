@@ -181,27 +181,6 @@ namespace sql.builder
           
             while (true)
             {
-
-
-                //if (el.Descendants("call").Where(e => getAttrValue(e, "function") == "over").Where(e1 =>
-                //    e1.Ancestors("call").Where(e2 => getAttrValue(e2, "function") == "over").FirstOrDefault() != null ||
-                //    e1.AncestorsAndSelf("call").Where(e2 => getAttrValue(e2, "group") != "").FirstOrDefault() != null
-                //    ).FirstOrDefault() != null)
-                //{
-                //    return;
-                //}
-
-
-                //if (el.Descendants("call").Where(e => getAttrValue(e, "function") == "over" || getAttrValue(e,"group")!="")
-                //    .Descendants().Where(e1 => getAttrValue(e1, "function") == "over")
-                //    .FirstOrDefault() == null)
-                //{
-                //    return;
-                //}
-
-
-
-
                 List<XElement> queries = el.Descendants(EName.query).Where(q => q.AttrOrDefault(TextConst.AName.Materialize, string.Empty) != "2").Where(e3 =>
                     e3.Elements(EName.select).Descendants().Where(EPredicate.IsCallOfWindowFunction).Where(e1 =>
                     e1.Ancestors().FirstOrDefault(EPredicate.IsCallOfWindowFunction) != null ||
@@ -218,30 +197,6 @@ namespace sql.builder
                 {
                     return;
                 }
-
-                //if (additionId > 10)
-                //{
-                //    var el1 = el.Descendants("query").Where(q => getAttrValue(q, "materialize") != "2")
-                //        .Elements("select").Descendants("call").Where(e => windowFuncNames.Contains(getAttrValue(e, "function"))/* getAttrValue(e, "function") == "over"*/).Where(e1 =>
-
-                //    e1.AncestorsAndSelf("call").Where(e2 => getAttrValue(e2, "group") != "").FirstOrDefault() != null
-
-                //    ).FirstOrDefault();
-
-
-                //    var el2 = el.Descendants("query").Where(q => getAttrValue(q, "materialize") != "2")
-                //        .Elements("select").Descendants("call").Where(e => windowFuncNames.Contains(getAttrValue(e, "function")) /*getAttrValue(e, "function") == "over"*/).Where(e1 =>
-                //   e1.Ancestors("call").Where(e2 => windowFuncNames.Contains(getAttrValue(e2, "function")) /*getAttrValue(e2, "function") == "over"*/).FirstOrDefault() != null
-
-                //   ).FirstOrDefault();
-                //}
-
-                //List<XElement> queries = el.Descendants("query").Where(e2 =>
-                //     e2.Elements("select").Descendants("call").Where(e => getAttrValue(e, "function") == "over" || getAttrValue(e, "group") != "")
-                //     .Descendants().Where(e1 => getAttrValue(e1, "function") == "over")
-                //     .FirstOrDefault() != null
-                //     ).ToList();
-
                 foreach (XElement qry in queries)
                 {
 
@@ -1026,17 +981,6 @@ namespace sql.builder
             ClearDoubleGroup(ret);
             return ret;
         }
-
-        //public static XElement compileReport(XElement element, List<VSXElement> scheme, int useRepository, bool noPivot = false)
-        //{
-        //    var buf = SchemeRoot;
-        //    SchemeRoot = scheme.Select(VSXElement.Get).ToList();
-        //    XElement rep = compileReport(element, useRepository, noPivot);
-        //    SchemeRoot = buf;//.Select(v => VSXElement.Get(v)).ToList();
-        //    return rep;
-        //}
-        // private static SortedList<string, XElement> pivotColumns = null;
-
         private static bool dontReset = false;
         private static void Reset()
         {
@@ -1154,23 +1098,6 @@ namespace sql.builder
 
 
             AddMaterializedToResult(report1);
-
-
-            //List<XElement> firstLevelMatDummies = report1.Elements().Where(e => getAttrValue(e, "materialize") == "1").ToList();
-
-            //firstLevelMatDummies.Remove();
-            //foreach (XElement name in matOrderForNames.Elements().OrderByDescending(e => Convert.ToInt32(e.Attribute("ord").Value)))
-            //{
-            //    XElement qry = matQueries[name.Attribute("name").Value];
-            //    report1.AddFirst(qry.Elements());
-            //}
-
-            ////////////
-
-            // List<XElement> firstLevelMatDummies = report1.Elements().Where(e => getAttrValue(e, "materialize") == "1").ToList();
-
-
-
             /*  XElement matQueriesSet = new XElement("cont");
               foreach (XElement el in report1.Elements().Descendants("query").Where(e =>
                    getAttrValue(e, "materialize") == "1" &
@@ -1469,25 +1396,6 @@ namespace sql.builder
 
 
             XElement ret = mainCommon(element, query, rep);
-
-
-            //var chsss = ret.Descendants(TextConst.EName.ChangeSources).ToList();
-
-            //foreach (XElement chss in chsss)
-            //{
-            //    foreach (var chs in chss.Elements())
-            //    {
-            //        var o = chs.Attribute(TextConst.AName.Name).Value;
-            //        var n = chs.Attribute(TextConst.AName.Call).Value;
-
-            //        foreach (var q in ret.Descendants(TextConst.EName.Query).Where(e => getAttrValue(e, TextConst.AName.Name) == o).ToList())
-            //        {
-            //            q.SetAttributeValue(TextConst.AName.Name, n);
-            //        }
-            //    }
-            //}
-
-
             return ret;
         }
         private static bool hasChangeSources = false;
@@ -1510,18 +1418,6 @@ namespace sql.builder
                         }
                     }
                 }
-                //foreach (XElement chss in chsss)
-                //{
-                //    foreach (var chs in chss.Elements())
-                //    {
-                //        var o = chs.Attribute(TextConst.AName.Name).Value;
-                //        var n = chs.Attribute(TextConst.AName.Call).Value;
-                //        foreach (var q in ret.Descendants(TextConst.EName.Query).Where(e => getAttrValue(e, TextConst.AName.Name) == o).ToList())
-                //        {
-                //            q.SetAttributeValue(TextConst.AName.Name, n);
-                //        }
-                //    }
-                //}
                 query = new XElement(XmlReports.Environment.Manager.GetScheme().Elements(EName.queries).Elements(EName.query).SearchByAttribute(AName.name, queryName));
             } else {
                 query = new XElement(element);
@@ -1726,17 +1622,6 @@ namespace sql.builder
 
                     if (el.Ancestors(TextConst.AName.Column).All(e => getAttrValue(e, TextConst.AName.Table) != TextConst.AVTable.Ths))// !!!! не понятно зачем это
                     {
-
-                        //var name = el.Attribute(TextConst.AName.Column).Value;
-
-                        //if (el.Ancestors().Where(e => getAttrValue(e, "thissrc") == name).Any())
-                        //{
-                        //    //var col = thisCols.First();
-                        //    var qry = el.Ancestors(TextConst.EName.Query).First();
-                        //    throw new VCompilerException("Цикл в выражении с использованием this", qry, el);
-                    
-                        //}
-
                         XElement col = thisColumn(el);
                         if (getAttrValue(el, "column") == "col_i_check")
                         {
@@ -1749,32 +1634,6 @@ namespace sql.builder
                             if (el.Attribute(TextConst.AName.RowSelector) != null || col.Descendants(TextConst.AName.Column).All(e => getAttrValue(e, TextConst.AName.Table) != TextConst.AVTable.Ths))
                             {
                                 col = createThisColumn(col, el);
-                                //col = new XElement(col);
-                                
-                                //if (col.Attribute("as") != null)
-                                //{
-                                //    col.SetAttributeValue("thissrc", col.Attribute("as").Value);
-                                //}
-                                //copyAttribute(el, col, "as");
-                                //copyAttribute(el, col, "group");
-
-                                //Cmn.CopyAttributeNotEmpty(el, col, "mp");
-
-                                //copyAttribute(el, col, "dimname");
-                                //copyAttribute(el, col, "title");
-                                //copyAttribute(el, col, "cumulate");
-                                //copyAttribute(el, col, "timeline");
-                                //copyAttribute(el, col, "pivtarg");
-                                //copyAttribute(el, col, "colset");
-                                //copyAttribute(el, col, TextConst.AName.Color);
-                                //copyAttribute(el, col, TextConst.AName.ColumnEditable);
-                                //copyAttribute(el, col, TextConst.AName.Sys);
-                                //col.Add(el.Elements(TextConst.EName.Pivot));
-                                ////copyAttribute(el, col, "window");
-                                //if (el.Attribute(TextConst.AName.RowSelector) != null)
-                                //{
-                                //    col.Elements().Remove();
-                                //}
                                 el.ReplaceWith(col);
                             }
                             
@@ -3877,23 +3736,6 @@ namespace sql.builder
 
 
             qry.Element("select").Add(compiled.Element("query").Element("select").Elements()); // могут быть проблемы если в разделе select есть query
-            //foreach (XElement col in compiled.Element("query").Element("select").Elements())
-            //{
-
-            //    qry.Element("select").Add(new XElement("const", new XAttribute("as", col.Attribute("as").Value),
-
-            //        col.Attributes().Where(a => columnAttributesNames.Contains(a.Name.LocalName)),
-
-            //        copyAttribute(col,"into"),
-            //         copyAttribute(col,"used"),
-            //           copyAttribute(col,"key")
-            //        ));
-            //}
-            //if (name == "32274-titul")
-            //{
-            //   // return ret1;
-            //    // 
-            //}
             _processingCollections.matQueriesDummies.Add(name, qry);
             setMatOrdreLast(name);
 
@@ -3981,18 +3823,6 @@ namespace sql.builder
                         );
                 }
             }
-
-
-            //  copyAttribute(qry1, qry, "as");
-
-            //foreach (XElement tbl in compiled.Element("query").Element("from").Elements())
-            //{
-
-            //    qry.Element("from").Add(new XElement("table", new XAttribute("name", tbl.Attribute("as").Value), new XAttribute("as", tbl.Attribute("as").Value)));
-
-            //}
-
-
             foreach (XElement col in compiled.Element("query").Element("select").Elements())
             {
                 XElement newCol = new XElement("column", new XAttribute("table", "st"), new XAttribute("column", col.Attribute("as").Value));
@@ -4003,30 +3833,6 @@ namespace sql.builder
                 qry.Element("select").Add(newCol);
 
             }
-
-            //if (element.Elements("push").Elements("where").Any())
-            //{
-            //    bool isProcessingPivots1 = isProcessingPivots;
-            //    isProcessingPivots = true;
-            //    qry = compileQuery(qry, false, rep);
-            //    isProcessingPivots = isProcessingPivots1;
-
-            //}
-
-            //qry.Element("select").Add(compiled.Element("query").Element("select").Elements()); // могут быть проблемы если в разделе select есть query
-            //foreach (XElement col in compiled.Element("query").Element("select").Elements())
-            //{
-
-            //    qry.Element("select").Add(new XElement("const", new XAttribute("as", col.Attribute("as").Value),
-
-            //        col.Attributes().Where(a => columnAttributesNames.Contains(a.Name.LocalName)),
-
-            //        copyAttribute(col,"into"),
-            //         copyAttribute(col,"used"),
-            //           copyAttribute(col,"key")
-            //        ));
-            //}
-
             return qry;
 
 
@@ -4762,29 +4568,6 @@ namespace sql.builder
                         }
 
                         copyAttribute(link, linkedQueryCall, TextConst.AName.LinkMultiplicatePoint);
-
-                        //var dim = XmlReports.Environment.GetDimensionByQueryName(linkedQuery.Attribute(TextConst.AName.Name).Value);
-                        //if (dim != null)
-                        //{
-                        //    linkedQueryCall.SetAttributeValue(TextConst.AName.Dimension, dim.XName);
-
-                        //}
-                        //else
-                        //{
-                        //    linkedQueryCall.Attributes(TextConst.AName.Dimension).Remove();
-                        //}
-
-
-
-
-                        //     Cmn.CopyAttribute(link, linkerQuery, TextConst.AName.MainInEditor);
-
-
-                        //if (linkedQueryCall.Attribute(TextConst.AName.Dimension) != null)
-                        //{
-
-                        //}
-
                         if (link.Element("where") != null)
                         {
                             var call = linkedQueryCall.Element("call");
@@ -5083,32 +4866,6 @@ namespace sql.builder
                     col1.SetAttributeValue("group", "1");
                     dlinkExpr.Element("select").Add(col1);
                 }
-
-
-
-                //List<string> tableAliaces = new List<string>();
-
-                //tableAliaces.Add(link.Attribute("as").Value);
-
-                //IEnumerable<XElement> childLinks = link.Elements().Where(e => (new string[] { "link", "slink","dlink" }).Contains(e.Name.LocalName)).ToArray();
-
-                //while (childLinks.Count() > 0)
-                //{
-                //    foreach (XElement childLink in childLinks)
-                //    {
-                //        tableAliaces.Add(childLink.Attribute("as").Value);
-                //    }
-                //    childLinks = childLinks.Elements().Where(e => (new string[] { "link", "slink" }).Contains(e.Name.LocalName)).ToArray();
-                //}
-
-
-
-
-
-                //IEnumerable<XElement> selColumns = getQueryColumns(query).Where(e1 => tableAliaces.Contains(e1.Attribute("table").Value)).ToArray();
-
-
-
                 SortedList<string, string> colNames = new SortedList<string, string>();
                 string colAlias;
                 IEnumerable<XElement> selColumns =
@@ -5280,38 +5037,6 @@ namespace sql.builder
             {
                 return;
             }
-            //  XElement linkCursor = link;
-
-            //List<XElement> links = new List<XElement>();
-            //while (linkCursor.Attribute("as").Value != firstLevelLink.Parent.Attribute("as").Value)
-            //{
-            //    links.Add(linkCursor);
-            //    linkCursor = linkCursor.Parent;
-            //}
-
-            //for (int i = links.Count - 1; i >= 0; i--)
-            //{
-            //    if (links[i].Name.LocalName != "dlink" && getAttrValue(links[i], "pushpred") != "1")
-            //    {
-            //        links.Remove(links[i]);
-            //    }
-            //    else
-            //    {
-            //        break;
-            //    }
-            //}
-
-            //if (links.Count > 0)
-            //{
-            //    firstLevelLink = links[links.Count - 1];
-            //    links.Remove(links[links.Count - 1]);
-            //}
-
-
-
-
-            //  links.Clear();
-
             XElement linkerQuery = firstLevelLink.Parent;
             IEnumerable<XElement> parentColumns;
             IEnumerable<XElement> childColumns;
@@ -5840,28 +5565,6 @@ namespace sql.builder
                         col.Attribute("table").Value = nextLinkI.Attribute("as").Value;
                     }
                 }
-
-
-
-                ////////////
-                //if (linkCursor.Name.LocalName == "dlink")
-                //{
-                //    newLink = new XElement("elink");
-                //}
-
-
-                //if (linkCursor.Name.LocalName == "link")
-                //{
-                //    newLink = new XElement("link");
-                //}
-
-                //if (linkCursor.Name.LocalName == "slink")
-                //{
-                //    newLink = new XElement("slink");
-                //}
-
-                //newLink.SetAttributeValue("name", linkCursor.Attribute("name").Value);
-                //newLink.SetAttributeValue("as", linkCursor.Attribute("as").Value);
                 foreach (XElement link1 in linkCursor.Elements("link"))
                 {
 
@@ -5946,77 +5649,7 @@ namespace sql.builder
 
 
             }
-
-
-
-              //foreach (XElement childLink in link.Descendants().Where(e => (new string[] { "dlink", "link" }).Contains(e.Name.LocalName)))
-              //{
-              //    colNames.Clear();
-              //    IEnumerable<XElement> childSelCols = query.Elements().Where(e => (new string[] { "select", "where" }).Contains(e.Name.LocalName)).Descendants("column").Where(
-              //       e1 => e1.Attribute("table").Value == childLink.Attribute("as").Value
-              //   ).ToArray();
-              //    foreach (XElement col in childSelCols)
-              //    {
-              //        // Может тормозить!!!!!! переписать, наверное
-              //        if (col.Attribute("as") != null)
-              //        {
-              //            colAlias = col.Attribute("as").Value;
-              //        }
-              //        else
-              //        {
-              //            XElement colWithAlias = childSelCols.Where(e1 => e1.Attribute("column").Value == col.Attribute("column").Value & e1.Attribute("as") != null).FirstOrDefault();
-              //            if (colWithAlias != null)
-              //            {
-              //                colAlias = colWithAlias.Attribute("as").Value;
-              //            }
-              //            else
-              //            {
-              //                colAlias = col.Attribute("column").Value;
-              //            }
-              //        }
-              //        if (!colNames.Keys.Contains(colAlias))
-              //        {
-              //            XElement col1 = new XElement("column");
-              //            col1.SetAttributeValue("table", childLink.Attribute("as").Value);
-              //            col1.SetAttributeValue("group", col.Attribute("dgroup").Value);
-              //            col1.SetAttributeValue("dgroup", col.Attribute("dgroup").Value);
-              //            col1.SetAttributeValue("column", col.Attribute("column").Value);
-              //            col1.SetAttributeValue("as", colAlias);
-              //            dlinkExpr.Element("select").Add(col1);
-              //            colNames.Add(colAlias, colAlias);
-              //        }
-              //        else
-              //        {
-              //            colAlias = colNames[colAlias];
-              //        }
-              //        col.SetAttributeValue("column", colAlias);
-              //        col.SetAttributeValue("table", link.Attribute("as").Value);
-              //    }
-              //}
-              //if (link.Attribute("usenl") != null)
-              //{
-              //    string queryMainQueryAlias = query.Elements("from").Elements().First().Attribute("as").Value;
-              //    string sHint = getAttrValue(query, "hint");
-              //    sHint += string.Format(" use_nl({0} {1})", queryMainQueryAlias, link.Attribute("as").Value);
-              //    query.SetAttributeValue("hint", sHint);
-              //}
-              //applyLinks(dlinkExpr);
-              //linkerQuery.AddAfterSelf(dlinkExpr);
-            //link.Remove();
         }*/
-        //public static void collectExtensions(XElement query, List<string> extNames)
-        //{
-        //    foreach (XElement ext in query.Elements("extensions").Elements())
-        //    {
-        //        if (!extNames.Contains(ext.Attribute("name").Value))
-        //        {
-        //            extNames.Add(
-        //        }
-        //    }
-        //}
-
-
-
         /* public static void applyExtensions(XElement query, XElement queryCall)
          {
              if (queryCall != null)
@@ -6213,18 +5846,6 @@ namespace sql.builder
         private static string bbAlias = "backbone";
         private static void applyQube(XElement query, XElement rep, XElement inPars, XElement queryCall)
         {
-
-            //if (queryCall != null && queryCall.Ancestors(TextConst.EName.Pivot).Any())
-            //{
-
-            //}
-
-            //тест
-
-          //  var filterCols = query.Elements(TextConst.EName.Select).Elements().Where(e => getAttrValue(e, TextConst.AName.AutoFilter) == TextConst.AVBool.True).ToArray();
-
-           
-
             XElement fact = query.Descendants(TextConst.EName.Fact).FirstOrDefault();
 
             if (fact == null)
@@ -6568,43 +6189,6 @@ namespace sql.builder
                     }
 
                 }
-
-
-
-                //var dsts = query3.Descendants(TextConst.EName.DimSet).ToArray();
-                //if (dsts.Any())
-                //{
-
-                //    var xcolsAll = Compiler.getQueryColumns(query3).ToList();
-                  
-               
-                //    foreach (XElement ds in query3.Descendants(TextConst.EName.DimSet).ToArray()) // 20180426 удаление dimset для которых нет фактов и колонок, странно что этого еще не было, или не нашел
-                //    {
-                //        var dsName = ds.Attribute(TextConst.AName.As).Value;
-
-                //        var dslinks = ds.Elements(TextConst.EName.Link); // нужно проверять еще линки, если есть колонки и нет колонок
-
-                      
-
-
-                //        if (!xcolsAll.Where(c => getAttrValue(c, TextConst.AName.Table) == dsName).Any())
-                //        {
-                //            ds.Remove();
-                //        }
-                //        else
-                //        {
-                //        }
-
-                //    }
-                //}
-
-
-
-
-                //isProcessingPivots = true;
-                //processingPivots(ret);
-                //ProcessingNestedOvers(ret);
-                //isProcessingPivots = false;
                 var factPivCols = query3.Descendants(TextConst.EName.Fact).Where(e => e.Elements(TextConst.EName.WithParams).Descendants(TextConst.AName.Column).Any(c => getAttrValue(c, TextConst.AName.Table) == "dim")).ToList();
                 if (factPivCols.Count != 0) {
                     isProcessingPivots = true;
@@ -6899,60 +6483,9 @@ namespace sql.builder
                     );
                     lastExpr.SetAttributeValue("as", col.Attribute("cumulate").Value + cumulNextPfx);
                     query.Element("select").Add(lastExpr);
-
-
-                    //lastExpr = new XElement("call",
-                    //   new XAttribute("function", "over"),
-                    //   new XElement("call",
-                    //        new XAttribute("function", "min"),
-                    //             new XElement("column", new XAttribute("table", "this"), new XAttribute("column", col.Attribute("cumulate").Value), new XAttribute("group", "min"))
-                    //        ),
-                    //   new XElement("call",
-                    //        new XAttribute("function", "partition by"),
-                    //            dimCols
-                    //        )
-                    //   //, new XElement("call",
-                    //   //     new XAttribute("function", "order by 2"),
-                    //   //      new XElement("call", new XAttribute("function", "nulls last"),
-                    //   //             new XElement("column", new XAttribute("table", "this"), new XAttribute("column", col.Attribute("cumulate").Value))
-                    //   //       )
-                    //   //     )
-
-                    //);
-                    //lastExpr.SetAttributeValue("as", col.Attribute("cumulate").Value + cumulFirstPfx);
-                    //query.Element("select").Add(lastExpr);
                 }
 
             }
-
-
-
-            //foreach (XElement col in query.Descendants("column").Where(e => e.Attribute("window") != null).ToList())
-            //{
-
-            //    List<string> dimColsNames = col.Attribute("window").Value.Split(',').ToList();
-            //    List<XElement> dimCols = dimColsNames.Select(e => new XElement("column", new XAttribute("table", "this"), new XAttribute("column", e))).ToList();
-            //    XElement colCopy = new XElement(col);
-            //    colCopy.Attribute("window").Remove();
-            //    colCopy.Attributes("as").Remove();
-            //    XElement overExpr = new XElement("call",
-            //            new XAttribute("function", "over"),
-            //            new XElement("call",
-            //                new XAttribute("function", "sum"),
-            //                colCopy
-            //                ),
-            //           new XElement("call",
-            //                new XAttribute("function", "partition by"),
-            //                    dimCols
-            //                )
-
-            //        );
-
-            //    copyAttributes(col, overExpr, new string[] { "as" });
-            //    col.ReplaceWith(overExpr);
-            //}
-
-
             XElement backbone = new XElement("query", new XAttribute("as", bbAlias), new XElement("union"));
             if (cstyle == "join")
             {
@@ -7383,19 +6916,6 @@ namespace sql.builder
                     srcQuery = link;
 
                 }
-                //string linkName = ss[1];
-                //string linkAlias = linkName + TextConst.Pfx.ExtValName;
-               
-                //XElement link = srcQuery.Elements(TextConst.EName.Link).FirstOrDefault(e => getAttrValue(e, TextConst.AName.As) == linkAlias);
-
-                //if (link == null)
-                //{
-                //    link = new XElement(TextConst.EName.Link
-                //        , new XAttribute(TextConst.AName.Name, linkName)
-                //        , new XAttribute(TextConst.AName.As, linkName + TextConst.Pfx.ExtValName)
-                //          );
-                //    srcQuery.Add(link);
-                //}
                 column.SetAttributeValue(TextConst.AName.Table, linkAlias);
             }
         }
@@ -7492,29 +7012,6 @@ namespace sql.builder
                 }
             }
         }
-        //public static void clearFuncMultiSpaces(XElement scheme)
-        //{
-        //    var ftt =
-        //        scheme.Elements(TextConst.EName.Functions)
-        //            .Elements(TextConst.EName.Function)
-        //            .DescendantNodes()
-        //            .Where(n => n is XText)
-        //            .ToArray();
-        //    RegexOptions options = RegexOptions.None;
-        //    Regex regex = new Regex("[ ]{2,}", options);
-        //    foreach (XText t in ftt)
-        //    {
-                
-        //        t.Value = regex.Replace(t.Value, " ");
-        //    }
-        //    //element.Descendants().Where(e => e.Attribute(TextConst.AName.Exclude) != null).Remove();
-        //}
-
-
-
-
-
-
         internal static void addMatrializeId(XElement query, string name = null)
         {
 
@@ -8210,18 +7707,6 @@ namespace sql.builder
                 }
                 int field_count = fields.Count();
                 Contract.Assume(field_count > 0);
-                // <query>
-                //   <select>
-                //     <column table="u" column="*" />
-                //   </select>
-                //   <from>
-                //     <query>
-                //       <union as="u">
-                //         ...
-                //       </union>
-                //     </query>
-                //   </from>
-                // </query>
                 XElement qry, select, from;
                 Factory.NewSelectFromQuery(out qry, out select, out from);
                 select.Add(Factory.NewColumn("u", TextConst.AVColumn.All));
@@ -8392,24 +7877,6 @@ namespace sql.builder
                 }
             }
         }
-        /// <summary>
-        /// Преобразует колонки, имеющие атрибут "window" в &lt;call function="over" ... &gt;&lt;call function="sum"&gt; ... &lt;/call&gt;&lt;call function="partition by"&gt; ... &lt;/call&gt;&lt;/call&gt;
-        /// Например,<br/>
-        /// &lt;column table="a" column="opl" agg="sum" window="field_1,field_2, ..., field_n" as="opl_1" /&gt;<br/>
-        /// преобразуется в<br/>
-        /// &lt;call function="over" as="alias"&gt;<br/>
-        ///   &lt;call function="sum"&gt;<br/>
-        ///     &lt;column table="a" column="opl" agg="sum" /&gt;<br/>
-        ///   &lt;/call&gt;<br/>
-        ///   &lt;call function="partition by"&gt;<br/>
-        ///     &lt;column table="this" column="field_1" group="1" /&gt;<br/>
-        ///     &lt;column table="this" column="field_2" group="1" /&gt;<br/>
-        ///     ...<br/>
-        ///     &lt;column table="this" column="field_n" group="1" /&gt;<br/>
-        ///   &lt;/call&gt;<br/>
-        /// &lt;/call&gt;<br/>
-        /// </summary>
-        /// <param name="query"></param>
         private static void processingWindow(XElement query)
         {
             Contract.Assert(query != null);
@@ -8522,25 +7989,6 @@ namespace sql.builder
                             {
 
                                 srcAttr = searchSectAttr(srcQuery, col1);
-                                //List<XElement> cols = new List<XElement> { col1 };
-                                //List<string> names = new List<string> { getAttrValue(col1, "column") };
-                                //XElement cumCol = null;
-
-                                //while (cumCol == null)
-                                //{
-                                //    List<string> names = cols.DescendantsAndSelf().Where(e => getAttrValue(e, "table") == "this").Select(e1 => getAttrValue(e1, "column")).ToList();
-                                //    cols = srcQuery.Element("select").Elements().Where(e => names.Contains(e.Attribute("as").Value)).ToList();
-                                //    if (cols.Count() == 0)
-                                //    {
-                                //        break;
-                                //    }
-                                //    cumCol = cols.Where(e => e.Attribute("cumulate") != null).FirstOrDefault();
-                                //}
-
-                                //if (cumCol != null)
-                                //{
-                                //    dimName = cumCol.Attribute("cumulate").Value;
-                                //}
                             }
 
                             if (srcAttr != null)
@@ -8622,25 +8070,6 @@ namespace sql.builder
                     }
                     else
                     {
-
-
-                        //   List<XElement> cols = new List<XElement> { srcCol };
-
-                        //   XElement cumCol =null;
-                        //   XAttribute cumAttr=null;
-                        //   while (cumCol == null)
-                        //   {
-                        //       List<string> names = cols.Descendants().Where(e => getAttrValue(e, "table") == "this").Select(e1 => getAttrValue(e1, "column")).ToList();
-                        //       cols = srcQuery.Element("select").Elements().Where(e => names.Contains(e.Attribute("as").Value)).ToList();
-                        //       cumCol = cols[0];
-                        //       cumAttr = cols.Attributes().Where(a => sectRoleAttrsNames.Contains(a.Name.LocalName)).FirstOrDefault();
-                        //       if (cumAttr != null)
-                        //       {
-                        //           cumCol = cumAttr.Parent;
-                        //       }
-                        ////       cumCol = cols.Where(e => e.Attribute("cumulate") != null).FirstOrDefault();
-
-                        //   }
                         srcAttr = searchSectAttr(srcQuery, srcCol);
                         srcCol = srcAttr.Parent;
                     }
@@ -8689,27 +8118,6 @@ namespace sql.builder
                                           )
                                     )
                             );
-
-                        //if (getAttrValue(sect, "nvl") == "first")
-                        //{
-                        //    expr.Element("call").Add(
-
-
-                        //        new XElement("call", new XAttribute("function", "and"),
-                        //              new XElement("call", new XAttribute("function", "gt"),
-                        //                new XElement("column", new XAttribute("table", tablePName), new XAttribute("column", dimName + cumulFirstPfx)),
-                        //                new XElement(sect.Elements().First())
-                        //              ),
-                        //              new XElement("call", new XAttribute("function", "="),
-                        //                new XElement("column", new XAttribute("table", tablePName), new XAttribute("column", dimName + cumulFirstPfx))
-                        //               , new XElement("column", new XAttribute("table", tablePName), new XAttribute("column", dimName))
-                        //              )
-                        //            )
-
-                        //        );
-                        //}
-
-
                     }
                     else
                     {
@@ -8873,44 +8281,6 @@ namespace sql.builder
             }
             //}
         }
-
-        //private static void addReportsForReferences()
-        //{
-        //    SortedList<string, string> sl = new SortedList<string, string>();
-        //    foreach (XAttribute attr in schemeRoot.Descendants("column").Attributes("reference").Distinct())
-        //    {
-        //        if (!sl.ContainsKey(attr.Value))
-        //        {
-        //            sl.Add(attr.Value, attr.Value);
-
-        //            XElement report = schemeRoot.Elements("reports").Elements("report").Where(e => e.Attribute("name").Value == attr.Value).FirstOrDefault();
-        //            if (report == null)
-        //            {
-
-        //                XElement query = schemeRoot.Elements("queries").Elements("query").Where(e => e.Attribute("name").Value == attr.Value).FirstOrDefault();
-        //                if (query != null)
-        //                {
-        //                    XElement columns = new XElement("columns");
-        //                    report = new XElement("report", new XAttribute("auto", "1"), new XAttribute("name", attr.Value), new XElement("queries", new XElement("query", new XAttribute("name", attr.Value), new XAttribute("as", "a"), columns)));
-        //                    foreach (XElement column in query.Elements("select").Elements().Where(e => getAttrValue(e, "vid") == "1"))
-        //                    {
-        //                        columns.Add(new XElement("column", new XAttribute("table", "a"), new XAttribute("name", column.Attribute("as").Value)));
-        //                    }
-
-        //                    if (columns.Elements().Count() == 0)
-        //                    {
-        //                        columns.Remove();
-        //                    }
-
-        //                    schemeRoot.Element("reports").Add(report);
-
-
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
         private static void processingOrderColumns(XElement query)
         {
             // foreach (XElement query in schemeRoot.Elements("queries").Elements("query").Where(e => e.Attribute("order") != null))
@@ -9040,29 +8410,6 @@ namespace sql.builder
                     }
                 }
             }
-            //foreach (XElement query in root.DescendantsAndSelf("query").ToList())
-            //{
-            //    List<XElement> links = new List<XElement>();
-            //    foreach (XElement qry in query.Descendants("from").Elements().Where(e => (new string[] { "query", "table" }).Contains(e.Name.LocalName)))
-            //    {
-            //        XElement classScheme = getQueryScheme(getAttrValue(qry, "name"));
-            //        copyAttribute(classScheme, qry, "title");
-            //        foreach (XElement el in qry.Elements().Where(EPredicate.IsAnyLink))
-            //        {
-            //            links.Add(el);
-            //            //addLinkInfoI(el, query);
-            //        }
-            //        foreach (XElement el in qry.Elements(TextConst.EName.ExtendLinks).Elements().Where(EPredicate.IsAnyLink))
-            //        {
-            //            links.Add(el);
-            //            //addLinkInfoI(el, query);
-            //        }
-            //    }
-            //    foreach (var el in links)
-            //    {
-            //        addLinkInfoI(el, query);
-            //    }
-            //}
         }
         private static void addLinkInfoI(XElement link, XElement query, IEnumerable<XElement> selColumns)
         {
@@ -9431,17 +8778,6 @@ namespace sql.builder
                 XElement targetContent = target.Element(TextConst.EName.From).Element(TextConst.EName.Qube);
                 qubeWhereByAddition.Add("", targetContent.Element(TextConst.EName.Where));
                 whereByAddition.Add("", target.Element(TextConst.EName.Where));
-
-                //if (source.Elements(TextConst.EName.Expressions).Any())
-                //{
-                //    var sourceContent = source.Elements(TextConst.EName.Expressions).ToList();
-                //    if (!target.Elements(TextConst.EName.Expressions).Any())
-                //    {
-                //        target.Add(new XElement(TextConst.EName.Expressions));
-                //    }
-                //    var targetContent = target.Element(TextConst.EName.Expressions);
-                //}
-
                 foreach (XElement source1 in source)
                 {
                     var sourceContent1 = source1.Elements(TextConst.EName.From).Elements(TextConst.EName.Qube).Elements(TextConst.EName.Link).Select(e => new XElement(e)).ToList();
@@ -9464,21 +8800,6 @@ namespace sql.builder
                     whereByAddition.Add(source1.Attribute(TextConst.AName.Name).Value, xwhere);
                     qubeByAddition.Add(source1.Attribute(TextConst.AName.Name).Value, source1.Elements(TextConst.EName.From).Elements(TextConst.EName.Qube).FirstOrDefault());
                 }
-                //var list = new List<XElement>();
-                //list.Add(null);
-                //list.AddRange(source);
-
-
-
-
-                //if (source1 != null)
-                //{
-                //     sourceContentElements = source1.Elements(TextConst.EName.From).Elements(TextConst.EName.Qube).ToList();
-                //     xwhere = source1.Elements(TextConst.EName.From).Elements(TextConst.EName.Qube).Elements(TextConst.EName.Where).FirstOrDefault();
-
-
-                //    targetContent.Add(sourceContentElements.Elements(TextConst.EName.Link));
-                //}
                 targetContent.Add(sourceContentElements);
                 var trgElements = targetContent.Elements(TextConst.EName.Link).ToList();
 
@@ -9632,58 +8953,6 @@ namespace sql.builder
                         target.Element(TextConst.EName.Where).Add(xwhere.Elements());
                     }
                 }
-
-                //var dimsIds = target.Elements(TextConst.EName.Where).Descendants(TextConst.EName.Fact).Attributes(TextConst.EName.DimSet).Select(e => e.Value).Distinct().ToList();
-                //int i = 0;
-                //foreach (string dimsId in dimsIds)
-                //{
-                //    i++;
-                //    var dimnames = dimsId.Split(',').ToList();
-                //    XElement dimset = null;
-
-                //    foreach (XElement link in targetContent.Elements(TextConst.EName.Link).ToList())
-                //    {
-                //        var origPr = getAttrValue(link, TextConst.AName.OnlyForCond);
-                //        var dimPr = "1";
-                //        if (dimnames.Contains(link.Attribute(TextConst.AName.Name).Value))
-                //        {
-                //            dimPr = "";
-                //        }
-                //        if (origPr != dimPr)
-                //        {
-                //            if (dimset == null)
-                //            {
-                //                dimset = new XElement(TextConst.EName.DimSet);
-                //                dimset.SetAttributeValue(TextConst.AName.As, "set" + i.ToString());
-                //            }
-                //            var link1 = new XElement(TextConst.EName.Link);
-                //            copyAttributes(link, link1);
-                //            if (dimPr == "1")
-                //            {
-                //                link1.SetAttributeValue(TextConst.AName.OnlyForCond, TextConst.AVBool.True);
-                //            }
-                //            else
-                //            {
-                //                link1.Attributes(TextConst.AName.OnlyForCond).Remove();
-                //            }
-                //            link1.Attributes(TextConst.AName.AllRows).Remove();
-                //            dimset.Add(link1);
-
-                //        }
-                //    }
-                //    if (dimset != null)
-                //    {
-                //        targetContent.Add(dimset);
-                //        foreach (XElement fact in target.Elements(TextConst.EName.Where).Descendants(TextConst.EName.Fact).Where(e => getAttrValue(e,TextConst.EName.DimSet) == dimsId).ToList())
-                //        {
-                //            fact.SetAttributeValue(TextConst.AName.Table, dimset.Attribute(TextConst.AName.As).Value);
-                //            fact.Attributes(TextConst.EName.DimSet).Remove();
-                //        }
-                //    }
-
-
-                //}
-
                 targetContent.Descendants().Attributes(TextConst.AName.Addition).Remove();
 
 
@@ -10257,90 +9526,6 @@ namespace sql.builder
                     el.Attribute("table").Value = query.Attribute("as").Value;
                 }
             }
-
-            //bool hasPivots = false;
-            //SortedList<string, string> newCols = new SortedList<string, string>();
-
-
-
-            // 
-            //foreach (XElement piv in queryScheme.Elements("select").Elements().Elements("pivot"))
-            //{
-            //     foreach (XElement expCol in piv.Elements().Where(e => new string[] { "column", "call" }.Contains(e.Name.LocalName)).DescendantsAndSelf("column").Where(e => getAttrValue(e, "table") != "dim"))
-            //    {
-            //       // if (expCol.Attribute("table").Value != "this")
-            //      //  {
-
-            //            string newColFullName = expCol.Attribute("table").Value + "." + expCol.Attribute("column").Value;
-            //            string newColAlias = "";
-            //            if (!newCols.ContainsKey(newColFullName))
-            //            {
-            //                XElement newExpCol = new XElement(expCol);
-
-            //                newExpCol.SetAttributeValue("group", "max");
-            //                newColAlias = "pcol" + newColIndex.ToString();
-            //                newExpCol.SetAttributeValue("as", newColAlias);
-            //                newExpCol.SetAttributeValue("title", "");
-            //                newColIndex++;
-            //                queryScheme.Element("select").Add(newExpCol);
-            //                newCols.Add(newColFullName, newColAlias);
-            //            }
-            //            else
-            //            {
-            //                newColAlias = newCols[newColFullName];
-            //            }
-            //            expCol.SetAttributeValue("table", "this");
-            //            expCol.SetAttributeValue("column", newColAlias);
-            //            expCol.SetAttributeValue("group", "");
-            //       // }
-            //    }
-            //}
-
-
-
-            //foreach (XElement col in queryScheme.Elements("select").Elements().Where(e => getAttrValue(e, "dimname") != "").ToList())
-            //{
-            //    if (col.Descendants("column").Where(e => getAttrValue(e, "pivtarg") == "1").FirstOrDefault() != null)
-            //    {
-            //         foreach (XElement expCol in col.Descendants("column").Where(e => e.Ancestors("pivot").FirstOrDefault() == null).Distinct().ToList())
-            //        {
-            //           // if (expCol.Attribute("table").Value != "this")
-            //           // {
-            //                string newColFullName = expCol.Attribute("table").Value + "." + expCol.Attribute("column").Value;
-            //                string newColAlias = "";
-            //                if (!newCols.ContainsKey(newColFullName))
-            //                {
-            //                    XElement newExpCol = new XElement(expCol);
-
-            //                    newExpCol.SetAttributeValue("group", "max");
-            //                    newColAlias = "pcol" + newColIndex.ToString();
-            //                    newExpCol.SetAttributeValue("as", newColAlias);
-            //                    newExpCol.SetAttributeValue("title", "");
-            //                    newColIndex++;
-            //                    queryScheme.Element("select").Add(newExpCol);
-            //                    newCols.Add(newColFullName, newColAlias);
-
-            //                }
-            //                else
-            //                {
-            //                    newColAlias = newCols[newColFullName];
-            //                }
-            //                expCol.SetAttributeValue("table", "this");
-            //                expCol.SetAttributeValue("column", newColAlias);
-            //                expCol.SetAttributeValue("group", "");
-            //          //  }
-
-            //        }
-            //        col.SetAttributeValue("needdel", "1");
-            //    }
-            //}
-
-
-            //if (getAttrValue(queryScheme, "name") == "26630-dat")
-            //{
-            //    //queryScheme = queryScheme;
-            //}
-
             foreach (XElement col in queryScheme.Elements("select").Elements().ToList())
             {
                 XElement newCol = null;
@@ -10395,17 +9580,6 @@ namespace sql.builder
                         newCol.SetAttributeValue("group", gr.Value);
                     }
                 }
-                //if (col.Attribute("dimname") != null)
-                //{
-                //    copyAttribute(col, newCol, "dimname");
-                //}
-                //if (col.Element("pivot") != null && childPivs.Count() == 0)
-                // {
-                //     newCol.Add(col.Elements("pivot"));
-                //     hasPivots = true;
-                // }
-                //col.Elements("pivot").Remove(); // это было закомментированно
-                //col.Attributes("dimname").Remove(); // это было закомментированно
                 query.Element("select").Add(newCol);
             }
 
@@ -10625,22 +9799,6 @@ namespace sql.builder
                 if (xgrsets.Elements(TextConst.EName.OnColumns).Any()) {
                     isOnColumns = true;
                     var oncolsElement = new XElement(xgrsets.Element(TextConst.EName.OnColumns));
-                    //foreach (XElement xgrsetOnCols in oncolsElement.Descendants(TextConst.EName.Grset).ToList())
-                    //{
-                    //    var dimQry = xgrsetOnCols.Element(TextConst.EName.DimQuery);
-                    //    if (dimQry != null)
-                    //    {
-                    //        dimQry.Remove();
-                    //        query.Add(dimQry);
-                    //        var wp = dimQry.Element(TextConst.EName.WithParams);
-                    //        if (wp != null)
-                    //        {
-                    //            var wp2 = new XElement(TextConst.EName.WithParams2);
-                    //            wp2.Add(wp.Elements());
-                    //            wp.ReplaceWith(wp2);
-                    //        }
-                    //    }
-                    //}
                     foreach (XElement xgrsetOnRow in xgrsets1.Descendants(TextConst.EName.Grset).ToList()) {
                         var name1 = xgrsetOnRow.Attribute(AName.@as).Value;
                         var oncolsElement1 = new XElement(oncolsElement);
@@ -10701,43 +9859,9 @@ namespace sql.builder
 
             elements.Attributes("group").Remove();
             int groipId = 1;
-            //XElement grIdExpr = new XElement("call", new XAttribute("function", "case"), new XAttribute("as", "grsetid"),new XAttribute("type","string"));
-
-            //XElement grParIdExpr = new XElement("call", new XAttribute("function", "case"), new XAttribute("as", "parent_grsetid"), new XAttribute("type", "string"));
-
-
-            // XElement grIdExpr = new XElement("call", new XAttribute("function", "||"), new XAttribute("as", "grsetid"));
-
-            //XElement parIdExpr = new XElement("call", new XAttribute("function", "decode"), new XAttribute("as", "parent_growid"), new XAttribute("type", "string"), new XAttribute("title", ""),
-            //      new XElement("column", new XAttribute("table", "this"), new XAttribute("column", "parent_grsetid"))
-            //    );
-
-
-           
-            //XElement onRowsIdExpr = null;
-
-            //if (isOnColumns)
-            //{
-            //    onRowsIdExpr = new XElement("call", new XAttribute("function", "decode"), new XAttribute("as", TextConst.AVSpecColumnGrset.OnRowsGrRowId), new XAttribute("type", "string"), new XAttribute("title", ""),
-            //          new XElement("column", new XAttribute("table", "this"), new XAttribute("column", TextConst.AVSpecColumnGrset.OnRowsGrSetId))
-            //        );
-            //}
-
-
             XElement rowNumExpr = Factory.NewCall(TextConst.AVFunction.RowNumber);
             rowNumExpr.Add(new XAttribute(AName.@as, TextConst.AVSpecColumnGrset.GrRowNum));
             rowNumExpr.Add(Factory.NewCall(TextConst.AVFunction.OrderBySimple, Factory.NewConst("null")));
-            //XElement rowNumExpr = new XElement("call",
-            //    new XAttribute("function", TextConst.AVFunction.RowNum),
-            //    new XAttribute("as", TextConst.AVSpecColumnGrset.GrRowNum),
-            //    new XElement(TextConst.EName.Const, new XText("null"))
-            //   );
-
-
-            //XElement idExpr = new XElement("call", new XAttribute("function", "decode"), new XAttribute("as", "growid"), new XAttribute("type", "string"), new XAttribute("key", "1"), new XAttribute("title", ""),
-            //    new XElement("column", new XAttribute("table", "this"), new XAttribute("column", "grsetid"))
-            //  );
-
             XElement idExpr = new XElement("call", new XAttribute("function", TextConst.AVFunction.Concat), new XAttribute("as", "growid"), new XAttribute("type", "string"), new XAttribute("key", "1"), new XAttribute("title", ""));
 
             XElement onColsColIddExpr = null;
@@ -10910,33 +10034,6 @@ namespace sql.builder
                     //  grIdExprW.Element("call").Add(grIdExprE);
 
                 }
-
-                //XElement grIdExprW = new XElement("call", new XAttribute("function", "when"));
-                //XElement grIdExprE = new XElement("call", new XAttribute("function", "="), new XElement("call", new XAttribute("function", "grouping")
-                //         ,new XElement("column", new XAttribute("table", qalias), new XAttribute("column", grColName))
-                //        )
-                //        , new XElement("const", new XText("0"))  
-                //);
-                //grIdExprW.Add(grIdExprE);
-                //grIdExprW.Add(new XElement("const", new XText("'" + sGroupId + "'")));
-                //grIdExpr.Add(grIdExprW);
-
-                //if (!string.IsNullOrEmpty(grParColName))
-                //{
-                //    XElement grParIdExprW = new XElement("call", new XAttribute("function", "when"));
-                //    XElement grParIdExprE = new XElement("call", new XAttribute("function", "="), new XElement("call", new XAttribute("function", "grouping")
-                //             , new XElement("column", new XAttribute("table", qalias), new XAttribute("column", grParColName))
-                //            )
-                //            , new XElement("const", new XText("0"))
-                //    );
-
-
-                //    grParIdExprW.Add(grParIdExprE);
-                //    grParIdExprW.Add(new XElement("const", new XText("'" + sParGroupId + "'")));
-                //    grParIdExpr.Add(grParIdExprW);
-                //}
-
-                //   grIdExpr.Add(new XElement("column", new XAttribute("table", qalias), new XAttribute("column", grColName)));
                 if (grSet.Element(TextConst.EName.Having) != null)
                 {
                     if (grSet.Element("where") == null)
@@ -10987,20 +10084,6 @@ namespace sql.builder
                                         ),
                                         new XElement("const", new XText("1"))
                                      );
-                        
-
-
-
-
-
-
-                        
-                        
-
-                        
-
-
-
                         havingExpr.Element("call").Add(visExp1);
 
                         query.Element(TextConst.EName.Select).Add(new XElement("column"
@@ -11008,41 +10091,6 @@ namespace sql.builder
                             , new XAttribute("column", visColName)
                                 , new XAttribute(TextConst.AName.As, visColName)
                             ));
-                        //var grSetAr = new XElement[] { grSet };
-
-                        //if (sOnColsGrsetId != "")
-                        //{
-                        //    grSetAr = xgrsets.Descendants(TextConst.EName.Grset).Where(e => Cmn.GetAttrValue(e, TextConst.AName.OnColsGrsetId) == sOnColsGrsetId).ToArray();
-                        //}
-
-                        //List<XElement> gids = grSetAr.DescendantsAndSelf("grset").Select(e => new XElement("const", new XText("'" + getAttrValue(e, "id") + "'"))).ToList();
-
-                        //var visExp1 = new XElement("call", new XAttribute("function", "="),
-                        //    //visibleExpr,
-                        //                new XElement("column", new XAttribute("table", qalias), new XAttribute("column", visColName)),
-                        //                new XElement("const", new XText("1"))
-                        //             );
-                        //if (grSet.Element(TextConst.EName.Having) != null)
-                        //{
-                        //    var visExp2 = new XElement("call", new XAttribute("function", "and"), grSet.Element(TextConst.EName.Having).Elements(), visExp1);
-                        //    visExp1 = visExp2;
-
-                        //}
-
-
-
-                        //havingExpr.Element("call").Add(
-
-                        //         new XElement("call", new XAttribute("function", "or"),
-                        //             visExp1,
-                        //             new XElement("call", new XAttribute("function", "not in"),
-                        //    //visibleExpr,
-                        //                new XElement("column", new XAttribute("table", "this"), new XAttribute("column", "grsetid")),
-                        //                 new XElement("call", new XAttribute("function", "array"), gids)
-                        //             )
-                        //          )
-
-                        //    );
                     }
                 }
 
@@ -11073,122 +10121,8 @@ namespace sql.builder
 
 
                 string origId = "";
-
-                //List<string> keys = null;
-
-                //if (grSet.Parent.Name.LocalName != "grsets" || grSet.Attribute(TextConst.AName.Parent) != null)
-                //{
-                //    if (grSet.Attribute(TextConst.AName.ParentKey) != null)
-                //    {
-                //        keys = grSet.Attribute(TextConst.AName.ParentKey).Value.Split(',').ToList();
-                //    }
-
-                //    string parId = "";
-
-                //    if (grSet.Attribute(TextConst.AName.Parent) != null)
-                //    {
-                //        origId = grSet.Attribute(TextConst.AName.Parent).Value;
-                //        parId = origId;
-                //    }
-                //    else
-                //    {
-                //        origId = grSet.Parent.Attribute("id").Value;
-                //        parId = grSet.Parent.Attribute("id").Value;
-
-
-                //        if (grSet.Parent.Attribute(TextConst.AName.Name) != null)
-                //        {
-                //            origId = grSet.Parent.Attribute(TextConst.AName.Name).Value;
-                //        }
-                //        if (grSet.Parent.Attribute(TextConst.AName.Key) != null)
-                //        {
-                //            keys = grSet.Parent.Attribute(TextConst.AName.Key).Value.Split(',').ToList();
-                //        }
-
-
-                //    }
-                //    parIdExpr.Add(new XElement("const", new XText("'" + parId + "'")));
-                //    XElement parIdExprC = new XElement("call", new XAttribute("function", "||")
-                //        , new XElement("const", new XText("'" + origId + "'"))
-                //        );
-                //    foreach (XElement col in elements)
-                //    {
-
-                //        if (keys == null)
-                //        {
-                //            parIdExprC.Add(new XElement("const", new XText("'#'")));
-                //            if (grSetsColumns[grSet.Parent.Attribute("id").Value].Contains(col.Attribute("as").Value))
-                //            {
-                //                parIdExprC.Add(new XElement("call", new XAttribute("function", "to_char"), new XElement(col)));
-                //            }
-                //            else
-                //            {
-                //                parIdExprC.Add(new XElement("const", new XText("' '")));
-                //            }
-                //        }
-                //        else
-                //        {
-                //            if (keys.Contains(col.Attribute("as").Value))
-                //            {
-                //                parIdExprC.Add(new XElement("const", new XText("'#'")));
-                //                parIdExprC.Add(new XElement("call", new XAttribute("function", "to_char"), new XElement(col)));
-                //            }
-                //        }
-                //    }
-                //    parIdExpr.Add(parIdExprC);
-                //}
-
-
-
-                //List<string> keysOnRows = null; // on rows
-
-                //string origIdOnRows = "";// on rows
-                // делаю для вычисления id onrows  все как для parent id, кроме того что касается дерева, не вникая
                 if (isOnColumns)
                 {
-
-
-
-                    //string parIdOnRows = "";// on rows
-                    //var parentOnRows = grSet.AncestorsAndSelf().Where(e => e.Attribute(TextConst.AName.OnColumns) == null).First();
-
-
-
-
-                    //origIdOnRows = parentOnRows.Attribute("id").Value;// on rows
-                    //parIdOnRows = parentOnRows.Attribute("id").Value;// on rows
-
-
-
-                    //onRowsIdExpr.Add(new XElement("const", new XText("'" + parIdOnRows + "'")));
-                    //XElement onRowsIdExprC = new XElement("call", new XAttribute("function", "||")
-                    //   , new XElement("const", new XText("'" + origIdOnRows + "'"))
-                    //   );
-                    //foreach (XElement col in elements)
-                    //{
-
-                    //    if (keysOnRows == null)
-                    //    {
-                    //        onRowsIdExprC.Add(new XElement("const", new XText("'#'")));
-                    //        if (grSetsColumns[parentOnRows.Attribute("id").Value].Contains(col.Attribute("as").Value))
-                    //        {
-                    //            onRowsIdExprC.Add(new XElement("call", new XAttribute("function", "to_char"), new XElement(col)));
-                    //        }
-                    //        else
-                    //        {
-                    //            onRowsIdExprC.Add(new XElement("const", new XText("' '")));
-                    //        }
-                    //    }
-                    //    else
-                    //    {
-                    //        if (keysOnRows.Contains(col.Attribute("as").Value))
-                    //        {
-                    //            onRowsIdExprC.Add(new XElement("const", new XText("'#'")));
-                    //            onRowsIdExprC.Add(new XElement("call", new XAttribute("function", "to_char"), new XElement(col)));
-                    //        }
-                    //    }
-                    //}
-                    //onRowsIdExpr.Add(onRowsIdExprC);
                 }
 
                 origId = grSet.Attribute("id").Value;
@@ -11196,45 +10130,6 @@ namespace sql.builder
                 {
                     origId = grSet.Attribute(TextConst.AName.Name).Value;
                 }
-                //группировку по дереву сломал
-                //idExpr.Add(new XElement("const", new XText("'" + grSet.Attribute("id").Value + "'")));
-                //XElement idExprC = new XElement("call", new XAttribute("function", "||")
-                //    , new XElement("const", new XText("'" + origId + "'"))
-                //);
-                //keys = null;
-                
-                //if (grSet.Attribute(TextConst.AName.Key) != null)
-                //{
-                //    keys = grSet.Attribute(TextConst.AName.Key).Value.Split(',').ToList();
-                //}
-
-                //foreach (XElement col in elements)
-                //{
-                //    if (keys == null)
-                //    {
-                //        idExprC.Add(new XElement("const", new XText("'#'")));
-                //        if (grSetsColumns[grSet.Attribute("id").Value].Contains(col.Attribute("as").Value))
-                //        {
-                //            idExprC.Add(new XElement("call", new XAttribute("function", "to_char"), new XElement(col)));
-                //        }
-                //        else
-                //        {
-                //            idExprC.Add(new XElement("const", new XText("' '")));
-                //        }
-                //    }
-                //    else
-                //    {
-                //        if (keys.Contains(col.Attribute("as").Value))
-                //        {
-                //            idExprC.Add(new XElement("const", new XText("'#'")));
-                //            idExprC.Add(new XElement("call", new XAttribute("function", "to_char"), new XElement(col)));
-                //        }
-                //    }
-                //}
-                //idExpr.Add(idExprC);
-
-
-                //oncols id, дерево не учтено
                 XElement idExprC = null;
                 if (isOnColumns && sOnColsGrsetId != "")
                 {
@@ -11290,17 +10185,6 @@ namespace sql.builder
                 }
 
             }
-
-
-
-
-
-
-
-
-
-            //query.Element("select").Add(grIdExpr);
-          
             var hOld = query.Elements(TextConst.EName.Having).FirstOrDefault();
             if (hOld != null && havingExpr!=null)
             {
@@ -11317,59 +10201,13 @@ namespace sql.builder
             {
                 query.Add(havingExpr);
             }
-        
-
-            //XElement grParIdExpr = new XElement("call", new XAttribute("function", "decode"), new XAttribute("as", "parent_grsetid"), new XAttribute("type", "string"),
-            //         new XElement("column", new XAttribute("table", "this"), new XAttribute("column", "grsetid"))
-
-            //    );
-
-            //foreach (XElement grSet in  grSets)
-            //{
-            //    if (grSet.Parent.Name.LocalName != "grsets")
-            //    {
-            //        grParIdExpr.Add(new XElement("const", new XText("'"+grSet.Attribute("id").Value+"'")));
-            //        grParIdExpr.Add(new XElement("const", new XText("'" + grSet.Parent.Attribute("id").Value + "'")));
-            //    }
-            //}
-
-
-            //query.Element("select").Add(grParIdExpr);
             if (element.Element("grsets").Elements().Count() == 1)
             {
                 //  grCols.Remove(element.Element("grsets").Elements().First().Attribute("level").Value);
 
             }
-            //XElement idExpr = new XElement("call", new XAttribute("function", "||"), new XAttribute("as", "growid"), new XAttribute("type", "string"), new XAttribute("key", "1")
-            //       ,new XElement("column", new XAttribute("table", "this"), new XAttribute("column", "grsetid"))
-            //    );
-            //foreach (XElement col in grCols.Values)
-            //{
-            //    XElement idExprIf = new XElement("call", new XAttribute("function", "if"));
-            //    XElement idExprE = new XElement("call", new XAttribute("function", "="), new XElement("call", new XAttribute("function", "grouping"), new XElement(col)), new XElement("const", new XText("0")));
-            //    idExprIf.Add(idExprE);
-            //    idExpr.Add(new XElement("const", new XText("'#'")));
-            //    idExprIf.Add( new XElement("call", new XAttribute("function", "to_char"),  new XElement(col)), new XElement("const", new XText("' '")));
-
-            //    idExpr.Add(idExprIf);
-            //}
-            //query.Element("select").Add(idExpr);
             query.Element("select").Add(rowNumExpr);
             query.SetAttributeValue("haskeys", "1");
-
-            //if (parIdExpr.Elements().Count() > 1)
-            //{
-            //   // query.Element("select").Add(parIdExpr);
-            //}
-            //else
-            //{
-            //    //  as="parent_grsetid" type="string"
-
-            //   // query.Element("select").Add(new XElement("const", new XAttribute("as", "parent_growid"), new XAttribute("type", "string"), new XText("null")));
-            //}
-
-            
-
             foreach (XElement col in grCols.Values)
             {
 
@@ -11445,42 +10283,6 @@ namespace sql.builder
             //query.Elements("select").Elements().Attributes("master").Remove();
 
             query.SetAttributeValue("order", sorder);
-
-
-
-            // Все что выше касается создания выражений определяющих идентификаторы групппы, род группы не работает. Убрать. Ниже второй вариант через grouping_id
-            // НЕ актуально?
-
-            //if (grSet.Attribute(TextConst.AName.Key) != null)
-            //{
-            //    keys = grSet.Attribute(TextConst.AName.Key).Value.Split(',').ToList();
-            //}
-
-            //foreach (XElement col in elements)
-            //{
-            //    if (keys == null)
-            //    {
-            //        idExprC.Add(new XElement("const", new XText("'#'")));
-            //        if (grSetsColumns[grSet.Attribute("id").Value].Contains(col.Attribute("as").Value))
-            //        {
-            //            idExprC.Add(new XElement("call", new XAttribute("function", "to_char"), new XElement(col)));
-            //        }
-            //        else
-            //        {
-            //            idExprC.Add(new XElement("const", new XText("' '")));
-            //        }
-            //    }
-            //    else
-            //    {
-            //        if (keys.Contains(col.Attribute("as").Value))
-            //        {
-            //            idExprC.Add(new XElement("const", new XText("'#'")));
-            //            idExprC.Add(new XElement("call", new XAttribute("function", "to_char"), new XElement(col)));
-            //        }
-            //    }
-            //}
-            //idExpr.Add(idExprC);
-
             var allGroupColumns = query.Elements("group").Elements("column").ToList();
             List<string> allGroupColumnsNames = new List<string>();
             var allGroupColumnsNamesOrig = new SortedList<string, string>();
@@ -12324,17 +11126,6 @@ namespace sql.builder
 
                 applyQueryGroupLevel(element, matName);
             }
-
-
-
-            //foreach (XElement element in root.Elements(TextConst.EName.Queries).Elements("query").Where(e => e.Attribute("grouplevel") != null || e.Element("grsets") != null).ToArray())
-            //{
-
-            //    applyQueryGroupLevel(element);
-            //}
-
-
-
             IEnumerable<XElement> elements = root.DescendantsAndSelf("report").Descendants("query").Where(e => e.Attribute("grouplevel") != null || e.Element("grsets") != null).ToArray();
 
             while (elements.Any())
@@ -13157,37 +11948,6 @@ namespace sql.builder
             }
             return xand;
         }
-        /// <summary>
-        /// Дополняет условие в where (<paramref name="whereElement"/>) условием <paramref name="newCondition"/>
-        /// </summary>
-        /// <param name="whereElement">тэг where</param>
-        /// <param name="newCondition">дополнительное условие</param>
-        /// <returns>результирующий тэг</returns>
-        /// <example>
-        /// В этом примере условие WHERE A or B дополняется условием С:
-        /// <code><![CDATA[
-        ///   XElement where = XElement.Parse(@"<where>
-        ///                                       <call function='or'>
-        ///                                         <A />
-        ///                                         <B />
-        ///                                      </call>
-        ///                                     </where>");
-        ///   XElement cond = XElement.Parse("<C />");
-        ///   where = extendWhereByAnd(where, cond);
-        /// ]]></code>
-        /// Результатом будет 
-        /// <code><![CDATA[
-        /// <where>
-        ///   <call function="and">
-        ///     <call function="or">
-        ///       <A />
-        ///       <B />
-        ///     </call>
-        ///     <C />
-        ///   </call>
-        /// </where>
-        /// ]]></code>
-        /// </example>
         internal static XElement extendWhereByAnd(XElement whereElement, XElement newCondition)
         {
             if (whereElement == null) {
@@ -13671,17 +12431,6 @@ namespace sql.builder
                         XElement joinExpr = new XElement("call", new XAttribute("function", "and"));
 
                         int keyIndex = 1;
-                        //XElement joinCol = parentQuery.Element("select").Elements().Where(e => getAttrValue(e, "as") == "key" + keyIndex).First();
-
-                        //while (joinCol != null)
-                        //{
-                        //    keyIndex++;
-                        //    joinCol = parentQuery.Element("select").Elements().Where(e => getAttrValue(e, "as") == "key" + keyIndex).FirstOrDefault();
-                        //}
-
-
-                        //XElement key1 = query1.Element("select").Elements().First(e => getAttrValue(e, "key") == "1");// Ошибка, если нет ключевой колонки в запросе
-
                         foreach (XElement joinCol in query1.Element("select").Elements().Where(e => getAttrValue(e, "key") == "1"))
                         {
                             XElement joinCol1 = parentQuery.Element("select").Elements().First(e => getAttrValue(e, "as") == "key" + keyIndex);
@@ -13697,22 +12446,6 @@ namespace sql.builder
                             joinExpr.Add(condExpr2);
                             keyIndex++;
                         }
-
-                        //foreach (XElement key1 in query1.Element("select").Elements().Where(e => getAttrValue(e, "key") == "1"))
-                        //{
-                        //    XElement condExpr2 = new XElement("call", new XAttribute("function", "="),
-
-                        //         key1
-                        //        );
-                        //    XElement key2 = thisQueryInParent.Element("select").Elements().Where(e => getAttrValue(e, "as") == key1.Attribute("as").Value).First();
-                        //    condExpr2.Add(new XElement("column", new XAttribute("table", thisQueryInParent.Attribute("as").Value), new XAttribute("column", key2.Attribute("as").Value)));
-                        //    condExpr1.Add(condExpr2);
-                        //}
-
-
-                        //andNodeForJoin.Add(
-                        //    joinExpr
-                        //    );
                         queryExpr.Add(
                             joinExpr
                             );
@@ -13760,42 +12493,8 @@ namespace sql.builder
 
             return query1;
         }
-        //public static void markQeriesKeys(XElement query)
-        //{
-        //    foreach (XElement query in schemeRoot.Elements("queries").Elements("query"))
-        //    {
-        //        //if (query.Attribute("name").Value == "24279-test-pivot-new")
-        //        //{
-        //        //    int i = 1;
-        //        //}
-        //        markQueryKeys(query);
-        //    }
-        //}
         private static void addClassTitles(XElement element)
         {
-            //if (element.Attribute("title") == null)
-            //{
-            //    foreach (XElement query in element.Elements("from").Elements("query").Where(e => e.Attribute("title") != null))
-            //    {
-            //        foreach (XElement col in query.Parent.Parent.Elements("select").Elements().Where(e => getAttrValue(e, "table") == getAttrValue(query, "as")))
-            //        {
-            //            if (col.Attribute("class-title") == null)
-            //            {
-            //                col.SetAttributeValue("class-title", query.Attribute("title").Value);
-            //            }
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //        foreach (XElement col in element.Elements("select").Elements())
-            //        {
-            //            if (col.Attribute("class-title") == null)
-            //            {
-            //                col.SetAttributeValue("class-title", element.Attribute("title").Value);
-            //            }
-            //        }
-            //}
         }
         //
         private static string[] grFuncsNamesNative = new string[] { "sum", "min", "max", "count", "avg" };

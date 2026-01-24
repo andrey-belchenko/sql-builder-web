@@ -81,61 +81,10 @@ namespace sql.builder.UI
         public int GetClientSize()
         {
             return 0;
-            //var splitterWidth = GetTypedControl().GetSplitterWidth();
-
-            //var val = - splitterWidth * (Nodes.Count() - 1);
-           
-            //if (IsVertical)
-            //{
-            //    val+= GetClientWidth();
-            //}
-            //else
-            //{
-            //    val+= GetClientHeight();
-            //}
-            //return val;
         }
 
         private  void processCollapsed()
         {
-            //var allSize = (decimal)GetAllSize();
-            //var clientSize = GetClientSize();
-           
-            //if (!IsVertical)
-            //{
-                
-            //    decimal aditionalSize = 0;
-            //    decimal otherSize = 0;
-            //    foreach (VLayoutGroupInfo node in Nodes)
-            //    {
-
-            //        if (!node.IsExpanded())
-            //        {
-            //            var h = GetParentGroup().GetTypedControl().CollapsedHeight() + node.GetMarginTop() + node.GetMarginBottom();
-            //            var adds = node.sizeTemp - h;
-            //            if (adds < 0)
-            //            {
-            //                adds = 0;
-            //            }
-            //            aditionalSize += adds;
-            //            node.sizeTemp = h;
-            //        }
-            //        else
-            //        {
-            //            otherSize += node.sizeTemp;
-            //        }
-            //    }
-            //    if (aditionalSize > 0)
-            //    {
-            //        foreach (VLayoutGroupInfo node in Nodes)
-            //        {
-            //            if (node.IsExpanded())
-            //            {
-            //                node.sizeTemp += (node.sizeTemp / otherSize) * aditionalSize;
-            //            }
-            //        }
-            //    }
-            //}
         }
         public override void ResetAndCalculateChilds()
         {
@@ -184,20 +133,6 @@ namespace sql.builder.UI
        
         public void SplitSizeChanged() 
         {
-            //if (!Nodes.Where(n => !(n as VLayoutGroupInfo).IsExpanded()).Any())
-            //{// корректно будет работать только для 2-х пока больше не нужно
-            //    int i = 0;
-            //    var sizes = GetTypedControl().GetSizes();
-            //    foreach (VLayoutGroupInfo node in Nodes)
-            //    {
-
-            //        node.sizePercent = sizes[i];
-
-            //        i++;
-            //    }
-            //}
-            //GetLayoutController().hasChanges = true;
-            //GetLayoutController().RefreshLayoutIfNeed();
         }
     }
     

@@ -97,18 +97,6 @@ namespace sql.builder.DataApi
             {
                 exp = GetTable().GetColumn(OriginalNameForPivotColumn).ParsedExpression;
             }
-
-            //if (tr != null)
-            //{
-            //    if (tr.GetCurrentRowValue("dog").ToString() == (3).ToString())
-            //    {
-            //        if (this.ColumnName == "sld_tit_fc_201601")
-            //        {
-
-            //        }
-            //    }
-            //}
-
             var val = exp.Evaluate(dataAccessor);
             val= Cmn.Nvl( val,DBNull.Value);
             dataAccessor.SetValue(this.ColumnName, val);

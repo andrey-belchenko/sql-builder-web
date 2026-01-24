@@ -12,41 +12,6 @@ namespace sql.builder.UI
     {
         private List<TabContainerItem> tabContainerItems;
         private SortedList<string, TabItem> namedTabs;
-        //private TabContainerItem AddTabContainerItem(TabbedGroup tabContainer, TabItem parentTab)
-        //{
-        //    var tabContainerItem = new TabContainerItem();
-        //    tabContainerItem.TabContainer = tabContainer;
-        //    if (parentTab != null)
-        //    {
-        //        parentTab.ChildTabContainerItems.Add(tabContainerItem);
-        //        tabContainerItem.ParentTab = parentTab;
-        //    }
-        //    else
-        //    {
-        //        if (tabContainerItems == null)
-        //        {
-        //            tabContainerItems = new List<TabContainerItem>();
-        //        }
-        //        tabContainerItems.Add(tabContainerItem);
-        //    }
-        //    return tabContainerItem;
-        //}
-        //private TabItem AddTabItem(LayoutGroup tab, TabContainerItem containerItem, string name)
-        //{
-        //    var tabItem = new TabItem();
-        //    tabItem.Tab = tab;
-        //    tabItem.ContainerItem = containerItem;
-        //    containerItem.TabItems.Add(tabItem);
-        //    if (name != null)
-        //    {
-        //        if (namedTabs == null)
-        //        {
-        //            namedTabs = new SortedList<string, TabItem>();
-        //        }
-        //        namedTabs.Add(name, tabItem);
-        //    }
-        //    return tabItem;
-        //}
         private void SelectTabs(List<TabContainerItem> tabContainerItems1)
         {
             if (tabContainerItems1 != null)

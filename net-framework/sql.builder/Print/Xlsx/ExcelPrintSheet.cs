@@ -181,48 +181,6 @@ namespace sql.builder.Print.Xlsx
             this.row_count++;
             this.document.NextPrintedRow(this);
         }
-        //public bool HasMixedSources = false;
-        //public int CalculateRowsCount( DataSet dataSet, DataRow row)
-        //{
-        //    int rowsCount = 0;
-        //    if (HasMixedSources)
-        //    {
-        //        foreach (ExcelPrintNode node in Childs)
-        //        {
-        //            bool other = false;
-        //            if (row != null)
-        //            {
-        //                if (node.GetType() == typeof(ExcelPrintElement))
-        //                {
-        //                    if ((node as ExcelPrintElement).TableReferences[0].MainTableName != row.Table.TableName)
-        //                    {
-        //                        node.Print(null, dataSet, true, null, false,false);
-        //                        other = true;
-        //                    }
-        //                }
-        //            }
-        //            if (!other)
-        //            {
-        //                node.Print(null, dataSet, true, row, false,false);
-        //            }
-        //        }
-        //        rowsCount = RowsCount;
-        //        RowsCount = 0;
-        //        return rowsCount;
-        //    }
-        //    foreach (ExcelPrintNode node in Childs)
-        //    {
-        //        if (node.GetType() == typeof(ExcelPrintText))
-        //        {
-        //            rowsCount++;
-        //        }
-        //        else
-        //        {
-        //            rowsCount += (node as ExcelPrintElement).CalculateRowsCount(dataSet);
-        //        }
-        //    }
-        //    return rowsCount;
-        //}
     }
     internal class ExcelPrintMultiplicatedSheet : ExcelPrintSheet
     {

@@ -190,36 +190,6 @@ namespace sql.builder.UI
 
         public void RefreshLayout()
         {
-            ////if (Suspended) return;
-
-            ////var d1 = DateTime.Now;
-            //GetMainGroup().ResetAndCalculateChilds();
-            ////var d2 = DateTime.Now;
-
-            ////var t = d2 - d1;
-            ////MessageBox.Show(t.Milliseconds.ToString());
-
-            //GetMainGroup().GetTypedControl().BeginLayoutChange();
-            //GetMainGroup().Show();
-            //GetMainGroup().GetTypedControl().EndLayoutChange();
-
-
-            ////var ctrl =( GetMainGroup().GetControl() as Control);
-            ////var pctrl =ctrl.Parent;
-            ////pctrl.Controls.Remove(ctrl);
-            ////if ((GetMainGroup().GetControl() as Control).FindForm() != null)
-            ////{
-            ////    (GetMainGroup().GetControl() as Control).FindForm().SuspendLayout();
-            ////    GetMainGroup().Show();
-            ////    (GetMainGroup().GetControl() as Control).FindForm().SuspendLayout();
-            ////}
-            ////else
-            ////{
-            ////    GetMainGroup().Show();
-            ////}
-
-
-            ////pctrl.Controls.Add(ctrl);
         }
         public void HideLayout()
         {

@@ -91,17 +91,6 @@ namespace sql.builder.UI
         {
             return containedControl;
         }
-       
-        
-        //public override IVLayoutNode GetControl()
-        //{
-        //    //if (control == null)
-        //    //{
-        //    //    control = GetParent().GetLayoutController().GetControlsFactory().CreateControlContainer();
-        //    //}
-        //    return control;
-        //}
-
         private void SendVisiblityToSource(bool value)
         {
             var contCtrl = GetContainedControl();
@@ -130,25 +119,6 @@ namespace sql.builder.UI
             //SendVisiblityToSource(true);
            
         }
-
-
-        //public VLayoutLabelInfo Label = null;
-
-        //public IVLayoutControlContainer  GetTypedControl()
-        //{
-        //   return (GetControl() as IVLayoutControlContainer);
-        //}
-        //public override IVControlsFactory GetControlsFactory()
-        //{
-        //    return GetParent().GetControlsFactory();
-        //}
-        
-
-        //public override bool IsBreak()
-        //{
-        //    return true;
-        //}
-
         public override int GetControlHeight()
         {
             return 0;

@@ -718,21 +718,6 @@ namespace sql.builder.DataApi
                     usedUpdColumns[srcName].Add(un);
                     //usedUpdColumns[srcName].Add(srcCol.XName);
                 }
-                ///////////
-                //if (srcName != mainQname)
-                //{
-                //    if (Cmn.GetAttrValue(xcol, TextConst.DsAName.IsUpdateable) == TextConst.AVBool.True)
-                //    {
-                //        updatebleColumns[mainQname].Add(col as VColumn);
-                //    }
-                //    if (Cmn.GetAttrValue(xcol, TextConst.DsAName.IsUpdateableExt) == TextConst.AVBool.True)
-                //    {
-                //        updatebleColumnsExt[mainQname].Add(col as VColumn);
-                //        xupdatebleColumnsExt[mainQname].Add(xcol);
-                //        usedUpdColumns[mainQname].Add(srcCol.XName);
-                //    }
-                //}
-                ///////////
                 if (xcol.Attribute(_AName.is_updateable_ext) != null)
                 {
                     // var srcCol = (col as VColumn).SourceColumn().First();
@@ -913,17 +898,6 @@ namespace sql.builder.DataApi
                                     updQuery = src;
                                 }
                             }
-                            //else if (srcCol.P_Table == TextConst.AVTable.Ths)
-                            //{
-                            //    var ssrcCol = (srcCol as VColumn).SourceColumn() .First();
-                            //    if (ssrcCol is VColumn)
-                            //    {
-                            //        if ((ssrcCol as VColumn).Source() is VTable)
-                            //        {
-                            //            isUpdateable = true;
-                            //        }
-                            //    }
-                            //}
                         }
                     }
                 }

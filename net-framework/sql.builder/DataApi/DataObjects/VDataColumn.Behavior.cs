@@ -204,54 +204,6 @@ namespace sql.builder.DataApi
             }
             list.Add(col);
         }
-
-        //public void AddDependantEditable(VDataColumn col)
-        //{
-        //    if (DependantsEditable == null)
-        //    {
-        //        DependantsEditable = new List<VDataColumn>();
-        //        (Table as VDataTable).AttachBehaviorEvent();
-        //    }
-        //    DependantsEditable.Add(col);
-        //}
-        //public void AddDependantMandatory(VDataColumn col)
-        //{
-        //    if (DependantsMandatory == null)
-        //    {
-        //        DependantsMandatory = new List<VDataColumn>();
-        //        (Table as VDataTable).AttachBehaviorEvent();
-        //    }
-        //    DependantsMandatory.Add(col);
-        //}
-        //public void AddDependantVisible(VDataColumn col)
-        //{
-        //    if (DependantsVisible == null)
-        //    {
-        //        DependantsVisible = new List<VDataColumn>();
-        //        (Table as VDataTable).AttachBehaviorEvent();
-        //    }
-        //    DependantsVisible.Add(col);
-        //}
-        //public void AddDependantValidation(VDataColumn col)
-        //{
-        //    if (DependantsValid == null)
-        //    {
-        //        DependantsValid = new List<VDataColumn>();
-        //        (Table as VDataTable).AttachBehaviorEvent();
-        //    }
-        //    DependantsValid.Add(col);
-        //}
-
-        //public void AddDependantDefault(VDataColumn col)
-        //{
-        //    if (DependantsDefault == null)
-        //    {
-        //        DependantsDefault = new List<VDataColumn>();
-        //        (Table as VDataTable).AttachBehaviorEvent();
-        //    }
-        //    DependantsDefault.Add(col);
-        //}
-
         public void AddDependantSelList(VDataColumn col)
         {
             if (DependantsSelList == null)
@@ -272,18 +224,6 @@ namespace sql.builder.DataApi
             }
             DependantsTextSource.Add(col);
         }
-
-        //public void AddDependantNewVal(VDataColumn colName)
-        //{
-        //    if (DependantsNewVal == null)
-        //    {
-        //        DependantsNewVal = new List<VDataColumn>();
-        //        (Table as VDataTable).AttachBehaviorEvent();
-        //    }
-        //    DependantsNewVal.Add(colName);
-        //}
-
-
         private int columnElitable = -1;
 
         private bool GetClientSourceBoolValue(DataRow row,string variableName,bool invert)
@@ -351,38 +291,6 @@ namespace sql.builder.DataApi
             }
             if (ClientEditableSource != null)
             {
-                //var srcCol = GetTable().GetDataSet().GetVariableColumn(ClientEditableSource);
-                //object val = null;
-                //if (srcCol != null)
-                //{
-                //    DataRow srcRow = null;
-                //    if (this.Table == srcCol.Table)
-                //    {
-                //        srcRow = row;
-                //    }
-                //    else
-                //    {
-                //        srcRow = (srcCol.Table as VDataTable).CurrentRow;
-                //    }
-                //    if (srcRow != null)
-                //    {
-                //        val = srcRow[srcCol];
-                //    }
-                //}
-                //else
-                //{
-                //    val = GetTable().GetDataSet().InputParams[ClientEditableSource].Value;
-                //}
-                //columnElitable = Convert.ToInt32(Cmn.Nvl(val, 0));
-                //if (columnElitable == 0)
-                //{
-                //    editable = EditableInvert;
-                //}
-                //else
-                //{
-                //    editable = !EditableInvert;
-                //}
-
                 editable = GetClientSourceBoolValue(row, ClientEditableSource,EditableInvert);
 
             }
@@ -606,19 +514,6 @@ namespace sql.builder.DataApi
             {
                 propVal = !propVal;
             }
-
-           
-            //if (propVal == false)
-            //{
-
-               
-                    
-                
-            //}
-            //else
-            //{
-            //    // !!! сохранять удаленное значение при зачистке и восстанавливать тут
-            //}
             return propVal;
         }
 
@@ -866,23 +761,6 @@ namespace sql.builder.DataApi
 
 
         public static List<BackgroundWorker> backgroundWorkers = null;
-
-        //private void CancelAsync()
-        //{
-        //    if (backgroundWorkers != null)
-        //    {
-        //        foreach (BackgroundWorker bw in backgroundWorkers.ToList())
-        //        {
-        //            if (bw.IsBusy)
-        //            {
-        //                bw.CancelAsync();
-        //            }
-        //        }
-        //    }
-        //    GetTable().GetDataSet().ClearChangingColumns();
-        //}
-
-
         public class RefreshInfo //Бельченко: всякая химия с потоками , чтобы не завичал интерфейс при обновлении полей
         //, и при этом корректно обновлялись поля c циклической зависимостью
         // если поле B зависит от поля А, поле С от B , А от С обновление при изменении А:  A->B->C->стоп (А не обновится) 
@@ -982,177 +860,6 @@ namespace sql.builder.DataApi
             var column = (e.Column as VDataColumn);
             column.ProcessChanges(e.Row);
         }
-
-        //public static void DataTableColumnChanged(object sender, DataColumnChangeEventArgs e)
-        //{
-        //    var column = (e.Column as VDataColumn);
-        //    column.ProcessChanges(e.Row);
-        //    return;
-        //    var changesRuning = false;
-        //    // Для текста синхронное обновление , а для остальных в отдельных потоках
-        //    //if (column.GetTable().GetDataSet().IsColumnChanging(column))
-        //    //{
-        //    //    return;
-        //    //    //
-        //    //   // column.CancelAsync();// !!!эта химия вроде уже не актуальна , почитить
-        //    //}
-        //    if (column.Dependants != null)
-        //    {
-
-
-        //        RefreshInfo prevRi = null;
-        //        RefreshInfo firstRi = null;
-        //        int i = 0;
-        //        foreach (VDataColumn col in (e.Column as VDataColumn).Dependants)
-        //        {
-        //            if (column.TextSource == col.ColumnName)
-        //            {
-        //                continue;
-        //            }
-        //            RefreshInfo ri = null;
-        //            if (col != e.Column)
-        //            {
-        //                if (e.Row.Table == col.Table)
-        //                {
-
-        //                    changesRuning = true;
-
-        //                    ri = new RefreshInfo(col, e.Row,true);
-        //                    if (firstRi == null)
-        //                    {
-        //                        firstRi = ri;
-        //                    }
-        //                    else
-        //                    {
-        //                        prevRi.Next = ri;
-        //                    }
-        //                    prevRi = ri;
-        //                    //col.RefreshCalulatedValue(e.Row);
-        //                }
-        //                else
-        //                {
-        //                    foreach (DataRow row in col.Table.Rows)
-        //                    {
-        //                        changesRuning = true;
-        //                        ri = new RefreshInfo(col, row,true);
-        //                        if (firstRi == null)
-        //                        {
-        //                            firstRi = ri;
-        //                        }
-        //                        else
-        //                        {
-        //                            prevRi.Next = ri;
-        //                        }
-        //                        prevRi = ri;
-        //                        // col.RefreshCalulatedValue(row);
-        //                    }
-        //                }
-        //            }
-
-        //        }
-        //        if (firstRi != null)
-        //        {
-        //            firstRi.Col.RefreshCalulatedValue(firstRi.Row, firstRi,firstRi.IsAsync);
-        //        }
-        //    }
-
-
-
-        //    if (!changesRuning)
-        //    {
-        //        column.GetTable().GetDataSet().RemoveChangingColumn(column);
-        //    }
-        //    else
-        //    {
-
-        //        //BackgroundWorker bw = new BackgroundWorker();
-
-        //        //bw.DoWork += delegate(object o, DoWorkEventArgs args)
-        //        //{
-        //        //    bool wasWait = true;
-
-        //        //    //while (wasWait)
-        //        //    //{
-
-        //        //    //}
-
-        //        //    var r1 = mutex1.WaitOne(0);
-        //        //    if (r1)
-        //        //    {
-        //        //        mutex1.ReleaseMutex();
-        //        //    }
-        //        //    else
-        //        //    {
-        //        //        mutex1.WaitOne();
-        //        //        mutex1.ReleaseMutex();
-        //        //    }
-        //        //    var r2 = mutex2.WaitOne(0);
-        //        //    if (r2)
-        //        //    {
-        //        //        mutex2.ReleaseMutex();
-        //        //    }
-
-        //        //    else
-        //        //    {
-        //        //        mutex2.WaitOne();
-        //        //        mutex2.ReleaseMutex();
-        //        //    }
-
-        //        //    if (r2 /*&& r1*/)
-        //        //    {
-        //        //        wasWait = false;
-
-        //        //    }
-
-
-        //        //    args.Result = wasWait;
-        //        //    //column.GetTable().GetDataSet().RemoveChangingColumn(column);
-
-        //        //    //mutex1.WaitOne();
-        //        //    //mutex1.ReleaseMutex();
-        //        //};
-
-        //        //bw.RunWorkerCompleted += delegate(object o, RunWorkerCompletedEventArgs args)
-        //        //{
-        //        //    bool wasWait = (bool)args.Result;
-        //        //    // bool isFree= mutex2.WaitOne(0);
-        //        //    if (!wasWait)
-        //        //    {
-        //        //        var r2 = mutex2.WaitOne(0);
-        //        //        if (r2)
-        //        //        {
-        //        //            mutex2.ReleaseMutex();
-        //        //        }
-
-        //        //        else
-        //        //        {
-        //        //            mutex2.WaitOne();
-        //        //            mutex2.ReleaseMutex();
-        //        //        }
-        //        //        if (r2)
-        //        //        {
-        //        //            column.GetTable().GetDataSet().RemoveChangingColumn(column);
-        //        //        }
-        //        //        else
-        //        //        {
-        //        //            bw.RunWorkerAsync();
-        //        //        }
-        //        //        // mutex2.ReleaseMutex();
-        //        //    }
-        //        //    else
-        //        //    {
-        //        //        //mutex2.WaitOne();
-        //        //        //mutex2.ReleaseMutex();
-        //        //        bw.RunWorkerAsync();
-        //        //    }
-        //        //};
-
-
-        //        //bw.RunWorkerAsync();
-        //    }
-
-        //}
-
         public void ChangeValueForDisplay(bool IsExists,DataRow row)
         {
             if (row == null)
@@ -1162,19 +869,6 @@ namespace sql.builder.DataApi
 
            
             var row1 = row;
-            
-            //if (row1.Table != this.Table)
-            //{
-            //    row1 = this.GetTable().CurrentRow;
-            //}
-            //if (row1 != null)
-            //{
-            //    if (row1.RowState != DataRowState.Added)
-            //    {
-            //        val = row1[this, DataRowVersion.Original];
-            //    }
-            //    SetValue(row1, val);
-            //}
             bool newVal = false;
             object val = null;
             // !!! плохо проверенная часть, производительность?
@@ -1233,17 +927,6 @@ namespace sql.builder.DataApi
                 {
                     pars = new List<OracleParameter>();
                 }
-
-
-
-                // if (col.ColumnName == "ur_hist_mat_dec_count")
-                //{
-                //    var s = col.ValueRefreshCommand.GetText(pars.ToArray());
-                //}
-
-                //bool isAsync = true;
-               // bool isAsync = false;
-
                 BackgroundWorker bw = new BackgroundWorker();
                 bw.WorkerSupportsCancellation = true;
                 if (backgroundWorkers == null)

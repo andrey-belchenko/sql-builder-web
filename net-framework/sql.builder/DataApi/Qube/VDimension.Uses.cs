@@ -94,18 +94,6 @@ namespace sql.builder.DataApi
             }
             return list;
         }
-
-
-        //public override void RenameUses()
-        //{
-
-        //    //foreach (VQueryCall query in SearchUses())
-        //    //{
-        //    //    query.P_CalledQuery = P_IdName;
-        //    //}
-        //    //base.RenameUses();
-
-        //}
         #endregion
 
        

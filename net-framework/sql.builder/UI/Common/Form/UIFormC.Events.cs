@@ -64,21 +64,6 @@ namespace sql.builder.UI
                 AddEventTag(xcmd.Attribute(TextConst.AName.EventName).Value, action);
             }
         }
-        //internal void UpdateGridEvents(ucTableViewerContainer grid, XElement xevents)
-        //{
-        //    if (xevents == null)
-        //    {
-        //        return;
-        //    }
-        //    grid.RemoveUIEventHandler(this.Grid_UIEvent);
-        //    grid.AddUIEventHandler(this.Grid_UIEvent);
-        //    grid.UpdateEvents(xevents);
-        //}
-        //private bool Grid_UIEvent(object sender, UIEventArgs e)
-        //{
-        //    VUseAction.ExecuteAction(this._form_name, (VUseAction)e.ActionInfo, dataSource, this, e.Table, e.Row, null);
-        //    return true;
-        //}
     }
     internal class UIEventArgs : EventArgs
     {

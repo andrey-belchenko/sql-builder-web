@@ -15,30 +15,6 @@ namespace sql.builder.UI
 
         private void ButtonRefresh_ItemClick(object sender)
         {
-            ////if (!SaveDataWithCheckModified()) return ;
-            //Action yesAction = () =>
-            //{
-            //    if (SaveData(false))
-            //    {
-            //        DoRefresh();
-            //    }
-            //};
-            //Action noAction = () =>
-            //{
-            //    DoRefresh();
-            //};
-            //if (IsModifiedSelfOrSub())
-            //{
-
-            //    UIStatic.GetControlsfactory().GetDialogManager(null).ShowQuestion("Имеются несохраненные изменения", "Сохранить изменения?", yesAction, noAction);
-              
-            //}
-            //else
-            //{
-            //    DoRefresh();
-            //}
-
-          
         }
 
         private void DoRefresh()
@@ -74,21 +50,6 @@ namespace sql.builder.UI
         public bool SaveDataWithCheckModified()
         {
             throw new NotImplementedException();
-            //if (IsModifiedSelfOrSub())
-            //{
-
-            //    var result = ShowMessage.Show(ShowMessage.MType.UnsavedChangesQuestion);
-            //    if (result == DialogResult.Cancel)
-            //    {
-            //        return false;
-            //    }
-            //    else if (result == DialogResult.Yes)
-            //    {
-            //        if (!SaveData(false)) return false;
-            //    }
-            //}
-
-            //return true;
         }
         #endregion
     }

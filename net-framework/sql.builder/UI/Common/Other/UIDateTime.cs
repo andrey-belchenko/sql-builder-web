@@ -26,17 +26,6 @@ namespace sql.builder.UI
 
         protected override void InitControl()
         {
-            //if (this.mandatory)
-            //{
-            //    deControl.SetCanClear(false);
-            //}
-            //else
-            //{
-            //    deControl.SetCanClear(true);
-            //}
-            //deControl.ValueChanged += deControl_ValueChanged;
-            //deControl.FocusLost += deControl_FocusLost;
-
         }
 
         void deControl_FocusLost()
@@ -58,52 +47,6 @@ namespace sql.builder.UI
         {
             setValue(value);
         }
-
-        //public override RepositoryItem GetRepositoryItem()
-        //{
-        //    var rep = new RepositoryItemDateEdit
-        //    {
-        //        CloseUpKey = KeyShortcut.Empty
-        //    };
-        //    // Противная штука не показывает время без фокуса
-        //    addRepositoryButtons(rep.Buttons);
-        //    rep.Mask.MaskType = MaskType.RegEx;
-        //    rep.Mask.EditMask =
-        //        @"([012]?[1-9]|[123]0|31)\.(0?[1-9]|1[012])\.([123][0-9])?[0-9][0-9] (0?[0-9]|1[0-9]|2[0-4]):[0-5][0-9]";
-        //    rep.DisplayFormat.FormatString = "";
-        //    rep.DisplayFormat.FormatType = FormatType.None;
-        //    rep.EditFormat.FormatString = "";
-        //    rep.EditFormat.FormatType = FormatType.None;
-        //    rep.Mask.UseMaskAsDisplayFormat = true;
-        //    //rep.Buttons[0].IsLeft = true;
-
-        //    // грязный хак, пока лучше не придумал
-        //    // чтобы при неверном значении не сбрасывалось в 01.01.0001 
-        //    string last_value = null;
-        //    rep.EditValueChanged += (sender, args) =>
-        //    {
-        //        var edit = (sender as DateEdit);
-        //        last_value = edit.EditValue != null ? edit.EditValue.ToString() : null;
-        //    };
-        //    rep.Validating += (sender, args) =>
-        //    {
-        //        var edit = (sender as DateEdit);
-        //        if (edit.EditValue == null || last_value == "")
-        //        {
-        //            setValue(DBNull.Value);
-
-        //             edit.EditValue = DBNull.Value;
-        //        }
-        //        else if (edit.EditValue.Equals(DateTime.MinValue))
-        //        {
-        //            edit.EditValue = _value;
-        //        }
-        //    };
-        //    //_repository = rep;
-        //    rep.ButtonClick += RepositoryEditor_ButtonClick;
-        //    return rep;
-        //}
-        
         public override void RefreshData()
         {
             if (this.UseDefaultQuery && this.data_set_default != null) {

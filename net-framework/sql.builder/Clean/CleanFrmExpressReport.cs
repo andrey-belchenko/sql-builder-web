@@ -582,99 +582,10 @@ namespace sql.builder.WinForms
             //}
             //base.Dispose(disposing);
         }
-        //private void SaveUserSettings()
-        //{
-        //    this._user_settings.Clear();
-        //    this._user_settings.Add("form_width", this.Width);
-        //    this._user_settings.Add("form_height", this.Height);
-        //}
-        //private void LoadStateFromRegistry()
-        //{
-        //    using (RegistryKey reg_settings = Registry.CurrentUser.CreateSubKey(this._reg_path, RegistryKeyPermissionCheck.ReadSubTree))
-        //    {
-        //        this._user_settings.Clear();
-        //        string[] names = reg_settings.GetValueNames();
-        //        for (int index = 0; index < names.Length; index++)
-        //        {
-        //            string reg_name = names[index];
-        //            this._user_settings.Add(reg_name, reg_settings.GetValue(reg_name));
-        //        }
-        //    }
-        //}
-        //private void SaveStateToRegistry()
-        //{
-        //    //this.SaveUserSettings();
-        //    using (RegistryKey reg_settings = Registry.CurrentUser.CreateSubKey(this._reg_path, RegistryKeyPermissionCheck.ReadWriteSubTree))
-        //    {
-        //        foreach (KeyValuePair<string, object> user_setting in this._user_settings)
-        //        {
-        //            reg_settings.SetValue(user_setting.Key, user_setting.Value);
-        //        }
-        //    }
-        //}
-        //private void CancelProcess()
-        //{
-        //    if (this.in_process && this.cts != null)
-        //    {
-        //        cts.Cancel();
-        //    }
-        //}
-        //private void InvestProInstructionsButton()
-        //{
-        //    //Type type = ReflectionHelper.GetLoadedType("ipsupport.Net.InstructionBarButtonClass");
-        //    Type type = Type.GetType("ipsupport.Net.InstructionBarButtonClass, ipsupport.Net");
-        //    if (type != null)
-        //    {
-        //        BarButtonItem btn = Activator.CreateInstance(type, _report_name) as BarButtonItem;
-        //        btn.Caption = "����������";
-        //        this.barMenu.ItemLinks.Add(btn, true);
-        //    }
-        //}
         #endregion
         #region ����������� �������
-        //private void btnReportParams_ItemClick(object sender, ItemClickEventArgs e)
-        //{
-        //    using (var frm = new frmVisibleParams())
-        //    {
-        //        frm.ParamsTable = this._dt_params;
-        //        if (frm.ShowDialog() == DialogResult.Yes)
-        //        {
-        //            for (int index = this._dt_params.Rows.Count - 1; index >= 0; index--)
-        //            {
-        //                DataRow param_row = this._dt_params.Rows[index];
-        //                bool visible = (bool)param_row["check"];
-        //                this._uIForm.SetControlOptions((string)param_row["name"], new VFieldStateAndOtherInfo(visible) { VisibleInForm = visible });
-        //            }
-        //        }
-        //    }
-        //}
-        //private void btnRepParsReset_ItemClick(object sender, ItemClickEventArgs e)
-        //{
-        //    foreach (UIBase ctrl in _uIForm.controls.Values)
-        //    {
-        //        if (!ctrl.Mandatory)
-        //        {
-        //            ctrl.Used = false;
-        //        }
-        //    }
-        //}
         private void start()
         {
-            //string msg = this.ValidateParams();
-            //if (msg != string.Empty)
-            //{
-            //    XtraMessageBox.Show(msg, "�� ��� ��������� ������� ���������", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //    return;
-            //}
-            //if (!this.CheckWorkFolder())
-            //{
-            //    XtraMessageBox.Show("������ ��� ������������ �����, ���������� ������� ������� �����", "������� ����� �� �������", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //    return;
-            //}
-            //if (this.ceStoreDefaultParams.EditValue != null && (bool)this.ceStoreDefaultParams.EditValue)
-            //{
-            //    this.SaveDefaultParams();
-            //}
             XmlNode templateInfo = this.GetTemplateInfo();
             //�������� ��� ������� ������ (2 ������ �� ����� �����)
             if (this.changeReportName != null && this._report.P_IdName != this.changeReportName)
@@ -698,22 +609,6 @@ namespace sql.builder.WinForms
         //    this.Close();
         //}
         #endregion
-        //private void CleanFrmExpressReport_Load(object sender, EventArgs e)
-        //{
-        //    // ���� � ������ ��� ���������� � ��� �������� �������� - ��������� ����� ����� ��� �������� �����
-        //    //if (_no_params_mode) btnAccept.PerformClick();
-        //    // ��������� ������ ��� ������ ���������� ���������
-        //    this.barManager1.ForceInitialize();
-        //    if (XmlReports.customerId == "17")
-        //    {
-        //        // ���� ��� ����������, ��� ����� ����� ������
-        //        bool has_instruction = db.HasInvestproInstruction(_report_name);
-        //        if (has_instruction)
-        //        {
-        //            InvestProInstructionsButton();
-        //        }
-        //    }
-        //}
         private void UIFormC_SpecialTypeChanged(UIFormC sender, string special_type, object data)
         {
             switch (special_type)
@@ -733,86 +628,6 @@ namespace sql.builder.WinForms
         #region WorkFolder
         private const string WORK_FOLDER_PROMPT = "�������� �����, � ������� ����� ����������� ������";
         private bool _folder_button_pressed;
-        //private void rbtnWorkFolderPath_Click(object sender, EventArgs e)
-        //{
-        //    string work_folder = this.GetWorkFolder();
-        //    if (this._folder_button_pressed || work_folder == string.Empty)
-        //    {
-        //        using (var dlg = new FolderBrowserDialog())
-        //        {
-        //            dlg.Description = WORK_FOLDER_PROMPT;
-        //            dlg.SelectedPath = work_folder;
-        //            if (dlg.ShowDialog() == DialogResult.OK)
-        //            {
-        //                work_folder = dlg.SelectedPath;
-        //                this.SetWorkFolder(work_folder);
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        Process.Start(work_folder);
-        //    }
-        //    this._folder_button_pressed = false;
-        //}
-        //private void rbtnWorkFolderPath_ButtonPressed(object sender, ButtonPressedEventArgs e)
-        //{
-        //    this._folder_button_pressed = true;
-        //}
-        //private void rbtnWorkFolderPath_CustomDisplayText(object sender, CustomDisplayTextEventArgs e)
-        //{
-        //    if (e.Value != null)
-        //    {
-        //        e.DisplayText = Cmn.CutString(e.Value.ToString(), 48);
-        //    }
-        //    else
-        //    {
-        //        e.DisplayText = string.Empty;
-        //    }
-        //}
-        //private void SetWorkFolder(string path)
-        //{
-        //    SettingsHelper.WorkFolder = path;
-        //    Printing.outputFolder = path;
-        //    this.FillWorkFolder();
-        //}
-        //private string GetWorkFolder()
-        //{
-        //    string work_folder = (string)this.btnWorkFolderPath.EditValue;
-        //    if (work_folder != null)
-        //    {
-        //        return work_folder;
-        //    }
-        //    else
-        //    {
-        //        return string.Empty;
-        //    }
-        //}
-        //private void FillWorkFolder()
-        //{
-        //    string fld = SqlBuilder.GetWorkFolderPath();
-        //    this.btnWorkFolderPath.EditValue = fld;
-        //    Printing.outputFolder = fld;
-        //}
-        //private bool CheckWorkFolder()
-        //{
-        //    string work_folder = this.GetWorkFolder();
-        //    if (!Directory.Exists(work_folder))
-        //    {
-        //        using (var dlg = new FolderBrowserDialog())
-        //        {
-        //            dlg.Description = WORK_FOLDER_PROMPT;
-        //            if (dlg.ShowDialog() == DialogResult.OK)
-        //            {
-        //                work_folder = dlg.SelectedPath;
-        //                SetWorkFolder(work_folder);
-        //                return true;
-        //            }
-        //        }
-        //        return false;
-        //    }
-        //    return true;
-        //}
         #endregion
         private string changeReportName;
         private void ChangeReport(string newReportName)
@@ -825,28 +640,6 @@ namespace sql.builder.WinForms
             Parser.SaveReportParamsToXml(xroot, this._uIForm);
             db.MergeDefaultReportSetting(this._report_name, xroot.ToString());
         }
-        //private void rceStoreDefaultParams_EditValueChanged(object sender, EventArgs e)
-        //{
-        //    bool val = (bool)((BaseEdit)sender).EditValue;
-        //    if (!val)
-        //    {
-        //        db.DeleteDefaultReportSetting(this._report_name);
-        //    }
-        //}
-        //private void CleanFrmExpressReport_FormClosing(object sender, FormClosingEventArgs e)
-        //{
-        //    if (this.in_process)
-        //    {
-        //        if (XtraMessageBox.Show("��� ������������ ������. ��������?", "��������", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes)
-        //        {
-        //            e.Cancel = true;
-        //        }
-        //    }
-        //}
-        //private void CleanFrmExpressReport_FormClosed(object sender, FormClosedEventArgs e)
-        //{
-        //    this.CancelProcess();
-        //}
         internal string ValidateParams()
         {
             if (!this._isWithBehavior)

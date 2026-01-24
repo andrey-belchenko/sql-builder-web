@@ -116,35 +116,5 @@ namespace sql.builder.DataApi
             }
         }
         #endregion
-
-
-
-        //#region NavigationInfo
-
-
-
-        //public override string P_NavigationInfo
-        //{
-        //    get
-        //    {
-
-        //        return GetNavigationPath();
-
-        //    }
-
-        //}
-
-        
-   
-       
-
-        //public override bool P_NavigationInfo_Exists()
-        //{
-          
-        //    return true;
-
-        //}
-        //#endregion
-
     }*/
 }

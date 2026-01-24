@@ -28,18 +28,6 @@ namespace sql.builder.DataApi
                 return null;
             }
         }
-        //public VQuery TypedColumnTypeQuery
-        //{
-        //    get
-        //    {
-        //        VColumn col = TypedColumn;
-        //        if (col != null)
-        //        {
-        //            return col.TypeQuery();
-        //        }
-        //        return null;
-        //    }
-        //}
         protected VDataTable SelectionListTable()
         {
             VColumn col = this.TypedColumn();

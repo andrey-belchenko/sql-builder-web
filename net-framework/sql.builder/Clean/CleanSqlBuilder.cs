@@ -37,30 +37,6 @@ namespace sql.builder.Clean
             connection.Open();
             ChangeConnection(connection);
         }
-
-        //public static XElement GetParamsXml(Dictionary<string, object> param)
-        //{
-        //    var xparams =  new XElement(EName.@params);
-        //    foreach (var p in param)
-        //    {
-        //        object value = null;
-        //        if (p.Value != null)
-        //        {
-        //            if (p.Value is IEnumerable)
-        //            {
-        //                value = new XElement(EName.call, new XAttribute(AName.function, TextConst.AVFunction.Array));
-
-        //                foreach (object v in (p.Value as IEnumerable))
-        //                {
-        //                    (value as XElement).Add(new XElement(EName.@const, new XText(v.ToString());
-        //                }
-
-        //            }
-        //        }
-        //    }
-        //    return xparams;
-        //}
-
     }
 
 }

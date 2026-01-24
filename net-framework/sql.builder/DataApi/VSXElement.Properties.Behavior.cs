@@ -352,35 +352,6 @@ namespace sql.builder.DataApi
 
                 }
             }
-
-
-        
-
-
-            //table.Rows.Add(col.P_FormalParName, col.P_FormalParName, col.P_Title);
-            //Добавить параметры формы, факты
-
-
-            //foreach (VSXElement el in rootQuery.Columns())
-            //{
-            //    if (!names.Contains(el.XName))
-            //    {
-            //        table.Rows.Add(el.XName, el.XName, el.P_Title);
-            //        names.Add(el.XName);
-            //    }
-            //}
-
-            //if (rootQuery is VForm)
-            //{
-            //    foreach (VField el in (rootQuery as VForm).ParamFields())
-            //    {
-            //        if (!names.Contains(el.P_FormalParName))
-            //        {
-            //            table.Rows.Add(el.P_FormalParName, el.P_FormalParName, el.P_Title);
-            //            names.Add(el.P_FormalParName);
-            //        }
-            //    }
-            //}
         }
 
 
@@ -1128,17 +1099,6 @@ namespace sql.builder.DataApi
         public virtual void P_Valid_ListRefresh(VDataTable table)
         {
             ObjectFieldPropertyListRefresh(table,false,true);
-            //table.Rows.Clear();
-            //List<string> names = new List<string>();
-            //VSourcedElement rootQuery = RootQuery();
-            //foreach (VSXElement el in rootQuery.Columns())
-            //{
-            //    if (!names.Contains(el.XName))
-            //    {
-            //        table.Rows.Add(el.XName, el.XName, el.P_Title);
-            //        names.Add(el.XName);
-            //    }
-            //}
         }
         public virtual bool P_Valid_Exists()
         {

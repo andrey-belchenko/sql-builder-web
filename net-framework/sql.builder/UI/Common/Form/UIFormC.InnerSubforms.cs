@@ -20,24 +20,6 @@ namespace sql.builder.UI
         internal void ShowInnerSubformNew(string name)
         {
             throw new NotImplementedException();
-            //var info = innerSubFormsNew[name];
-            //var mainGroup = info.Layout.GetMainGroup().GetControl() as Control;
-            //var dform = (mainGroup.FindForm() as frmDynamicEditor);
-            //if (dform == null)
-            //{
-            //    dform = new frmDynamicEditor(this.GetFormName(), name);
-            //    dform.Controls.Add(mainGroup);
-            //    dform.Text = info.Layout.GetMainGroup().GetText();
-            //    dform.Name = name;
-            //    mainGroup.Dock = DockStyle.Fill;
-            //    info.Parent = dform;
-            //    //  dform.Controls.Add(layout);
-            //    // ContainerVisibleChanged(innerSubForms[name].Root, update_immediately: true, recursive: true);
-            //    //RefreshData();
-            //}
-            //activeSubForm = dform;
-            //dform.MdiParent = null;
-            //dform.ShowDialog();
         }
         internal void HideInnerSubform()
         {
@@ -51,26 +33,5 @@ namespace sql.builder.UI
             public VLayout Layout { get; set; }
             public IDisposable Parent { get; set; }
         }
-        //frmDynamicEditor _dform = null;
-        //DialogResult LastDialogResult = DialogResult.None; // возможно тоже самое уже реализовано другим сособом
-        //internal DialogResult ShowDialog()
-        //{
-        //    LastDialogResult = DialogResult.None;
-        //    ApplyVisibitlity();
-        //    if (_dform == null)
-        //    {
-        //        _dform = new frmDynamicEditor(this.GetFormName());
-        //    }
-        //    _dform.Controls.Add(TmpGetControlAsWinFormCtrl() as Control);
-        //    _dform.Text = GetTitle();
-        //    _dform.Name = GetFormName();
-        //    _dform.MdiParent = null;
-        //    _dform.StartPosition = FormStartPosition.CenterParent;
-        //     LayoutResume();
-        //     //UpdateTitle();
-        //    // uiform.LayoutRefresh();
-        //     _dform.ShowDialog(null);
-        //     return this.LastDialogResult;
-        //}
     }
 }

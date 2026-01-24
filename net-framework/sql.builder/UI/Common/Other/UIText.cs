@@ -51,64 +51,7 @@ namespace sql.builder.UI
         public override void SetControlValue(object value, int index = 1)
         {
             this.SetCtrlValue(value);
-            //beControl.SetValue(value);
-
-            //if (ShowNulls)
-            //{
-            //    if (Used && Cmn.IsNull(value))
-            //    {
-            //        beControl.SetNullText(TextConst.NullPlaceholder);
-            //    }
-            //    else
-            //    {
-            //        beControl.SetNullText(null);
-            //    }
-            //}
         }
-
-        //public override RepositoryItem GetRepositoryItem()
-        //{
-        //    //if (_repository == null)
-        //    // {
-        //    var rep = new RepositoryItemButtonEdit();
-        //    rep.Buttons.Clear();
-        //    addRepositoryButtons(rep.Buttons);
-
-        //    rep.ButtonClick += RepositoryEditor_ButtonClick;
-        //    // rep.Buttons.Add(createWarningButton());
-        //    if (EditMask != null)
-        //    {
-        //        var mask = EditMask;
-        //        if (mask.StartsWith("n", true, CultureInfo.CurrentCulture))
-        //        {
-        //            rep.Mask.MaskType = MaskType.Numeric;
-        //        }
-        //        else if (mask.StartsWith("s")) // заплатка
-        //        {
-        //            mask = mask.Substring(1, mask.Length - 1);
-        //            rep.Mask.MaskType = MaskType.Simple;
-        //            rep.Mask.SaveLiteral = false;
-
-        //        }
-        //        rep.Mask.EditMask = mask;
-        //    }
-        //    rep.Mask.UseMaskAsDisplayFormat = true;
-        //    //rep.ButtonClick += (sender, args) =>
-        //    //{
-        //    //    MessageBox.Show("yep");
-        //    //    //(sender as Control).Tag = btn_rep.Tag;
-        //    //};
-
-        //    //foreach (EditorButton btn in beControl.Properties.Buttons)
-        //    //{
-        //    //    rep.Buttons.Add(btn);
-        //    //}
-        //    // _repository = rep;
-        //    //}
-
-        //    return rep;
-        //}
-
         public override void RefreshData()
         {
             if (this.UseDefaultQuery && this.data_set_default != null) {
@@ -136,29 +79,5 @@ namespace sql.builder.UI
         {
             Form.LastActiveField = this;
         }
-
-        //protected override EditorButtonCollection buttonCollection()
-        //{
-        //    return (beControl as DevExpress.XtraEditors.ButtonEdit).Properties.Buttons; // временно
-        //}
-
-        //public override void AddEditorButton(EditorButton btn, EditorButton btn_rep, EventHandler on_click)
-        //{
-        //    _custom_buttons = true;
-
-        //    beControl.Properties.Buttons.Add(btn);
-        //    btn.Click += on_click;
-
-
-        //    additionalButtons.Add(btn);
-        //    //var rep = (_repository ?? GetRepositoryItem()) as RepositoryItemButtonEdit;
-        //    //rep.Buttons.Add(btn_rep);
-        //    //// если кнопок несколько - не отличить по какой был клик!
-        //    //rep.Click += (sender, args) => (sender as Control).Tag = btn_rep.Tag;
-        //    //rep.Click += on_click;
-
-        //    ////beControl.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-        //    ////rep.TextEditStyle = TextEditStyles.DisableTextEditor;
-        //}
     }
 }

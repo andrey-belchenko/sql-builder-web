@@ -21,38 +21,6 @@ namespace sql.builder.DataApi
 
 
         #region Вспомогательные вызовы
-
-        //public  List<DataTable>  GetChildContextLists()
-        //{
-        //    var tables = new List<DataTable>();
-        //    var xlists = CreateContextListsElement();
-        //    MakeChildContextLists(xlists);
-
-        //    foreach (XElement xlist in xlists.Elements().ToList())
-        //    {
-
-        //        VDataTable table = new VDataTable();
-        //        table.TableName = xlist.Attribute("name").Value;
-        //        int i = 0;
-        //        foreach (XElement item in xlist.Elements().ToList())
-        //        {
-        //            VSXElement item1 = VSXElement.Get(item);
-        //            item1.VirtualParent = this;
-        //            //VSXElement item1 = this.InsertChild(new XElement(item), false);
-        //           DataRow r=  item1.ToDataRowSingle(table,true,i);
-        //           item1.Row = r;
-        //            i++;
-        //            item1.Remove();
-
-        //        }
-        //        tables.Add(table);
-
-        //       // xlists = new XElement(xlists);
-        //    }
-        //    return tables;
-        //}
-
-
         public virtual void MakeChildContextLists(XElement xlists)
         {
 

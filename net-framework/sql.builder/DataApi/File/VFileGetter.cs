@@ -40,18 +40,6 @@ namespace sql.builder.DataApi
         {
             return this.FileName.SubstringAfter('\\').SubstringAfter('/');
         }
-        //public static void whriteFileToDB(byte[] blob, string commandText)
-        //{
-
-        //    int conIndex = getConnection();
-
-        //    OracleConnection connection = connections[conIndex];
-        //    OracleCommand command = new OracleCommand(commandText, connection);
-        //    OracleParameter par = command.Parameters.Add("filedata", OracleDbType.Blob);
-        //    par.Value = blob;
-        //    command.ExecuteNonQuery();
-        //}
-
         public string FileName=null;
 
       

@@ -10,21 +10,6 @@ namespace sql.builder.DataApi
             : base(EName.query)
         {
         }
-        //public static VRelation GetOrCreate(XElement element)
-        //{
-        //    VRelation item = new VRelation("item");
-        //    if (element.GetType() != item.GetType())
-        //    {
-        //        item = new VRelation(element);
-        //        element.ReplaceWith(item);
-        //        item.environment = VSXElement.SearchEnvironment(item);
-        //    }
-        //    else
-        //    {
-        //        item = (VRelation)element;
-        //    }
-        //    return item;
-        //}
         internal VQuery ChildQuery()
         {
             XElement query = this.Ancestors(EName.query).First();

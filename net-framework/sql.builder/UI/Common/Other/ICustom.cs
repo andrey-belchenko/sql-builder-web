@@ -10,17 +10,6 @@ namespace sql.builder.UI
     /// </summary>
     public interface ICustom
     {
-        /// <summary>
-        /// Контрол, который будет добавлен на панель поиска. 
-        /// В простейшем случае реализация будет "return this".
-        /// </summary>
-        /// <returns></returns>
-        //Control GetControl();
-
-        /// <summary>
-        /// Высота контрола, необходимая для его отображения.
-        /// </summary>
-        /// <returns></returns>
         int GetControlHeight();
 
         /// <summary>

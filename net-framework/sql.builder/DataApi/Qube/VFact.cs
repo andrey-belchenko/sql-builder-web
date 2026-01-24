@@ -27,28 +27,6 @@ namespace sql.builder.DataApi
         {
             return child_nodes;
         }
-        //internal VCall GetFactExpression()
-        //{
-        //    return GetEnvironment().GetExpression(P_Column);
-        //}
-        //internal VSXElement GetFactColumn()
-        //{
-        //    return GetEnvironment().GetFactColumn(P_Column);
-        //}
-        //public VSXElement GetFactSourceByName()
-        //{
-        //    if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
-        //    {
-        //        return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as VSXElement);
-        //    }
-        //    VSXElement source = GetFactExpression();
-        //    if (source == null)
-        //    {
-        //        source = GetFactColumn();
-        //    }
-        //    AddCashValue(source, MethodBase.GetCurrentMethod().ToString(), null);
-        //    return source;
-        //}
         internal VSXElement GetFactSource()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
@@ -229,25 +207,6 @@ namespace sql.builder.DataApi
             public VQuery Query;
 
         }
-
-
-        //public SortedList<string, List<string>> GetFactDimDependanceInfo()
-        //{
-
-
-        //    VSXElement source = GetFactSource();
-
-        //    if (source is VExpression)
-        //    {
-        //        return (source as VExpression).GetFactDimDependanceInfo();
-        //    }
-        //    else
-        //    {
-        //        var list = new SortedList<string, List<string>>();
-        //        list.Add(source.P_Fact, new List<string>());
-        //        return list;
-        //    }
-        //}
         /*private string Cumulate()
         {
             var scope = Scope();
@@ -295,74 +254,6 @@ namespace sql.builder.DataApi
             }
             return null;
         }*/
-        //public VQubeUtils.FactInfo FactInfo()
-        //{
-        //    var cumulate = Cumulate();
-        //    var src = GetFactSource();
-        //    string dimset=null;
-
-        //   var ds=GetDimset();
-        //   if (ds != null)
-        //   {
-        //       dimset = ds.XName;
-        //   }
-        //    var fi = new VQubeUtils.FactInfo(src.P_Fact, cumulate, dimset);
-
-        //    return fi;
-        //}
-
-        //public string FullColName()
-        //{
-        //    //var cumulate = Cumulate();
-
-        //    //var name = GetFactSource().P_Fact;
-        //    //if (cumulate != null)
-        //    //{
-        //    //    name += TextConst.Pfx.ScopeExp + cumulate;
-        //    //}
-
-        //    return FactInfo().BuildName();
-        //}
-
-        //public string ColNamePfx()
-        //{
-        //    return FactInfo().BuildPfx();
-        //}
-
-
-        //public void GetFactDimDependanceInfo(SortedList<string, FactDependantceInfo> infoList, List<string> conditions, List<string> outputDimensions, List<string> nonOutputDimensions)
-        //{
-
-
-        //    VSXElement source = GetFactSource();
-        //    var conds = conditions.ToList();
-        //    if (P_Condition != "")
-        //    {
-        //        if (!conds.Contains(P_Condition))
-        //        {
-        //            conds.Add(P_Condition);
-        //        }
-        //    }
-        //    if (source is VExpression)
-        //    {
-
-        //        (source as VExpression).GetFactDimDependanceInfo(infoList, conds, outputDimensions, nonOutputDimensions);
-        //    }
-        //    else
-        //    {
-
-        //        var info = new FactDependantceInfo(P_Column);
-        //        info.Conditions = conds.ToList();
-        //        info.OutputDimensions = outputDimensions.ToList();
-
-        //        var id = info.GetInfoId();
-        //        if (!infoList.ContainsKey(id))
-        //        {
-        //            infoList.Add(info.GetInfoId(), info);
-        //        }
-
-        //    }
-        //}
         internal XElement BuildFullExpression(XElement factPars, SortedList<string, FactDependantceInfo> infoList, List<string> conditions, List<string> outputDimensions, List<string> nonOutputDimensions /*не используется - можно убрать*/, SortedList<string, int> names)
         {
             VSXElement source = this.GetFactSource();
@@ -417,27 +308,6 @@ namespace sql.builder.DataApi
             return elExpr;
         }
         #region Специальные способы агрегации
-
-        //public static XElement ApplySpecAggregationToFact(XElement elExpr, VSXElement srcCol)
-        //{
-        //    if (srcCol.P_AggregationS == TextConst.AVGroup.List)
-        //    {
-
-        //        //var expr = new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunc.Listagg));
-        //        //Cmn.CopyOrReplaceAttributes(elExpr, expr, Compiler.columnAttributesNamesCanDub);
-        //        //expr.Add(elExpr);
-        //        //expr.Add(new XElement(TextConst.EName.Const, new XText("'; '")));
-        //        //expr.Add(elExpr);
-        //        //return expr;
-
-        //        elExpr.SetAttributeValue(TextConst.AName.Group, TextConst.AVGroup.List);
-        //        return elExpr;
-        //    }
-        //    else
-        //    {
-        //        return elExpr;
-        //    }
-        //}
         private XElement ApplySpecAggregation(XElement elExpr)
         {
             VSXElement factSource = this.GetFactSource();

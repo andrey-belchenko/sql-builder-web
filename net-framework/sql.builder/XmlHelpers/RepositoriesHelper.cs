@@ -102,55 +102,6 @@ namespace sql.builder.XmlHelpers
            
             return ((VDataTable)XmlReports.Environment.GetPrecompiledReport(xquery1).Result(2,false).Tables[0]).DataAdapter.SelectCommand.CommandText;
         }
-
-        //public static string GetUpdSelectSql(XElement xquery, XElement xquery_changed, string key_changed_name)
-        //{
-        //    var query_changed_name = xquery_changed.Attribute("name").Value;
-        //    // чтобы не испортить query в схеме
-        //    xquery = new XElement(xquery);
-        //    xquery.Attribute("name").Remove();
-        //    xquery.Attributes("inherit").Remove();
-
-        //    // ищем колонку
-        //    var xcolumn = new XElement(xquery.Element("select").Elements("column").First(col => col.Attribute("as").Value == key_changed_name));
-        //    xcolumn.Attributes("group").Remove();
-        //    xcolumn.Attributes("key").Remove();
-        //    xcolumn.Attributes("class-title").Remove();
-
-        //    // добавляем условия на колонку
-        //    XElement xwhere = null;
-        //    var xpush = xquery.Element("push") ?? xquery;
-
-        //    xwhere = xpush.Element("where");
-        //    if (xwhere == null)
-        //    {
-        //        xwhere = new XElement("where");
-        //        xpush.Add(xwhere);
-        //    }
-        //    var xcall = new XElement("call",
-        //                 new XAttribute("function", "and"),
-        //                 new XElement("call",
-        //                     new XAttribute("function", "in"),
-        //                     xcolumn,
-        //                     new XElement("query",
-        //                         new XElement("select",
-        //                           new XElement("column",
-        //                               new XAttribute("table", query_changed_name + "_m"),
-        //                               new XAttribute("column", key_changed_name))),
-        //                         new XElement("from",
-        //                           new XElement("query",
-        //                               new XAttribute("name", query_changed_name),
-        //                               new XAttribute("as",   query_changed_name + "_m"),
-        //                               new XAttribute("hint", "materialize")
-        //                               )))),
-        //                 xwhere.Elements());
-        //    xwhere.RemoveAll();
-        //    xwhere.Add(xcall);
-
-        //    return GetSelectSql(xquery);
-        //}
-
-        
         #region Закрытые методы
         private static void FillQueryRepository(XElement query_link, string parent_query_name)
         {
@@ -344,32 +295,6 @@ namespace sql.builder.XmlHelpers
 
          //   string rec_columns;
             string sql = "";
-            //if (insertPortionSize != 0)
-            //{
-            //    rec_columns = String.Join(",", Compiler.schemeRoot.Element("queries").Elements()
-            //                          .First(que => que.Attribute("name").Value == query_name)
-            //                          .Element("select").Elements()
-            //                          .Select(col => "rec." + col.Attribute("as").Value));
-
-            //    sql = String.Format(
-            //   @"
-            //                      declare
-            //                          v_counter number;
-            //                      begin
-            //                        v_counter := 0;
-            //                        for rec in ({2}) loop
-            //                            insert into {0}({1}) 
-            //                            values ({3});
-            //                            v_counter := v_counter+1;
-            //                            if (v_counter={4}) then
-            //                                commit;
-            //                                v_counter := 0;
-            //                            end if;
-            //                        end loop;
-            //                        commit;
-            //                      end;", rep_table, into_columns, select_sql, rec_columns, insertPortionSize);
-            //}
-            //else
             {
                 // !!! Дописать если понадобится создание простого insert...select всех записей без цикла 
             }

@@ -376,18 +376,6 @@ namespace sql.builder
                         SetCurrentRowValue(col.ColumnName, imputedRow[col]);
                     }
                 }
-                //var newRow = bufferTable.Rows.Add();
-                //bufferTable.BeginLoadData();
-                //while (reader.Read())
-                //{
-                //    foreach (DataColumn col in bufferTable.Columns)
-                //    {
-                //        newRow [col.ColumnName] = reader[col.ColumnName];
-                //    }
-                //}
-                //bufferTable.Clear();
-                //bufferTable.AcceptChanges();
-                //reader = (Table as VDataTable).cmd.ExecuteReader();
             }
             parentId = GetParentId();
         }

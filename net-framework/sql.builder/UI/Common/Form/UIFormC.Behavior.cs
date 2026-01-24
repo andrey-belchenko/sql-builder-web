@@ -39,18 +39,6 @@ namespace sql.builder.UI
         public bool IsModifiedSelfOrSub() 
         {
             return GetRelativeFormsAndSelf().Any(f => f.IsModified());
-                //var stack = new Stack<UIFormC>();
-                //stack.Push(this);
-
-                //while (stack.Count > 0)
-                //{
-                //    var form = stack.Pop();
-                //    if (form.IsModified) return true;
-
-                //    if (form.SubForms != null) form.SubForms.ForEach(f => stack.Push(f));
-                //}
-
-                //return false;
         }
 
         public event EventHandler ChangeActionComplete = null;
@@ -82,108 +70,6 @@ namespace sql.builder.UI
             //_is_modified = false;
             UpdateButtonsState();
         }
-
-        //private SortedList<string, VariableStateDependence> variableStateDependenceList=null;
-
-        //private SortedList<int, string> visiblilityControlVariableList = null; // для отолженной установки видимости 
-
-        //private  class VariableStateDependence
-        //{
-        //    public List<ControlState> Editable = new List<ControlState>();
-        //    public List<ControlState> Visible = new List<ControlState>();
-        //    public List<ControlState> SelList = new List<ControlState>();
-        //}
-
-        //private  class ControlState
-        //{
-        //    public object Control;
-        //    public object State=null;
-        //}
-
-
-
-        //public string AddVariableStateDependance(object control, string variable, string attr, bool invert=false) //!!! Тоже самое делается для полей по - другому . Продумать. Объединить.  Пока доделываю invert
-        //{
-        //    if (variable == TextConst.AVBool.True)// заплатка для стыковки нового и старого варианта
-        //    {
-        //        return null;
-        //    }
-
-        //    if (variable == TextConst.AVBool.False)
-        //    {
-        //        return null;
-        //    }
-        //    if (Form.FormUseType == UseType.ParamEditor) return null;
-        //    if (invert)
-        //    {
-        //        variable = "!" + variable;
-        //    }
-        //    if (variableStateDependenceList == null)
-        //    {
-        //        variableStateDependenceList = new SortedList<string, VariableStateDependence>();
-        //    }
-
-        //    if (!variableStateDependenceList.ContainsKey(variable))
-        //    {
-        //        variableStateDependenceList.Add(variable, new VariableStateDependence());
-        //    }
-
-        //    var controlState = new ControlState();
-        //    controlState.Control = control;
-            
-
-        //    List<ControlState> controlStateList = null;
-          
-        //    switch (attr)
-        //    {
-        //        case TextConst.AName.Editable:
-        //            controlStateList = variableStateDependenceList[variable].Editable;
-        //            break;
-        //        case TextConst.AName.Visible:
-        //            controlStateList = variableStateDependenceList[variable].Visible;
-        //            break;
-        //        case TextConst.EName.ListQuery:
-        //            controlStateList = variableStateDependenceList[variable].SelList;
-        //            break;
-        //    }
-
-        //    controlStateList.Add(controlState);
-        //    attachControlStateEvent();
-
-
-        //    if (attr == TextConst.AName.Visible)
-        //    {
-        //        if (visiblilityControlVariableList == null)
-        //        {
-        //            visiblilityControlVariableList = new SortedList<int, string>();
-        //            visiblilityControlVariableList[control.GetHashCode()] = variable;
-        //        }
-        //    }
-        //    return variable;
-            
-        //}
-
-      
-        //private bool controlStateEventAttached=false;
-        //internal void attachControlStateEvent()
-        //{
-        //    if (!controlStateEventAttached)
-        //    {
-        //        controlStateEventAttached = true;
-        //        DataSource.VariableChanged += DataSource_OnVariableChanged;  
-        //    }
-
-        //}
-        //internal void detachControlStateEvent()
-        //{
-        //    if (controlStateEventAttached)
-        //    {
-        //        controlStateEventAttached = false;
-        //        DataSource.VariableChanged -= DataSource_OnVariableChanged;
-        //    }
-
-        //}
-
         private bool changeCompletedEventAttached = false;
         //private bool _is_modified;
         internal void attachChangeCompletedEvent()
@@ -204,191 +90,10 @@ namespace sql.builder.UI
             }
 
         }
-
-
-        //private void DataSource_OnVariableChanged(object sender, DataColumnChangeEventArgs args)
-        //{
-        //    string varName = (args.Column as VDataColumn).VariableName;
-
-        //    UpdateControlsStates(varName);
-
-
-        //    foreach (VDataTable tbl in DataSource.Tables)
-        //    {
-        //        if (tbl.AutoRefresh)
-        //        {
-        //            var parsNames = tbl.GetParamsNames();
-        //            if (parsNames.Contains(varName + " "))
-        //            {
-        //                tbl.Refresh();// !!! Выполняется несколько раз - отследить
-        //            }
-        //        }
-        //    }
-
-
-        //}
-
         private void DataSource_OnChangeCompleted(object sender, EventArgs args)
         {
             ApplyVisibitlity();
         }
-
-
-        //internal void UpdateAllControlsStates()
-        //{
-        //    if (variableStateDependenceList == null) return;
-
-        //    foreach (string varName in variableStateDependenceList.Keys)
-        //    {
-        //        UpdateControlsStates(varName);
-        //    }
-        //}
-
-        //private void UpdateControlsStates(string varName)
-        //{
-        //    if (variableStateDependenceList == null) return;
-        //    if (variableStateDependenceList.ContainsKey(varName))
-        //    {
-        //        foreach (ControlState controlState in variableStateDependenceList[varName].Editable)
-        //        {
-        //            SetControlEditable(controlState, varName);
-        //        }
-        //        foreach (ControlState controlState in variableStateDependenceList[varName].Visible)
-        //        {
-        //            SetControlVisible(controlState, varName);
-        //        }
-        //        foreach (ControlState controlState in variableStateDependenceList[varName].SelList)
-        //        {
-        //            RereshControlSelList(controlState, varName);
-        //        }
-        //    }
-        //}
-
-        //private  void SetControlEditable(ControlState controlState, string varName)
-        //{
-        //    object newVal = dataSource.GetVariableValue(varName);
-
-        //    if (!newVal.Equals(controlState.State))
-        //    {
-        //         controlState.State=newVal;
-        //        bool state=true;
-        //        if (Cmn.Nvl(newVal, 0).ToString() == "0")
-        //        {
-        //            state = false;
-        //        }
-        //        SetControlEditable(controlState.Control, state);
-        //    }
-        //}
-
-        //private void SetControlVisible(ControlState controlState, string varName)
-        //{
-        //    if (this.NoData) return;
-        //    object newVal = dataSource.GetVariableValue(varName);
-
-        //    if (!newVal.Equals(controlState.State))
-        //    {
-        //        controlState.State = newVal;
-        //        bool state = true;
-        //        if (Cmn.Nvl(newVal, 0).ToString() == "0")
-        //        {
-        //            state = false;
-        //        }
-        //        SetControlVisible(controlState.Control, state);
-        //    }
-        //}
-
-
-        
-
-
-        //public  void SetControlEditable(object control, bool val)
-        //{
-        //    if (control is LayoutControlGroup)
-        //    {
-        //        (control as LayoutControlGroup).Enabled = val;
-        //    }
-
-        //    else if (control is BarButtonItem)
-        //    {
-        //        (control as BarButtonItem).Enabled = val;
-
-        //    }
-
-        //    else if (control is SimpleButton)
-        //    {
-        //        (control as SimpleButton).Enabled = val;
-        //    }
-
-        //    else if (control is EditorButton)
-        //    {
-        //        (control as EditorButton).Enabled = val;
-        //    }
-        //    else
-        //    {
-        //        throw new System.InvalidOperationException("Не описано поведение для "+ control.GetType().Name);
-        //    }
-        //}
-
-        //public bool SetControlVisible_GroupNew(object control, bool val) // new to do
-        //{
-        //    var group = control as VLayoutGroupInfo;
-        //    if (group != null)
-        //    {
-        //        group.SetVisibility(val);
-                
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
-        //public void SetControlVisible(object control, bool val) // new to do
-        //{
-        //    if (SetControlVisible_GroupNew(control, val))
-        //    {
-        //        return;
-        //    }
-
-        //    if (control is BarItem)
-        //    {
-        //        var ctrl = (BarItem)control;
-        //        if (val)
-        //        {
-        //            ctrl.Visibility = BarItemVisibility.Always;
-        //        }
-        //        else
-        //        {
-        //            ctrl.Visibility = BarItemVisibility.Never;
-        //        }
-        //        return;
-        //    }
-
-        //    if (control is Control)
-        //    {
-        //        var itemInfo = Layout.GetItemByControl(control);
-        //        itemInfo.SetVisibility(val);
-        //    }
-
-        //    if (control is EditorButton)
-        //    {
-        //        (control as EditorButton).Visible = val;
-        //    }
-        //}
-
-
-        
-
-
-        ////!!! Желательно перенести в DataSet, подумать как   обеспечмить общую логику для контролов (нет соотв колонки в dataset) и полей (есть колонка в dataset)
-        //private static void RereshControlSelList(ControlState controlState, string varName)
-        //{
-        //    if (controlState.Control is UIBase)
-        //    {
-        //        (controlState.Control as UIBase).RefreshData();
-        //    }
-        //}
-
-        
-
     }
 
     public partial class UIFormC
@@ -657,20 +362,6 @@ namespace sql.builder.UI
                 SetControlEditable(controlState.Control, state);
             }
         }
-        //private void SetControlExists(ControlState controlState, string varName)
-        //{
-        //    object newVal = DataSource.GetVariableValue(varName);
-        //    if (!newVal.Equals(controlState.State))
-        //    {
-        //        controlState.State = newVal;
-        //        bool state = true;
-        //        if (Cmn.Nvl(newVal, 0).ToString() == "0")
-        //        {
-        //            state = false;
-        //        }
-        //        //SetControlVisible(controlState.Control, state);
-        //    }
-        //}
         private void SetControlVisible(ControlState controlState, string varName)
         {
             object newVal = DataSource.GetVariableValue(varName);
@@ -690,30 +381,6 @@ namespace sql.builder.UI
 
             var ec = (control as IVEnabledControl);
             ec.SetEnabled(val);
-            //if (control is LayoutControlGroup)
-            //{
-            //    (control as LayoutControlGroup).Enabled = val;
-            //}
-
-            //else if (control is BarButtonItem)
-            //{
-            //    (control as BarButtonItem).Enabled = val;
-
-            //}
-
-            //else if (control is SimpleButton)
-            //{
-            //    (control as SimpleButton).Enabled = val;
-            //}
-
-            //else if (control is EditorButton)
-            //{
-            //    (control as EditorButton).Enabled = val;
-            //}
-            //else
-            //{
-            //    throw new System.InvalidOperationException("Не описано поведение для " + control.GetType().Name);
-            //}
         }
 
         public bool SetControlVisible_GroupNew(object control, bool val) // new to do
@@ -730,36 +397,6 @@ namespace sql.builder.UI
 
         public void SetControlVisible(object control, bool val) // new to do
         {
-            //if (SetControlVisible_GroupNew(control, val))
-            //{
-            //    return;
-            //}
-
-            //if (control is BarItem)
-            //{
-            //    var ctrl = (BarItem)control;
-            //    if (val)
-            //    {
-            //        ctrl.Visibility = BarItemVisibility.Always;
-            //    }
-            //    else
-            //    {
-            //        //ctrl.Visibility = BarItemVisibility.Always;
-            //        ctrl.Visibility = BarItemVisibility.Never;
-            //    }
-            //    return;
-            //}
-
-            //if (control is Control  || control is IVNormalControl)
-            //{
-            //    var itemInfo = Form.Layout.GetItemByControl(control);
-            //    itemInfo.SetVisibility(val);
-            //}
-
-            //if (control is EditorButton)
-            //{
-            //    (control as EditorButton).Visible = val;
-            //}
         }
 
 

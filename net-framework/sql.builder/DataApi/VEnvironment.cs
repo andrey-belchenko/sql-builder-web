@@ -27,19 +27,6 @@ namespace sql.builder.DataApi
         {
             return scheme.First();
         }*/
-        //VerticaConnection _vcon;
-        //public VerticaConnection VConnection
-        //{
-        //    get
-        //    {
-        //        if (_vcon == null)
-        //        {
-        //            //_vcon = new VerticaConnection("Host=192.168.47.189;Database=VMart;User=dbadmin;");
-        //            //_vcon.Open(useGlobalSettings: true);
-        //        }
-        //        return _vcon;
-        //    }
-        //}
         internal DateTime GetLastSchemeAssembleTime()
         {
             string val = this.manager.GetNativeScheme().First().AttrOrDefault(AName.timestamp, null);
@@ -53,21 +40,6 @@ namespace sql.builder.DataApi
         {
             return GetHashCode().ToString();
         }
-        //public VEntityType GetEntityType(string typeName)
-        //{
-        //    VQuery qry = VQuery.GetOrCreate(this, typeName);
-        //    if (qry == null)
-        //    {
-        //        return null;
-        //    }
-        //    return qry.EntityType;
-        //}
-        /// <summary>
-        /// Получаем или создаем отчет по имени
-        /// </summary>
-        /// <param name="name">Имя report или query</param>
-        /// <param name="project">Имя проекта</param>
-        /// <returns></returns>
         internal VReport GetPrecompiledReport(string name, string project = null)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
@@ -748,42 +720,6 @@ namespace sql.builder.DataApi
             Manager.GetNativeScheme().Elements(EName.forms).First().Add(element);
             return VSXElement.Get<VQuery>(element);
         }*/
-        //public Image GetImage(  XElement ximage)
-        // {
-        //     return AwesomeImages.GetAwesomeImage(ximage, 32, Color.FromArgb(150, 0, 0, 255), Color.FromArgb(0, 255, 255, 255));
-        // }
-        // public Image GetImage(string name)
-        // {
-        //     XElement ximage = this.SchemeNative.Elements("images").Elements("image").Where(e => Cmn.GetAttrValue(e, "name") == name).FirstOrDefault();
-        //     return  GetImage(   ximage);
-        // }
-        // private ImageCollection imageCollection = null;
-        //private SortedList<string,int> imageList=null;
-        // public ImageCollection GetImageCollection()
-        // {
-        //     if (imageCollection == null)
-        //     {
-        //         imageCollection = new ImageCollection();
-        //         imageList = new SortedList<string, int>();
-        //         int i = 0;
-        //         foreach (XElement ximage in this.SchemeNative.Elements("images").Elements("image"))
-        //         {
-        //             Image img = GetImage(ximage);
-        //             imageCollection.Images.Add(img, Cmn.GetAttrValue(ximage, "name"));
-        //             imageList.Add(Cmn.GetAttrValue(ximage, "name"), i);
-        //             i++;
-        //         }
-        //     }
-        //     return imageCollection;
-        // }
-        // public int GetImageIndex(string name)
-        // {
-        //     if (imageList.ContainsKey(name))
-        //     {
-        //         return imageList[name];
-        //     }
-        //     return -1;
-        // }
         internal void SyncNavigators(VSXElement e)
         {
             throw new NotImplementedException();
