@@ -2,13 +2,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": ".NET Core Launch (console)",
+      "name": ".NET Launch (console)",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/HelloWorldApp/bin/Debug/net8.0/HelloWorldApp.dll",
+      "program": "${workspaceFolder}/SqlBuilderApp/bin/Debug/net8.0/SqlBuilderApp.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/HelloWorldApp",
+      "cwd": "${workspaceFolder}/SqlBuilderApp",
       "console": "externalTerminal",
       "stopAtEntry": false
     }

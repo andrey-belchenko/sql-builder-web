@@ -1,5 +1,5 @@
 {
-  "dotnet.defaultSolution": "HelloWorld.slnx",
+  "dotnet.defaultSolution": "SqlBuilder.slnx",
   "files.exclude": {
     "**/bin": true,
     "**/obj": true
