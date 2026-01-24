@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Data;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Xml;
 using System.Xml.Linq;
@@ -94,7 +94,7 @@ namespace sql.builder.DataApi
             s += TextConst.Pfx.Param + TextConst.DBParams.FileId;
             var cmd = new OracleCommand(s, (OracleConnection)GetTable().GetConnection());
             var par = new OracleParameter(TextConst.DBParams.FileId, fileId);
-            par.OracleDbType = OracleDbType.Number;
+            par.OracleDbType = OracleDbType.Decimal;
             cmd.Parameters.Add(par);
             byte[] _buf = (byte[])cmd.ExecuteScalar();
             if (_buf == null)
@@ -145,16 +145,16 @@ namespace sql.builder.DataApi
                 var cmd = new OracleCommand(s, (OracleConnection)GetTable().GetConnection());
 
                 var par = new OracleParameter(TextConst.DBParams.FileId, fileId);
-                par.OracleDbType = OracleDbType.Number;
+                par.OracleDbType = OracleDbType.Decimal;
                 par.Direction = ParameterDirection.Output;
                 cmd.Parameters.Add(par);
 
                 par = new OracleParameter(TextConst.DBParams.FileName, FileGetter.Name());
-                par.OracleDbType = OracleDbType.VarChar;
+                par.OracleDbType = OracleDbType.Varchar2;
                 cmd.Parameters.Add(par);
 
                 par = new OracleParameter(TextConst.DBParams.FileSize, _buf.Length);
-                par.OracleDbType = OracleDbType.VarChar;
+                par.OracleDbType = OracleDbType.Varchar2;
                 cmd.Parameters.Add(par);
 
                 cmd.ExecuteNonQuery();
@@ -176,7 +176,7 @@ namespace sql.builder.DataApi
                 cmd = new OracleCommand(s, (OracleConnection)GetTable().GetConnection());
 
                 par = new OracleParameter(TextConst.DBParams.FileId, fileId);
-                par.OracleDbType = OracleDbType.Number;
+                par.OracleDbType = OracleDbType.Decimal;
                 cmd.Parameters.Add(par);
 
                 par = cmd.Parameters.Add(TextConst.DBParams.FileData, OracleDbType.Blob);
@@ -213,7 +213,7 @@ namespace sql.builder.DataApi
             }
             s += " end; ";
             var cmd = new OracleCommand(s, this.GetTable().GetConnection());
-            cmd.Parameters.Add(TextConst.DBParams.FileId, OracleDbType.Number, fileId, ParameterDirection.InputOutput);
+            cmd.Parameters.Add(TextConst.DBParams.FileId, OracleDbType.Decimal, fileId, ParameterDirection.InputOutput);
 
 
             var rid = row[GetTable().PrimaryKey[0]];

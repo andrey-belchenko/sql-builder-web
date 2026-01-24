@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
 using System.Data;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 
 //using infoenergo.core.Extensions;
 //using infoenergo.ui.win;
@@ -421,7 +421,7 @@ namespace sql.builder.DataApi
                             } else {
                                 if (dbPar.OracleDbType == OracleDbType.Date) {
                                     val = Cmn.ExtractDateFromOracleToDateString(factParam.Value);
-                                } else if (dbPar.OracleDbType == OracleDbType.VarChar) {
+                                } else if (dbPar.OracleDbType == OracleDbType.Varchar2) {
                                     val = Cmn.ExtractStringFromOracleString(factParam.Value);
                                 } else {
                                     val = factParam.Value;

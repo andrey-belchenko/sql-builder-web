@@ -1,5 +1,5 @@
-﻿using System;
-using Devart.Data.Oracle;
+using System;
+using Oracle.ManagedDataAccess.Client;
 
 namespace sql.builder.XmlHelpers
 {

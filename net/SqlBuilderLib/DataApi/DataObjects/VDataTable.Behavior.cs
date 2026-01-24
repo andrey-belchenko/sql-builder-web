@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 using sql.builder.UI;// !!! перенести используемые классы и убрать
 using System.Threading;
 using System.ComponentModel;

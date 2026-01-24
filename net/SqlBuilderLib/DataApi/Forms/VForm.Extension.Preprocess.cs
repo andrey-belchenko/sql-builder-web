@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,7 +11,7 @@ using System.Xml.Xsl;
 using System.Xml.XPath;
 using System.IO;
 //using System.Windows.Forms;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 using sql.builder.UI;
 using System.Reflection;
 using sql.builder.Exceptions;

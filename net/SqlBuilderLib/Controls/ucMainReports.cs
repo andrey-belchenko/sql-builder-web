@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Contract = System.Diagnostics.Contracts.Contract;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 ////using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 using infoenergo.sys;
 using sql.builder.Controls.Containers;
 //using sql.builder.Controls.Grids;

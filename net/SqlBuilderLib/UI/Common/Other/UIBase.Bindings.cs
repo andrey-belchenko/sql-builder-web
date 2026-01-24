@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Linq;
 using System.Xml.Linq;
@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using sql.builder.DataApi;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 //using DevExpress.XtraEditors;
 //using DevExpress.XtraEditors.Controls;
 //using System.Windows.Forms;

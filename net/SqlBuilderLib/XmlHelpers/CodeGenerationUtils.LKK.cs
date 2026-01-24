@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 using sql.builder.DataApi;
 using System.Collections.Generic;
 
@@ -96,7 +96,7 @@ namespace lenenergo.lkk.svc.web
         public static string DataFileBegin()
         {
             return
-                @"using Devart.Data.Oracle;
+                @"using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Data;
 using  System.Collections.Generic;

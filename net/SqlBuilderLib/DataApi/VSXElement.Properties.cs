@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,7 +13,7 @@ using System.IO;
 //using System.Windows.Forms;
 using System.Diagnostics;
 using System.Reflection;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 //using DevExpress.XtraEditors.Controls;
 //using infoenergo.core.Extensions;
 using sql.builder.FieldInfo;

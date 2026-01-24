@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Data;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Xml;
 using System.Xml.Linq;

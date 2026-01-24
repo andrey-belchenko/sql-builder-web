@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 
 using sql.builder.DataApi;
 
@@ -220,10 +220,10 @@ namespace sql.builder.XmlHelpers
                 cmd.CommandText = "kg_common.lock_dog";
                 var parameters = new[]
                 {
-                    new OracleParameter("s_pref"  , OracleDbType.NVarChar) { Value = "sql.builder_" + rep_table},
-                    new OracleParameter("nkod_dog", OracleDbType.Number)   { Value = 0M },
-                    new OracleParameter("nwait"   , OracleDbType.NVarChar) { Value = 0M },
-                    new OracleParameter("return"  , OracleDbType.NVarChar) { Direction = ParameterDirection.ReturnValue}
+                    new OracleParameter("s_pref"  , OracleDbType.NVarchar2) { Value = "sql.builder_" + rep_table},
+                    new OracleParameter("nkod_dog", OracleDbType.Decimal)   { Value = 0M },
+                    new OracleParameter("nwait"   , OracleDbType.NVarchar2) { Value = 0M },
+                    new OracleParameter("return"  , OracleDbType.NVarchar2) { Direction = ParameterDirection.ReturnValue}
                 };
                 cmd.Parameters.AddRange(parameters);
                 cmd.ExecuteNonQuery();
@@ -252,8 +252,8 @@ namespace sql.builder.XmlHelpers
                 cmd.CommandText = "kg_common.unlock_dog";
                 var parameters = new[]
                 {
-                    new OracleParameter("s_pref"  , OracleDbType.NVarChar) { Value = "sql.builder_" + rep_table},
-                    new OracleParameter("nkod_dog", OracleDbType.Number)   { Value = 0M },
+                    new OracleParameter("s_pref"  , OracleDbType.NVarchar2) { Value = "sql.builder_" + rep_table},
+                    new OracleParameter("nkod_dog", OracleDbType.Decimal)   { Value = 0M },
                 };
                 cmd.Parameters.AddRange(parameters);
                 cmd.ExecuteNonQuery();

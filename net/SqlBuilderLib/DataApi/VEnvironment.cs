@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using System.Reflection;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 //using Vertica.Data.VerticaClient;
 using sql.builder.Core;
 //using sql.builder.WebReports;

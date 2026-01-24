@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 using sql.builder.DataApi;
 
 namespace sql.builder.Clean

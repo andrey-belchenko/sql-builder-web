@@ -1,4 +1,4 @@
-﻿using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 using sql.builder.DataApi;
 
 namespace sql.builder.asuse

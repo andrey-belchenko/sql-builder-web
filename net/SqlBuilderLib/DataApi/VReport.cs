@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
 using System.Data;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 using sql.builder.Core;
 using sql.builder.XmlHelpers;
 using AName_ = sql.builder.DataApi.AName;
@@ -658,7 +658,7 @@ namespace sql.builder.DataApi
         internal static string GetStringType(OracleDbType type)
         {
             switch (type) {
-                case OracleDbType.Number:
+                case OracleDbType.Decimal:
                     return TextConst.AVDataType.Number;
                 case OracleDbType.Date:
                     return TextConst.AVDataType.Date;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,7 +12,7 @@ using System.Xml.XPath;
 using System.IO;
 using System.Reflection;
 ////using System.Windows.Forms;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 //using DevExpress.XtraBars.Ribbon;
 //using DevExpress.XtraEditors;
 using sql.builder.Controls;

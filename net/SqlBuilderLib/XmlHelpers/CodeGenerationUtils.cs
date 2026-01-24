@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 //using DevExpress.XtraCharts.Design;
 using sql.builder.DataApi;
 using System.Collections.Generic;
@@ -53,7 +53,7 @@ namespace sql.builder.XmlHelpers
             {
                 sb.AppendLine("var par = new OracleParameter();");
                 sb.AppendLine(string.Format("par.ParameterName = \"{0}\";", TextConst.DBParams.PrimaryKeyParam));
-                sb.AppendLine("par.OracleDbType = OracleDbType.Number;");
+                sb.AppendLine("par.OracleDbType = OracleDbType.Decimal;");
                 sb.AppendLine("par.Direction = ParameterDirection.Output;");
                 sb.AppendLine("cmd.Parameters.Add(par);");
             }
@@ -593,7 +593,7 @@ namespace sql.builder.XmlHelpers
             {
                 result.AppendLine(@"            var cmdText" + ParseToUpper(t.TableName) + @" = @""" + t.DataAdapter.SelectCommand.CommandText + @""";");
                 
-                result.AppendLine(@"            var cmd" + ParseToUpper(t.TableName) + " = new Devart.Data.Oracle.OracleCommand(cmdText" + ParseToUpper(t.TableName) + ", _Connection);");
+                result.AppendLine(@"            var cmd" + ParseToUpper(t.TableName) + " = new Oracle.ManagedDataAccess.Client.OracleCommand(cmdText" + ParseToUpper(t.TableName) + ", _Connection);");
                 if (ds.ProcedureText == null) result.AppendLine(GetCodeAddOraclePars(rep, ParseToUpper(t.TableName)));
                 result.AppendLine(@"            var dataReader" + ParseToUpper(t.TableName) + " = cmd" + ParseToUpper(t.TableName) + ".ExecuteReader();");
                 

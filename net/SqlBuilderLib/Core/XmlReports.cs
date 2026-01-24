@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 using infoenergo;
 using infoenergo.core;
 //using DevExpress.DashboardCommon.Native;

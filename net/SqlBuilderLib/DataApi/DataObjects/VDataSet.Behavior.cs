@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,7 +11,7 @@ using System.Xml.Linq;
 using System.Xml.Xsl;
 using System.Xml.XPath;
 using System.Threading;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 using sql.builder.UI;
 namespace sql.builder.DataApi
 {
@@ -310,7 +310,7 @@ namespace sql.builder.DataApi
         }
         internal OracleParameter CreateFormIdParametr()
         {
-            return new OracleParameter(TextConst.DBParams.FormId, OracleDbType.Number, (object)this.GetFormId(), ParameterDirection.Input);
+            return new OracleParameter(TextConst.DBParams.FormId, OracleDbType.Decimal, (object)this.GetFormId(), ParameterDirection.Input);
         }
     }
 }

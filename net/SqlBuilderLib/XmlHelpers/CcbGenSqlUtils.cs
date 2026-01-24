@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 //using DevExpress.Utils.Drawing.Helpers;
 //using DevExpress.XtraBars.Docking2010.Base;
 using sql.builder.DataApi;

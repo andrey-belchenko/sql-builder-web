@@ -12,7 +12,7 @@ using System.Data.Common;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 
 
 namespace infoenergo.core.Data
@@ -34,7 +34,7 @@ namespace infoenergo.core.Data
                 {
                     result = ((DbCommand)(object)oracleCommand).ExecuteScalar();
                 }
-                catch (OracleException innerException)
+                catch (Oracle.ManagedDataAccess.Client.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sql, oracleCommand.Parameters);
                 }
@@ -138,7 +138,7 @@ namespace infoenergo.core.Data
                         }
                     }
                 }
-                catch (OracleException innerException)
+                catch (Oracle.ManagedDataAccess.Client.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sql, oracleCommand.Parameters);
                 }
@@ -170,47 +170,25 @@ namespace infoenergo.core.Data
             return SqlGetDate(sql, new OracleParameter[0], connection);
         }
 
-        public static OracleArray ConvertDecimalArrayToOracle(decimal[] array, OracleConnection connection, string oracleArrayTypeName = "ASUSETYPES.NUMBER$TABLE", bool forceEmptyArray = false)
+        // Note: Oracle.ManagedDataAccess.Core doesn't support OracleArray/UDTs
+        // These methods are kept for API compatibility but will throw NotSupportedException
+        [Obsolete("Oracle.ManagedDataAccess.Core doesn't support OracleArray. Use alternative array handling methods.")]
+        public static object ConvertDecimalArrayToOracle(decimal[] array, OracleConnection connection, string oracleArrayTypeName = "ASUSETYPES.NUMBER$TABLE", bool forceEmptyArray = false)
         {
-            if (!forceEmptyArray && array == null)
-            {
-                return null;
-            }
-
-            OracleArray oracleArray = new OracleArray(oracleArrayTypeName, connection);
-            if (array != null)
-            {
-                for (int i = 0; i < array.Length; i++)
-                {
-                    oracleArray.Add(array[i]);
-                }
-            }
-
-            return oracleArray;
+            throw new NotSupportedException("Oracle.ManagedDataAccess.Core doesn't support OracleArray/UDTs. Use alternative array handling methods.");
         }
 
-        public static OracleArray ConvertStringArrayToOracle(string[] array, OracleConnection connection, string oracleArrayTypeName = "ASUSETYPES.VARCHAR2$TABLE", bool forceEmptyArray = false)
+        [Obsolete("Oracle.ManagedDataAccess.Core doesn't support OracleArray. Use alternative array handling methods.")]
+        public static object ConvertStringArrayToOracle(string[] array, OracleConnection connection, string oracleArrayTypeName = "ASUSETYPES.VARCHAR2$TABLE", bool forceEmptyArray = false)
         {
-            if (!forceEmptyArray && array == null)
-            {
-                return null;
-            }
-
-            OracleArray oracleArray = new OracleArray(oracleArrayTypeName, connection);
-            if (array != null)
-            {
-                for (int i = 0; i < array.Length; i++)
-                {
-                    oracleArray.Add(array[i]);
-                }
-            }
-
-            return oracleArray;
+            throw new NotSupportedException("Oracle.ManagedDataAccess.Core doesn't support OracleArray/UDTs. Use alternative array handling methods.");
         }
 
-        public static OracleLob SqlGetLob(string sql, OracleParameter[] parameters, OracleConnection connection)
+        // Note: Oracle.ManagedDataAccess.Core doesn't have OracleLob class
+        // GetOracleLob() returns OracleBlob/OracleClob which inherit from Stream
+        public static System.IO.Stream SqlGetLob(string sql, OracleParameter[] parameters, OracleConnection connection)
         {
-            OracleLob result = null;
+            System.IO.Stream result = null;
             OracleCommand oracleCommand = new OracleCommand(sql, connection);
             try
             {
@@ -227,7 +205,7 @@ namespace infoenergo.core.Data
                         result = oracleDataReader.GetOracleLob(0);
                     }
                 }
-                catch (OracleException innerException)
+                catch (Oracle.ManagedDataAccess.Client.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sql, oracleCommand.Parameters);
                 }
@@ -295,7 +273,7 @@ namespace infoenergo.core.Data
                         dataTable.AcceptChanges();
                     }
                 }
-                catch (OracleException innerException)
+                catch (Oracle.ManagedDataAccess.Client.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sql, oracleCommand.Parameters);
                 }
@@ -363,7 +341,7 @@ namespace infoenergo.core.Data
                         dataTable.AcceptChanges();
                     }
                 }
-                catch (OracleException innerException)
+                catch (Oracle.ManagedDataAccess.Client.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sql, oracleCommand.Parameters);
                 }
@@ -403,7 +381,7 @@ namespace infoenergo.core.Data
                     ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                     result = true;
                 }
-                catch (OracleException innerException)
+                catch (Oracle.ManagedDataAccess.Client.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sqlCommand, oracleCommand.Parameters);
                 }
@@ -437,7 +415,7 @@ namespace infoenergo.core.Data
                     ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                     result = true;
                 }
-                catch (OracleException innerException)
+                catch (Oracle.ManagedDataAccess.Client.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sqlCommand, oracleCommand.Parameters);
                 }
@@ -488,7 +466,7 @@ namespace infoenergo.core.Data
                     ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                     result = true;
                 }
-                catch (OracleException innerException)
+                catch (Oracle.ManagedDataAccess.Client.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sqlCommand, oracleCommand.Parameters);
                 }
@@ -523,7 +501,7 @@ namespace infoenergo.core.Data
                     ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                     result = true;
                 }
-                catch (OracleException innerException)
+                catch (Oracle.ManagedDataAccess.Client.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sqlCommand, oracleCommand.Parameters);
                 }
@@ -559,7 +537,7 @@ namespace infoenergo.core.Data
                     ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                     result = true;
                 }
-                catch (OracleException innerException)
+                catch (Oracle.ManagedDataAccess.Client.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sqlCommand, oracleCommand.Parameters);
                 }
@@ -856,7 +834,7 @@ namespace infoenergo.core.Data
                             SqlExecute(text, connection);
                             result = true;
                         }
-                        catch (OracleException innerException)
+                        catch (Oracle.ManagedDataAccess.Client.OracleException innerException)
                         {
                             throw new OracleSqlException(innerException, text);
                         }
@@ -1072,7 +1050,7 @@ namespace infoenergo.core.Data
                         result = false;
                     }
                 }
-                catch (OracleException innerException)
+                catch (Oracle.ManagedDataAccess.Client.OracleException innerException)
                 {
                     throw new OracleSqlException($"Не удалось определить, заблокирован пользователь {user} или нет", innerException);
                 }
@@ -1227,8 +1205,8 @@ namespace infoenergo.core.Data
         {
             module = null;
             action = null;
-            OracleParameter oracleParameter = new OracleParameter("module", OracleDbType.VarChar, ParameterDirection.Output);
-            OracleParameter oracleParameter2 = new OracleParameter("action", OracleDbType.VarChar, ParameterDirection.Output);
+            OracleParameter oracleParameter = new OracleParameter("module", OracleDbType.Varchar2, ParameterDirection.Output);
+            OracleParameter oracleParameter2 = new OracleParameter("action", OracleDbType.Varchar2, ParameterDirection.Output);
             OracleParameter[] parameters = new OracleParameter[2] { oracleParameter, oracleParameter2 };
             try
             {
@@ -1252,6 +1230,20 @@ namespace infoenergo.core.Data
         }
     }
 
+
+    // Simple enum to replace DevArt's OracleObjectType
+    public enum OracleObjectType
+    {
+        Unknown = 0,
+        Table = 1,
+        View = 2,
+        Procedure = 3,
+        Function = 4,
+        Package = 5,
+        Type = 6,
+        Sequence = 7,
+        Synonym = 8
+    }
 
     public class OracleException : DbException, ISerializable
     {

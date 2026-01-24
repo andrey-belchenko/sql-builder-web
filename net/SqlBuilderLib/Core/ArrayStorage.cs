@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Diagnostics; 
 using Contract = System.Diagnostics.Contracts.Contract;
 using System.Text;
 using System.Data;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 using infoenergo.sys;
 using infoenergo.core.Data; // DataHelper, OracleSqlException
 using sql.builder.DataApi; // TextConst
@@ -13,28 +13,18 @@ namespace sql.builder.Core
     internal class ArrayStorage
     {
         #region static
-        /// <summary>
-        /// Тип ASUSETYPES.NUMBER$TABLE
-        /// </summary>
-        private static OracleType _number_table_type;
-        /// <summary>
-        /// Тип ASUSETYPES.VARCHAR2$TABLE
-        /// </summary>
-        private static OracleType _varchar2_table_type;
-        private static bool TryGetOracleType(string type_name, ref OracleType type)
-        {
-            //try {
-                type = OracleType.GetObjectType(type_name, db.Connection);
-                return true;
-        }
+        // Note: Oracle.ManagedDataAccess.Core doesn't support UDTs (User-Defined Types) like OracleType
+        // We'll use the fallback path with individual inserts instead of FORALL with array types
+        private static object _number_table_type = null; // Always null - triggers fallback path
+        private static object _varchar2_table_type = null; // Always null - triggers fallback path
         static ArrayStorage()
         {
-            TryGetOracleType("ASUSETYPES.NUMBER$TABLE", ref _number_table_type);
-            TryGetOracleType("ASUSETYPES.VARCHAR2$TABLE", ref _varchar2_table_type);
+            // OracleType.GetObjectType() is not available in ODP.NET Core
+            // Array operations will use the fallback path (individual inserts)
         }
         internal static void ClearStoredValues(string id)
         {
-            OracleParameter par = new OracleParameter("array_id", OracleDbType.VarChar, id, ParameterDirection.Input);
+            OracleParameter par = new OracleParameter("array_id", OracleDbType.Varchar2, id, ParameterDirection.Input);
             DataHelper.SqlExecute("DELETE FROM vr_array_storage WHERE array_id = :array_id", new OracleParameter[1] { par }, Global.Connection);
         }
         #endregion
@@ -63,15 +53,13 @@ namespace sql.builder.Core
         {
                 this._values = null;
                 OracleDbType data_type;
-                OracleType array_type;
-                if (values[0] is string) {
+                // Note: Oracle.ManagedDataAccess.Core doesn't support UDTs, so we always use the fallback path
+                if (values.Length > 0 && values[0] is string) {
                     this._value_column = "sval";
-                    data_type = OracleDbType.NVarChar;
-                    array_type = _varchar2_table_type;
+                    data_type = OracleDbType.NVarchar2;
                 } else {
                     this._value_column = "nval";
-                    data_type = OracleDbType.Number;
-                    array_type = _number_table_type;
+                    data_type = OracleDbType.Decimal;
                 }
                 #if DEBUG
                 Stopwatch sw = new Stopwatch();
@@ -81,47 +69,27 @@ namespace sql.builder.Core
                 try {
                 try
                 {
-                    if (array_type != null)
+                    // ODP.NET Core doesn't support OracleArray/UDTs, so we use individual inserts
+                    // This is slower than FORALL but works with the free provider
+                    cmd = new OracleCommand("delete from vr_array_storage where array_id = :array_id", Global.Connection);
+                    OracleParameter par_array_id = new OracleParameter("array_id", OracleDbType.NVarchar2, this._id, ParameterDirection.Input);
+                    cmd.Parameters.Add(par_array_id);
+                    cmd.ExecuteNonQuery();
+                    //
+                    cmd.CommandText = "insert into vr_array_storage (array_id, " + this._value_column + ") values (:array_id, :value)";
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.Add(par_array_id);
+                    OracleParameter par_value = new OracleParameter("value", data_type, null, ParameterDirection.Input);
+                    cmd.Parameters.Add(par_value);
+                    cmd.Prepare();
+                    for (int index = 0; index < values.Length; index++)
                     {
-                        // FORALL INSERT INTO примерно в 48 раз быстрее простого INSERT'а
-                        cmd = new OracleCommand("DECLARE\n" +
-                                                "  s_array_id vr_array_storage.array_id%TYPE;\n" +
-                                                "BEGIN\n" +
-                                                "  s_array_id := :array_id;\n" +
-                                                "  delete from vr_array_storage where array_id = s_array_id;\n" +
-                                                "  FORALL i IN 1..:count\n" +
-                                                "    INSERT INTO vr_array_storage (array_id, " + this._value_column + ")\n" +
-                                                "      VALUES (s_array_id, :value(i));\n" +
-                                                "END;", Global.Connection);
-                        cmd.Parameters.Add(new OracleParameter("array_id", OracleDbType.NVarChar, this._id, ParameterDirection.Input));
-                        cmd.Parameters.Add(new OracleParameter("count", OracleDbType.Integer, values.Length, ParameterDirection.Input));
-                        OracleArray array = new OracleArray(array_type, values);
-                        cmd.Parameters.Add(new OracleParameter("value", OracleDbType.Array, array, ParameterDirection.Input));
+                        par_value.Value = values[index];
                         cmd.ExecuteNonQuery();
-                    }
-                    else
-                    {
-                        cmd = new OracleCommand("delete from vr_array_storage where array_id = :array_id", Global.Connection);
-                        OracleParameter par_array_id = new OracleParameter("array_id", OracleDbType.NVarChar, this._id, ParameterDirection.Input);
-                        cmd.Parameters.Add(par_array_id);
-                        cmd.ExecuteNonQuery();
-                        //
-                        cmd.CommandText = "insert into vr_array_storage (array_id, " + this._value_column + ") values (:array_id, :value)";
-                        cmd.Parameters.Clear();
-                        cmd.Parameters.Add(par_array_id);
-                        OracleParameter par_value = new OracleParameter("value", data_type, null, ParameterDirection.Input);
-                        cmd.Parameters.Add(par_value);
-                        cmd.Prepare();
-                        for (int index = 0; index < values.Length; index++)
-                        {
-                            par_value.Value = values[index];
-                            cmd.ExecuteNonQuery();
-                        }
                     }
                 }
-                catch (Devart.Data.Oracle.OracleException ex)
+                catch (Oracle.ManagedDataAccess.Client.OracleException ex)
                 {
-
                     throw ex;
                     //throw new infoenergo.core.Data.OracleSqlException(ex, cmd.CommandText, cmd.Parameters);
                 }

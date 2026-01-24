@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 using System.ComponentModel;
 
 namespace infoenergo.sys

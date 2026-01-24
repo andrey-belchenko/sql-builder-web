@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading;
 //using System.Windows.Forms;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
 //using DevExpress.LookAndFeel;
 //using DevExpress.Skins;
 //using DevExpress.UserSkins;

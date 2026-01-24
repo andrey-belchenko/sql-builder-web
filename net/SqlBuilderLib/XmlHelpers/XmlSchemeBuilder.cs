@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 using infoenergo.core.Data;
 //using infoenergo.core.Extensions;
 using sql.builder.DataApi;
@@ -45,8 +45,8 @@ namespace sql.builder.XmlHelpers
             } else {
                 db_scheme = string.Empty;
             }
-            OracleParameter[] parameters = new OracleParameter[2] { new OracleParameter("table_name", OracleDbType.VarChar, table, ParameterDirection.Input),
-                                                                    new OracleParameter("db_scheme", OracleDbType.VarChar, db_scheme, ParameterDirection.Input) };
+            OracleParameter[] parameters = new OracleParameter[2] { new OracleParameter("table_name", OracleDbType.Varchar2, table, ParameterDirection.Input),
+                                                                    new OracleParameter("db_scheme", OracleDbType.Varchar2, db_scheme, ParameterDirection.Input) };
             DataTable dt = DataHelper.SqlGetTable("SELECT owner, object_type FROM all_objects WHERE object_name = UPPER(:table_name) AND owner = NVL(:db_scheme, USER) AND object_type IN ('TABLE', 'VIEW')", parameters, db.Connection);
             DataRow row;
             if (dt.Rows.Count > 0) {
@@ -59,7 +59,7 @@ namespace sql.builder.XmlHelpers
             } else {
                 Cmn.DisposeAndSetNull(ref dt);
                 if (string.IsNullOrEmpty(db_scheme)) {
-                    parameters = new OracleParameter[1] { new OracleParameter("table_name", OracleDbType.VarChar, table, ParameterDirection.Input) };
+                    parameters = new OracleParameter[1] { new OracleParameter("table_name", OracleDbType.Varchar2, table, ParameterDirection.Input) };
                     dt = DataHelper.SqlGetTable("SELECT owner, object_type FROM all_objects WHERE object_name = UPPER(:table_name) AND object_type IN ('TABLE', 'VIEW')", parameters, db.Connection);
                     if (dt.Rows.Count != 1) {
                         return null;
@@ -188,7 +188,7 @@ namespace sql.builder.XmlHelpers
         }
         private static DataTable GetConstraintColumns(string constraint_name)
         {
-            OracleParameter[] parameters = new OracleParameter[1] { new OracleParameter("constraint_name", OracleDbType.VarChar, constraint_name, ParameterDirection.Input) };
+            OracleParameter[] parameters = new OracleParameter[1] { new OracleParameter("constraint_name", OracleDbType.Varchar2, constraint_name, ParameterDirection.Input) };
             return DataHelper.SqlGetTable("SELECT table_name, position, column_name FROM all_cons_columns WHERE constraint_name = :constraint_name ORDER BY position ASC", parameters, db.Connection);
         }
         private static XElement LoadQueryStruct(string db_scheme, string table, string object_type)
@@ -291,8 +291,8 @@ namespace sql.builder.XmlHelpers
                 //var c_constraints = dtConstraints.AsEnumerable().Where(cns => (string)cns["constraint_type"] == "C").ToArray();
                 //var c_constraints_names = c_constraints.Select(c => (string)c["constraint_name"]).ToArray();
                 //var c_constraints_cols = dtConstraintColumns.AsEnumerable().Where(cns => c_constraints_names.Contains((string)cns["constraint_name"])).ToArray();
-                OracleParameter[] parameters = new OracleParameter[2] { new OracleParameter("table_name", OracleDbType.VarChar, table, ParameterDirection.Input),
-                                                                    new OracleParameter("db_scheme", OracleDbType.VarChar, db_scheme, ParameterDirection.Input) };
+                OracleParameter[] parameters = new OracleParameter[2] { new OracleParameter("table_name", OracleDbType.Varchar2, table, ParameterDirection.Input),
+                                                                    new OracleParameter("db_scheme", OracleDbType.Varchar2, db_scheme, ParameterDirection.Input) };
                 DataTable ref_constraints = DataHelper.SqlGetTable("SELECT constraint_name, r_constraint_name FROM all_constraints WHERE table_name = UPPER(:table_name) AND owner = :db_scheme AND constraint_type = 'R'", parameters, db.Connection);
                 foreach (DataRow row in ref_constraints.Rows) {
                     string constraint_name = row["constraint_name"].ToString();

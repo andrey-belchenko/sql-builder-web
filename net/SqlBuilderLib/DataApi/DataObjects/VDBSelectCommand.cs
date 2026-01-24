@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.Contracts;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,7 +13,7 @@ using System.Xml.XPath;
 using System.IO;
 using System.Data.Common;
 ////using System.Windows.Forms;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 //using DevExpress.XtraVerticalGrid;
 using sql.builder.Core;
 //using sql.builder.Test;
@@ -51,7 +51,7 @@ namespace sql.builder.DataApi
         }
         internal void CreateRetParam()
         {
-            var par = new OracleParameter(TextConst.DBParams.PrimaryKeyParam, OracleDbType.Number, ParameterDirection.Output);
+            var par = new OracleParameter(TextConst.DBParams.PrimaryKeyParam, OracleDbType.Decimal, ParameterDirection.Output);
             this.mainCommand.Parameters.Add(par);
         }
         internal object GetRetValue()
@@ -364,7 +364,7 @@ namespace sql.builder.DataApi
             newCmd = CopyCommand(command);
             foreach (OracleParameter par in command.Parameters) {
                 if (par.Value is string) {
-                    if (par.OracleDbType != OracleDbType.VarChar || (string)par.Value == Cmn.undefinedString) {
+                    if (par.OracleDbType != OracleDbType.Varchar2 || (string)par.Value == Cmn.undefinedString) {
                         newCmd.Parameters.Remove(newCmd.Parameters[par.ParameterName]);
                         newCmd.CommandText = newCmd.CommandText.Replace(TextConst.Pfx.Param + par.ParameterName + " ", par.Value.ToString());
                     }
@@ -440,7 +440,7 @@ namespace sql.builder.DataApi
             } else {
                 value = Cmn.DECIMAL_ZERO;
             }
-            return new OracleParameter(TextConst.Pfx.Param + TextConst.DBParams.IsNewRowParam, OracleDbType.Number, value, ParameterDirection.Input);
+            return new OracleParameter(TextConst.Pfx.Param + TextConst.DBParams.IsNewRowParam, OracleDbType.Decimal, value, ParameterDirection.Input);
         }
         internal static OracleParameter TempRowIdParametr(DataTable table, DataRow row)
         {
@@ -509,7 +509,7 @@ namespace sql.builder.DataApi
             for (int index = 0; index < pars.Count; index++) {
                 object val = pars[index];
                 string name = this.orderedParams[index];
-                list.Add(new OracleParameter(name, OracleDbType.Number, val, ParameterDirection.Input));
+                list.Add(new OracleParameter(name, OracleDbType.Decimal, val, ParameterDirection.Input));
             }
             return list;
         }

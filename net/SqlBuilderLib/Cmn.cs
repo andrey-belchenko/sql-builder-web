@@ -1692,33 +1692,33 @@ namespace sql.builder
                 .GroupBy(x => x.inx / maxItems)
                 .Select(g => g.Select(x => x.item));
         }*/
-        internal static Devart.Data.Oracle.OracleDbType GetDBType(string type)
+        internal static Oracle.ManagedDataAccess.Client.OracleDbType GetDBType(string type)
         {
             switch (type) {
                 case "number":
-                    return Devart.Data.Oracle.OracleDbType.Number;
+                    return Oracle.ManagedDataAccess.Client.OracleDbType.Decimal;
                 case "bool":
-                    return Devart.Data.Oracle.OracleDbType.Number;
+                    return Oracle.ManagedDataAccess.Client.OracleDbType.Decimal;
                 case "date":
-                    return Devart.Data.Oracle.OracleDbType.Date;
+                    return Oracle.ManagedDataAccess.Client.OracleDbType.Date;
                 case "array":
-                    return Devart.Data.Oracle.OracleDbType.Array;
+                    return Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2; // ODP.NET doesn't support Array type, fallback to Varchar2
                 case "clob":
-                    return Devart.Data.Oracle.OracleDbType.Clob;
+                    return Oracle.ManagedDataAccess.Client.OracleDbType.Clob;
 				case "blob":
-					return Devart.Data.Oracle.OracleDbType.Blob;
+					return Oracle.ManagedDataAccess.Client.OracleDbType.Blob;
 				default:
-                    return Devart.Data.Oracle.OracleDbType.VarChar;
+                    return Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2;
             }
         }
-        internal static Devart.Data.Oracle.OracleDbType GetDBType(Type type)
+        internal static Oracle.ManagedDataAccess.Client.OracleDbType GetDBType(Type type)
         {
             if (type == typeof(Decimal)) {
-                return Devart.Data.Oracle.OracleDbType.Number;
+                return Oracle.ManagedDataAccess.Client.OracleDbType.Decimal;
             } else if (type == typeof(DateTime)) {
-                return Devart.Data.Oracle.OracleDbType.Date;
+                return Oracle.ManagedDataAccess.Client.OracleDbType.Date;
             } else {
-                return Devart.Data.Oracle.OracleDbType.VarChar;
+                return Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2;
             }
         }
         internal static string writeScriptFile(string name, string data)
@@ -1852,7 +1852,7 @@ namespace sql.builder
                 }
             }
         }
-        internal static bool TryGetParameter(this Devart.Data.Oracle.OracleParameterCollection parameters, string parameter_name, out Devart.Data.Oracle.OracleParameter parameter)
+        internal static bool TryGetParameter(this Oracle.ManagedDataAccess.Client.OracleParameterCollection parameters, string parameter_name, out Oracle.ManagedDataAccess.Client.OracleParameter parameter)
         {
             Contract.Assert(parameters != null);
             int index = parameters.IndexOf(parameter_name);
@@ -1903,7 +1903,7 @@ namespace sql.builder
         internal static string[] ExtractParameterNamesFromSQL(string sql)
         {
             string[] param_names;
-            using (Devart.Data.Oracle.OracleCommand cmd = new Devart.Data.Oracle.OracleCommand()) {
+            using (Oracle.ManagedDataAccess.Client.OracleCommand cmd = new Oracle.ManagedDataAccess.Client.OracleCommand()) {
                 cmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
                 cmd.CommandText = sql;
                 param_names = Cmn.GetParameterNames(cmd.Parameters);

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using System.Reflection;
 using System.Data;
 using System;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 
 namespace sql.builder.DataApi
 {

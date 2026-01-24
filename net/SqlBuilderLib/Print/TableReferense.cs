@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using sql.builder.DataApi;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 using System.Xml;
 using System.Xml.Linq;
 using sql.builder.Print.Xlsx;

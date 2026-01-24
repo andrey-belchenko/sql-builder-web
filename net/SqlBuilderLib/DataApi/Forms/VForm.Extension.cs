@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,7 +13,7 @@ using System.Xml.XPath;
 using System.IO;
 //using System.Windows.Forms;
 using System.Reflection;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 //using DevExpress.XtraVerticalGrid;
 //using infoenergo.core.Extensions;
 using sql.builder.UI;
@@ -604,18 +604,18 @@ namespace sql.builder.DataApi
             dataAdapter.DeleteCommand.Parameters.AddRange(pars);
             pars = getOracleParams(xkeyColumns).ToArray();
             string cmdText = ReadElementAsString(xtable, EName.clear_temp_text);
-            var par = new OracleParameter(TextConst.Pfx.Param + TextConst.DBParams.FormId, OracleDbType.VarChar);
+            var par = new OracleParameter(TextConst.Pfx.Param + TextConst.DBParams.FormId, OracleDbType.Varchar2);
             if (!string.IsNullOrEmpty(cmdText)) {
                 table.ClearTempCommand = new OracleCommand(cmdText);
                 table.ClearTempCommand.Parameters.Add(par);
             }
             var parsList = getOracleParams(xupdatebleColumnsExt);
-            par = new OracleParameter(TextConst.Pfx.Param + TextConst.DBParams.FormId, OracleDbType.VarChar);
+            par = new OracleParameter(TextConst.Pfx.Param + TextConst.DBParams.FormId, OracleDbType.Varchar2);
             parsList.Add(par);
             if (!xkeyColumns.Any(c => c.Attribute(_AName.is_updateable) != null || c.Attribute(_AName.is_updateable_ext) != null)) {
                 parsList.AddRange(pars);
             }
-            par = new OracleParameter(TextConst.Pfx.Param + TextConst.DBParams.RowStateId, OracleDbType.VarChar);
+            par = new OracleParameter(TextConst.Pfx.Param + TextConst.DBParams.RowStateId, OracleDbType.Varchar2);
             parsList.Add(par);
             pars = parsList.ToArray();
             string updateTempText = ReadElementAsString(xtable, EName.update_temp_text);
