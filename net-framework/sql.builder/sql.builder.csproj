@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <LangVersion>5</LangVersion>
@@ -636,22 +636,7 @@
     <None Include="Resources\AddItem_24.png" />
     <None Include="Resources\AddChildItem_24.png" />
     <None Include="Resources\DeleteItem_24.png" />
-    <EmbeddedResource Include="Controls\Containers\ucFormContainer.resx">
-      <DependentUpon>ucFormContainer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ucMainReports.resx">
-      <DependentUpon>ucMainReports.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\QueryEditor\ucQueryEditor.resx">
-      <DependentUpon>ucQueryEditor.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
