@@ -23,6 +23,7 @@ using sql.builder.WinForms;
 using sql.builder.XmlHelpers;
 //using infoenergo.framework.Extensions.Oracle;
 using System.Collections.Generic;
+using System.Text;
 using sql.builder.Clean;
 
 // Basic usage
@@ -35,6 +36,7 @@ namespace sql.builder
 
         public static void Main(string[] args)
         {
+            Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
             //var conStr = infoenergo.framework.Global2.BuildConnectionString("asuse", "kl0pik", "realkazn");
             var conStr = "User Id=asuse;Password=kl0pik;Server=REALKAZN;Pooling=False;Sid=REALKAZN;Port=1521";
@@ -52,7 +54,9 @@ namespace sql.builder
             });
 
             var path =  CleanSqlBuilder.ExecReportGetPath("asuse2.65211", pars, "65211.xlsx");
-            Process.Start(path);
+            // Output as file URI for VS Code debug console to recognize as clickable link
+            var fileUri = new Uri(path).ToString();
+            Console.WriteLine(fileUri); // VS Code will make this clickable
             Console.WriteLine("done");
 
         }
