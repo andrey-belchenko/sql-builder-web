@@ -9,7 +9,7 @@
       "program": "${workspaceFolder}/HelloWorldApp/bin/Debug/net8.0/HelloWorldApp.dll",
       "args": [],
       "cwd": "${workspaceFolder}/HelloWorldApp",
-      "console": "internalConsole",
+      "console": "externalTerminal",
       "stopAtEntry": false
     }
   ]

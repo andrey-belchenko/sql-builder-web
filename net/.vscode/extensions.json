@@ -1,7 +1,8 @@
 {
   "recommendations": [
-    "ms-dotnettools.csdevkit",
+    "anysphere.csharp",
     "ms-dotnettools.csharp",
+    "ms-dotnettools.csdevkit",
     "ms-dotnettools.vscode-dotnet-runtime",
     "jmrog.vscode-nuget-package-manager"
   ]

@@ -7,5 +7,10 @@
   "search.exclude": {
     "**/bin": true,
     "**/obj": true
-  }
+  },
+  "omnisharp.enableRoslynAnalyzers": true,
+  "omnisharp.enableEditorConfigSupport": true,
+  "omnisharp.enableImportCompletion": true,
+  "omnisharp.useModernNet": true,
+  "omnisharp.path": "latest"
 }
