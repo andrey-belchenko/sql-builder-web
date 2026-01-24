@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
 using System.ComponentModel;
