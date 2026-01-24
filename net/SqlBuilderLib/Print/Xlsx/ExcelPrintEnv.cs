@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml.Linq;
 //using DevExpress.DashboardCommon.Native;
-using Ionic.Zip;
 using sql.builder.DataApi;
 
 namespace sql.builder.Print.Xlsx
@@ -54,9 +54,19 @@ namespace sql.builder.Print.Xlsx
                 template_path = template_path_new;
             }
             // загрузка базового xlsx и распаковка во временную дирректорию
-            using (ZipFile xlsx = ZipFile.Read(template_path)) {
-                xlsx.ExtractAll(_print_directory);
-                xlsx.Dispose();
+            using (ZipArchive xlsx = ZipFile.OpenRead(template_path)) {
+                foreach (ZipArchiveEntry entry in xlsx.Entries) {
+                    string destinationPath = Path.GetFullPath(Path.Combine(_print_directory, entry.FullName));
+                    if (destinationPath.StartsWith(_print_directory, StringComparison.Ordinal)) {
+                        string directory = Path.GetDirectoryName(destinationPath);
+                        if (!Directory.Exists(directory)) {
+                            Directory.CreateDirectory(directory);
+                        }
+                        if (!string.IsNullOrEmpty(entry.Name)) {
+                            entry.ExtractToFile(destinationPath, overwrite: true);
+                        }
+                    }
+                }
             }
             this.shared_strings = new ExcelSharedStrings(Path.Combine(_print_directory, "xl", "sharedStrings.xml"));
             this._files.Add(this.shared_strings);
@@ -321,11 +331,10 @@ namespace sql.builder.Print.Xlsx
             for (int index = 0; index < this._files.Count; index++) {
                 this._files[index].Save();
             }
-            using (ZipFile zip = new ZipFile()) {
-                zip.UseZip64WhenSaving = Zip64Option.AsNecessary;
-                zip.AddDirectory(_print_directory);
-                zip.Save(output_path);
+            if (File.Exists(output_path)) {
+                File.Delete(output_path);
             }
+            ZipFile.CreateFromDirectory(_print_directory, output_path);
         }
         // для отладки - посмотреть что получилось после размазывания колонок и т.д.
         internal void SaveTemplate(string output_path)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.IO;
 using System.Xml;
-using System.Web.Script.Serialization;
+using Newtonsoft.Json;
 
 
 namespace sql.builder.DashboardUtils
@@ -160,11 +160,11 @@ namespace sql.builder.DashboardUtils
 					throw new NotImplementedException();
 				}
 				else {
-					var projectListObject = new JavaScriptSerializer().DeserializeObject(result.Result.Content.ReadAsStringAsync().Result);
-                    projectList = new string[((object[])projectListObject).Length];
-                    for (int i = 0; i < ((object[])projectListObject).Length; i++)
+					var projectListObject = JsonConvert.DeserializeObject<object[]>(result.Result.Content.ReadAsStringAsync().Result);
+                    projectList = new string[projectListObject.Length];
+                    for (int i = 0; i < projectListObject.Length; i++)
 					{
-						projectList[i] = (string)((object[])projectListObject)[i];
+						projectList[i] = (string)projectListObject[i];
 					}
 				}
 			}
@@ -197,10 +197,10 @@ namespace sql.builder.DashboardUtils
 				}
 				else
 				{
-					var extractListObject = new JavaScriptSerializer().DeserializeObject(result.Result.Content.ReadAsStringAsync().Result);
-                    extractList = new string[((object[])extractListObject).Length];
-                    for (int i = 0; i < ((object[])extractListObject).Length; i++) {
-						extractList[i] = (string)((object[])extractListObject)[i];
+					var extractListObject = JsonConvert.DeserializeObject<object[]>(result.Result.Content.ReadAsStringAsync().Result);
+                    extractList = new string[extractListObject.Length];
+                    for (int i = 0; i < extractListObject.Length; i++) {
+						extractList[i] = (string)extractListObject[i];
 					}
 				}
 			}

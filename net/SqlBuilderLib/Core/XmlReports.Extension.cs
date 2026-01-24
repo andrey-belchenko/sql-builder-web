@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
@@ -419,7 +419,7 @@ namespace sql.builder
                 .Elements(EName.references)
                 .Elements(EName.reference)
                 .Select(r => r.Attribute(AName.project).Value);
-            var projects = projects_referenced.Append(project_name).ToArray();
+            var projects = System.Linq.Enumerable.Append(projects_referenced, project_name).ToArray();
             return projects;
         }
         //public static string[] GetProjectFolders()

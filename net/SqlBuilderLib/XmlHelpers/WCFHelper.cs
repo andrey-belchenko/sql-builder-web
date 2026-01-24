@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Linq;
-using System.ServiceModel;
+// WCF is Windows-specific and not needed for cross-platform
+//using System.ServiceModel;
 //using System.Windows.Forms;
 using System.Xml.Linq;
 using infoenergo.core.Data;
@@ -12,6 +13,8 @@ using sql.builder.WinForms;
 
 namespace sql.builder.XmlHelpers
 {
+    // WCF functionality commented out - not needed for cross-platform
+    /*
     internal static class WCFHelper
     {
         public static bool IsServer { get; private set; }
@@ -181,4 +184,24 @@ namespace sql.builder.XmlHelpers
         PrintingExcel,
         Fault
     }
+    */
+    
+    // Placeholder to prevent compilation errors where WCFHelper is referenced
+    internal static class WCFHelper
+    {
+        public static bool IsServer { get; private set; }
+        public static bool IsClient { get; private set; }
+        
+        internal static object Server { get; private set; }
+        
+        internal static void StartServer(object server) { }
+        public static void ShutdownServer() { }
+        public static void StartClient(string service_name) { }
+    }
+    
+    // Placeholder interfaces and classes for WCF
+    internal interface IWCFServer { }
+    internal class ServerData { }
+    internal enum ServerCommand { Wait, ExecuteReport, PrintExcel, CloseApplication }
+    internal enum ClientState { Unknown, Ready, ExecutingReport, PrintingExcel, Fault }
 }

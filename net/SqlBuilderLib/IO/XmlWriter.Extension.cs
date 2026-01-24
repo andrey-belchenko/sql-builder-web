@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Xml;      // XmlWriter
 using System.Xml.Linq; // XElement, XAttribute
 using Contract = System.Diagnostics.Contracts.Contract;
@@ -69,8 +69,10 @@ namespace sql.builder
         {
             long file_size;
             using (System.IO.FileStream stream = File.Open(file_name, FileMode.CreateNew, FileAccess.Write, FileShare.Write)) {
+#pragma warning disable SYSLIB0011 // BinaryFormatter is obsolete
                 System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                 formatter.Serialize(stream, obj);
+#pragma warning restore SYSLIB0011
                 stream.Flush();
                 file_size = stream.Length;
                 stream.Close();

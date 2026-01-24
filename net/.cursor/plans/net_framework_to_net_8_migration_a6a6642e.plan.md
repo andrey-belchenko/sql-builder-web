@@ -7,10 +7,10 @@ todos:
     status: pending
   - id: copy_source_files
     content: Copy all .cs files from net-framework/sql.builder to net/SqlBuilderLib preserving directory structure exactly
-    status: pending
+    status: completed
   - id: copy_resources
     content: Copy embedded resources (icons, SQL files, DDL scripts, licenses.licx) to SqlBuilderLib
-    status: pending
+    status: completed
   - id: update_solution_phase1
     content: Update SqlBuilder.slnx to properly reference SqlBuilderLib project
     status: pending
@@ -22,7 +22,7 @@ todos:
     status: pending
   - id: handle_devart
     content: Replace Devart.Data.Oracle local DLL reference with NuGet package (version 10.3+ supports .NET 8)
-    status: pending
+    status: completed
   - id: handle_ionic_zip
     content: Replace Ionic.Zip with System.IO.Compression.ZipArchive in ExcelPrintEnv.cs (lines 13, 57, 324) - code changes required
     status: pending
@@ -31,13 +31,13 @@ todos:
     status: pending
   - id: update_app
     content: Update SqlBuilderApp Program.cs to use migrated code from SqlBuilderLib (replace placeholder Greeter usage)
-    status: pending
+    status: completed
   - id: migrate_config
     content: Migrate app.config settings to .NET 8 configuration (appsettings.json or code-based) if needed
-    status: pending
+    status: completed
   - id: build_test
     content: Build solution and fix only necessary compilation errors (minimal code changes, preserve C# 6 syntax)
-    status: pending
+    status: completed
   - id: commit_phase2
     content: "COMMIT: Update code for .NET 8 compatibility"
     status: pending
