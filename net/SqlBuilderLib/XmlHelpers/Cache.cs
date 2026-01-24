@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 //using System.Windows.Forms;
-using System.Windows.Input;
+// Cross-platform: System.Windows.Input (WPF) is Windows-only, commented out
+//using System.Windows.Input;
 using System.Xml.Linq;
 using sql.builder.DataApi;
 //using sql.builder.TFS;

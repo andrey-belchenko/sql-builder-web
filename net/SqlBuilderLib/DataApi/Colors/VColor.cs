@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Color = System.Drawing.Color;
@@ -76,7 +76,9 @@ namespace sql.builder.DataApi
             if (ParseRGB(rgb, out color)) {
                 string hex = "#" + (color.ToArgb() & 0x00FFFFFF).ToString("X6");
                 string fore_color;
-                if (color.GetBrightness() >= 0.5) {
+                // Calculate brightness using standard luminance formula (cross-platform alternative to GetBrightness)
+                double brightness = (0.299 * color.R + 0.587 * color.G + 0.114 * color.B) / 255.0;
+                if (brightness >= 0.5) {
                     fore_color = "black";
                 } else {
                     fore_color = "white";

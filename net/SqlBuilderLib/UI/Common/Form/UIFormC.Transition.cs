@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -12,8 +12,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 //using System.Windows.Forms;
 using System.Xml.Linq;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
+// Cross-platform: Drawing2D and Imaging are Windows-only, commented out
+//using System.Drawing.Drawing2D;
+//using System.Drawing.Imaging;
 using Microsoft.Win32;
 using sql.builder.DataApi;
 //using sql.builder.Properties;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,8 +16,9 @@ using System.Xml.Linq;
 //using DevExpress.XtraTreeList.Columns;
 //using DevExpress.XtraTreeList.Nodes;
 using sql.builder.DataApi;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
+// Cross-platform: Drawing2D and Imaging are Windows-only, commented out
+//using System.Drawing.Drawing2D;
+//using System.Drawing.Imaging;
 //using sql.builder.WebReports;
 
 namespace sql.builder.UI

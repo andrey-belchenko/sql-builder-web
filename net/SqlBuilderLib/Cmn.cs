@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -32,8 +32,9 @@ using System.Text.RegularExpressions;
 //using DevExpress.XtraBars;
 //using infoenergo.core.Extensions;
 using sql.builder.UI;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
+// Cross-platform: Drawing2D and Imaging are Windows-only, commented out
+//using System.Drawing.Drawing2D;
+//using System.Drawing.Imaging;
 using System.Security.Principal;
 //using DevExpress.Skins;
 //using DevExpress.XtraEditors.Controls;
@@ -459,13 +460,14 @@ namespace sql.builder
                 }
             }
         }
-        private static Image _imageWarning14;
-        private static Image _imageEdit12;
-        //private static Image _imageCheck12;
+        // Cross-platform: Image/Bitmap are Windows-only, replaced with object
+        private static object _imageWarning14;
+        private static object _imageEdit12;
+        //private static object _imageCheck12;
 
 
 
-        internal static Image ImageWarning14
+        internal static object ImageWarning14
         {
             get
             {
@@ -477,7 +479,7 @@ namespace sql.builder
             }
         }
 
-        internal static Image ImageEdit12
+        internal static object ImageEdit12
         {
             get
             {
@@ -517,6 +519,9 @@ namespace sql.builder
         }*/
         //public static Image ImageWarning16 = GetIcon(TextConst.Images.Warning16);
 
+        // Cross-platform: Bitmap/Graphics/ImageAttributes are Windows-only (System.Drawing.Common)
+        // This method is not used (only called in commented code)
+        /*
         internal static Bitmap ResizeImage(Image image, int width, int height)
         {
             var destRect = new Rectangle(0, 0, width, height);
@@ -541,6 +546,7 @@ namespace sql.builder
 
             return destImage;
         }
+        */
 
         internal const string undefinedString = "$undefined$";
         private static string undefNvluConst = "/*nvlu*/ $undefined$";
@@ -1297,7 +1303,8 @@ namespace sql.builder
         {
             throw new NotImplementedException();
         }
-        internal static Image GetIcon(XElement xcmd)
+        // Cross-platform: Image is Windows-only, replaced with object
+        internal static object GetIcon(XElement xcmd)
         {
             XAttribute xicon = xcmd.Attribute(AName.icon);
             if (xicon == null) {
@@ -1306,12 +1313,12 @@ namespace sql.builder
                 return GetIcon(xicon.Value);
             }
         }
-        private static Image GetIcon(string name)
+        private static object GetIcon(string name)
         {
             return null;
             //PropertyInfo pi = typeof(infoenergo.ui.resources.Properties.Resources).GetProperty(name, BindingFlags.Public | BindingFlags.Static | BindingFlags.GetProperty);
             //if (pi != null) {
-            //    return pi.GetValue(null, null) as Image;
+            //    return pi.GetValue(null, null) as object;
             ////} else if (name == "CommitAndClose_24") {
             ////    return ImageCommitAndClose24;
             //} else {

@@ -1,10 +1,11 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Input;
+// Cross-platform: System.Windows.Input (WPF) is Windows-only, commented out
+//using System.Windows.Input;
 using System.Xml.Linq;
 using sql.builder.DataApi;
 using sql.builder.UI.CommandItems;

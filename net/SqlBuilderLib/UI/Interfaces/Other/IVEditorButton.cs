@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Drawing;
+// Cross-platform: Image is Windows-only, using object instead
 namespace sql.builder.UI
 {
     public interface IVEditorButton : IVControl, IVTagControl, IVEnabledControl
@@ -10,7 +10,7 @@ namespace sql.builder.UI
 
         void SetCaption(string value);
         void SetToolTip(string value);
-        void SetImage(Image value);
+        void SetImage(object value);
         void SetIsLeft(bool value);
         void SetKind(string value);
         IVEditorButton Copy();
