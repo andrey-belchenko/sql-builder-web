@@ -31,15 +31,15 @@ using sql.builder.Controls.Containers;
 using sql.builder.DataApi;
 using sql.builder.ExcelApi;
 using sql.builder.Print.Xlsx;
-using sql.builder.Test;
-using sql.builder.TFS;
-using sql.builder.TFS.AutoCheckIn;
-using sql.builder.TFS.AutoCheckIn.Commands;
+//using sql.builder.Test;
+//using sql.builder.TFS;
+//using sql.builder.TFS.AutoCheckIn;
+//using sql.builder.TFS.AutoCheckIn.Commands;
 using sql.builder.UI;
 using sql.builder.WinForms;
 using sql.builder.XmlHelpers;
 using DataTable = System.Data.DataTable;
-using sql.builder.WebReports;
+//using sql.builder.WebReports;
 
 namespace sql.builder.Controls
 {

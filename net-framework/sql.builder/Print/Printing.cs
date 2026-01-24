@@ -25,7 +25,7 @@ using sql.builder.ExcelApi;
 //
 //using reports.word.XmlPrint;
 using sql.builder.Print.Xlsx;
-using sql.builder.Test;
+//using sql.builder.Test;
 using sql.builder.WinForms;
 using sql.builder.XmlHelpers;
 using DataTable = System.Data.DataTable;

@@ -21,7 +21,7 @@ using infoenergo.core.Data;
 using sql.builder.Clean;
 using sql.builder.DataApi;
 using sql.builder.UI;
-using sql.builder.WebReports;
+//using sql.builder.WebReports;
 //using static System.Net.Mime.MediaTypeNames;
 
 namespace sql.builder

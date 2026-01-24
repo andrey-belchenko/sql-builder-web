@@ -6,7 +6,7 @@ using System.Reflection;
 using Devart.Data.Oracle;
 //using Vertica.Data.VerticaClient;
 using sql.builder.Core;
-using sql.builder.WebReports;
+//using sql.builder.WebReports;
 
 namespace sql.builder.DataApi
 {

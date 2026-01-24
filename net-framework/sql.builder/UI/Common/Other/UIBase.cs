@@ -15,7 +15,7 @@ using Microsoft.Win32;
 using sql.builder.DataApi;
 using sql.builder.XmlHelpers;
 using sql.builder.Exceptions;
-using sql.builder.WebReports;
+//using sql.builder.WebReports;
 
 namespace sql.builder.UI
 {

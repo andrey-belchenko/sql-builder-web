@@ -11,7 +11,7 @@ using System.Linq;
 using System.Xml.Linq;
 //using System.Windows.Forms;
 
-using sql.builder.Test;
+//using sql.builder.Test;
 using sql.builder.Controls;
 namespace sql.builder.UI
 {

@@ -8,7 +8,7 @@ using sql.builder.DataApi;
 using System.Data;
 using System.Threading.Tasks;
 //using DevExpress.XtraEditors;
-using sql.builder.Test;
+//using sql.builder.Test;
 using sql.builder.XmlHelpers;
 
 namespace sql.builder.UI

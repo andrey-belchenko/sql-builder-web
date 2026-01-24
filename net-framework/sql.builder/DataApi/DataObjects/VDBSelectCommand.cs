@@ -16,7 +16,7 @@ using System.Data.Common;
 using Devart.Data.Oracle;
 //using DevExpress.XtraVerticalGrid;
 using sql.builder.Core;
-using sql.builder.Test;
+//using sql.builder.Test;
 
 namespace sql.builder.DataApi
 {

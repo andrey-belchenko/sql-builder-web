@@ -11,7 +11,7 @@ using Devart.Data.Oracle;
 using sql.builder.Core;
 using sql.builder.XmlHelpers;
 using AName_ = sql.builder.DataApi.AName;
-using sql.builder.WebReports;
+//using sql.builder.WebReports;
 
 namespace sql.builder.DataApi
 {

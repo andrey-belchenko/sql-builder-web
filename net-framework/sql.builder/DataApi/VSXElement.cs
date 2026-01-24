@@ -17,7 +17,7 @@ using Devart.Data.Oracle;
 using sql.builder.FieldInfo;
 using System.Reflection;
 using sql.builder.DataApi.Documenting;
-using sql.builder.TFS;
+//using sql.builder.TFS;
 using sql.builder.UI;
 using sql.builder.WinForms;
 using sql.builder.XmlHelpers;

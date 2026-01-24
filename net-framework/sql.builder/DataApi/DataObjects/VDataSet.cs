@@ -15,7 +15,7 @@ using Devart.Data.Oracle;
 //using infoenergo.ui.win;
 using sql.builder.asuse;
 using sql.builder.Core;
-using sql.builder.Test;
+//using sql.builder.Test;
 using sql.builder.UI;
 using sql.builder.XmlHelpers;
 //using Vertica.Data.VerticaClient;

@@ -39,7 +39,7 @@ using System.Security.Principal;
 //using DevExpress.XtraEditors.Controls;
 using infoenergo.core.Data;
 //using Microsoft.Office.Interop.Excel;
-using sql.builder.TFS;
+//using sql.builder.TFS;
 using sql.builder.WinForms;
 //using Application = System.Windows.Forms.Application;
 using DataTable = System.Data.DataTable;

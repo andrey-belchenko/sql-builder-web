@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using sql.builder.Exceptions;
 using _AName = sql.builder.DataApi.AName;
-using sql.builder.WebReports;
+//using sql.builder.WebReports;
 using sql.builder.Clean.Extensions;
 
 namespace sql.builder.DataApi
@@ -77,10 +77,10 @@ namespace sql.builder.DataApi
         internal static XElement CreateFilteredQuery(XElement xquery, int rows_limit)
         {
 
-            if (WebReportsAdapter.IsWebQuery(xquery))
-            {
-                return xquery;
-            }
+            //if (WebReportsAdapter.IsWebQuery(xquery))
+            //{
+            //    return xquery;
+            //}
             xquery = new XElement(xquery);
             xquery.RemoveAttribute(_AName.name);
             xquery.RemoveAttribute(_AName.inherit);
@@ -275,10 +275,10 @@ namespace sql.builder.DataApi
         public XElement AsListQuery()
         {
 
-            if (WebReportsAdapter.IsWebQuery(this))
-            {
-                return new XElement(this);
-            }
+            //if (WebReportsAdapter.IsWebQuery(this))
+            //{
+            //    return new XElement(this);
+            //}
             var keyCol = KeyColumn();
             XElement xquery = null;
             //var ordColsNames = ExtractColNamesFromOrderStr(P_Order); // не получилось

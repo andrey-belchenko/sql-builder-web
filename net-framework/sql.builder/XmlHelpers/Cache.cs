@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Input;
 using System.Xml.Linq;
 using sql.builder.DataApi;
-using sql.builder.TFS;
+//using sql.builder.TFS;
 
 namespace sql.builder.XmlHelpers
 {

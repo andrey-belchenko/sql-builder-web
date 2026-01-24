@@ -18,7 +18,7 @@ using System.Xml.Linq;
 using sql.builder.DataApi;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using sql.builder.WebReports;
+//using sql.builder.WebReports;
 
 namespace sql.builder.UI
 {

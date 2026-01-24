@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using System.IO;
-using sql.builder.TFS;
+//using sql.builder.TFS;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
@@ -28,8 +28,8 @@ namespace sql.builder.DataApi
         public override List<VSXElement> GetUsedElements()
         {
             string s = Path.Combine(ExcelPrintDocument.GetProjectExcelTemplates(this.GetParent().Name.LocalName), this.XName);
-            TFSHelper.CheckOutFile(s);
-            Cmn.FocusFile(s);
+            //TFSHelper.CheckOutFile(s);
+            //Cmn.FocusFile(s);
             return new List<VSXElement>();
             //return GetEnvironment().GetElement(TextConst.EName.ExcelTemplates, XName).AsList();
         }

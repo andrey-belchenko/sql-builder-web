@@ -8,7 +8,7 @@ using System.Linq;
 //using infoenergo.core.Extensions;
 using sql.builder.DataApi;
 using sql.builder.WinForms;
-using sql.builder.Test;
+//using sql.builder.Test;
 
 namespace sql.builder.UI
 {

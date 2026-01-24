@@ -11,7 +11,7 @@ using sql.builder.FieldInfo;
 using sql.builder.XmlHelpers;
 using sql.builder.Exceptions;
 using _AName = sql.builder.DataApi.AName; // из-за конфликта с экземплярным методом VForm.AName()
-using sql.builder.WebReports;
+//using sql.builder.WebReports;
 
 namespace sql.builder.DataApi
 {
