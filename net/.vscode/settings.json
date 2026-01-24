@@ -10,7 +10,7 @@
   },
   "omnisharp.enableRoslynAnalyzers": true,
   "omnisharp.enableEditorConfigSupport": true,
-  "omnisharp.enableImportCompletion": true,
   "omnisharp.useModernNet": true,
-  "omnisharp.path": "latest"
+  "omnisharp.path": "latest",
+  "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": true
 }
