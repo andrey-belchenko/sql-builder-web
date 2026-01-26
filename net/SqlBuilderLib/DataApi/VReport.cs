@@ -11,6 +11,7 @@ using Devart.Data.Oracle;
 using sql.builder.Core;
 using sql.builder.XmlHelpers;
 using AName_ = sql.builder.DataApi.AName;
+using SqlBuilderLib.DevTools;
 //using sql.builder.WebReports;
 
 namespace sql.builder.DataApi
@@ -420,6 +421,7 @@ namespace sql.builder.DataApi
                     }
                 }
             }
+            DevAnalyzer.LogXElement(compiled);
             return compiled;
         }
         internal VDataSet Result(int useRepository, bool useCash)

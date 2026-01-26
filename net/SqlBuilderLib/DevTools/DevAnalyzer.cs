@@ -13,9 +13,34 @@ namespace SqlBuilderLib.DevTools
     internal static class DevAnalyzer
     {
         public static bool Enabled = false;
-        public static void LogXElement(XElement element, string name)
+        public static void LogXElement(XElement element, string name= null)
         {
             if (!Enabled) return;
+            if (element == null) return;
+
+            // If name is not provided, try to find it from the element's name attribute
+            if (string.IsNullOrEmpty(name))
+            {
+                var nameAttr = element.Attribute("name");
+                if (nameAttr == null)
+                {
+                    // Search in descendants for a name attribute
+                    var elementWithName = element.DescendantsAndSelf()
+                        .FirstOrDefault(e => e.Attribute("name") != null);
+                    nameAttr = elementWithName?.Attribute("name");
+                }
+                
+                if (nameAttr != null)
+                {
+                    name = nameAttr.Value;
+                }
+                else
+                {
+                    // Fallback to element name if no name attribute found
+                    name = element.Name.LocalName;
+                }
+            }
+
             // Get project root directory (where SqlBuilder.slnx is located)
             string projectRoot = GetProjectRoot();
             if (string.IsNullOrEmpty(projectRoot)) return;
@@ -24,9 +49,25 @@ namespace SqlBuilderLib.DevTools
             string tempFolder = Path.Combine(projectRoot, "Temp");
             Directory.CreateDirectory(tempFolder);
 
-            // Save element to {name}-par-val.xml
-            string fileName = $"{name}-par-val.xml";
-            string filePath = Path.Combine(tempFolder, fileName);
+            // Generate filename with index if file already exists
+            string baseFileName = $"{name}-par-val.xml";
+            string filePath = Path.Combine(tempFolder, baseFileName);
+            
+            // If file exists, add index to filename
+            if (File.Exists(filePath))
+            {
+                int index = 1;
+                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(baseFileName);
+                string extension = Path.GetExtension(baseFileName);
+                
+                do
+                {
+                    string indexedFileName = $"{fileNameWithoutExt}-{index}{extension}";
+                    filePath = Path.Combine(tempFolder, indexedFileName);
+                    index++;
+                } while (File.Exists(filePath));
+            }
+
             element.Save(filePath);
         }
 

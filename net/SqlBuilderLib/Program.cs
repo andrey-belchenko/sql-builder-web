@@ -25,6 +25,7 @@ using sql.builder.XmlHelpers;
 using System.Collections.Generic;
 using System.Text;
 using sql.builder.Clean;
+using SqlBuilderLib.DevTools;
 
 // Basic usage
 
@@ -33,28 +34,33 @@ namespace sql.builder
 {
     public static class Program
     {
-//        REALRYAZ.WORLD =
-//(DESCRIPTION =
-//  (ADDRESS_LIST =
-//    (ADDRESS = (PROTOCOL = TCP)(HOST = ryazan-ora.infoenergo.loc)(PORT = 1521))
-//  )
-//  (CONNECT_DATA =
-//    (SERVER = DEDICATED)
-//    (SERVICE_NAME = realryaz)
-//  )
-//)
 
-//        <params>
-//  <param name = "p_dep" type="number">
-//    <const>3580</const>
-//  </param>
-//  <param type = "number" name="p_ym_beg">
-//    <const>2025.06</const>
-//  </param>
-//  <param type = "array" name="p_tco" />
-//  <param type = "array" name="p_dog" />
-//</params>
         public static void Main(string[] args)
+        {
+            DevAnalyzer.Enabled = true;
+            Console.OutputEncoding = Encoding.UTF8;
+            XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
+            var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
+
+            CleanSqlBuilder.ChangeConnectionString(conStr);
+            Console.WriteLine(conStr);
+
+            XmlReports.SetGlobalParValue("dep", 3580m);
+            var pars = new Dictionary<string, object>();
+
+
+            pars.Add("p_dep", 3580m);
+            pars.Add("p_ym_beg", 2025.06m);
+
+            var path = CleanSqlBuilder.ExecReportGetPath("ryazan.76607", pars, "76607.xlsx");
+            // Output as file URI for VS Code debug console to recognize as clickable link
+            //var fileUri = new Uri(path).ToString();
+            Console.WriteLine(path);
+            Console.WriteLine("done");
+
+        }
+
+        public static void Main2(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
