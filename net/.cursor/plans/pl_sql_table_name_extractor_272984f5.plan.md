@@ -63,7 +63,9 @@ After researching Oracle PL/SQL 11g parsers for .NET, three viable approaches we
 
 ## Recommended Approach: ANTLR-Based Solution
 
-Use **AntlrOraclePlsql** or compile ANTLR grammars directly, implementing custom table extraction logic.
+**Target Implementation: ANTLR**
+
+Use **AntlrOraclePlsql** or compile ANTLR grammars directly, implementing custom table extraction logic. The implementation will use ANTLR parse trees to traverse SQL structures and extract table names.
 
 ## Implementation Details
 
@@ -84,13 +86,13 @@ public static HashSet<string> GetSourceTables(string plsqlText)
 
    - Parse PL/SQL to identify all SELECT statements
    - Handle nested contexts: anonymous blocks, procedures, functions, packages
-   - Extract SQL from EXECUTE IMMEDIATE statements
 
 2. **Analyze Each SELECT Statement**
 
-   - Parse SELECT statement structure
+   - Parse SELECT statement structure using ANTLR
    - Handle CTEs (WITH clauses) - track CTE names but exclude from final results
-   - Handle subqueries recursively
+   - **CRITICAL: Handle nested WITH clauses** - CTEs and subqueries can contain nested WITH clauses that must be processed recursively
+   - Handle subqueries recursively (subqueries may contain their own WITH clauses)
    - Handle UNION/UNION ALL statements
    - Extract table names from:
      - FROM clauses
@@ -133,9 +135,10 @@ public static HashSet<string> GetSourceTables(string plsqlText)
 
 ### Edge Cases to Handle
 
-- Nested subqueries in SELECT, FROM, WHERE, HAVING clauses
+- **Nested WITH clauses** - CTEs can contain nested WITH clauses, subqueries can contain WITH clauses
+- Nested subqueries in SELECT, FROM, WHERE, HAVING clauses (may contain their own WITH clauses)
 - CTEs with multiple CTE definitions
-- UNION statements combining multiple SELECTs
+- UNION statements combining multiple SELECTs (each may have WITH clauses)
 - Table aliases vs actual table names
 - Schema-qualified names (SCHEMA.TABLE)
 - Database links (TABLE@DBLINK)
@@ -143,7 +146,6 @@ public static HashSet<string> GetSourceTables(string plsqlText)
 - Comments (single-line -- and multi-line /* */)
 - String literals containing SQL keywords
 - PL/SQL variables vs table names
-- Dynamic SQL in EXECUTE IMMEDIATE
 
 ### Testing Considerations
 
