@@ -57,7 +57,7 @@ namespace sql.builder
             // Output as file URI for VS Code debug console to recognize as clickable link
             //var fileUri = new Uri(path).ToString();
             Console.WriteLine(path);
-            var tablenames = DevAnalyzer.tablenames;
+            var tablenames = DevAnalyzer.tableNames;
             Console.WriteLine("done");
 
         }

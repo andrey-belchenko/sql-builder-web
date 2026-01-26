@@ -26,16 +26,19 @@ namespace SqlBuilderLib.DevTools
     {
         public static bool Enabled = false;
 
-        public static HashSet<string> tablenames = new HashSet<string>();
+        public static HashSet<string> tableNames = new HashSet<string>();
 
         public static void AnalyzeSql(string sql)
         {
-           LogSql(sql);
+            if (!Enabled) return;
+            var names = DevSqlParser.GetSourceTables(sql);
+            tableNames.UnionWith(names);
+            LogSql(sql);
         }
 
         public static void LogSql(string sql)
         {
-            if (!Enabled) return;
+
             if (string.IsNullOrEmpty(sql)) return;
 
             // Get project root directory (where SqlBuilder.slnx is located)
@@ -60,12 +63,13 @@ namespace SqlBuilderLib.DevTools
 
         public static void AnalyzeReport(XElement xelement, string name = null)
         {
+            if (!Enabled) return;
             var xtables = xelement.Descendants(TextConst.EName.Table);
             foreach (var xtable in xtables) { 
                 var xtext = xelement.Element(TextConst.EName.Text);
                 if (xtext == null)
                 {
-                    tablenames.Add(xtable.GetAttributeValue(TextConst.AName.Name));
+                    tableNames.Add(xtable.GetAttributeValue(TextConst.AName.Name));
                 }
             }
             LogXElement(xelement, name);
