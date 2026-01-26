@@ -23,6 +23,56 @@ namespace sql.builder
 {
     internal partial class XmlReports
     {
+
+        //private static SortedDictionary<string, object> globalParsValues = new SortedDictionary<string, object>();
+       
+        public static object GetGlobalParValue(string name)
+        {
+            //switch (name)
+            //{
+            //    case "dep":
+            //        if (ContextDataModel.Initialized)
+            //        {
+            //            ContextBase context = ContextDataModel.GlobalContextGroup.GetContext(typeof(infoenergo.app.common.Context.DepartmentContext));
+            //            if (context != null)
+            //            {
+            //                return context.Value;
+            //            }
+            //        }
+            //        if (Global.DepartmentKodp.HasValue)
+            //        {
+            //            return (decimal)Global.DepartmentKodp.GetValueOrDefault();
+            //        }
+            //        break;
+            //    case "ym":
+            //        if (ContextDataModel.Initialized)
+            //        {
+            //            ContextBase context = ContextDataModel.GlobalContextGroup.GetContext(typeof(infoenergo.app.common.Context.YmContext));
+            //            if (context != null)
+            //            {
+            //                return context.Value;
+            //            }
+            //        }
+            //        if (Global.Ym.HasValue)
+            //        {
+            //            return (decimal)Global.Ym.GetValueOrDefault();
+            //        }
+            //        break;
+            //    case "tep_el":
+            //        if (Global.Tep_el.HasValue)
+            //        {
+            //            return (decimal)Global.Tep_el.GetValueOrDefault();
+            //        }
+            //        break;
+            //}
+            //if (infoenergo.GlobalValues.ContainsVariable(name))
+            //{
+            //    return infoenergo.GlobalValues.GetGlobalVariable(name);
+            //}
+            return globalParsValues[name];
+        }
+
+        /////////////
         /// <summary>
         /// Путь к папке source. Заполняется при вызове из ASP
         /// для веба Application.StartupPath использовать нельзя

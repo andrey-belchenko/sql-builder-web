@@ -313,22 +313,25 @@ namespace sql.builder.DataApi
         }
         internal static bool TryGetGlobalDbParam(string param_name, out OracleParameter db_param)
         {
-            //if (param_name.StartsWith(TextConst.Pfx.GlobParam)) {
-            //    string global_param_name = param_name.Substring(TextConst.Pfx.GlobParam.Length);
-            //    db_param = new OracleParameter(param_name, OracleDbType.Number, XmlReports.GetGlobalParValue(global_param_name) /* !!!временно. нужно изменить чтобы устанавливался во время выполнения */, ParameterDirection.Input);
-            //    return true;
-            //} else {
+            if (param_name.StartsWith(TextConst.Pfx.GlobParam))
+            {
+                string global_param_name = param_name.Substring(TextConst.Pfx.GlobParam.Length);
+                db_param = new OracleParameter(param_name, OracleDbType.Number, XmlReports.GetGlobalParValue(global_param_name) /* !!!временно. нужно изменить чтобы устанавливался во время выполнения */, ParameterDirection.Input);
+                return true;
+            }
+            else
+            {
                 db_param = null;
                 return false;
-            //}
+            }
         }
         //private static void SetGlobalParams(OracleCommand cmd)
         //{
-            //var dbPar = new OracleParameter();
-            //dbPar.ParameterName = paramName;
-            //dbPar.OracleDbType = OracleDbType.Number;
-            //var parName2 = paramName.Substring(TextConst.Pfx.GlobParam.Length, paramName.Length - TextConst.Pfx.GlobParam.Length);
-            //dbPar.Value = XmlReports.GetGlobalParValue(parName2);
+        //var dbPar = new OracleParameter();
+        //dbPar.ParameterName = paramName;
+        //dbPar.OracleDbType = OracleDbType.Number;
+        //var parName2 = paramName.Substring(TextConst.Pfx.GlobParam.Length, paramName.Length - TextConst.Pfx.GlobParam.Length);
+        //dbPar.Value = XmlReports.GetGlobalParValue(parName2);
         //}
         internal DataTable ExecuteDataTable(OracleConnection connection)
         {
