@@ -6,8 +6,18 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Devart.Data.Oracle;
 using sql.builder.Clean.Extensions;
 using sql.builder.DataApi;
+
+//VReportProc repProc = this.Report.GetReportProc();
+//if (repProc != null)
+//{
+//    //WaitUIHelper.LastUsedUIHelper.Show("Загрузка данных", WaitUIMode.WaitCursor);
+//    OracleCommand procCmd = new OracleCommand();
+//    procCmd.Connection = this.GetConnection();
+//    procCmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
+//    procCmd.CommandText = repProc.Value;
 
 namespace SqlBuilderLib.DevTools
 {
