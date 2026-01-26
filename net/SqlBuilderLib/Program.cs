@@ -397,6 +397,13 @@ adr on p.kod_d_p = adr.kodd--\k_house
 ;
 --\title_info
 end;");
+            
+            Console.WriteLine("Extracted source tables:");
+            foreach (var tableName in tableNames.OrderBy(t => t))
+            {
+                Console.WriteLine($"  - {tableName}");
+            }
+            Console.WriteLine($"Total: {tableNames.Count} tables");
             Console.Write("done");
         }
 

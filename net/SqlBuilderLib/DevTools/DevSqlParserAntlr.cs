@@ -114,25 +114,8 @@ namespace SqlBuilderLib.DevTools
                 var singleInsert = context.single_table_insert();
                 if (singleInsert != null)
                 {
-                    var insertInto = singleInsert.insert_into_clause();
-                    if (insertInto != null)
-                    {
-                        var generalTableRef = insertInto.general_table_ref();
-                        if (generalTableRef != null)
-                        {
-                            var dmlTableExpr = generalTableRef.dml_table_expression_clause();
-                            if (dmlTableExpr != null)
-                            {
-                                var tableviewName = dmlTableExpr.tableview_name();
-                                if (tableviewName != null)
-                                {
-                                    ExtractTableName(tableviewName);
-                                }
-                            }
-                        }
-                    }
-
-                    // Visit SELECT statement if present
+                    // Visit SELECT statement if present (source tables)
+                    // Do NOT extract target table from insert_into_clause
                     var selectStmt = singleInsert.select_statement();
                     if (selectStmt != null)
                     {
@@ -143,34 +126,14 @@ namespace SqlBuilderLib.DevTools
                 var multiInsert = context.multi_table_insert();
                 if (multiInsert != null)
                 {
-                    // Visit SELECT statement
+                    // Visit SELECT statement (source tables)
                     var selectStmt = multiInsert.select_statement();
                     if (selectStmt != null)
                     {
                         VisitSelect_statement(selectStmt);
                     }
 
-                    // Visit multi-table elements
-                    foreach (var element in multiInsert.multi_table_element())
-                    {
-                        var insertInto = element.insert_into_clause();
-                        if (insertInto != null)
-                        {
-                            var generalTableRef = insertInto.general_table_ref();
-                            if (generalTableRef != null)
-                            {
-                                var dmlTableExpr = generalTableRef.dml_table_expression_clause();
-                                if (dmlTableExpr != null)
-                                {
-                                    var tableviewName = dmlTableExpr.tableview_name();
-                                    if (tableviewName != null)
-                                    {
-                                        ExtractTableName(tableviewName);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    // Do NOT extract target tables from multi_table_element
                 }
 
                 return null;
@@ -181,20 +144,8 @@ namespace SqlBuilderLib.DevTools
             {
                 if (context == null) return null;
 
-                var generalTableRef = context.general_table_ref();
-                if (generalTableRef != null)
-                {
-                    var dmlTableExpr = generalTableRef.dml_table_expression_clause();
-                    if (dmlTableExpr != null)
-                    {
-                        var tableviewName = dmlTableExpr.tableview_name();
-                        if (tableviewName != null)
-                        {
-                            ExtractTableName(tableviewName);
-                        }
-                    }
-                }
-
+                // Do NOT extract target table from UPDATE statement
+                // Only visit subqueries in WHERE clauses, SET expressions, etc.
                 return base.VisitUpdate_statement(context);
             }
 
@@ -203,20 +154,8 @@ namespace SqlBuilderLib.DevTools
             {
                 if (context == null) return null;
 
-                var generalTableRef = context.general_table_ref();
-                if (generalTableRef != null)
-                {
-                    var dmlTableExpr = generalTableRef.dml_table_expression_clause();
-                    if (dmlTableExpr != null)
-                    {
-                        var tableviewName = dmlTableExpr.tableview_name();
-                        if (tableviewName != null)
-                        {
-                            ExtractTableName(tableviewName);
-                        }
-                    }
-                }
-
+                // Do NOT extract target table from DELETE statement
+                // Only visit subqueries in WHERE clauses, etc.
                 return base.VisitDelete_statement(context);
             }
 
@@ -225,26 +164,20 @@ namespace SqlBuilderLib.DevTools
             {
                 if (context == null) return null;
 
-                // Extract table name from INTO clause
-                var tableviewName = context.tableview_name();
-                if (tableviewName != null)
-                {
-                    ExtractTableName(tableviewName);
-                }
-
-                // Visit USING clause (may contain SELECT or table name)
+                // Do NOT extract target table from INTO clause
+                // Visit USING clause (contains source tables)
                 // selected_tableview: (tableview_name | '(' select_statement ')' | table_collection_expression | '(' table_collection_expression ')') table_alias?
                 var selectedTableview = context.selected_tableview();
                 if (selectedTableview != null)
                 {
-                    // Check for tableview_name
+                    // Check for tableview_name (source table in USING clause)
                     var tvName = selectedTableview.tableview_name();
                     if (tvName != null)
                     {
                         ExtractTableName(tvName);
                     }
 
-                    // Check for SELECT statement
+                    // Check for SELECT statement (source in USING clause)
                     var selectStmt = selectedTableview.select_statement();
                     if (selectStmt != null)
                     {
@@ -281,7 +214,7 @@ namespace SqlBuilderLib.DevTools
                 return null;
             }
 
-            // Visit WITH clause to collect CTE names
+            // Visit WITH clause to collect CTE names and extract source tables from CTE definitions
             private void VisitWithClause(PlSqlParser.With_clauseContext context)
             {
                 if (context == null) return;
@@ -306,6 +239,14 @@ namespace SqlBuilderLib.DevTools
                                     _cteNames.Add(cteName);
                                 }
                             }
+                        }
+
+                        // Visit the CTE definition subquery to extract source tables
+                        // subquery_factoring_clause: query_name ... AS '(' subquery ... ')'
+                        var cteSubquery = subqueryFactoring.subquery();
+                        if (cteSubquery != null)
+                        {
+                            VisitSubquery(cteSubquery);
                         }
                     }
                 }
