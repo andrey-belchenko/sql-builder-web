@@ -37,7 +37,7 @@ namespace sql.builder
 
         public static void Main(string[] args)
         {
-            var tableNames = DevSqlParser.GetSourceTables(@"begin
+            var tableNames = DevSqlParserAntlr.GetSourceTables(@"begin
 delete from rr_temp where skod = '76607_data';
 insert into rr_temp
 (
@@ -310,10 +310,10 @@ row_number() over (order by 1) as rn,
 mtr.*
 from
 (
-select decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'январь',2,'февраль',3,'март',4,'апрель',5,'май',6,'июнь',7,'июль',8,'август',9,'сентябрь',10,'октябрь',11,'ноябрь',12,'декабрь') as mes, /*string*/
- lower( ( decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'Январе',2,'Феврале',3,'Марте',4,'Апреле',5,'Мае',6,'Июне',7,'Июле',8,'Августе',9,'Сентябре',10,'Октябре',11,'Ноябре',12,'Декабре') ) ) as mes_pp, /*Название месяца в предложном падеже*//*string*/
+select decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'пїЅпїЅпїЅпїЅпїЅпїЅ',2,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ',3,'пїЅпїЅпїЅпїЅ',4,'пїЅпїЅпїЅпїЅпїЅпїЅ',5,'пїЅпїЅпїЅ',6,'пїЅпїЅпїЅпїЅ',7,'пїЅпїЅпїЅпїЅ',8,'пїЅпїЅпїЅпїЅпїЅпїЅ',9,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ',10,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ',11,'пїЅпїЅпїЅпїЅпїЅпїЅ',12,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ') as mes, /*string*/
+ lower( ( decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'пїЅпїЅпїЅпїЅпїЅпїЅ',2,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ',3,'пїЅпїЅпїЅпїЅпїЅ',4,'пїЅпїЅпїЅпїЅпїЅпїЅ',5,'пїЅпїЅпїЅ',6,'пїЅпїЅпїЅпїЅ',7,'пїЅпїЅпїЅпїЅ',8,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ',9,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ',10,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ',11,'пїЅпїЅпїЅпїЅпїЅпїЅ',12,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ') ) ) as mes_pp, /*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ*//*string*/
  trunc( :p_ym_beg ) as year, /*number*/
- decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'январь',2,'февраль',3,'март',4,'апрель',5,'май',6,'июнь',7,'июль',8,'август',9,'сентябрь',10,'октябрь',11,'ноябрь',12,'декабрь') as mes_end, /*string*/
+ decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'пїЅпїЅпїЅпїЅпїЅпїЅ',2,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ',3,'пїЅпїЅпїЅпїЅ',4,'пїЅпїЅпїЅпїЅпїЅпїЅ',5,'пїЅпїЅпїЅ',6,'пїЅпїЅпїЅпїЅ',7,'пїЅпїЅпїЅпїЅ',8,'пїЅпїЅпїЅпїЅпїЅпїЅ',9,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ',10,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ',11,'пїЅпїЅпїЅпїЅпїЅпїЅ',12,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ') as mes_end, /*string*/
  trunc( :p_ym_beg ) as year_end, /*number*/
 ( trim(to_char( :p_ym_beg ,'9999.99')) ) as ym_beg, /*string*/
 ( trim(to_char( :p_ym_beg ,'9999.99')) ) as ym_end, /* *//*string*/
@@ -321,7 +321,7 @@ select decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'январь',2,'февраль',3,'март',4,'
  trunc( ( to_number(to_char(ADD_MONTHS( (to_date(to_char( :p_ym_beg *10000+01),'YYYYMMDD') ) , 1 ) ,'YYYYMM'))/100 ) ) as year_for_mes_next_end, /* *//*string*/
  to_char( ( kg.ym_first_day( :p_ym_beg ) ) , 'DD.MM.YYYY' ) as first_day_ym_beg, /*string*/
  to_char( ( kg.ym_last_day( :p_ym_beg ) ) , 'DD.MM.YYYY' ) as last_day_ym_end, /*string*/
- case when (a.name is not null ) then a.name else ' ' end as p_dep_text, /*Отделение*//*string*/
+ case when (a.name is not null ) then a.name else ' ' end as p_dep_text, /*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*//*string*/
  case when (adr.kf_adress_o is not null ) then adr.kf_adress_o else ' ' end as address_p, /*string*/
  case when (( nk_adress.kf_address( 1 , rs.kodd ) ) is not null ) then ( nk_adress.kf_address( 1 , rs.kodd ) ) else ' ' end as address_rs, /*string*/
  nvl( (
@@ -333,18 +333,18 @@ bb
 where
 ( 0=1 ) )
 --\
- , 'все ' ) as adr_name, /*string*/
+ , 'пїЅпїЅпїЅ ' ) as adr_name, /*string*/
  case when (p.okpo is not null ) then p.okpo end as p_okpo, /*string*/
- case when (p.ogrn is not null ) then p.ogrn end as p_ogrn, /*ОГРН*//*string*/
- case when (p.inn is not null ) then p.inn end as p_inn, /*ИНН*//*string*/
+ case when (p.ogrn is not null ) then p.ogrn end as p_ogrn, /*пїЅпїЅпїЅпїЅ*//*string*/
+ case when (p.inn is not null ) then p.inn end as p_inn, /*пїЅпїЅпїЅ*//*string*/
  sysdate as dat, /*date*/
-rs.name as rs_name, /*Название энергосистемы*//*string*/
- case when (( nvl( /*nvlu*/ 0 , 0 ) ) = 1) then 'Да' else 'Нет' end as is_flag, /*string*/
- case when (( nvl( /*nvlu*/ :p_ym_beg , :p_ym_beg ) ) = :p_ym_beg ) then ('за ' || ( decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'январь',2,'февраль',3,'март',4,'апрель',5,'май',6,'июнь',7,'июль',8,'август',9,'сентябрь',10,'октябрь',11,'ноябрь',12,'декабрь') ) || ' ' || ( trunc( :p_ym_beg ) ) || ' г.') else ('c ' || (( trim(to_char( :p_ym_beg ,'9999.99')) ) ) || ' по ' || (( trim(to_char( :p_ym_beg ,'9999.99')) ) ) ) end as per_or_from_to/*string*/
+rs.name as rs_name, /*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*//*string*/
+ case when (( nvl( /*nvlu*/ 0 , 0 ) ) = 1) then 'пїЅпїЅ' else 'пїЅпїЅпїЅ' end as is_flag, /*string*/
+ case when (( nvl( /*nvlu*/ :p_ym_beg , :p_ym_beg ) ) = :p_ym_beg ) then ('пїЅпїЅ ' || ( decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'пїЅпїЅпїЅпїЅпїЅпїЅ',2,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ',3,'пїЅпїЅпїЅпїЅ',4,'пїЅпїЅпїЅпїЅпїЅпїЅ',5,'пїЅпїЅпїЅ',6,'пїЅпїЅпїЅпїЅ',7,'пїЅпїЅпїЅпїЅ',8,'пїЅпїЅпїЅпїЅпїЅпїЅ',9,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ',10,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ',11,'пїЅпїЅпїЅпїЅпїЅпїЅ',12,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ') ) || ' ' || ( trunc( :p_ym_beg ) ) || ' пїЅ.') else ('c ' || (( trim(to_char( :p_ym_beg ,'9999.99')) ) ) || ' пїЅпїЅ ' || (( trim(to_char( :p_ym_beg ,'9999.99')) ) ) ) end as per_or_from_to/*string*/
 from (
 --rs_esys
 select a.kod_esys as kod_esys, /*number*//*key*/
-a.name as name, /*Наименование*//*string*/
+a.name as name, /*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*//*string*/
 a.kodd as kodd/**//*number*/
 from rs_esys
 a
@@ -356,11 +356,11 @@ left outer join
 (
 --kr_org_one
 select a.kodp as kodp, /**//*number*//*key*/
-a.name as name/*Наименование*//*string*/
+a.name as name/*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*//*string*/
 from (
 --kr_org
 select a.kodp as kodp, /**//*number*//*key*/
-a.name as name/*Отделение*//*string*/
+a.name as name/*пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*//*string*/
 from kr_org
 a
 --\kr_org
@@ -374,9 +374,9 @@ left outer join
 (
 --kr_payer
 select a.kodp as kodp, /**//*number*//*key*/
-a.inn as inn, /*ИНН*//*string*/
+a.inn as inn, /*пїЅпїЅпїЅ*//*string*/
 a.okpo as okpo, /**//*string*/
-a.ogrn as ogrn, /*ОГРН*//*string*/
+a.ogrn as ogrn, /*пїЅпїЅпїЅпїЅ*//*string*/
 a.kod_d_p as kod_d_p/*number*/
 from kr_payer
 a
@@ -387,7 +387,7 @@ left outer join
 (
 --k_house
 select a.kodd as kodd, /**//*number*//*key*/
-a.kf_adress_o as kf_adress_o/*Адрес*//*string*/
+a.kf_adress_o as kf_adress_o/*пїЅпїЅпїЅпїЅпїЅ*//*string*/
 from k_house
 a
 --\k_house
@@ -397,7 +397,7 @@ adr on p.kod_d_p = adr.kodd--\k_house
 ;
 --\title_info
 end;");
-            Console.Write(tableNames);
+            Console.Write("done");
         }
 
         public static void Main3(string[] args)

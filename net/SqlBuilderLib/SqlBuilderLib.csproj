@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <LangVersion>6</LangVersion>
+    <LangVersion>7.0</LangVersion>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -13,7 +13,18 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
+    <PackageReference Include="Antlr4BuildTasks" Version="12.11.0" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <Antlr4 Include="Grammars\PlSqlLexer.g4">
+      <Listener>false</Listener>
+      <Visitor>false</Visitor>
+    </Antlr4>
+    <Antlr4 Include="Grammars\PlSqlParser.g4">
+      <Listener>false</Listener>
+      <Visitor>true</Visitor>
+    </Antlr4>
+  </ItemGroup>
 
 </Project>
