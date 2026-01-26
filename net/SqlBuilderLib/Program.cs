@@ -38,6 +38,7 @@ namespace sql.builder
         public static void Main(string[] args)
         {
             DevAnalyzer.Enabled = true;
+            DevAnalyzer.ClearTempFolder();
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
             var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
@@ -56,6 +57,7 @@ namespace sql.builder
             // Output as file URI for VS Code debug console to recognize as clickable link
             //var fileUri = new Uri(path).ToString();
             Console.WriteLine(path);
+            var tablenames = DevAnalyzer.tablenames;
             Console.WriteLine("done");
 
         }

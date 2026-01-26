@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using sql.builder.Clean.Extensions;
+using sql.builder.DataApi;
 
 namespace SqlBuilderLib.DevTools
 {
@@ -13,6 +15,21 @@ namespace SqlBuilderLib.DevTools
     internal static class DevAnalyzer
     {
         public static bool Enabled = false;
+
+        public static HashSet<string> tablenames = new HashSet<string>();
+
+        public static void AnalyzeReport(XElement xelement, string name = null)
+        {
+            var xtables = xelement.Descendants(TextConst.EName.Table);
+            foreach (var xtable in xtables) { 
+                var xtext = xelement.Element(TextConst.EName.Text);
+                if (xtext == null)
+                {
+                    tablenames.Add(xtable.GetAttributeValue(TextConst.AName.Name));
+                }
+            }
+            LogXElement(xelement, name);
+        }
         public static void LogXElement(XElement element, string name= null)
         {
             if (!Enabled) return;
@@ -69,6 +86,42 @@ namespace SqlBuilderLib.DevTools
             }
 
             element.Save(filePath);
+        }
+
+        public static void ClearTempFolder()
+        {
+            // Get project root directory (where SqlBuilder.slnx is located)
+            string projectRoot = GetProjectRoot();
+            if (string.IsNullOrEmpty(projectRoot)) return;
+
+            // Get Temp folder path
+            string tempFolder = Path.Combine(projectRoot, "Temp");
+            
+            // Check if Temp folder exists
+            if (!Directory.Exists(tempFolder)) return;
+
+            try
+            {
+                // Delete all files in the Temp folder
+                string[] files = Directory.GetFiles(tempFolder);
+                foreach (string file in files)
+                {
+                    File.Delete(file);
+                }
+
+                // Optionally delete all subdirectories
+                string[] directories = Directory.GetDirectories(tempFolder);
+                foreach (string directory in directories)
+                {
+                    Directory.Delete(directory, true);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception as needed
+                // For now, silently fail or you could throw/rethrow
+                throw new IOException($"Failed to clear Temp folder: {ex.Message}", ex);
+            }
         }
 
         private static string GetProjectRoot()

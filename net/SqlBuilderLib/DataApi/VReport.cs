@@ -421,7 +421,7 @@ namespace sql.builder.DataApi
                     }
                 }
             }
-            DevAnalyzer.LogXElement(compiled);
+            DevAnalyzer.AnalyzeReport(compiled);
             return compiled;
         }
         internal VDataSet Result(int useRepository, bool useCash)
