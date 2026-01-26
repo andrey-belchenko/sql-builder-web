@@ -13,10 +13,10 @@ using sql.builder.DataApi;
 //VReportProc repProc = this.Report.GetReportProc();
 //if (repProc != null)
 //{
-//    //WaitUIHelper.LastUsedUIHelper.Show("Загрузка данных", WaitUIMode.WaitCursor);
+//    //WaitUIHelper.LastUsedUIHelper.Show("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ", WaitUIMode.WaitCursor);
 //    OracleCommand procCmd = new OracleCommand();
 //    procCmd.Connection = this.GetConnection();
-//    procCmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
+//    procCmd.ParameterCheck = true; // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Parameters пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ CommandText
 //    procCmd.CommandText = repProc.Value;
 
 namespace SqlBuilderLib.DevTools
@@ -30,11 +30,31 @@ namespace SqlBuilderLib.DevTools
 
         public static void AnalyzeSql(string sql)
         {
-           
+           LogSql(sql);
         }
 
         public static void LogSql(string sql)
         {
+            if (!Enabled) return;
+            if (string.IsNullOrEmpty(sql)) return;
+
+            // Get project root directory (where SqlBuilder.slnx is located)
+            string projectRoot = GetProjectRoot();
+            if (string.IsNullOrEmpty(projectRoot)) return;
+
+            // Ensure Temp folder exists
+            string tempFolder = Path.Combine(projectRoot, "Temp");
+            Directory.CreateDirectory(tempFolder);
+
+            // Generate filename with current fileIndex
+            string fileName = $"{fileIndex}.sql";
+            string filePath = Path.Combine(tempFolder, fileName);
+
+            // Write SQL to file
+            File.WriteAllText(filePath, sql, Encoding.UTF8);
+
+            // Increment fileIndex for next call
+            fileIndex++;
         }
 
 
@@ -108,8 +128,10 @@ namespace SqlBuilderLib.DevTools
             element.Save(filePath);
         }
 
+        private static int fileIndex = 1;
         public static void ClearTempFolder()
         {
+            fileIndex = 1;
             // Get project root directory (where SqlBuilder.slnx is located)
             string projectRoot = GetProjectRoot();
             if (string.IsNullOrEmpty(projectRoot)) return;
