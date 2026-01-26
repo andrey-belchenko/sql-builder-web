@@ -12,6 +12,7 @@
     <PackageReference Include="Devart.Data.Oracle" Version="11.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
   </ItemGroup>
   
 
