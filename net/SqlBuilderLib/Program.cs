@@ -310,10 +310,10 @@ row_number() over (order by 1) as rn,
 mtr.*
 from
 (
-select decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'������',2,'�������',3,'����',4,'������',5,'���',6,'����',7,'����',8,'������',9,'��������',10,'�������',11,'������',12,'�������') as mes, /*string*/
- lower( ( decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'������',2,'�������',3,'�����',4,'������',5,'���',6,'����',7,'����',8,'�������',9,'��������',10,'�������',11,'������',12,'�������') ) ) as mes_pp, /*�������� ������ � ���������� ������*//*string*/
+select decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'январь',2,'февраль',3,'март',4,'апрель',5,'май',6,'июнь',7,'июль',8,'август',9,'сентябрь',10,'октябрь',11,'ноябрь',12,'декабрь') as mes, /*string*/
+ lower( ( decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'Январе',2,'Феврале',3,'Марте',4,'Апреле',5,'Мае',6,'Июне',7,'Июле',8,'Августе',9,'Сентябре',10,'Октябре',11,'Ноябре',12,'Декабре') ) ) as mes_pp, /*Название месяца в предложном падеже*//*string*/
  trunc( :p_ym_beg ) as year, /*number*/
- decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'������',2,'�������',3,'����',4,'������',5,'���',6,'����',7,'����',8,'������',9,'��������',10,'�������',11,'������',12,'�������') as mes_end, /*string*/
+ decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'январь',2,'февраль',3,'март',4,'апрель',5,'май',6,'июнь',7,'июль',8,'август',9,'сентябрь',10,'октябрь',11,'ноябрь',12,'декабрь') as mes_end, /*string*/
  trunc( :p_ym_beg ) as year_end, /*number*/
 ( trim(to_char( :p_ym_beg ,'9999.99')) ) as ym_beg, /*string*/
 ( trim(to_char( :p_ym_beg ,'9999.99')) ) as ym_end, /* *//*string*/
@@ -321,7 +321,7 @@ select decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'������',2,'���
  trunc( ( to_number(to_char(ADD_MONTHS( (to_date(to_char( :p_ym_beg *10000+01),'YYYYMMDD') ) , 1 ) ,'YYYYMM'))/100 ) ) as year_for_mes_next_end, /* *//*string*/
  to_char( ( kg.ym_first_day( :p_ym_beg ) ) , 'DD.MM.YYYY' ) as first_day_ym_beg, /*string*/
  to_char( ( kg.ym_last_day( :p_ym_beg ) ) , 'DD.MM.YYYY' ) as last_day_ym_end, /*string*/
- case when (a.name is not null ) then a.name else ' ' end as p_dep_text, /*���������*//*string*/
+ case when (a.name is not null ) then a.name else ' ' end as p_dep_text, /*Отделение*//*string*/
  case when (adr.kf_adress_o is not null ) then adr.kf_adress_o else ' ' end as address_p, /*string*/
  case when (( nk_adress.kf_address( 1 , rs.kodd ) ) is not null ) then ( nk_adress.kf_address( 1 , rs.kodd ) ) else ' ' end as address_rs, /*string*/
  nvl( (
@@ -333,18 +333,18 @@ bb
 where
 ( 0=1 ) )
 --\
- , '��� ' ) as adr_name, /*string*/
+ , 'все ' ) as adr_name, /*string*/
  case when (p.okpo is not null ) then p.okpo end as p_okpo, /*string*/
- case when (p.ogrn is not null ) then p.ogrn end as p_ogrn, /*����*//*string*/
- case when (p.inn is not null ) then p.inn end as p_inn, /*���*//*string*/
+ case when (p.ogrn is not null ) then p.ogrn end as p_ogrn, /*ОГРН*//*string*/
+ case when (p.inn is not null ) then p.inn end as p_inn, /*ИНН*//*string*/
  sysdate as dat, /*date*/
-rs.name as rs_name, /*�������� �������������*//*string*/
- case when (( nvl( /*nvlu*/ 0 , 0 ) ) = 1) then '��' else '���' end as is_flag, /*string*/
- case when (( nvl( /*nvlu*/ :p_ym_beg , :p_ym_beg ) ) = :p_ym_beg ) then ('�� ' || ( decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'������',2,'�������',3,'����',4,'������',5,'���',6,'����',7,'����',8,'������',9,'��������',10,'�������',11,'������',12,'�������') ) || ' ' || ( trunc( :p_ym_beg ) ) || ' �.') else ('c ' || (( trim(to_char( :p_ym_beg ,'9999.99')) ) ) || ' �� ' || (( trim(to_char( :p_ym_beg ,'9999.99')) ) ) ) end as per_or_from_to/*string*/
+rs.name as rs_name, /*Название энергосистемы*//*string*/
+ case when (( nvl( /*nvlu*/ 0 , 0 ) ) = 1) then 'Да' else 'Нет' end as is_flag, /*string*/
+ case when (( nvl( /*nvlu*/ :p_ym_beg , :p_ym_beg ) ) = :p_ym_beg ) then ('за ' || ( decode ( ( mod( :p_ym_beg , 1)*100 ) ,1,'январь',2,'февраль',3,'март',4,'апрель',5,'май',6,'июнь',7,'июль',8,'август',9,'сентябрь',10,'октябрь',11,'ноябрь',12,'декабрь') ) || ' ' || ( trunc( :p_ym_beg ) ) || ' г.') else ('c ' || (( trim(to_char( :p_ym_beg ,'9999.99')) ) ) || ' по ' || (( trim(to_char( :p_ym_beg ,'9999.99')) ) ) ) end as per_or_from_to/*string*/
 from (
 --rs_esys
 select a.kod_esys as kod_esys, /*number*//*key*/
-a.name as name, /*������������*//*string*/
+a.name as name, /*Наименование*//*string*/
 a.kodd as kodd/**//*number*/
 from rs_esys
 a
@@ -356,11 +356,11 @@ left outer join
 (
 --kr_org_one
 select a.kodp as kodp, /**//*number*//*key*/
-a.name as name/*������������*//*string*/
+a.name as name/*Наименование*//*string*/
 from (
 --kr_org
 select a.kodp as kodp, /**//*number*//*key*/
-a.name as name/*���������*//*string*/
+a.name as name/*Отделение*//*string*/
 from kr_org
 a
 --\kr_org
@@ -374,9 +374,9 @@ left outer join
 (
 --kr_payer
 select a.kodp as kodp, /**//*number*//*key*/
-a.inn as inn, /*���*//*string*/
+a.inn as inn, /*ИНН*//*string*/
 a.okpo as okpo, /**//*string*/
-a.ogrn as ogrn, /*����*//*string*/
+a.ogrn as ogrn, /*ОГРН*//*string*/
 a.kod_d_p as kod_d_p/*number*/
 from kr_payer
 a
@@ -387,7 +387,7 @@ left outer join
 (
 --k_house
 select a.kodd as kodd, /**//*number*//*key*/
-a.kf_adress_o as kf_adress_o/*�����*//*string*/
+a.kf_adress_o as kf_adress_o/*Адрес*//*string*/
 from k_house
 a
 --\k_house
@@ -397,7 +397,7 @@ adr on p.kod_d_p = adr.kodd--\k_house
 ;
 --\title_info
 end;");
-            
+
             Console.WriteLine("Extracted source tables:");
             foreach (var tableName in tableNames.OrderBy(t => t))
             {
@@ -405,6 +405,7 @@ end;");
             }
             Console.WriteLine($"Total: {tableNames.Count} tables");
             Console.Write("done");
+
         }
 
         public static void Main3(string[] args)
