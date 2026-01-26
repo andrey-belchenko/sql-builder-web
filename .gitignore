@@ -418,3 +418,6 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Temp folder for development tools
+net/Temp/
