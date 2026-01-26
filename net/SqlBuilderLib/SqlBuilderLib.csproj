@@ -16,15 +16,6 @@
     <PackageReference Include="Antlr4BuildTasks" Version="12.11.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Antlr4 Include="Grammars\PlSqlLexer.g4">
-      <Listener>false</Listener>
-      <Visitor>false</Visitor>
-    </Antlr4>
-    <Antlr4 Include="Grammars\PlSqlParser.g4">
-      <Listener>false</Listener>
-      <Visitor>true</Visitor>
-    </Antlr4>
-  </ItemGroup>
+  <!-- Pre-generated ANTLR files are in Grammars\Generated\ folder and are automatically included by the SDK -->
 
 </Project>

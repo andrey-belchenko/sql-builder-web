@@ -36,6 +36,9 @@ namespace SqlBuilderLib.DevTools
                 var tokens = new CommonTokenStream(lexer);
                 var parser = new PlSqlParser(tokens);
 
+                // Add custom error listener to catch parse errors
+                parser.AddErrorListener(new ThrowingErrorListener());
+
                 // Parse the input
                 var tree = parser.sql_script();
 
@@ -52,10 +55,12 @@ namespace SqlBuilderLib.DevTools
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 // If parsing fails, return empty set (graceful degradation)
-                // In production, you might want to log the error
+                // Log the error for debugging
+                System.Diagnostics.Debug.WriteLine($"PL/SQL parsing error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
             }
 
             return result;
@@ -76,6 +81,17 @@ namespace SqlBuilderLib.DevTools
             tableName = tableName.Trim();
             
             return tableName;
+        }
+
+        /// <summary>
+        /// Error listener that throws exceptions on parse errors.
+        /// </summary>
+        private class ThrowingErrorListener : Antlr4.Runtime.BaseErrorListener
+        {
+            public override void SyntaxError(System.IO.TextWriter output, IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
+            {
+                throw new InvalidOperationException($"Parse error at line {line}, position {charPositionInLine}: {msg}", e);
+            }
         }
 
         /// <summary>
@@ -102,6 +118,9 @@ namespace SqlBuilderLib.DevTools
             public override object VisitAnonymous_block(PlSqlParser.Anonymous_blockContext context)
             {
                 if (context == null) return null;
+                
+                // Visit seq_of_statements which contains the actual DML statements
+                // Use VisitChildren to automatically visit all children
                 return base.VisitAnonymous_block(context);
             }
 
