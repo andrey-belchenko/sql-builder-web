@@ -28,6 +28,16 @@ namespace SqlBuilderLib.DevTools
 
         public static HashSet<string> tablenames = new HashSet<string>();
 
+        public static void AnalyzeSql(string sql)
+        {
+           
+        }
+
+        public static void LogSql(string sql)
+        {
+        }
+
+
         public static void AnalyzeReport(XElement xelement, string name = null)
         {
             var xtables = xelement.Descendants(TextConst.EName.Table);
