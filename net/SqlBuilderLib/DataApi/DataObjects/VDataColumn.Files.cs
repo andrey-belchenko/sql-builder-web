@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Data;
 using Devart.Data.Oracle;
 using System;
@@ -8,6 +8,7 @@ using System.Xml.Xsl;
 using System.Xml.XPath;
 using System.Linq;
 using System.IO;
+using SqlBuilderLib.DevTools;
 namespace sql.builder.DataApi
 {
     internal partial class VDataColumn
@@ -96,6 +97,7 @@ namespace sql.builder.DataApi
             var par = new OracleParameter(TextConst.DBParams.FileId, fileId);
             par.OracleDbType = OracleDbType.Number;
             cmd.Parameters.Add(par);
+            DevAnalyzer.AnalyzeSql(s);
             byte[] _buf = (byte[])cmd.ExecuteScalar();
             if (_buf == null)
             {
@@ -157,6 +159,7 @@ namespace sql.builder.DataApi
                 par.OracleDbType = OracleDbType.VarChar;
                 cmd.Parameters.Add(par);
 
+                DevAnalyzer.AnalyzeSql(s);
                 cmd.ExecuteNonQuery();
 
                 fileId = cmd.Parameters[TextConst.DBParams.FileId].Value;
@@ -181,6 +184,7 @@ namespace sql.builder.DataApi
 
                 par = cmd.Parameters.Add(TextConst.DBParams.FileData, OracleDbType.Blob);
                 par.Value = _buf;
+                DevAnalyzer.AnalyzeSql(s);
                 cmd.ExecuteNonQuery();
                 if (row.RowState != DataRowState.Deleted)
                 {

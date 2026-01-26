@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -7,6 +7,7 @@ using Devart.Data.Oracle;
 using System.Xml;
 using System.Xml.Linq;
 using sql.builder.Print.Xlsx;
+using SqlBuilderLib.DevTools;
 namespace sql.builder
 {
     // Этот интерфейс нужен только для того,
@@ -350,6 +351,7 @@ namespace sql.builder
                     }
                     if (!done) {
                         vdt.cmd.FetchSize = 10;
+                        DevAnalyzer.AnalyzeSql(vdt.cmd.CommandText);
                         reader = vdt.cmd.ExecuteReader();
                     }
                     //bufferTable = new DataTable();

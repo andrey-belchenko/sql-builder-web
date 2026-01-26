@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -7,6 +7,7 @@ using Devart.Data.Oracle;
 using sql.builder.UI;// !!! перенести используемые классы и убрать
 using System.Threading;
 using System.ComponentModel;
+using SqlBuilderLib.DevTools;
 namespace sql.builder.DataApi
 {
     internal partial class VDataTable
@@ -2580,6 +2581,7 @@ namespace sql.builder.DataApi
             if (!IsNonDb)
             {
                 hasTemp = true;
+                DevAnalyzer.AnalyzeSql(UpdateTempCommand.CommandText);
                 UpdateTempCommand.ExecuteNonQuery();
 
             }
@@ -2595,6 +2597,7 @@ namespace sql.builder.DataApi
             {
                 ClearTempCommand.Connection = (OracleConnection)GetConnection();
                 ClearTempCommand.Parameters[TextConst.DBParams.FormId].Value = GetDataSet().GetFormId();
+                DevAnalyzer.AnalyzeSql(ClearTempCommand.CommandText);
                 ClearTempCommand.ExecuteNonQuery();
                 hasTemp = false;
             }

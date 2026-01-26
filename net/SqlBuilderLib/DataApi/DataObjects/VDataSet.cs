@@ -19,6 +19,7 @@ using sql.builder.Core;
 using sql.builder.UI;
 using sql.builder.XmlHelpers;
 //using Vertica.Data.VerticaClient;
+using SqlBuilderLib.DevTools;
 
 namespace sql.builder.DataApi
 {
@@ -473,6 +474,7 @@ namespace sql.builder.DataApi
                     Stopwatch sw = new Stopwatch();
                     sw.Start();
                     #endif
+                    DevAnalyzer.AnalyzeSql(procCmd.CommandText);
                     procCmd.ExecuteNonQuery();
                     #if DEBUG
                     sw.Stop();

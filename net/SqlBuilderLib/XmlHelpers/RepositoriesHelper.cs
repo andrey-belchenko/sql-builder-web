@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using Devart.Data.Oracle;
 
 using sql.builder.DataApi;
+using SqlBuilderLib.DevTools;
 
 namespace sql.builder.XmlHelpers
 {
@@ -226,6 +227,7 @@ namespace sql.builder.XmlHelpers
                     new OracleParameter("return"  , OracleDbType.NVarChar) { Direction = ParameterDirection.ReturnValue}
                 };
                 cmd.Parameters.AddRange(parameters);
+                DevAnalyzer.AnalyzeSql(cmd.CommandText);
                 cmd.ExecuteNonQuery();
 
                 var result = parameters[3].Value;
@@ -256,6 +258,7 @@ namespace sql.builder.XmlHelpers
                     new OracleParameter("nkod_dog", OracleDbType.Number)   { Value = 0M },
                 };
                 cmd.Parameters.AddRange(parameters);
+                DevAnalyzer.AnalyzeSql(cmd.CommandText);
                 cmd.ExecuteNonQuery();
 
                 AddLog(rep_table, "Блокировка снята", "");

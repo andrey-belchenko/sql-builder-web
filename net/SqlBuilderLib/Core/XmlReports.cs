@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -23,6 +23,7 @@ using sql.builder.DataApi;
 using sql.builder.UI;
 //using sql.builder.WebReports;
 //using static System.Net.Mime.MediaTypeNames;
+using SqlBuilderLib.DevTools;
 
 namespace sql.builder
 {
@@ -1534,6 +1535,7 @@ namespace sql.builder
                 //con.Open(useGlobalSettings: true);
                 //var cmd = new OracleCommand(VDBCommand.GetCmdParametrizedText(command), con);
                 //cmd.ExecuteNonQuery();
+                DevAnalyzer.AnalyzeSql(sql1);
                 command.ExecuteNonQuery();
             } catch (Exception e) {
                 throw e;

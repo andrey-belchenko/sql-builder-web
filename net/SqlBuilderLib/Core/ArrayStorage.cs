@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics; 
 using Contract = System.Diagnostics.Contracts.Contract;
 using System.Text;
@@ -7,6 +7,7 @@ using Devart.Data.Oracle;
 using infoenergo.sys;
 using infoenergo.core.Data; // DataHelper, OracleSqlException
 using sql.builder.DataApi; // TextConst
+using SqlBuilderLib.DevTools;
 
 namespace sql.builder.Core
 {
@@ -97,6 +98,7 @@ namespace sql.builder.Core
                         cmd.Parameters.Add(new OracleParameter("count", OracleDbType.Integer, values.Length, ParameterDirection.Input));
                         OracleArray array = new OracleArray(array_type, values);
                         cmd.Parameters.Add(new OracleParameter("value", OracleDbType.Array, array, ParameterDirection.Input));
+                        DevAnalyzer.AnalyzeSql(cmd.CommandText);
                         cmd.ExecuteNonQuery();
                     }
                     else
@@ -104,6 +106,7 @@ namespace sql.builder.Core
                         cmd = new OracleCommand("delete from vr_array_storage where array_id = :array_id", Global.Connection);
                         OracleParameter par_array_id = new OracleParameter("array_id", OracleDbType.NVarChar, this._id, ParameterDirection.Input);
                         cmd.Parameters.Add(par_array_id);
+                        DevAnalyzer.AnalyzeSql(cmd.CommandText);
                         cmd.ExecuteNonQuery();
                         //
                         cmd.CommandText = "insert into vr_array_storage (array_id, " + this._value_column + ") values (:array_id, :value)";
@@ -112,6 +115,7 @@ namespace sql.builder.Core
                         OracleParameter par_value = new OracleParameter("value", data_type, null, ParameterDirection.Input);
                         cmd.Parameters.Add(par_value);
                         cmd.Prepare();
+                        DevAnalyzer.AnalyzeSql(cmd.CommandText);
                         for (int index = 0; index < values.Length; index++)
                         {
                             par_value.Value = values[index];

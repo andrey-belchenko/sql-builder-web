@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -10,6 +10,7 @@ using infoenergo.sys;
 using sql.builder.Core;
 using sql.builder.DataApi;
 using DataHelper = infoenergo.core.Data.DataHelper;
+using SqlBuilderLib.DevTools;
 
 namespace sql.builder
 {
@@ -307,6 +308,7 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
                 DbDataReader reader = null;
                 try
                 {
+                    DevAnalyzer.AnalyzeSql(sql);
                     reader = cmd.ExecuteReader();
                 }
                 catch (OracleException e)
@@ -328,6 +330,7 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = sql;
+                DevAnalyzer.AnalyzeSql(sql);
                 var reader = cmd.ExecuteReader();
                 dt.Load(reader);
             }
@@ -357,6 +360,7 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
                     
                 }
                 
+                DevAnalyzer.AnalyzeSql(sql);
                 var reader = cmd.ExecuteReader();
                 dt.Load(reader);
             }
@@ -377,6 +381,7 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = sql;
+                DevAnalyzer.AnalyzeSql(sql);
                return cmd.ExecuteNonQuery();
              
             }
