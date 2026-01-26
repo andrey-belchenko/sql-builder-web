@@ -289,6 +289,14 @@ namespace SqlBuilderLib.DevTools
             
             foreach (var part in unionParts)
             {
+                // Extract CTE names from this UNION part as well (CTEs can appear in each part)
+                var partCteNames = ExtractCteNames(part);
+                // Merge with main CTE names
+                foreach (var cteName in partCteNames)
+                {
+                    cteNames.Add(cteName);
+                }
+                
                 // Remove CTE clause if present (we already extracted CTE names)
                 string sqlWithoutCte = RemoveCteClause(part);
                 
@@ -298,19 +306,23 @@ namespace SqlBuilderLib.DevTools
                 
                 foreach (var table in fromTables)
                 {
-                    if (!IsCteName(table, cteNames))
+                    if (IsValidTableName(table, cteNames))
                         tables.Add(table);
                 }
                 
                 foreach (var table in joinTables)
                 {
-                    if (!IsCteName(table, cteNames))
+                    if (IsValidTableName(table, cteNames))
                         tables.Add(table);
                 }
                 
                 // Extract tables from subqueries in SELECT, WHERE, HAVING clauses
                 var subqueryTables = ExtractTablesFromSubqueries(sqlWithoutCte, cteNames);
-                tables.UnionWith(subqueryTables);
+                foreach (var table in subqueryTables)
+                {
+                    if (IsValidTableName(table, cteNames))
+                        tables.Add(table);
+                }
             }
 
             return tables;
@@ -349,7 +361,7 @@ namespace SqlBuilderLib.DevTools
                     var subqueryTables = ExtractTablesFromSelect(subquery);
                     foreach (var table in subqueryTables)
                     {
-                        if (!IsCteName(table, cteNames))
+                        if (IsValidTableName(table, cteNames))
                             tables.Add(table);
                     }
                 }
@@ -455,48 +467,164 @@ namespace SqlBuilderLib.DevTools
 
         /// <summary>
         /// Extracts CTE (Common Table Expression) names from WITH clauses.
+        /// Handles multiple CTEs, recursive CTEs, and CTEs in UNION statements.
         /// </summary>
         private static HashSet<string> ExtractCteNames(string sql)
         {
             var cteNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             
-            // Pattern to match WITH clause: WITH cte_name AS (...)
-            var withPattern = new Regex(
-                @"\bWITH\s+(\w+)\s+AS\s*\(",
+            if (string.IsNullOrWhiteSpace(sql))
+                return cteNames;
+
+            // Find all WITH clauses (may appear multiple times in UNION statements)
+            var withClausePattern = new Regex(
+                @"\bWITH\s+(?:RECURSIVE\s+)?",
                 RegexOptions.IgnoreCase | RegexOptions.Multiline
             );
 
-            var matches = withPattern.Matches(sql);
-            foreach (Match match in matches)
+            var withMatches = withClausePattern.Matches(sql);
+            
+            foreach (Match withMatch in withMatches)
             {
-                if (match.Groups.Count > 1)
-                {
-                    cteNames.Add(match.Groups[1].Value.Trim());
-                }
-            }
-
-            // Handle multiple CTEs: WITH cte1 AS (...), cte2 AS (...)
-            var multiCtePattern = new Regex(
-                @"\bWITH\s+((?:\w+\s+AS\s*\([^)]+\),?\s*)+)",
-                RegexOptions.IgnoreCase | RegexOptions.Singleline
-            );
-
-            var multiMatch = multiCtePattern.Match(sql);
-            if (multiMatch.Success && multiMatch.Groups.Count > 1)
-            {
-                string cteList = multiMatch.Groups[1].Value;
-                var cteNamePattern = new Regex(@"(\w+)\s+AS\s*\(", RegexOptions.IgnoreCase);
-                var cteMatches = cteNamePattern.Matches(cteList);
+                int startIndex = withMatch.Index + withMatch.Length;
+                
+                // Find the SELECT keyword after the WITH clause
+                int selectIndex = FindSelectAfterWith(sql, startIndex);
+                if (selectIndex < 0)
+                    continue;
+                
+                // Extract the CTE section (between WITH and SELECT)
+                string cteSection = sql.Substring(startIndex, selectIndex - startIndex);
+                
+                // Normalize whitespace in CTE section to handle multi-line CTEs
+                // Replace all whitespace (including newlines) with single space for pattern matching
+                string normalizedCteSection = Regex.Replace(cteSection, @"\s+", " ", RegexOptions.Multiline);
+                
+                // Parse CTE names from the normalized section
+                // Pattern: cte_name [optional column list] AS (
+                var cteNamePattern = new Regex(
+                    @"(\w+)\s*(?:\([^)]*\))?\s+AS\s*\(",
+                    RegexOptions.IgnoreCase
+                );
+                
+                // Match CTE names in the normalized section
+                var cteMatches = cteNamePattern.Matches(normalizedCteSection);
                 foreach (Match cteMatch in cteMatches)
                 {
                     if (cteMatch.Groups.Count > 1)
                     {
-                        cteNames.Add(cteMatch.Groups[1].Value.Trim());
+                        string cteName = cteMatch.Groups[1].Value.Trim();
+                        if (!string.IsNullOrWhiteSpace(cteName))
+                        {
+                            cteNames.Add(cteName);
+                        }
                     }
                 }
             }
 
             return cteNames;
+        }
+
+        /// <summary>
+        /// Finds the SELECT keyword after a WITH clause, handling nested parentheses in CTE definitions.
+        /// Tracks through all CTE definitions until finding the SELECT that uses them.
+        /// </summary>
+        private static int FindSelectAfterWith(string sql, int startIndex)
+        {
+            if (startIndex < 0 || startIndex >= sql.Length)
+                return -1;
+
+            int depth = 0;
+            bool inString = false;
+            char stringChar = '\0';
+            bool inCteDefinition = false;
+
+            // Skip initial whitespace
+            int i = startIndex;
+            while (i < sql.Length && char.IsWhiteSpace(sql[i]))
+                i++;
+
+            while (i < sql.Length)
+            {
+                char c = sql[i];
+                char next = i + 1 < sql.Length ? sql[i + 1] : '\0';
+
+                // Handle string literals
+                if (!inString && (c == '\'' || c == '"'))
+                {
+                    inString = true;
+                    stringChar = c;
+                }
+                else if (inString && c == stringChar)
+                {
+                    if (c == '\'' && next == '\'')
+                    {
+                        i++; // Skip escaped quote
+                    }
+                    else
+                    {
+                        inString = false;
+                    }
+                }
+                else if (!inString)
+                {
+                    if (c == '(')
+                    {
+                        depth++;
+                        if (depth == 1)
+                        {
+                            // This is the opening paren of a CTE definition
+                            inCteDefinition = true;
+                        }
+                    }
+                    else if (c == ')')
+                    {
+                        depth--;
+                        if (depth == 0 && inCteDefinition)
+                        {
+                            // We've closed the CTE definition
+                            inCteDefinition = false;
+                            // Skip whitespace and comma if present (for multiple CTEs)
+                            i++;
+                            while (i < sql.Length && (char.IsWhiteSpace(sql[i]) || sql[i] == ','))
+                                i++;
+                            // If next is another CTE (identifier), continue; otherwise look for SELECT
+                            if (i >= sql.Length || !char.IsLetterOrDigit(sql[i]))
+                            {
+                                // Look for SELECT keyword
+                                int selectPos = i;
+                                while (selectPos < sql.Length && char.IsWhiteSpace(sql[selectPos]))
+                                    selectPos++;
+                                
+                                if (selectPos + 6 < sql.Length &&
+                                    sql.Substring(selectPos, 7).Equals("SELECT ", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    return selectPos;
+                                }
+                            }
+                            continue;
+                        }
+                    }
+                    else if (depth == 0 && !inCteDefinition)
+                    {
+                        // We're outside all CTE definitions, look for SELECT
+                        // Skip whitespace
+                        int checkPos = i;
+                        while (checkPos < sql.Length && char.IsWhiteSpace(sql[checkPos]))
+                            checkPos++;
+                        
+                        if (checkPos + 6 < sql.Length &&
+                            sql.Substring(checkPos, 7).Equals("SELECT ", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return checkPos;
+                        }
+                    }
+                }
+
+                i++;
+            }
+
+            return -1;
         }
 
         /// <summary>
@@ -618,8 +746,9 @@ namespace SqlBuilderLib.DevTools
                 if (string.IsNullOrWhiteSpace(tablePart))
                     continue;
 
-                // Skip if it's a subquery
-                if (tablePart.StartsWith("("))
+                // Skip if it's a subquery - check more thoroughly
+                // A subquery starts with ( and contains SELECT
+                if (IsSubquery(tablePart))
                     continue;
 
                 // Extract table name (handle schema.table, table@dblink, table alias)
@@ -632,6 +761,68 @@ namespace SqlBuilderLib.DevTools
             }
 
             return tables;
+        }
+
+        /// <summary>
+        /// Checks if a table part is actually a subquery (SELECT statement in parentheses).
+        /// </summary>
+        private static bool IsSubquery(string tablePart)
+        {
+            if (string.IsNullOrWhiteSpace(tablePart))
+                return false;
+
+            tablePart = tablePart.Trim();
+            
+            // Must start with opening parenthesis
+            if (!tablePart.StartsWith("("))
+                return false;
+
+            // Look for SELECT keyword inside (ignoring nested parentheses)
+            int depth = 0;
+            bool inString = false;
+            char stringChar = '\0';
+            
+            for (int i = 0; i < tablePart.Length; i++)
+            {
+                char c = tablePart[i];
+                char next = i + 1 < tablePart.Length ? tablePart[i + 1] : '\0';
+
+                // Handle string literals
+                if (!inString && (c == '\'' || c == '"'))
+                {
+                    inString = true;
+                    stringChar = c;
+                }
+                else if (inString && c == stringChar)
+                {
+                    if (c == '\'' && next == '\'')
+                    {
+                        i++; // Skip escaped quote
+                    }
+                    else
+                    {
+                        inString = false;
+                    }
+                }
+                else if (!inString)
+                {
+                    if (c == '(')
+                        depth++;
+                    else if (c == ')')
+                        depth--;
+                    else if (depth > 0)
+                    {
+                        // Check for SELECT keyword at current depth
+                        if (i + 6 < tablePart.Length &&
+                            tablePart.Substring(i, 7).Equals("SELECT ", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -696,6 +887,7 @@ namespace SqlBuilderLib.DevTools
 
         /// <summary>
         /// Extracts table name from a table reference part (handles schema.table, table@dblink, table alias).
+        /// Removes aliases reliably, preserving schema-qualified names.
         /// </summary>
         private static string ExtractTableNameFromPart(string part)
         {
@@ -704,49 +896,70 @@ namespace SqlBuilderLib.DevTools
 
             part = part.Trim();
             
-            // Remove alias (everything after AS or space before a word that's not a keyword)
-            // Pattern: table_name AS alias or table_name alias
-            var aliasPattern = new Regex(
-                @"\b(AS|ON|USING|WHERE|GROUP|ORDER|HAVING|INNER|LEFT|RIGHT|FULL|OUTER|JOIN|UNION)\b",
+            // Handle quoted identifiers first
+            bool isQuoted = (part.StartsWith("\"") && part.EndsWith("\"")) || 
+                           (part.StartsWith("'") && part.EndsWith("'"));
+            
+            // Remove quotes temporarily for processing, we'll add them back if needed
+            string unquotedPart = part;
+            if (isQuoted)
+            {
+                unquotedPart = part.Substring(1, part.Length - 2);
+            }
+            
+            // Pattern to match SQL keywords that indicate end of table name
+            // This includes: AS (for explicit alias), ON, USING, WHERE, JOIN keywords, etc.
+            var keywordPattern = new Regex(
+                @"\s+\b(AS|ON|USING|WHERE|GROUP\s+BY|ORDER\s+BY|HAVING|INNER|LEFT|RIGHT|FULL|OUTER|JOIN|UNION|,)\b",
                 RegexOptions.IgnoreCase
             );
 
-            var aliasMatch = aliasPattern.Match(part);
-            if (aliasMatch.Success)
+            var keywordMatch = keywordPattern.Match(unquotedPart);
+            if (keywordMatch.Success)
             {
-                part = part.Substring(0, aliasMatch.Index).Trim();
+                // Found a keyword - table name ends before it
+                unquotedPart = unquotedPart.Substring(0, keywordMatch.Index).Trim();
             }
             else
             {
-                // Try to find alias by looking for space followed by identifier
-                // Simple heuristic: if there's a space and next word looks like alias, remove it
-                var spaceMatch = Regex.Match(part, @"\s+(\w+)$");
-                if (spaceMatch.Success)
+                // No explicit keyword found - check for implicit alias (space followed by identifier)
+                // Pattern: table_name identifier (where identifier is not a keyword and doesn't contain dots)
+                var implicitAliasPattern = new Regex(
+                    @"^(.+?)\s+([a-zA-Z_][a-zA-Z0-9_]*)$",
+                    RegexOptions.IgnoreCase
+                );
+                
+                var implicitMatch = implicitAliasPattern.Match(unquotedPart);
+                if (implicitMatch.Success && implicitMatch.Groups.Count >= 3)
                 {
-                    // Check if it's likely an alias (not a keyword)
-                    string potentialAlias = spaceMatch.Groups[1].Value;
-                    if (!IsSqlKeyword(potentialAlias))
+                    string potentialTable = implicitMatch.Groups[1].Value.Trim();
+                    string potentialAlias = implicitMatch.Groups[2].Value.Trim();
+                    
+                    // Only treat as alias if:
+                    // 1. It's not a SQL keyword
+                    // 2. The table part doesn't end with a dot (which would indicate schema.table format)
+                    // 3. The potential alias doesn't contain dots (schema.table.alias is invalid)
+                    if (!IsSqlKeyword(potentialAlias) && 
+                        !potentialTable.EndsWith(".") && 
+                        !potentialAlias.Contains("."))
                     {
-                        part = part.Substring(0, spaceMatch.Index).Trim();
+                        unquotedPart = potentialTable;
                     }
                 }
             }
 
-            // Extract table name (schema.table@dblink or schema.table or table)
-            // Remove quotes if present
-            part = part.Trim('"', '\'');
-            
-            // Handle schema.table@dblink format
-            var dblinkMatch = Regex.Match(part, @"^(.+?)@");
+            // Handle schema.table@dblink format - extract before @ symbol
+            var dblinkMatch = Regex.Match(unquotedPart, @"^(.+?)@");
             if (dblinkMatch.Success)
             {
-                part = dblinkMatch.Groups[1].Value;
+                unquotedPart = dblinkMatch.Groups[1].Value;
             }
 
-            // Handle schema.table format - we want the full qualified name
-            // So we keep schema.table as is
+            // Remove any remaining quotes
+            unquotedPart = unquotedPart.Trim('"', '\'');
             
-            return part.Trim();
+            // Return normalized table name (preserve schema.table format)
+            return unquotedPart.Trim();
         }
 
         /// <summary>
@@ -792,6 +1005,49 @@ namespace SqlBuilderLib.DevTools
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Validates that a table name is a valid database table (not a CTE, not a keyword, not empty).
+        /// </summary>
+        private static bool IsValidTableName(string tableName, HashSet<string> cteNames)
+        {
+            if (string.IsNullOrWhiteSpace(tableName))
+                return false;
+
+            // Normalize the table name
+            string normalized = NormalizeTableName(tableName);
+            if (string.IsNullOrWhiteSpace(normalized))
+                return false;
+
+            // Exclude CTE names
+            if (IsCteName(normalized, cteNames))
+                return false;
+
+            // Exclude SQL keywords (table names shouldn't be keywords)
+            // Extract the base table name (before schema qualification)
+            string baseName = normalized;
+            int dotIndex = normalized.IndexOf('.');
+            if (dotIndex > 0)
+            {
+                baseName = normalized.Substring(dotIndex + 1);
+            }
+            
+            // Remove @dblink if present
+            int atIndex = baseName.IndexOf('@');
+            if (atIndex > 0)
+            {
+                baseName = baseName.Substring(0, atIndex);
+            }
+
+            if (IsSqlKeyword(baseName))
+                return false;
+
+            // Basic validation: table name should contain at least one alphanumeric character
+            if (!Regex.IsMatch(normalized, @"[a-zA-Z0-9]"))
+                return false;
+
+            return true;
         }
 
         /// <summary>
