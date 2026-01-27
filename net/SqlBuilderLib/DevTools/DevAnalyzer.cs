@@ -43,13 +43,17 @@ namespace SqlBuilderLib.DevTools
             DevAnalyzer.ClearTempFolder();
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
-            var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
+            // var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
+            var conStr = "User Id=asuse;Password=kl0pik;Server=REALKAZN;Pooling=False;Sid=REALKAZN;Port=1521";
             CleanSqlBuilder.ChangeConnectionString(conStr);
             Console.WriteLine(conStr);
 
 
             var navs = XmlReports.Environment.GetElements(TextConst.EName.Navigators).Cast<VNavigator>()
-            .Where(it => it.P_IdName == "nav310")
+            .Where(it =>
+            //  it.P_IdName == "nav310"
+               it.P_IdName == "nav10"
+             )
             .ToList();
 
             // Count total reports first
@@ -74,7 +78,7 @@ namespace SqlBuilderLib.DevTools
                         folder = folder.Parent as VFolder;
                     }
                     var fullName = $"{userep.P_Project}.{userep.P_Report}";
-                    
+
                     if (SkipReports.Contains(fullName)) continue;
                     var info = new AnalyzerReportInfo()
                     {
