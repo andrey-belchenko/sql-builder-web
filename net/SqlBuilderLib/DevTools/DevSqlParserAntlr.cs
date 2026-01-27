@@ -36,11 +36,19 @@ namespace SqlBuilderLib.DevTools
                 var tokens = new CommonTokenStream(lexer);
                 var parser = new PlSqlParser(tokens);
 
-                // Add custom error listener to catch parse errors
-                parser.AddErrorListener(new ThrowingErrorListener());
+                // Remove default error listeners and add a non-throwing one
+                // This allows us to extract table names even if there are parse errors
+                parser.RemoveErrorListeners();
+                parser.AddErrorListener(new ConsoleErrorListener());
 
-                // Parse the input
+                // Parse the input (may produce partial parse tree on errors)
                 var tree = parser.sql_script();
+
+                // Check if we got a valid parse tree
+                if (tree == null)
+                {
+                    return result;
+                }
 
                 // Create visitor to extract table names
                 var visitor = new TableNameExtractorVisitor();
@@ -84,13 +92,15 @@ namespace SqlBuilderLib.DevTools
         }
 
         /// <summary>
-        /// Error listener that throws exceptions on parse errors.
+        /// Error listener that logs errors but doesn't throw exceptions.
+        /// This allows partial parsing to extract table names even when there are syntax errors.
         /// </summary>
-        private class ThrowingErrorListener : Antlr4.Runtime.BaseErrorListener
+        private class ConsoleErrorListener : Antlr4.Runtime.BaseErrorListener
         {
             public override void SyntaxError(System.IO.TextWriter output, IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
             {
-                throw new InvalidOperationException($"Parse error at line {line}, position {charPositionInLine}: {msg}", e);
+                // Log the error but don't throw - allows partial parsing
+                System.Diagnostics.Debug.WriteLine($"PL/SQL parse warning at line {line}, position {charPositionInLine}: {msg}");
             }
         }
 
@@ -120,8 +130,105 @@ namespace SqlBuilderLib.DevTools
                 if (context == null) return null;
                 
                 // Visit seq_of_statements which contains the actual DML statements
-                // Use VisitChildren to automatically visit all children
-                return base.VisitAnonymous_block(context);
+                var seqOfStatements = context.seq_of_statements();
+                if (seqOfStatements != null)
+                {
+                    Visit(seqOfStatements);
+                }
+                
+                // Don't call base.VisitAnonymous_block to avoid double-visiting
+                return null;
+            }
+
+            // Visit sequence of statements
+            public override object VisitSeq_of_statements(PlSqlParser.Seq_of_statementsContext context)
+            {
+                if (context == null) return null;
+                
+                // Visit all statement items
+                foreach (var statement in context.statement())
+                {
+                    Visit(statement);
+                }
+                
+                // Don't call base.VisitSeq_of_statements to avoid double-visiting
+                return null;
+            }
+
+            // Visit statement (can contain sql_statement, block, etc.)
+            public override object VisitStatement(PlSqlParser.StatementContext context)
+            {
+                if (context == null) return null;
+
+                // Visit sql_statement which contains DML statements
+                var sqlStmt = context.sql_statement();
+                if (sqlStmt != null)
+                {
+                    Visit(sqlStmt);
+                }
+
+                // Don't call base.VisitStatement to avoid double-visiting
+                return null;
+            }
+
+            // Visit SQL statement (contains data_manipulation_language_statements)
+            public override object VisitSql_statement(PlSqlParser.Sql_statementContext context)
+            {
+                if (context == null) return null;
+
+                // Visit data_manipulation_language_statements which contains SELECT, INSERT, UPDATE, DELETE
+                var dmlStatements = context.data_manipulation_language_statements();
+                if (dmlStatements != null)
+                {
+                    Visit(dmlStatements);
+                }
+
+                // Don't call base.VisitSql_statement to avoid double-visiting
+                return null;
+            }
+
+            // Visit data manipulation language statements (SELECT, INSERT, UPDATE, DELETE, MERGE)
+            public override object VisitData_manipulation_language_statements(PlSqlParser.Data_manipulation_language_statementsContext context)
+            {
+                if (context == null) return null;
+
+                // Visit SELECT statement
+                var selectStmt = context.select_statement();
+                if (selectStmt != null)
+                {
+                    VisitSelect_statement(selectStmt);
+                }
+
+                // Visit INSERT statement
+                var insertStmt = context.insert_statement();
+                if (insertStmt != null)
+                {
+                    VisitInsert_statement(insertStmt);
+                }
+
+                // Visit UPDATE statement
+                var updateStmt = context.update_statement();
+                if (updateStmt != null)
+                {
+                    VisitUpdate_statement(updateStmt);
+                }
+
+                // Visit DELETE statement
+                var deleteStmt = context.delete_statement();
+                if (deleteStmt != null)
+                {
+                    VisitDelete_statement(deleteStmt);
+                }
+
+                // Visit MERGE statement
+                var mergeStmt = context.merge_statement();
+                if (mergeStmt != null)
+                {
+                    VisitMerge_statement(mergeStmt);
+                }
+
+                // Don't call base.VisitData_manipulation_language_statements to avoid double-visiting
+                return null;
             }
 
 
@@ -155,6 +262,18 @@ namespace SqlBuilderLib.DevTools
                     // Do NOT extract target tables from multi_table_element
                 }
 
+                // Don't call base.VisitInsert_statement to avoid double-visiting
+                return null;
+            }
+
+            // Override to prevent extracting target table from INSERT INTO clause
+            public override object VisitInsert_into_clause(PlSqlParser.Insert_into_clauseContext context)
+            {
+                if (context == null) return null;
+
+                // Do NOT extract target table name from INSERT INTO clause
+                // This is the target table, not a source table
+                // Don't visit children to avoid extracting table names
                 return null;
             }
 
@@ -165,7 +284,22 @@ namespace SqlBuilderLib.DevTools
 
                 // Do NOT extract target table from UPDATE statement
                 // Only visit subqueries in WHERE clauses, SET expressions, etc.
-                return base.VisitUpdate_statement(context);
+                // Visit WHERE clause if present (may contain subqueries)
+                var whereClause = context.where_clause();
+                if (whereClause != null)
+                {
+                    Visit(whereClause);
+                }
+
+                // Visit SET clause expressions (may contain subqueries)
+                var updateSetClause = context.update_set_clause();
+                if (updateSetClause != null)
+                {
+                    Visit(updateSetClause);
+                }
+
+                // Don't call base.VisitUpdate_statement to avoid extracting target table
+                return null;
             }
 
             // Visit DELETE statements
@@ -175,7 +309,29 @@ namespace SqlBuilderLib.DevTools
 
                 // Do NOT extract target table from DELETE statement
                 // Only visit subqueries in WHERE clauses, etc.
-                return base.VisitDelete_statement(context);
+                // Visit WHERE clause if present (may contain subqueries)
+                var whereClause = context.where_clause();
+                if (whereClause != null)
+                {
+                    Visit(whereClause);
+                }
+
+                // Don't call base.VisitDelete_statement to avoid extracting target table
+                return null;
+            }
+
+            // Override to prevent extracting target table from DELETE/UPDATE FROM clause
+            // Table extraction is handled through VisitTable_ref_aux (FROM clauses in SELECT statements)
+            // This method is used for target tables in DELETE/UPDATE statements, which we don't want
+            public override object VisitGeneral_table_ref(PlSqlParser.General_table_refContext context)
+            {
+                if (context == null) return null;
+
+                // Do NOT extract table names from general_table_ref
+                // This is used for target tables in DELETE/UPDATE statements
+                // Source tables are extracted through VisitTable_ref_aux in FROM clauses
+                // Don't visit children to avoid extracting target table names
+                return null;
             }
 
             // Visit MERGE statements
@@ -204,7 +360,8 @@ namespace SqlBuilderLib.DevTools
                     }
                 }
 
-                return base.VisitMerge_statement(context);
+                // Don't call base.VisitMerge_statement to avoid double-visiting
+                return null;
             }
 
             // Visit SELECT statements
@@ -230,6 +387,7 @@ namespace SqlBuilderLib.DevTools
                     }
                 }
 
+                // Don't call base.VisitSelect_statement to avoid double-visiting
                 return null;
             }
 
@@ -313,6 +471,7 @@ namespace SqlBuilderLib.DevTools
                     }
                 }
 
+                // Don't call base.VisitSubquery to avoid double-visiting and infinite loops
                 return null;
             }
 
@@ -328,6 +487,7 @@ namespace SqlBuilderLib.DevTools
                     Visit(fromClause);
                 }
 
+                // Don't call base.VisitQuery_block to avoid double-visiting
                 return null;
             }
 
@@ -345,6 +505,7 @@ namespace SqlBuilderLib.DevTools
                     }
                 }
 
+                // Don't call base.VisitFrom_clause to avoid double-visiting
                 return null;
             }
 
@@ -366,6 +527,7 @@ namespace SqlBuilderLib.DevTools
                     Visit(joinClause);
                 }
 
+                // Don't call base.VisitTable_ref to avoid double-visiting and infinite loops
                 return null;
             }
 
@@ -380,9 +542,10 @@ namespace SqlBuilderLib.DevTools
                     // table_ref_aux_internal is a labeled alternative with three options.
                     // Visit children and let the visitor handle the alternatives recursively.
                     // We'll also check for dml_table_expression_clause and subquery in the children.
-                    VisitChildren(tableRefInternal);
+                    Visit(tableRefInternal);
                 }
 
+                // Don't call base.VisitTable_ref_aux to avoid double-visiting
                 return null;
             }
 
@@ -394,21 +557,11 @@ namespace SqlBuilderLib.DevTools
                 var dmlTableExpr = context.dml_table_expression_clause();
                 if (dmlTableExpr != null)
                 {
-                    var tableviewName = dmlTableExpr.tableview_name();
-                    if (tableviewName != null)
-                    {
-                        ExtractTableName(tableviewName);
-                    }
-
-                    // Check for subqueries
-                    var subquery = dmlTableExpr.subquery();
-                    if (subquery != null)
-                    {
-                        VisitSubquery(subquery);
-                    }
+                    Visit(dmlTableExpr);
                 }
 
-                return base.VisitTable_ref_aux_internal_one(context);
+                // Don't call base.VisitTable_ref_aux_internal_one to avoid double-visiting
+                return null;
             }
 
             public override object VisitTable_ref_aux_internal_two(PlSqlParser.Table_ref_aux_internal_twoContext context)
@@ -421,7 +574,8 @@ namespace SqlBuilderLib.DevTools
                     Visit(tableRef);
                 }
 
-                return base.VisitTable_ref_aux_internal_two(context);
+                // Don't call base.VisitTable_ref_aux_internal_two to avoid double-visiting
+                return null;
             }
 
             public override object VisitTable_ref_aux_internal_thre(PlSqlParser.Table_ref_aux_internal_threContext context)
@@ -431,20 +585,33 @@ namespace SqlBuilderLib.DevTools
                 var dmlTableExpr = context.dml_table_expression_clause();
                 if (dmlTableExpr != null)
                 {
-                    var tableviewName = dmlTableExpr.tableview_name();
-                    if (tableviewName != null)
-                    {
-                        ExtractTableName(tableviewName);
-                    }
-
-                    var subquery = dmlTableExpr.subquery();
-                    if (subquery != null)
-                    {
-                        VisitSubquery(subquery);
-                    }
+                    Visit(dmlTableExpr);
                 }
 
-                return base.VisitTable_ref_aux_internal_thre(context);
+                // Don't call base.VisitTable_ref_aux_internal_thre to avoid double-visiting
+                return null;
+            }
+
+            // Visit DML table expression clause (contains tableview_name or subquery)
+            public override object VisitDml_table_expression_clause(PlSqlParser.Dml_table_expression_clauseContext context)
+            {
+                if (context == null) return null;
+
+                var tableviewName = context.tableview_name();
+                if (tableviewName != null)
+                {
+                    ExtractTableName(tableviewName);
+                }
+
+                // Check for subqueries
+                var subquery = context.subquery();
+                if (subquery != null)
+                {
+                    VisitSubquery(subquery);
+                }
+
+                // Don't call base.VisitDml_table_expression_clause to avoid double-visiting
+                return null;
             }
 
             // Visit JOIN clause
@@ -458,6 +625,7 @@ namespace SqlBuilderLib.DevTools
                     Visit(tableRefAux);
                 }
 
+                // Don't call base.VisitJoin_clause to avoid double-visiting
                 return null;
             }
 
