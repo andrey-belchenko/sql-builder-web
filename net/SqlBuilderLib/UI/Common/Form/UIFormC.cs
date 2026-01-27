@@ -922,6 +922,15 @@ namespace sql.builder.UI
             {
                 typeName = TextConst.AVControlType.Text;
             }
+
+
+            // КОСТЫЛЬ для WEB
+            if (typeName == typeof(UIComboRange).Name)
+            {
+                typeName = typeof(UIList).Name;
+                xfield.SetAttributeValue(TextConst.AName.DataType, TextConst.AVDataType.Number);
+            }
+
             Type control_type = UIBase.GetConcreteType(typeName);
             // создаем объект, вызывая нужный конструктор
             UIBase control = Activator.CreateInstance(control_type) as UIBase;

@@ -345,6 +345,10 @@ namespace sql.builder.UI
                 } else {
                     Type value_type;
                     if (this.Form.WithBehavior) {
+                        if (xfield.Attribute(AName.type)==null)
+                        {
+                            xfield.SetAttributeValue(AName.type, TextConst.AVDataType.Number);
+                        }
                         value_type = Cmn.GetTypeFromStringType(this.xfield.Attribute(AName.type).Value, XmlReports.numberType);
                     } else if (this.DataTableList != null) {
                         value_type = this.DataTableList.Columns[value_field_name].DataType;

@@ -10,7 +10,8 @@ using System.Xml.Linq;
 using sql.builder.FieldInfo;
 using sql.builder.XmlHelpers;
 using sql.builder.Exceptions;
-using _AName = sql.builder.DataApi.AName; // из-за конфликта с экземплярным методом VForm.AName()
+using _AName = sql.builder.DataApi.AName;
+using System.ComponentModel.DataAnnotations; // из-за конфликта с экземплярным методом VForm.AName()
 //using sql.builder.WebReports;
 
 namespace sql.builder.DataApi
@@ -210,7 +211,12 @@ namespace sql.builder.DataApi
             var xfields = new XElement(EName.fields);
             foreach (VSXElement fld in Fields())
             {
-                XElement xfield = AddNewField(xfields, fld.P_FormalParNameS, fld.XDataType());
+                var dataType = fld.XDataType();
+                if (string.IsNullOrEmpty(dataType))
+                {
+                    dataType = TextConst.AVDataType.Number;
+                }
+                XElement xfield = AddNewField(xfields, fld.P_FormalParNameS, dataType);
                 xfield.Add(new XAttribute(_AName.title, fld.P_Title));
                 //if (fld.P_ColumnEditable != "")
                 //{
