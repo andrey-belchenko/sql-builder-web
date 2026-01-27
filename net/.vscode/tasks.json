@@ -12,6 +12,7 @@
         "/property:BuildInParallel=false",
         "/property:SkipCopyBuildProduct=false",
         "/property:DisableFastUpToDateCheck=false",
+        "/property:SkipGetTargetFrameworkProperties=true",
         "/consoleloggerparameters:NoSummary"
       ],
       "problemMatcher": "$msCompile"
@@ -37,6 +38,18 @@
         "run",
         "--project",
         "${workspaceFolder}/SqlBuilderApp"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build-generated",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/SqlBuilderLib.Generated/SqlBuilderLib.Generated.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
       ],
       "problemMatcher": "$msCompile"
     }

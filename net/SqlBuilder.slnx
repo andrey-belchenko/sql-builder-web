@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="SqlBuilderApp/SqlBuilderApp.csproj" />
-  <Project Path="SqlBuilderLib.Generated/SqlBuilderLib.Generated.csproj" />
+  <!-- SqlBuilderLib.Generated excluded from automatic builds - build manually when needed -->
+  <!-- <Project Path="SqlBuilderLib.Generated/SqlBuilderLib.Generated.csproj" /> -->
   <Project Path="SqlBuilderLib/SqlBuilderLib.csproj" />
 </Solution>

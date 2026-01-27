@@ -11,6 +11,17 @@
       "cwd": "${workspaceFolder}/SqlBuilderApp",
       "console": "externalTerminal",
       "stopAtEntry": false
+    },
+    {
+      "name": "Launch (Build Generated First)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-generated",
+      "program": "${workspaceFolder}/SqlBuilderApp/bin/Debug/net8.0/SqlBuilderApp.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/SqlBuilderApp",
+      "console": "externalTerminal",
+      "stopAtEntry": false
     }
   ]
 }

@@ -15,12 +15,19 @@
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
   </ItemGroup>
 
+  <!-- Use direct DLL reference instead of ProjectReference to prevent automatic builds -->
+  <!-- IMPORTANT: Build SqlBuilderLib.Generated manually first: dotnet build SqlBuilderLib.Generated/SqlBuilderLib.Generated.csproj -->
   <ItemGroup>
-    <ProjectReference Include="..\SqlBuilderLib.Generated\SqlBuilderLib.Generated.csproj">
-      <!-- Optimize: Skip building referenced project if it's up-to-date -->
-      <SkipGetTargetFrameworkProperties>false</SkipGetTargetFrameworkProperties>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-    </ProjectReference>
+    <Reference Include="SqlBuilderLib.Generated">
+      <HintPath>..\SqlBuilderLib.Generated\bin\$(Configuration)\net8.0\SqlBuilderLib.Generated.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
+  
+  <!-- Error if DLL doesn't exist - user must build manually -->
+  <Target Name="CheckGeneratedDllExists" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="!Exists('..\SqlBuilderLib.Generated\bin\$(Configuration)\net8.0\SqlBuilderLib.Generated.dll')" 
+           Text="SqlBuilderLib.Generated.dll not found. Build it manually with: dotnet build SqlBuilderLib.Generated/SqlBuilderLib.Generated.csproj" />
+  </Target>
 
 </Project>
