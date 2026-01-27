@@ -142,10 +142,6 @@ namespace sql.builder
 
         public static void TestReportsAnalysis(string[] args)
         {
-
-
-
-
             DevAnalyzer.Enabled = true;
             DevAnalyzer.PrepareOnly = true;
             DevAnalyzer.ClearTempFolder();

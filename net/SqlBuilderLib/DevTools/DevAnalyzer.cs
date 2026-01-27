@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Devart.Data.Oracle;
 using sql.builder;
+using sql.builder.Clean;
 using sql.builder.Clean.Extensions;
 using sql.builder.DataApi;
 using sql.builder.UI;
@@ -28,6 +29,67 @@ namespace SqlBuilderLib.DevTools
 
 
         public static AnalyzerReportInfo ReportInfo = null;
+
+
+        public static void AnalyzeReports()
+        {
+            DevAnalyzer.Enabled = true;
+            DevAnalyzer.PrepareOnly = true;
+            DevAnalyzer.ClearTempFolder();
+            Console.OutputEncoding = Encoding.UTF8;
+            XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
+            var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
+            CleanSqlBuilder.ChangeConnectionString(conStr);
+            Console.WriteLine(conStr);
+
+
+            var navs = XmlReports.Environment.GetElements(TextConst.EName.Navigators).Cast<VNavigator>()
+            .Where(it => it.P_IdName == "nav310")
+            .ToList();
+
+            foreach (var nav in navs)
+            {
+                var usereps = nav.GetDescedantsP(EName.usereport).Cast<VUseReport>();
+                foreach (var userep in usereps)
+                {
+                    var path = "";
+                    var folder = userep.Parent as VFolder;
+                    while (folder != null)
+                    {
+                        path = folder.P_Title + "/" + path;
+                        folder = folder.Parent as VFolder;
+                    }
+                    var fullName = $"{userep.P_Project}.{userep.P_Report}";
+                    var info = new AnalyzerReportInfo()
+                    {
+                        Name = fullName,
+                        Title = userep.P_Title,
+                        Path = path,
+                        NavId = nav.P_IdName,
+                        NavInfo = nav.P_Title ?? nav.P_Comment
+                    };
+                    Console.WriteLine($"Analyze report: {info.Name}");
+                    DevAnalyzer.AnalyzeRep(info);
+                    Console.WriteLine("Extracted source tables:");
+                    foreach (var tableName in DevAnalyzer.TableNames.OrderBy(t => t))
+                    {
+                        Console.WriteLine($"  - {tableName}");
+                    }
+                    Console.WriteLine($"Total: {DevAnalyzer.TableNames.Count} tables");
+                    Console.WriteLine();
+                    Console.WriteLine("Extracted source procedures:");
+                    foreach (var procName in DevAnalyzer.ProcNames.OrderBy(p => p))
+                    {
+                        Console.WriteLine($"  - {procName}");
+                    }
+                    Console.WriteLine($"Total: {DevAnalyzer.ProcNames.Count} procedures");
+                    Console.WriteLine();
+                }
+            }
+
+            Console.WriteLine("done");
+
+        }
 
 
         public static void AnalyzeRep(AnalyzerReportInfo repInfo)
@@ -120,8 +182,9 @@ namespace SqlBuilderLib.DevTools
             SaveReportAnalysisResults();
         }
 
-        public static void SaveReportAnalysisResults(){
-            AnalyzerStorage.SaveReports(new []{ReportInfo});
+        public static void SaveReportAnalysisResults()
+        {
+            AnalyzerStorage.SaveReports(new[] { ReportInfo });
             AnalyzerStorage.SaveDependencies(GetReportDependencyRecords());
         }
 
@@ -136,6 +199,17 @@ namespace SqlBuilderLib.DevTools
                     ObjectType = "report",
                     UsedObjectName = tbl,
                     UsedObjectType = "table or view"
+                });
+            }
+
+            foreach (var proc in ProcNames)
+            {
+                list.Add(new AnalyzerDependency()
+                {
+                    ObjectName = ReportInfo.Name,
+                    ObjectType = "report",
+                    UsedObjectName = proc,
+                    UsedObjectType = "procedure"
                 });
             }
             return list;
