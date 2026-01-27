@@ -474,6 +474,7 @@ namespace sql.builder.DataApi
                     Stopwatch sw = new Stopwatch();
                     sw.Start();
                     #endif
+                    DevAnalyzer.AnalyzePrepSql(procCmd.CommandText);
                     DevAnalyzer.AnalyzeSql(procCmd.CommandText);
                     procCmd.ExecuteNonQuery();
                     #if DEBUG
@@ -567,6 +568,7 @@ namespace sql.builder.DataApi
                         if (onlyGetSql) {
                             retSql += Environment.NewLine + VDBSelectCommand.GetCmdParametrizedText(cmd) + Environment.NewLine + "/";
                         } else {
+                            DevAnalyzer.AnalyzePrepSql(cmd.CommandText);
                             XmlReports.executeNonQuery(cmd.CommandText, (OracleConnection)GetConnection(), parsList);
                         }
                         if (this.UpdateTempTable) {
@@ -592,6 +594,7 @@ namespace sql.builder.DataApi
                             Cmn.DisposeAndSetNull(ref table.DataAdapter);
                             table.DataAdapter = new OracleDataAdapter();
                             table.DataAdapter.SelectCommand = new OracleCommand(cmd_text);
+                            DevAnalyzer.AnalyzePrepSql(cmd_text);
                         }
                     }
                     // Емцов. иногда данные не нужно грузить на клиент

@@ -7,8 +7,10 @@
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/SqlBuilder.slnx",
+        "${workspaceFolder}/SqlBuilderApp/SqlBuilderApp.csproj",
         "/property:GenerateFullPaths=true",
+        "/property:BuildInParallel=false",
+        "/property:SkipCopyBuildProduct=false",
         "/consoleloggerparameters:NoSummary"
       ],
       "problemMatcher": "$msCompile"
