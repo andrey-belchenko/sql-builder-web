@@ -39,9 +39,9 @@ namespace sql.builder
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            var sqlFileName = "1.sql";
-
-            string procedureName = "dog_obj";
+            var sqlFileName = "2.sql";
+            string procedureName = null;
+            // string procedureName = "dog_obj";
 
             // Read SQL from file - try multiple possible paths
             string sqlFilePath = null;
