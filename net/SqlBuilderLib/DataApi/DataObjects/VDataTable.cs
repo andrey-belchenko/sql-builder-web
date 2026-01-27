@@ -18,7 +18,7 @@ using sql.builder.UI;
 using sql.builder.XmlHelpers;
 using SqlBuilderLib.DevTools;
 using sql.builder.Clean;
- 
+
 namespace sql.builder.DataApi
 {
     internal enum StructureType
@@ -67,20 +67,26 @@ namespace sql.builder.DataApi
         {
             this.suppressChangeEventStack.Pop();
         }
-        internal StructureType StructureType {
-            get {
+        internal StructureType StructureType
+        {
+            get
+            {
                 return this.structure_type;
             }
-            set {
+            set
+            {
                 this.structure_type = value;
             }
         }
         private bool dontRefreshDependats;
-        public bool DontRefreshDependats {
-            get {
+        public bool DontRefreshDependats
+        {
+            get
+            {
                 return this.dontRefreshDependats;
             }
-            set {
+            set
+            {
                 this.dontRefreshDependats = value;
             }
         }
@@ -92,29 +98,36 @@ namespace sql.builder.DataApi
         public List<object> CreatedItems;
         public void AddCreatedItem(object value)
         {
-            if (this.CreatedItems == null) {
+            if (this.CreatedItems == null)
+            {
                 this.CreatedItems = new List<object>(1);
             }
             this.CreatedItems.Add(value);
         }
         private bool _has_user_changes1;
-        internal bool HasUserChanges {
-            get {
+        internal bool HasUserChanges
+        {
+            get
+            {
                 return this._has_user_changes1;
             }
         }
         internal bool HasChildrenUserChanges()
         {
             var queue = new Queue<VDataTable>();
-            foreach (var r in ChildRelations.Cast<DataRelation>().Where(r1 => !((VDataTable)r1.ChildTable).IsArrayEditValue)) {
+            foreach (var r in ChildRelations.Cast<DataRelation>().Where(r1 => !((VDataTable)r1.ChildTable).IsArrayEditValue))
+            {
                 queue.Enqueue((VDataTable)r.ChildTable);
             }
-            while (queue.Count > 0) {
+            while (queue.Count > 0)
+            {
                 VDataTable child = queue.Dequeue();
-                if (child.HasUserChanges) {
+                if (child.HasUserChanges)
+                {
                     return true;
                 }
-                foreach (var r in child.ChildRelations.Cast<DataRelation>().Where(r1 => !((VDataTable)r1.ChildTable).IsArrayEditValue)) {
+                foreach (var r in child.ChildRelations.Cast<DataRelation>().Where(r1 => !((VDataTable)r1.ChildTable).IsArrayEditValue))
+                {
                     queue.Enqueue((VDataTable)r.ChildTable);
                 }
             }
@@ -127,13 +140,18 @@ namespace sql.builder.DataApi
         internal IList<VDataColumn> GetColumnsByPivotOriginalName(string columnName)
         {
             VDataColumn col = this.GetColumn(columnName);
-            if (col != null) {
+            if (col != null)
+            {
                 return new VDataColumn[1] { col };
-            } else {
+            }
+            else
+            {
                 var list = new List<VDataColumn>();
-                for (int index = 0; index < this.Columns.Count; index++) {
+                for (int index = 0; index < this.Columns.Count; index++)
+                {
                     col = (VDataColumn)this.Columns[index];
-                    if (col.OriginalNameForPivotColumn == columnName) {
+                    if (col.OriginalNameForPivotColumn == columnName)
+                    {
                         list.Add(col);
                     }
                 }
@@ -144,11 +162,14 @@ namespace sql.builder.DataApi
         {
             return (VDataColumn)this.Columns[columnName];
         }
-        internal bool EditableOld {
-            get {
+        internal bool EditableOld
+        {
+            get
+            {
                 return this.editableOld;
             }
-            set {
+            set
+            {
                 this.editableOld = value;
                 this.Scheme.SetAttrValue(AName.editable, value);
             }
@@ -230,7 +251,7 @@ namespace sql.builder.DataApi
             {
                 this.ColumnChanged += VDataTable_ColumnChanged;
                 this.RowChanged += VDataTable_RowChanged;
- 
+
                 this.RowDeleted += VDataTable_RowDeleted;
                 this.TableCleared += VDataTable_TableCleared;
             }
@@ -285,7 +306,7 @@ namespace sql.builder.DataApi
             {
                 return;
             }
-            
+
             if (MyRowChanged != null)
             {
                 MyRowChanged(sender, e);
@@ -409,7 +430,7 @@ namespace sql.builder.DataApi
             {
                 if (value != null)
                 {
-                    
+
                 }
                 _currentRow = value;
             }
@@ -420,13 +441,13 @@ namespace sql.builder.DataApi
         {
             get
             {
-				if (currentRow != null)
-				{
-					if (currentRow.RowState == DataRowState.Detached)
-					{
-						currentRow = null;
-					}
-				}
+                if (currentRow != null)
+                {
+                    if (currentRow.RowState == DataRowState.Detached)
+                    {
+                        currentRow = null;
+                    }
+                }
                 if (currentRow == null)
                 {
                     if (this.Grid == null || !this.Grid.IsTree())
@@ -456,7 +477,7 @@ namespace sql.builder.DataApi
                 {
                     NewCurRowApplying = true;
                     currentRow = value;
-                    
+
                     RaiseCurrentRowChanged();
                     NewCurRowApplying = false;
                 }
@@ -486,12 +507,15 @@ namespace sql.builder.DataApi
         }
         public void RaiseCurrentRowChanged(DataRow row = null)
         {
-            if (currentRow != null) {
-                if (SelectedRows.Count == 0) {
-                    if (Grid == null || !Grid.IsCheckBoxSelection()) {
+            if (currentRow != null)
+            {
+                if (SelectedRows.Count == 0)
+                {
+                    if (Grid == null || !Grid.IsCheckBoxSelection())
+                    {
                         _selectedRows = new List<DataRow> { currentRow };
                     }
-                 
+
                     //RaiseDataSourceSelectionChanged();
                 }
             }
@@ -543,7 +567,7 @@ namespace sql.builder.DataApi
             }
             GetDataSet().PrcessRefreshQueue();
             processSelection();
-            
+
 
         }
 
@@ -576,7 +600,8 @@ namespace sql.builder.DataApi
         }
         private void parentCurrentRowChanged()
         {
-            if (this.is_dependant_refresh && !this.IsArrayEditValue) {
+            if (this.is_dependant_refresh && !this.IsArrayEditValue)
+            {
                 this.Refresh();
             }
         }
@@ -654,7 +679,7 @@ namespace sql.builder.DataApi
             {
                 this.Merge(tbl);
 
-               
+
 
 
             }
@@ -665,11 +690,11 @@ namespace sql.builder.DataApi
 
         }
 
-       
+
         public void FetchTo(int lastRowIndex) // используется в в редакторе данных
         {
 
-            
+
 
 
             int lastRowIndex1 = lastRowIndex;
@@ -710,7 +735,7 @@ namespace sql.builder.DataApi
                 foreach (var par in DataSetForFetch.InputParams)
                 {
                     efAllParVals.Add(par.Key, null);
-                  
+
                     if (GetDataSet().InputParams.ContainsKey(par.Key))
                     {
                         efAllParVals[par.Key] = GetDataSet().InputParamsValues[par.Key];
@@ -723,10 +748,10 @@ namespace sql.builder.DataApi
                         efKeyParVals[par.Key].Add(TextConst.NullConsts.nnullVal);// костыль , на случай если нет ни одного значения
                     }
                 }
-              
+
                 for (int i = fetchedRowsCount; i <= lastRowIndex1; i++)
                 {
-                   Wait.Check();
+                    Wait.Check();
                     bool isread = reader.Read();
                     if (isread)
                     {
@@ -758,16 +783,19 @@ namespace sql.builder.DataApi
                 {
                     DataSetForFetch.GetAllTables().First().defaultFetch = 0;
 
-                    var efAllParVals1 = new List< object>();
+                    var efAllParVals1 = new List<object>();
                     foreach (var parName in DataSetForFetch.InputParamsNames.Values)
                     {
                         object val = null;
                         if (efKeyParVals.ContainsKey(parName))
                         {
                             var arrVal = (efKeyParVals[parName] as List<object>).ToArray();
-                            if (arrVal.Length != 0) {
+                            if (arrVal.Length != 0)
+                            {
                                 val = (efKeyParVals[parName] as List<object>).ToArray();
-                            } else {
+                            }
+                            else
+                            {
                                 val = Cmn.undefinedString;
                             }
                         }
@@ -782,7 +810,7 @@ namespace sql.builder.DataApi
                     fetchedRowsCount1 = 0;
                     lastRowIndex1 = int.MaxValue;
                 }
-                
+
 
             }
 
@@ -800,7 +828,7 @@ namespace sql.builder.DataApi
                     //else
                     //{
 
-                        isread = reader.Read();
+                    isread = reader.Read();
                     //}
                     if (isread)
                     {
@@ -830,7 +858,7 @@ namespace sql.builder.DataApi
 
                 }
             }
-            
+
             //    tbl.EndLoadData();
 
             if (isNewRows)
@@ -855,7 +883,7 @@ namespace sql.builder.DataApi
                     }
                     UpdateDidplayValue(newRows);
                 }
-                
+
             }
 
 
@@ -893,9 +921,12 @@ namespace sql.builder.DataApi
         internal static bool IsDependantRefresh(DataTable dt)
         {
             VDataTable vdt = dt as VDataTable;
-            if (vdt == null) {
+            if (vdt == null)
+            {
                 return false;
-            } else {
+            }
+            else
+            {
                 return vdt.is_dependant_refresh;
             }
         }
@@ -915,11 +946,15 @@ namespace sql.builder.DataApi
             _refreshed = false;
             ClearChildsData();
             Rows.Clear();
-            for (int index = 0; index < this.Columns.Count; index++) {
+            for (int index = 0; index < this.Columns.Count; index++)
+            {
                 VDataColumn vcol = this.Columns[index] as VDataColumn;
-                if (vcol != null) {
-                    if (vcol.BoundControls != null) {
-                        for (int control_index = 0; control_index < vcol.BoundControls.Count; control_index++) {
+                if (vcol != null)
+                {
+                    if (vcol.BoundControls != null)
+                    {
+                        for (int control_index = 0; control_index < vcol.BoundControls.Count; control_index++)
+                        {
                             vcol.BoundControls[control_index].SetNeedRefreshList();
                         }
                     }
@@ -933,7 +968,7 @@ namespace sql.builder.DataApi
             ClearRowsToUpdateTemp();
             CheckedRows = null;
             _selectedRows = null;
-           
+
             ClearChangedRows();
             if (ModifiedRows != null)
             {
@@ -965,8 +1000,8 @@ namespace sql.builder.DataApi
             {
                 return null;
             }
-            
-             return ParentRelations[0].ChildColumns[0].ColumnName;
+
+            return ParentRelations[0].ChildColumns[0].ColumnName;
 
         }
         internal static void SetCommandParams(VDataSet ds, VDataTable dt, DbCommand command, IEnumerable<string> paramNames)
@@ -975,51 +1010,69 @@ namespace sql.builder.DataApi
             DataRelation rel;
             VDataTable parentTable;
             string fkName;
-            if (dt != null && dt.is_dependant_refresh) {
+            if (dt != null && dt.is_dependant_refresh)
+            {
                 rel = dt.ParentRelations[0];
                 parentTable = (VDataTable)rel.ParentColumns[0].Table;
                 fkName = TextConst.Pfx.ForegnKeyParam + rel.ChildColumns[0].ColumnName;
-            } else {
+            }
+            else
+            {
                 rel = null;
                 parentTable = null;
                 fkName = null;
             }
-            foreach (string param_name in paramNames) {
+            foreach (string param_name in paramNames)
+            {
                 OracleParameter dbPar;
-                if (!VDBSelectCommand.TryGetGlobalDbParam(param_name, out dbPar)) {
-                    if (param_name == fkName) {
+                if (!VDBSelectCommand.TryGetGlobalDbParam(param_name, out dbPar))
+                {
+                    if (param_name == fkName)
+                    {
                         dbPar = new OracleParameter(fkName, Cmn.GetDBType(rel.ChildColumns[0].DataType));
-                        if (parentTable.CurrentRow != null) {
-                            if (parentTable.CurrentRow.RowState == DataRowState.Added) {
+                        if (parentTable.CurrentRow != null)
+                        {
+                            if (parentTable.CurrentRow.RowState == DataRowState.Added)
+                            {
                                 dbPar.Value = DBNull.Value;
-                            } else {
+                            }
+                            else
+                            {
                                 dbPar.Value = (rel.ParentColumns[0] as VDataColumn).GetValue(parentTable.CurrentRow);
                             }
                         }
                     }
-                    if (dbPar == null && ds.InputParams != null) {
+                    if (dbPar == null && ds.InputParams != null)
+                    {
                         OracleParameter input_param;
-                        if (ds.InputParams.TryGetValue(param_name, out input_param)) {
+                        if (ds.InputParams.TryGetValue(param_name, out input_param))
+                        {
                             dbPar = new OracleParameter(input_param.ParameterName, input_param.OracleDbType, input_param.Value, ParameterDirection.Input);
                         }
                     }
-                    if (dbPar == null) {
+                    if (dbPar == null)
+                    {
                         dbPar = ds.GetParamAsOracleParametr(param_name);
                     }
                 }
-                if (dbPar.OracleDbType == OracleDbType.Array || Cmn.undefinedString.Equals(dbPar.Value)) {
+                if (dbPar.OracleDbType == OracleDbType.Array || Cmn.undefinedString.Equals(dbPar.Value))
+                {
                     command.CommandText = command.CommandText.Replace(":" + param_name, dbPar.Value.ToString());
-                } else {
+                }
+                else
+                {
                     command.Parameters.Add(dbPar);
                 }
             }
         }
         internal HashSet<string> GetParamsNames()
         {
-            if (this.paramNames == null) {
+            if (this.paramNames == null)
+            {
                 string sql = this.DataAdapter.SelectCommand.CommandText;
                 this.paramNames = new HashSet<string>();
-                foreach (string param_name in Cmn.ExtractParameterNamesFromSQL(sql).OrderByDescending(Cmn.LengthOfString)) {
+                foreach (string param_name in Cmn.ExtractParameterNamesFromSQL(sql).OrderByDescending(Cmn.LengthOfString))
+                {
                     this.paramNames.Add(param_name);
                 }
             }
@@ -1029,23 +1082,30 @@ namespace sql.builder.DataApi
         internal IList<DataRow> GetRowsForCurrentParent()
         {
             VDataTable parentTable = this.GetParentTable();
-            if (parentTable == null) {
+            if (parentTable == null)
+            {
                 return this.Rows.ToArray();
-            } else if (parentTable.currentRow == null) {
+            }
+            else if (parentTable.currentRow == null)
+            {
                 return Array.Empty<DataRow>();
-            } else {
+            }
+            else
+            {
                 DataRelation rel = this.ParentRelations[0];
                 DataColumn pkColumn = rel.ParentColumns[0];
                 DataColumn fkColumn = rel.ChildColumns[0];
                 string pkVal = parentTable.CurrentRow[pkColumn].ToString();
                 // return this.AsEnumerable().Where(r => r.RowState != DataRowState.Deleted && r[fkColumn].ToString() == pkVal).ToList();
                 List<DataRow> rows = new List<DataRow>();
-                for (int index = 0; index < this.Rows.Count; index++) {
+                for (int index = 0; index < this.Rows.Count; index++)
+                {
                     DataRow row = this.Rows[index];
-                    if (row.RowState != DataRowState.Deleted && row[fkColumn].ToString() == pkVal) {
+                    if (row.RowState != DataRowState.Deleted && row[fkColumn].ToString() == pkVal)
+                    {
                         rows.Add(row);
                     }
-                }    
+                }
                 return rows;
             }
         }
@@ -1082,9 +1142,9 @@ namespace sql.builder.DataApi
         {
             _forceRefresh = true;
         }
-        public void Refresh(ref string retSql, bool onlyProc=false)
+        public void Refresh(ref string retSql, bool onlyProc = false)
         {
-           
+
             WaitUIHelper.LastUsedUIHelper.Show("Обновление таблицы", WaitUIMode.WaitCursor);
             try
             {
@@ -1143,7 +1203,7 @@ namespace sql.builder.DataApi
                 SyncChecksIfNeed();
                 SendEndUpdateToUI();
             }
-            finally 
+            finally
             {
                 WaitUIHelper.LastUsedUIHelper.Hide();
             }
@@ -1154,10 +1214,13 @@ namespace sql.builder.DataApi
             if (this.Grid == null) return; // затертое значение сейчас не возвращается, если ячейка становится существующей, пока отменю это для формы, потом реализовать возврат
             DataRowCollection rows = this.Rows;
             DataColumnCollection columns = this.Columns;
-            for (int column = 0; column < columns.Count; column++) {
+            for (int column = 0; column < columns.Count; column++)
+            {
                 VDataColumn dc = columns[column] as VDataColumn;
-                if (dc != null && VDataColumn.HasBoundControl(dc)) {
-                    for (int row = 0; row < rows.Count; row++) {
+                if (dc != null && VDataColumn.HasBoundControl(dc))
+                {
+                    for (int row = 0; row < rows.Count; row++)
+                    {
                         dc.UpdateDidplayValue(rows[row]);
                     }
                 }
@@ -1168,10 +1231,13 @@ namespace sql.builder.DataApi
             if (!this.HasControls) return;
             if (this.Grid == null) return; // затертое значение сейчас не возвращается, если ячейка становится существующей, пока отменю это для формы, потом реализовать возврат
             DataColumnCollection columns = this.Columns;
-            for (int column = 0; column < columns.Count; column++) {
+            for (int column = 0; column < columns.Count; column++)
+            {
                 VDataColumn dc = columns[column] as VDataColumn;
-                if (dc != null && !List.IsNullOrEmpty(dc.BoundControls)) {
-                    for (int row = 0; row < rows.Count; row++) {
+                if (dc != null && !List.IsNullOrEmpty(dc.BoundControls))
+                {
+                    for (int row = 0; row < rows.Count; row++)
+                    {
                         dc.UpdateDidplayValue(rows[row]);
                     }
                 }
@@ -1180,35 +1246,47 @@ namespace sql.builder.DataApi
         private void fill(ref string retSql, bool onlyProc = false)
         {
             VDataSet dataset = this.GetDataSet();
-            #if DEBUG
+#if DEBUG
             string caller_name;
-            if (dataset.Report != null) {
+            if (dataset.Report != null)
+            {
                 caller_name = "report \"" + dataset.Report.AttrOrEmpty(AName.name) + "\", ";
-            } else if (dataset.Form != null) {
+            }
+            else if (dataset.Form != null)
+            {
                 caller_name = "form \"" + dataset.Form.GetFormName() + "\", ";
-            } else {
+            }
+            else
+            {
                 caller_name = string.Empty;
             }
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            #endif
+#endif
             this.isClear = false;
             this._forceRefresh = false;
             string buffer = this.DataAdapter.SelectCommand.CommandText;
             string procBuffer = null;
-            if (this.ProcedureCommand != null) {
+            if (this.ProcedureCommand != null)
+            {
                 procBuffer = this.ProcedureCommand.CommandText;
-            }            
+            }
             //для подстановки array параметров
             this.DataAdapter.SelectCommand.Connection = this.GetConnection();
-            if (dataset.Report == null || dataset.Report.IsSimpleParams) {
+            if (dataset.Report == null || dataset.Report.IsSimpleParams)
+            {
                 HashSet<string> parNames = this.GetParamsNames();
-                if (dataset.VariableColumns != null) {
-                    foreach (string name in parNames) {
+                if (dataset.VariableColumns != null)
+                {
+                    foreach (string name in parNames)
+                    {
                         VDataColumn col;
-                        if (dataset.VariableColumns.TryGetValue(name, out col)) {
-                            if (col.Table != dataset.ParamsTable) {
-                                if (!dataset.IsVariableHasValue(name)) {
+                        if (dataset.VariableColumns.TryGetValue(name, out col))
+                        {
+                            if (col.Table != dataset.ParamsTable)
+                            {
+                                if (!dataset.IsVariableHasValue(name))
+                                {
                                     return;
                                 }
                             }
@@ -1216,17 +1294,22 @@ namespace sql.builder.DataApi
                     }
                 }
                 SetCommandParams(dataset, this, this.DataAdapter.SelectCommand, parNames);
-                if (this.ProcedureCommand != null) {
-                    if (this.ProcParamNames == null) {
+                if (this.ProcedureCommand != null)
+                {
+                    if (this.ProcParamNames == null)
+                    {
                         this.ProcParamNames = Cmn.ExtractParameterNamesFromSQL(this.ProcedureCommand.CommandText).OrderByDescending(Cmn.LengthOfString);
                     }
                     SetCommandParams(dataset, this, this.ProcedureCommand, this.ProcParamNames);
                 }
-                if (this.is_dependant_refresh) {
+                if (this.is_dependant_refresh)
+                {
                     DataRelation rel = this.ParentRelations[0];
                     VDataTable parentTable = (VDataTable)rel.ParentColumns[0].Table;
-                    if (parentTable.CurrentRow == null) {
-                        if (currentRow != null) {
+                    if (parentTable.CurrentRow == null)
+                    {
+                        if (currentRow != null)
+                        {
                             currentRow = null;
                         }
                         this.RaiseCurrentRowChanged();// 170213 Бельченко, чтобы не отображалось скрытое поле на вкладке исп листы.
@@ -1236,30 +1319,40 @@ namespace sql.builder.DataApi
             }
             OracleCommand sel_cmd = this.DataAdapter.SelectCommand;
             sel_cmd.CommandText = Cmn.ClearUndefined(sel_cmd.CommandText);
-            if (sel_cmd.CommandText != string.Empty || this.IsNonDb) { //Бельченко 01082015 убрал, посмотрим что получится // вернул
+            if (sel_cmd.CommandText != string.Empty || this.IsNonDb)
+            { //Бельченко 01082015 убрал, посмотрим что получится // вернул
                 // Убираем неиспользуемые параметры
                 OracleParameterCollection parameters = sel_cmd.Parameters;
-                for (int index = parameters.Count - 1; index >= 0; index--) {
-                    if (!sel_cmd.CommandText.Contains(":" + parameters[index].ParameterName)) {
+                for (int index = parameters.Count - 1; index >= 0; index--)
+                {
+                    if (!sel_cmd.CommandText.Contains(":" + parameters[index].ParameterName))
+                    {
                         parameters.RemoveAt(index);
                     }
                 }
                 //Пустой запрос может получиться если есть udnefined которые нельзя выкинуть
-                try {
-                    if (this.ProcedureCommand != null) {
+                try
+                {
+                    if (this.ProcedureCommand != null)
+                    {
                         this.ProcedureCommand.Connection = sel_cmd.Connection;
                         DevAnalyzer.AnalyzeExecSql(this.ProcedureCommand.CommandText);
                         this.ProcedureCommand.ExecuteNonQuery();
                     }
                     bool done = false;
-                    if (this.AsyncLoad) {
+                    if (this.AsyncLoad)
+                    {
                         OracleCommand command = VDBSelectCommand.CopyCommand(sel_cmd);
                         this.AsyncExecuteReader(command);
                         done = true;
-                    } else if (onlyProc) {
+                    }
+                    else if (onlyProc)
+                    {
                         retSql += sel_cmd.CommandText;
                         done = true;
-                    } else if (dataset.Report != null && dataset.Report.AttrOrDefault(AName.datareader, false)) {
+                    }
+                    else if (dataset.Report != null && dataset.Report.AttrOrDefault(AName.datareader, false))
+                    {
                         // значит заполняем read для построчного чтения
                         this.IsReader = true; // по идее, нужно где-то раньше заполнять и потом везде на этот признак ориентироваться, пока так
                         this.cmd = VDBSelectCommand.CopyCommand(this.DataAdapter.SelectCommand);
@@ -1271,40 +1364,52 @@ namespace sql.builder.DataApi
                         WaitUIHelper.LastUsedUIHelper.SetDescription(WaitUIHelper.DESCRIPTION_DEFAULT);
                         //Теперь нужно, при !UseTempTable см. PrintTableReferense.cs 408
                         done = true;
-                        if (dataset.Report.AttrOrEmpty(AName.nogrid) != TextConst.AVBool.True) {
+                        if (dataset.Report.AttrOrEmpty(AName.nogrid) != TextConst.AVBool.True)
+                        {
                             done = false;
                             this.UseDeferredFetch = true;
                         }
                     }
-                    if (!done) {
-                        if (!this.IsNonDb) {
-                            if (this.IsDeferredFetch()) {
+                    if (!done)
+                    {
+                        if (!this.IsNonDb)
+                        {
+                            if (this.IsDeferredFetch())
+                            {
                                 DevAnalyzer.AnalyzeExecSql(this.DataAdapter.SelectCommand.CommandText);
                                 this.otherReader = this.DataAdapter.SelectCommand.ExecuteReader();
                                 this.fetchedRowsCount = 0;
-                                if (this.defaultFetch > 0) {
+                                if (this.defaultFetch > 0)
+                                {
                                     this.FetchTo(this.defaultFetch);
                                 }
-                            } else {
+                            }
+                            else
+                            {
                                 WaitUIHelper.LastUsedUIHelper.SetDescription("Выборка данных из БД...");
                                 this.SuppressChangeEvent();
                                 //this.FetchAllRows();
-                                #if DEBUG
+#if DEBUG
                                 Stopwatch fetch_sw = new Stopwatch();
                                 fetch_sw.Start();
-                                #endif
-                                DevAnalyzer.AnalyzeExecSql(this.DataAdapter.SelectCommand.CommandText);
-                                this.DataAdapter.Fill(this);
-                                #if DEBUG
+#endif
+                                // DevAnalyzer.AnalyzeSuppressedSql(this.DataAdapter.SelectCommand.CommandText);
+                                if (!DevAnalyzer.PrepareOnly)
+                                {
+                                    this.DataAdapter.Fill(this);
+                                }
+#if DEBUG
                                 fetch_sw.Stop();
-                                Debug.WriteLine("OracleDataAdapter.Fill(): " + caller_name + "query \"" + this.TableName + "\", " + this.Columns.Count.ToString() + " колонок и " + this.Rows.Count.ToString() + " строк за " + fetch_sw.ElapsedTicks.ToString() + " тактов = " + fetch_sw.ElapsedMilliseconds.ToString() + " мс");
-                                #endif
+                                // Debug.WriteLine("OracleDataAdapter.Fill(): " + caller_name + "query \"" + this.TableName + "\", " + this.Columns.Count.ToString() + " колонок и " + this.Rows.Count.ToString() + " строк за " + fetch_sw.ElapsedTicks.ToString() + " тактов = " + fetch_sw.ElapsedMilliseconds.ToString() + " мс");
+#endif
                                 this.InternDataAsNeeded();
                                 this.UpdateDidplayValue();
                                 this.ResumeChangeEvent();
                                 WaitUIHelper.LastUsedUIHelper.SetDescription(WaitUIHelper.DESCRIPTION_DEFAULT);
                             }
-                        } else {
+                        }
+                        else
+                        {
                             this.SuppressChangeEvent();
                             this.raiseCustomFill();
                             this.UpdateDidplayValue();
@@ -1312,16 +1417,18 @@ namespace sql.builder.DataApi
                         }
                         this.ClientLoadComplete();
                     }
-                } catch (Exception e) {
+                }
+                catch (Exception e)
+                {
                     throw e;
                     //throw new OracleSqlException(e, this.DataAdapter.SelectCommand.CommandText);
                 }
             }
             this.RestoreCommands(buffer, procBuffer);
-            #if DEBUG
+#if DEBUG
             sw.Stop();
-            Debug.WriteLine("VDataTable.fill(): " + caller_name + "query \"" + this.TableName + "\", " + sw.ElapsedTicks.ToString() + " тактов = " + sw.ElapsedMilliseconds.ToString() + " мс");
-            #endif
+            // Debug.WriteLine("VDataTable.fill(): " + caller_name + "query \"" + this.TableName + "\", " + sw.ElapsedTicks.ToString() + " тактов = " + sw.ElapsedMilliseconds.ToString() + " мс");
+#endif
         }
         /*private void FetchAllRows()
         {
@@ -1356,12 +1463,13 @@ namespace sql.builder.DataApi
         }*/
         internal void InternDataAsNeeded()
         {
-            #if DEBUG
+#if DEBUG
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            #endif
+#endif
             DataRowCollection rows = this.Rows;
-            if (rows.Count <= 0) {
+            if (rows.Count <= 0)
+            {
                 return;
             }
             // Составляем список интернируемых колонок
@@ -1369,32 +1477,40 @@ namespace sql.builder.DataApi
             VInternedStringDataColumn column;
             int col_index;
             DataColumnCollection cols = this.Columns;
-            for (col_index = 0; col_index < cols.Count; col_index++) {
+            for (col_index = 0; col_index < cols.Count; col_index++)
+            {
                 column = cols[col_index] as VInternedStringDataColumn;
-                if (column != null) {
+                if (column != null)
+                {
                     columns.Add(column);
                 }
             }
-            if (columns.Count <= 0) {
+            if (columns.Count <= 0)
+            {
                 return;
             }
             IDictionary<string, string> cache = new Dictionary<string, string>(StringComparer.InvariantCulture);
-            #if DEBUG
+#if DEBUG
             long replace_count = 0;
             long characters_count = 0;
-            #endif
-            for (int row_index = 0; row_index < rows.Count; row_index++) {
+#endif
+            for (int row_index = 0; row_index < rows.Count; row_index++)
+            {
                 DataRow row = rows[row_index];
                 bool changed = false;
-                for (col_index = 0; col_index < columns.Count; col_index++) {
+                for (col_index = 0; col_index < columns.Count; col_index++)
+                {
                     column = columns[col_index];
-                    if (!row.IsNull(column)) {
+                    if (!row.IsNull(column))
+                    {
                         string old_value = (string)row[column];
                         string new_value;
-                        if (!cache.TryGetValue(old_value, out new_value)) {
+                        if (!cache.TryGetValue(old_value, out new_value))
+                        {
                             // Если строка интернирована, используем интернированное значение
                             new_value = string.IsInterned(old_value);
-                            if (new_value == null) {
+                            if (new_value == null)
+                            {
                                 // А если строка не интернирована, используем значение из DataTable,
                                 // чтобы не забивать мусором таблицу интернированых строк
                                 // и чтобы эти строки могли быть удалены сборщиком мусора.
@@ -1402,28 +1518,31 @@ namespace sql.builder.DataApi
                             }
                             cache.Add(new_value, new_value);
                         }
-                        if (!object.ReferenceEquals(old_value, new_value)) {
-                            if (!changed) {
+                        if (!object.ReferenceEquals(old_value, new_value))
+                        {
+                            if (!changed)
+                            {
                                 row.BeginEdit();
                                 changed = true;
                             }
                             row[column] = new_value;
-                            #if DEBUG
+#if DEBUG
                             replace_count++;
                             characters_count += new_value.Length;
-                            #endif
+#endif
                         }
                     }
                 }
-                if (changed) {
+                if (changed)
+                {
                     row.EndEdit();
                     row.AcceptChanges();
                 }
             }
-            #if DEBUG
+#if DEBUG
             sw.Stop();
-            Debug.WriteLine("VDataTable.InternDataAsNeeded(): интернировано " + replace_count.ToString() + " значений (" + characters_count.ToString() + " символов) в " + columns.Count.ToString() + " колонках и " + rows.Count.ToString() + " строках за " + sw.ElapsedTicks.ToString() + " тактов = " + sw.ElapsedMilliseconds.ToString() + " мс");
-            #endif
+            // Debug.WriteLine("VDataTable.InternDataAsNeeded(): интернировано " + replace_count.ToString() + " значений (" + characters_count.ToString() + " символов) в " + columns.Count.ToString() + " колонках и " + rows.Count.ToString() + " строках за " + sw.ElapsedTicks.ToString() + " тактов = " + sw.ElapsedMilliseconds.ToString() + " мс");
+#endif
         }
         private void ClientLoadComplete()
         {
@@ -1438,7 +1557,7 @@ namespace sql.builder.DataApi
                     {
                         this.CurrentRow = this.Rows[0];
                     }
-                    
+
                 }
             }
             else
@@ -1825,7 +1944,7 @@ namespace sql.builder.DataApi
         private SaveResult save()
         {
             //rememberSelection(); // не помогло , все равно соскакивает выделение
-         
+
             var res = save1();
             //recollectSelection();
             return res;
@@ -1836,7 +1955,7 @@ namespace sql.builder.DataApi
 
         private bool InsteadSave(DataRow row)
         {
-            
+
             if (ProcessEvent(TextConst.AVEventName.InsteadObjectSave, row))
             {
                 return true;
@@ -1904,7 +2023,7 @@ namespace sql.builder.DataApi
                         }
                         r.Delete();
                     }
-                    
+
                 }
                 EndManualDeleteIgnore();
             }
@@ -1936,7 +2055,7 @@ namespace sql.builder.DataApi
                             raiseCustomRowSave_Added(row);
                         }
 
-                      
+
                         if ((DataSet as VDataSet).KeyParamName != null)
                         {
                             (DataSet as VDataSet).InputParams[(DataSet as VDataSet).KeyParamName].Value = retPar.Value;
@@ -1981,7 +2100,7 @@ namespace sql.builder.DataApi
 
                             if (!IsNonDb)
                             {
-                               
+
                                 DataAdapter.UpdateCommand.CommandText = DataAdapter.UpdateCommand.CommandText.Replace("\r", " ");
                                 DevAnalyzer.AnalyzeExecSql(DataAdapter.UpdateCommand.CommandText);
                                 DataAdapter.UpdateCommand.ExecuteNonQuery();
@@ -2059,7 +2178,7 @@ namespace sql.builder.DataApi
                     {
                         RaiseUIEvent(TextConst.AVEventName.CheckedRowSave, row, null);
                     }
-                  
+
                 }
             }
 
@@ -2074,41 +2193,45 @@ namespace sql.builder.DataApi
             }
 
             bool refreshAllNewRows = false;
-            foreach (var name in TextConst.AVColumnArray.SysColNamesForEditedObject) {
+            foreach (var name in TextConst.AVColumnArray.SysColNamesForEditedObject)
+            {
                 var col = GetColumn(name);
-                if (col != null) {
-                    if (col.Dependants != null) {
-                        if (col.Dependants.Count != 0) {
+                if (col != null)
+                {
+                    if (col.Dependants != null)
+                    {
+                        if (col.Dependants.Count != 0)
+                        {
                             refreshAllNewRows = true;// чтобы обновлялись данные зависимые от is_new , is_not_new
                             break;
                         }
                     }
                 }
             }
-			//event row-save
-			foreach (var row in newRows.Where(r => !result.RowsExceptions.ContainsKey(r)))
-			{
-				var wasEventProcessing = RaiseUIEvent(TextConst.AVEventName.RowSave, row, null);
-				if (wasEventProcessing || refreshAllNewRows)
-				{
-					if (!rowsToRefresh.Contains(row))
-					{
-						rowsToRefresh.Add(row);
-					}
-				}
-			}
-			foreach (var row in modifiedRows.Where(r => !result.RowsExceptions.ContainsKey(r)))
-			{
-				var wasEventProcessing = RaiseUIEvent(TextConst.AVEventName.RowSave, row, null);
-				if (wasEventProcessing)
-				{
-					if (!rowsToRefresh.Contains(row))
-					{
-						rowsToRefresh.Add(row);
-					}
-				}
-			}
-			//event new-row-save
+            //event row-save
+            foreach (var row in newRows.Where(r => !result.RowsExceptions.ContainsKey(r)))
+            {
+                var wasEventProcessing = RaiseUIEvent(TextConst.AVEventName.RowSave, row, null);
+                if (wasEventProcessing || refreshAllNewRows)
+                {
+                    if (!rowsToRefresh.Contains(row))
+                    {
+                        rowsToRefresh.Add(row);
+                    }
+                }
+            }
+            foreach (var row in modifiedRows.Where(r => !result.RowsExceptions.ContainsKey(r)))
+            {
+                var wasEventProcessing = RaiseUIEvent(TextConst.AVEventName.RowSave, row, null);
+                if (wasEventProcessing)
+                {
+                    if (!rowsToRefresh.Contains(row))
+                    {
+                        rowsToRefresh.Add(row);
+                    }
+                }
+            }
+            //event new-row-save
             foreach (var row in newRows.Where(r => !result.RowsExceptions.ContainsKey(r)))
             {
                 var wasEventProcessing = RaiseUIEvent(TextConst.AVEventName.NewRowSave, row, null);
@@ -2298,7 +2421,7 @@ namespace sql.builder.DataApi
             _manualDelete = true;
             _deletedRows = new List<DataRow>();
             this.RowDeleting += table_OnRowDeleting;
-          
+
         }
         private void table_OnRowDeleting(object sender, DataRowChangeEventArgs args)
         {
@@ -2367,7 +2490,8 @@ namespace sql.builder.DataApi
         }
         internal void CancelAsyncExecuteReader()
         {
-            if (this.executedTaskInfo != null) {
+            if (this.executedTaskInfo != null)
+            {
                 this.executedTaskInfo.Cancel();
                 this.executedTaskInfo = null;
                 Cmn.RaiseEvent(ref this.AsyncLoadCanceled, this, EventArgs.Empty);
@@ -2384,18 +2508,24 @@ namespace sql.builder.DataApi
         /// <param name="reader"></param>
         private void LoadAsyncData(DataTable data, IDataReader reader)
         {
-            if (reader != null) {
-                if (this.otherReader != null) {
+            if (reader != null)
+            {
+                if (this.otherReader != null)
+                {
                     this.otherReader.Close();
                 }
                 this.otherReader = reader;
                 this.fetchedRowsCount = this.defaultFetch; // = data.Rows.Count;
             }
-            if (data != null) {
-                try {
+            if (data != null)
+            {
+                try
+                {
                     this.SuppressChangeEvent();
                     this.Merge(data, false, MissingSchemaAction.Ignore);
-                } finally {
+                }
+                finally
+                {
                     this.ResumeChangeEvent();
                 }
                 Cmn.DisposeAndSetNull(ref data);
@@ -2407,7 +2537,8 @@ namespace sql.builder.DataApi
         }
         private void StartQueuedTask()
         {
-            if (this.executedTaskInfo == null && this.queuedTaskInfo != null) {
+            if (this.executedTaskInfo == null && this.queuedTaskInfo != null)
+            {
                 this.executedTaskInfo = this.queuedTaskInfo;
                 this.queuedTaskInfo = null;
                 Cmn.RaiseEvent(ref this.AsyncLoadStart, this, EventArgs.Empty);
@@ -2435,9 +2566,12 @@ namespace sql.builder.DataApi
                 this.parent = parent;
                 this.cancellation = new CancellationTokenSource();
                 this.command = сommand;
-                if (parent.IsDeferredFetch()) {
+                if (parent.IsDeferredFetch())
+                {
                     this.rows_to_fetch = parent.defaultFetch;
-                } else {
+                }
+                else
+                {
                     this.rows_to_fetch = int.MaxValue;
                 }
                 this.reader = null;
@@ -2450,8 +2584,10 @@ namespace sql.builder.DataApi
             {
                 this.cancellation.Cancel();
                 //this.command.Cancel();
-                if (this.task != null) {
-                    while (!(this.task.IsCompleted || this.task.IsCanceled || this.task.IsFaulted)) {
+                if (this.task != null)
+                {
+                    while (!(this.task.IsCompleted || this.task.IsCanceled || this.task.IsFaulted))
+                    {
                         this.task.Wait(VDataTable.SLEEP_TIME);
                         //Thread.Sleep(VDataTable.SLEEP_TIME);
                     }
@@ -2466,18 +2602,22 @@ namespace sql.builder.DataApi
             {
                 CancellationToken token = this.cancellation.Token;
                 // Ожидание, когда соединение освободится
-                while (this.command.Connection.State == ConnectionState.Executing) {
+                while (this.command.Connection.State == ConnectionState.Executing)
+                {
                     Thread.Sleep(VDataTable.SLEEP_TIME);
-                    if (token.IsCancellationRequested) {
+                    if (token.IsCancellationRequested)
+                    {
                         return null;
                     }
                 }
                 DataTable dt = null;
-                try {
+                try
+                {
                     // 1. Выполнение запроса
                     DevAnalyzer.AnalyzeExecSql(this.command.CommandText);
                     IAsyncResult result = this.command.BeginExecuteReader(CommandBehavior.SingleResult);
-                    while (!result.IsCompleted) {
+                    while (!result.IsCompleted)
+                    {
                         token.ThrowIfCancellationRequested();
                         Thread.Sleep(VDataTable.SLEEP_TIME);
                     }
@@ -2487,7 +2627,8 @@ namespace sql.builder.DataApi
                     // 2. Создание DataTable
                     dt = new DataTable();
                     int field_count = reader.FieldCount;
-                    for (int field = 0; field < field_count; field++) {
+                    for (int field = 0; field < field_count; field++)
+                    {
                         string field_name = reader.GetName(field);
                         Type data_type = reader.GetFieldType(field);
                         dt.Columns.Add(field_name, data_type);
@@ -2501,9 +2642,11 @@ namespace sql.builder.DataApi
                     // 3. Fetch данных
                     object[] values = new object[field_count];
                     dt.BeginLoadData();
-                    for (int row = 0; row <= this.rows_to_fetch; row++) {
+                    for (int row = 0; row <= this.rows_to_fetch; row++)
+                    {
                         token.ThrowIfCancellationRequested();
-                        if (!reader.Read()) {
+                        if (!reader.Read())
+                        {
                             break;
                         }
                         reader.GetValues(values);
@@ -2512,23 +2655,32 @@ namespace sql.builder.DataApi
                     }
                     dt.EndLoadData();
                     token.ThrowIfCancellationRequested();
-                } catch (OperationCanceledException) {
-                    if (dt != null) {
+                }
+                catch (OperationCanceledException)
+                {
+                    if (dt != null)
+                    {
                         Cmn.DisposeAndSetNull(ref dt);
                     }
-                    if (this.reader != null) {
+                    if (this.reader != null)
+                    {
                         Cmn.DisposeAndSetNull(ref this.reader);
                     }
                     Cmn.DisposeAndSetNull(ref this.command);
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     throw ex;
                     //if (ex.Code == 1013) { // ORA-01013: user requested cancel of current operation
                     //    return null;
                     //} else {
                     //    throw new infoenergo.core.Data.OracleSqlException(ex, this.command.CommandText);
                     //}
-                } finally {
-                    if (this.reader != null && this.rows_to_fetch == int.MaxValue) {
+                }
+                finally
+                {
+                    if (this.reader != null && this.rows_to_fetch == int.MaxValue)
+                    {
                         this.reader.Close();
                         this.reader = null;
                         Cmn.DisposeAndSetNull(ref this.command);
@@ -2542,8 +2694,10 @@ namespace sql.builder.DataApi
             private void ReadDataComplete(Task<DataTable> task)
             {
                 AggregateException e = task.Exception;
-                if (e != null) {
-                    foreach (Exception inE in e.InnerExceptions) {
+                if (e != null)
+                {
+                    foreach (Exception inE in e.InnerExceptions)
+                    {
                         //Program.ProcessUnhandledException(inE);
                         //throw inE;// почему то так не обрабатывается
                     }

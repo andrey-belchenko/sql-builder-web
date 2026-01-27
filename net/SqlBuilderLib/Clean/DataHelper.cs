@@ -21,7 +21,7 @@ namespace infoenergo.core.Data
 {
     public static class DataHelper
     {
-        public static object SqlGetValue(string sql, OracleParameter[] parameters, OracleConnection connection)
+        public static object SqlGetValue(string sql, OracleParameter[] parameters, OracleConnection connection, bool analyze = true)
         {
             object result = null;
             OracleCommand oracleCommand = new VOracleCommand(sql, connection);
@@ -34,7 +34,10 @@ namespace infoenergo.core.Data
 
                 try
                 {
-                    DevAnalyzer.AnalyzeExecSql(sql);
+                    if (analyze)
+                    {
+                        DevAnalyzer.AnalyzeExecSql(sql);
+                    }
                     result = ((DbCommand)(object)oracleCommand).ExecuteScalar();
                 }
                 catch (OracleException innerException)
@@ -93,9 +96,9 @@ namespace infoenergo.core.Data
             return SqlGetDecimal(sql, new OracleParameter[0], connection);
         }
 
-        public static string SqlGetString(string sql, OracleParameter[] parameters, OracleConnection connection)
+        public static string SqlGetString(string sql, OracleParameter[] parameters, OracleConnection connection, bool analyze = true)
         {
-            object obj = SqlGetValue(sql, parameters, connection);
+            object obj = SqlGetValue(sql, parameters, connection, analyze);
             if ((obj == null) | (obj == DBNull.Value))
             {
                 return null;
@@ -104,14 +107,14 @@ namespace infoenergo.core.Data
             return (obj != null) ? obj.ToString() : string.Empty;
         }
 
-        public static string SqlGetString(string sql, OracleConnection connection, OracleParameter parameter)
+        public static string SqlGetString(string sql, OracleConnection connection, OracleParameter parameter, bool analyze= true)
         {
-            return SqlGetString(sql, new OracleParameter[1] { parameter }, connection);
+            return SqlGetString(sql, new OracleParameter[1] { parameter }, connection, analyze);
         }
 
-        public static string SqlGetString(string sql, OracleConnection connection)
+        public static string SqlGetString(string sql, OracleConnection connection,  bool analyze= true)
         {
-            return SqlGetString(sql, new OracleParameter[0], connection);
+            return SqlGetString(sql, new OracleParameter[0], connection, analyze);
         }
 
         public static DateTime? SqlGetDate(string sql, OracleParameter[] parameters, OracleConnection connection)
@@ -249,7 +252,7 @@ namespace infoenergo.core.Data
             return result;
         }
 
-        public static DataTable SqlGetTable(string sql, OracleParameter[] parameters, OracleConnection connection)
+        public static DataTable SqlGetTable(string sql, OracleParameter[] parameters, OracleConnection connection, bool analyze = true)
         {
             DataTable dataTable = new DataTable();
             object[] array = null;
@@ -263,7 +266,11 @@ namespace infoenergo.core.Data
 
                 try
                 {
-                    DevAnalyzer.AnalyzeExecSql(sql);
+                    if (analyze)
+                    {
+                        DevAnalyzer.AnalyzeExecSql(sql);
+                    }
+
                     using (OracleDataReader oracleDataReader = oracleCommand.ExecuteReader())
                     {
                         if (dataTable.Columns.Count == 0)
@@ -393,7 +400,7 @@ namespace infoenergo.core.Data
             return SqlGetTable(sql, null, connection);
         }
 
-        public static bool SqlExecute(string sqlCommand, OracleParameter[] parameters, OracleConnection connection)
+        public static bool SqlExecute(string sqlCommand, OracleParameter[] parameters, OracleConnection connection, bool analyze = true)
         {
             bool result = false;
             OracleCommand oracleCommand = connection.CreateCommand();
@@ -407,7 +414,11 @@ namespace infoenergo.core.Data
 
                 try
                 {
-                    DevAnalyzer.AnalyzeExecSql(sqlCommand);
+                    if (analyze)
+                    {
+                        DevAnalyzer.AnalyzeExecSql(sqlCommand);
+                    }
+
                     ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                     result = true;
                 }

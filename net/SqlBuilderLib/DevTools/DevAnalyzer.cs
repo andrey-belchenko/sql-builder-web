@@ -31,19 +31,11 @@ namespace SqlBuilderLib.DevTools
 
         public static HashSet<string> TableNames = new HashSet<string>();
         public static HashSet<string> ProcNames = new HashSet<string>();
+
+
         public static void AnalyzeExecSql(string sql)
         {
-            // if (!Enabled) return;
-            // var tableNames = DevSqlParserAntlr.GetSourceTables(sql);
-            // TableNames.UnionWith(tableNames);
 
-            // if (tableNames.Overlaps(new[] { "adr_m", "k_house", "kr_calc" })){
-                
-            // }
-
-            // var procNames = DevSqlParserAntlr.GetSourceProcedures(sql);
-            // ProcNames.UnionWith(procNames);
-            // LogSql(sql);
         }
 
         // public static void AnalyzeSysSql(string sql)
@@ -57,7 +49,7 @@ namespace SqlBuilderLib.DevTools
             // TableNames.UnionWith(tableNames);
 
             // if (tableNames.Overlaps(new[] { "adr_m", "k_house", "kr_calc" })){
-                
+
             // }
 
             // var procNames = DevSqlParserAntlr.GetSourceProcedures(sql);
@@ -65,14 +57,15 @@ namespace SqlBuilderLib.DevTools
             // LogSql(sql);
         }
 
-         public static void AnalyzeCmdSql(string sql)
+        public static void AnalyzeCmdSql(string sql)
         {
             if (!Enabled) return;
             var tableNames = DevSqlParserAntlr.GetSourceTables(Cmn.ClearUndefined(sql));
             TableNames.UnionWith(tableNames);
 
-            if (tableNames.Overlaps(new[] { "adr_m", "k_house", "kr_calc" })){
-                
+            if (tableNames.Overlaps(new[] { "adr_m", "k_house", "kr_calc" }))
+            {
+
             }
 
             var procNames = DevSqlParserAntlr.GetSourceProcedures(Cmn.ClearUndefined(sql));

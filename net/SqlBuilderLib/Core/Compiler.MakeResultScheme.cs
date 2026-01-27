@@ -52,7 +52,7 @@ namespace sql.builder
             }
             #if DEBUG
             sw.Stop();
-            Debug.WriteLine("Compiler.MakeResultScheme() report name=\"" + report_name + "\": " + sw.ElapsedTicks + " тактов = " + sw.ElapsedMilliseconds.ToString() + " мс");
+            // Debug.WriteLine("Compiler.MakeResultScheme() report name=\"" + report_name + "\": " + sw.ElapsedTicks + " тактов = " + sw.ElapsedMilliseconds.ToString() + " мс");
             #endif
             return xscheme;
         }

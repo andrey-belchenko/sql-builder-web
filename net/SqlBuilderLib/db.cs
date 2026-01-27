@@ -100,7 +100,7 @@ namespace sql.builder
         internal static string SelectDefaultSettingData(string repname)
         {
             OracleParameter[] parameters = new OracleParameter[1] { new OracleParameter("repname", OracleDbType.VarChar, repname, ParameterDirection.Input) };
-            DataTable dt = DataHelper.SqlGetTable("SELECT data FROM vr_grid_settings WHERE repname = :repname AND name = 'default' AND visible = 0 AND u_m = USER", parameters, Connection);
+            DataTable dt = DataHelper.SqlGetTable("SELECT data FROM vr_grid_settings WHERE repname = :repname AND name = 'default' AND visible = 0 AND u_m = USER", parameters, Connection, false);
             if (dt.Rows.Count == 0) {
                 return null;
             } else {
@@ -216,7 +216,7 @@ namespace sql.builder
                 new OracleParameter("params", OracleDbType.NClob, report_params, ParameterDirection.Input),
                 kod_log
             };
-            DataHelper.SqlExecute("INSERT INTO vr_reports_log (repname, params) VALUES (:repname, :params) RETURNING kod_log INTO :kod_log", parameters, Connection);
+            DataHelper.SqlExecute("INSERT INTO vr_reports_log (repname, params) VALUES (:repname, :params) RETURNING kod_log INTO :kod_log", parameters, Connection,false);
             Connection.Commit();
             return Convert.ToDecimal(kod_log.Value);
         }
@@ -227,7 +227,7 @@ namespace sql.builder
                 new OracleParameter("stack_text", OracleDbType.VarChar, stack_text, ParameterDirection.Input),
                 new OracleParameter("kod_log", OracleDbType.Number, (object)kod_log, ParameterDirection.Input)
             };
-            DataHelper.SqlExecute("UPDATE vr_reports_log SET error_text = :error_text, stack_text = :stack_text WHERE kod_log = :kod_log", parameters, Connection);
+            DataHelper.SqlExecute("UPDATE vr_reports_log SET error_text = :error_text, stack_text = :stack_text WHERE kod_log = :kod_log", parameters, Connection, false);
             Connection.Commit();
         }
         internal static TimeSpan? AverageReportFormingTime(string report_name)
@@ -296,7 +296,7 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
             return (cnt > 0);
         }
         #region Вспомогательные функции
-        public static DataTable ExecuteDataTable(string sql, DbConnection conn = null,bool analyze=false)
+        public static DataTable ExecuteDataTable(string sql, DbConnection conn = null,bool analyze=true)
         {
             conn = conn ?? Connection;
 

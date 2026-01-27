@@ -48,12 +48,16 @@ namespace sql.builder
         internal static string TestName;
         internal static bool? TestCompare;
         private static VEnvironment _environment;
-        internal static VEnvironment Environment {
-            set {
+        internal static VEnvironment Environment
+        {
+            set
+            {
                 _environment = value;
             }
-            get {
-                if (_environment == null) {
+            get
+            {
+                if (_environment == null)
+                {
                     Init();
                 }
                 return _environment;
@@ -61,18 +65,19 @@ namespace sql.builder
         }
         internal static bool Init(bool force_reload = false, string source_folder = null)
         {
-            #if DEBUG
+#if DEBUG
             Stopwatch sw;
             sw = new Stopwatch();
             sw.Restart();
-            #endif
+#endif
             // The following line provides localization for data formats. 
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("ru-RU");
             // The following line provides localization for the application's user interface. 
             System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("ru-RU");
             //db.ExecuteNonQuery("ALTER SESSION SET session_cached_cursors = 300");
             string customer_id, scheme;
-            using (DataTable dt = db.ExecuteDataTable("select customer_id, scheme from rs_rep_sets", null, false)) {
+            using (DataTable dt = db.ExecuteDataTable("select customer_id, scheme from rs_rep_sets", null, false))
+            {
                 DataRow row = dt.Rows[0];
                 customer_id = row["customer_id"].ToString();
                 scheme = row["scheme"].ToString();
@@ -84,58 +89,64 @@ namespace sql.builder
             //    sql.builder.Controls.ucMainReports.MainPanelName = "Главная";
             ////}
             //customer_id = "29";
-            if (customer_id == "11") {
+            if (customer_id == "11")
+            {
                 //sql.builder.UI.UIStatic.IsMpep = true;
                 //sql.builder.Controls.ucMainReports.MainPanelName = "Отчеты";
 
             }
             LoadXml(scheme, customer_id, InputParams, force_reload: force_reload, source_folder: source_folder);
             VCashUtils.ClearCash();
-            #if DEBUG
+#if DEBUG
             sw.Stop();
             Debug.Write("XmlReports.Init(): ");
-            if (force_reload) {
+            if (force_reload)
+            {
                 Debug.Write("полная ");
             }
-            Debug.WriteLine("перезагрузка схемы за " + sw.ElapsedTicks.ToString() + " тактов = " + sw.ElapsedMilliseconds.ToString() + " мс");
-            #endif
+            // Debug.WriteLine("перезагрузка схемы за " + sw.ElapsedTicks.ToString() + " тактов = " + sw.ElapsedMilliseconds.ToString() + " мс");
+#endif
             return true;
         }
         internal static bool IsDeveloperMode()
         {
-            #if DEBUG
+#if DEBUG
             // return false;
             return IsNative || HasDevelopRights;
-            #else
+#else
             return false;
-            #endif
+#endif
         }
-        #if DEBUG
-        internal static bool UseProjectSourceFolder {
-            get {
+#if DEBUG
+        internal static bool UseProjectSourceFolder
+        {
+            get
+            {
                 return Directory.Exists(GetDefaultContentFolder());
             }
         }
-        #else
+#else
         internal const bool UseProjectSourceFolder = false;
-        #endif
+#endif
         internal static bool IsInfoenergo
         {
             get { return false; }
         }
         internal static bool IsNative
         {
-            get {
+            get
+            {
                 //return (NativeProductName == Application.ProductName);
                 return true;
             }
         }
         private static bool HasDevelopRights
         {
-            get {
+            get
+            {
                 //(NetProjectsWithDevelopRights.Contains(Application.ProductName));
-                return false; 
-            
+                return false;
+
             }
         }
         private static string[] NetProjectsWithDevelopRights =
@@ -265,28 +276,32 @@ namespace sql.builder
         {
             var dict = new Dictionary<string, string>();
             string name = xreport.AttrOrEmpty(AName.name);
-            dict.Add("repname",         name);
-            dict.Add("original_name",   name);
-            dict.Add("title",           xreport.AttrOrEmpty(AName.title));
-            dict.Add("form",            xreport.AttrOrEmpty(AName.form));
-            dict.Add("editable",        xreport.AttrOrEmpty(AName.editable));
-            dict.Add("folder",          xreport.AttrOrEmpty(AName.folder));
-            dict.Add("nogrid",          xreport.AttrOrEmpty(AName.nogrid));
-            dict.Add("item_type",       "usereport");
-            dict.Add("is_template",     "0");
-            dict.Add("visible",         xreport.AttrOrDefault(AName.visible, "1"));
-            dict.Add("kod_menu",        xreport.AttrOrEmpty(TextConst.AName.KodMenu));
-            dict.Add("changed",         "0");
-            dict.Add("kod_gs",          null);
-            dict.Add("data",            null);
-            dict.Add("old",             false.ToString());
-            if (dict["visible"].Equals("1")) {
-                switch (dict["item_type"]) {
+            dict.Add("repname", name);
+            dict.Add("original_name", name);
+            dict.Add("title", xreport.AttrOrEmpty(AName.title));
+            dict.Add("form", xreport.AttrOrEmpty(AName.form));
+            dict.Add("editable", xreport.AttrOrEmpty(AName.editable));
+            dict.Add("folder", xreport.AttrOrEmpty(AName.folder));
+            dict.Add("nogrid", xreport.AttrOrEmpty(AName.nogrid));
+            dict.Add("item_type", "usereport");
+            dict.Add("is_template", "0");
+            dict.Add("visible", xreport.AttrOrDefault(AName.visible, "1"));
+            dict.Add("kod_menu", xreport.AttrOrEmpty(TextConst.AName.KodMenu));
+            dict.Add("changed", "0");
+            dict.Add("kod_gs", null);
+            dict.Add("data", null);
+            dict.Add("old", false.ToString());
+            if (dict["visible"].Equals("1"))
+            {
+                switch (dict["item_type"])
+                {
                     case "folder": dict.Add("image_id", "0"); break;
                     case "usereport": dict.Add("image_id", "1"); break;
                     case "useform": dict.Add("image_id", "2"); break;
                 }
-            } else {
+            }
+            else
+            {
                 dict.Add("image_id", "4");
             }
             return dict;
@@ -299,9 +314,11 @@ namespace sql.builder
             //}
             IList<VSXElement> scheme = Environment.Manager.GetScheme();
             XElement xreport = scheme.Elements(EName.reports).Elements(EName.report).SearchByAttribute(AName.name, name);
-            if (xreport == null) {
+            if (xreport == null)
+            {
                 xreport = Environment.Manager.GetOldScheme().Elements(EName.reports).Elements(EName.report).SearchByAttribute(AName.name, name);
-                if (xreport == null) {
+                if (xreport == null)
+                {
                     xreport = scheme.Elements(EName.queries).Elements(EName.query).SearchByAttribute(AName.name, name);
                 }
             }
@@ -309,32 +326,45 @@ namespace sql.builder
         }
         internal static bool IsFormWithBehavior(string name, string repname)
         {
-            if (XmlReports.Environment.Manager.IsOldOnly()) {
+            if (XmlReports.Environment.Manager.IsOldOnly())
+            {
                 return false;
             }
             XElement element;
-            if (string.IsNullOrEmpty(name)) {
+            if (string.IsNullOrEmpty(name))
+            {
                 element = XmlReports.Environment.GetReportOrQuery(repname);
-            } else {
+            }
+            else
+            {
                 element = XmlReports.Environment.Manager.GetScheme().Elements(EName.forms).Elements(EName.form).SearchByAttribute(AName.name, name);
             }
-            if (element == null) {
+            if (element == null)
+            {
                 return true;
-            } else {
+            }
+            else
+            {
                 return element.AttrOrDefault(AName.with_behavior, true);
             }
         }
         internal static XElement GetForm(string name, string repname)
         {
             XElement xform;
-            if (string.IsNullOrEmpty(name)) {
-                if (XmlReports.Environment.Manager.IsOldOnly()) {
+            if (string.IsNullOrEmpty(name))
+            {
+                if (XmlReports.Environment.Manager.IsOldOnly())
+                {
                     xform = Environment.Manager.GetScheme().Elements(EName.forms).Elements(EName.form).SearchByAttribute(AName.name, repname);
-                } else {
+                }
+                else
+                {
                     VSXElement element = XmlReports.Environment.GetReportOrQuery(repname);
                     xform = element.GetFormXElement();
                 }
-            } else {
+            }
+            else
+            {
                 xform = Environment.Manager.GetScheme().Elements(EName.forms).Elements(EName.form).SearchByAttribute(AName.name, name);
             }
             return xform;
@@ -514,10 +544,13 @@ namespace sql.builder
             XmlDocument source = null;
             IList<VSXElement> scheme;
             XmlNode node = xmldoc.SelectSingleNode("//root/*/" + itemType + "[@name='" + itemName + "']");
-            if (node != null) {
+            if (node != null)
+            {
                 source = xmldoc;
                 scheme = Environment.Manager.GetScheme();
-            } else {
+            }
+            else
+            {
                 source = xmldoc_old;
                 scheme = Environment.Manager.GetOldScheme();
             }
@@ -535,28 +568,29 @@ namespace sql.builder
                 param.InnerText = itemType;
                 outputDocument = transformXml(source, xsltTemplate);
             } else {*/
-                XElement colmpiledQuery;
-                if (itemType == "query") {
-                    colmpiledQuery = Compiler.compileQuery(itemName, scheme);
-                    outputDocument = new XmlDocument();
-                    outputDocument.LoadXml("" + colmpiledQuery);
-                }
-                /*else
+            XElement colmpiledQuery;
+            if (itemType == "query")
+            {
+                colmpiledQuery = Compiler.compileQuery(itemName, scheme);
+                outputDocument = new XmlDocument();
+                outputDocument.LoadXml("" + colmpiledQuery);
+            }
+            /*else
+            {
+                colmpiledQuery=Compiler.compileReport(itemName);
+                if (noMat)
                 {
-                    colmpiledQuery=Compiler.compileReport(itemName);
-                    if (noMat)
+                    IEnumerable<XElement> queries = colmpiledQuery.Elements("query").Where(e => Compiler.getAttrValue(e, "materialize") == "1").ToArray();
+                    if (queries.Count() == 1)
                     {
-                        IEnumerable<XElement> queries = colmpiledQuery.Elements("query").Where(e => Compiler.getAttrValue(e, "materialize") == "1").ToArray();
-                        if (queries.Count() == 1)
-                        {
-                            colmpiledQuery.Elements("query").Where(e => Compiler.getAttrValue(e, "materialize") != "1").Remove();
-                            queries.First().Attributes("materialize").Remove();
-                        }
+                        colmpiledQuery.Elements("query").Where(e => Compiler.getAttrValue(e, "materialize") != "1").Remove();
+                        queries.First().Attributes("materialize").Remove();
                     }
-                     outputDocument = new XmlDocument();
-                 outputDocument.LoadXml("" + colmpiledQuery);
-                     
-                }*/
+                }
+                 outputDocument = new XmlDocument();
+             outputDocument.LoadXml("" + colmpiledQuery);
+
+            }*/
             //}
             outputDocument = finalProcessing(outputDocument);
             return outputDocument;
@@ -565,9 +599,12 @@ namespace sql.builder
         {
             bool is_new_scheme = Environment.Manager.GetScheme().Elements(EName.queries).Elements(EName.query).SearchByAttribute(AName.name, itemName) != null;
             IList<VSXElement> scheme = is_new_scheme ? Environment.Manager.GetScheme() : Environment.Manager.GetOldScheme();
-            if (itemType == "query") {
+            if (itemType == "query")
+            {
                 return finalProcessing(Compiler.compileQuery(itemName, scheme));
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
@@ -595,7 +632,7 @@ namespace sql.builder
             //}
             //else
             //{
-                return Compiler.GetSql(XElement.Parse("<root>" + query.OuterXml + "</root>"));
+            return Compiler.GetSql(XElement.Parse("<root>" + query.OuterXml + "</root>"));
             //}
         }
         //public static string getQuerySql(string queryName)
@@ -990,16 +1027,19 @@ namespace sql.builder
             }
             XmlNode childs = null;
 
-            foreach (XmlNode childQuery in query.SelectNodes("query")) {
-                if (childs == null) {
+            foreach (XmlNode childQuery in query.SelectNodes("query"))
+            {
+                if (childs == null)
+                {
                     childs = addChildNode(table, "childs");
                 }
                 getReportQueryScheme(childQuery, report, childs);
             }
             // XmlNode tablecolumns = table.SelectSingleNode("columns");
-            if (table.AttrOrDefault("transposed", string.Empty) != "1") {
+            if (table.AttrOrDefault("transposed", string.Empty) != "1")
+            {
                 applyColumnsPreset(query, report, table);
-            //} else {
+                //} else {
                 // XmlNode reportColumns = addChildNode(table, "columns");
                 // reportColumns.InnerXml = tablecolumns.InnerXml; 
             }
@@ -1152,22 +1192,27 @@ namespace sql.builder
                 //var que = report.SelectSingleNode("root/query");
 
                 string name = repCol.Attributes[TextConst.AName.Name].Value;
-                if (query.AttrOrDefault(TextConst.AName.ParentNodeId, string.Empty) == string.Empty) {
-                    if (name == TextConst.SpecCols.ParentGRowId || name == TextConst.SpecCols.GRowId) {
+                if (query.AttrOrDefault(TextConst.AName.ParentNodeId, string.Empty) == string.Empty)
+                {
+                    if (name == TextConst.SpecCols.ParentGRowId || name == TextConst.SpecCols.GRowId)
+                    {
                         query.SetAttrValue(TextConst.AName.ParentNodeId, TextConst.SpecCols.ParentGRowId);
                         query.SetAttrValue(TextConst.AName.NodeId, TextConst.SpecCols.GRowId);
                     }
                 }
                 string node_id = query.AttrOrDefault("node-id", string.Empty);
-                if (name == node_id) {
+                if (name == node_id)
+                {
                     repCol.SetAttrValue("node-id", "1");
                 }
                 string pnode_id = query.AttrOrDefault("parent-node-id", string.Empty);
-                if (name == pnode_id) {
+                if (name == pnode_id)
+                {
                     repCol.SetAttrValue("parent-node-id", "1");
                     tblCol.SetAttrValue(TextConst.AName.ParentNodeId, "1");
                 }
-                foreach (string attrName in Compiler.AdditionalAttributes) {
+                foreach (string attrName in Compiler.AdditionalAttributes)
+                {
                     copyAttribute(tblCol, repCol, attrName);
                 }
             }
@@ -1420,10 +1465,12 @@ namespace sql.builder
 
 
 
-            foreach (XmlNode transposedTable in reportData.SelectNodes("//table[@transposed='1']")) {
+            foreach (XmlNode transposedTable in reportData.SelectNodes("//table[@transposed='1']"))
+            {
                 XmlNode parent = transposedTable.ParentNode;
                 parent.RemoveChild(transposedTable);
-                if (!parent.HasChildNodes) {
+                if (!parent.HasChildNodes)
+                {
                     parent.ParentNode.RemoveChild(parent);
                 }
             }
@@ -1511,11 +1558,12 @@ namespace sql.builder
         // См. перевод на LINQ: Compiler.setColumnsVisibility()
         private static void setColumnsVisibility(XmlDocument reportData)
         {
-            foreach (XmlNode col in reportData.SelectNodes("root/scheme//viewcolumns//column[not(@title) or @title='' and not(@visible)]")) {
+            foreach (XmlNode col in reportData.SelectNodes("root/scheme//viewcolumns//column[not(@title) or @title='' and not(@visible)]"))
+            {
                 col.SetAttrValue(TextConst.AName.Visible, TextConst.AVBool.False);
             }
         }
-        internal static void executeNonQuery(string sql, OracleConnection connection, OracleParameter[] pars = null)
+        internal static void executeNonQuery(string sql, OracleConnection connection, OracleParameter[] pars = null, bool analyze = true)
         {
             string sql1 = Cmn.ClearUndefined(sql);
             // для пск
@@ -1523,9 +1571,11 @@ namespace sql.builder
             //connection = XmlReports.Environment.Connection.Clone();
             //connection.Open(useGlobalSettings: true);
             OracleCommand command = null;
-            try {
+            try
+            {
                 command = new VOracleCommand(sql1, connection);
-                if (!Array.IsNullOrEmpty(pars)) {
+                if (!Array.IsNullOrEmpty(pars))
+                {
                     command.Parameters.AddRange(pars);
                 }
                 //var con = new OracleConnection();
@@ -1535,11 +1585,19 @@ namespace sql.builder
                 //con.Open(useGlobalSettings: true);
                 //var cmd = new OracleCommand(VDBCommand.GetCmdParametrizedText(command), con);
                 //cmd.ExecuteNonQuery();
-                DevAnalyzer.AnalyzeExecSql(sql1);
+                if (analyze)
+                {
+                    DevAnalyzer.AnalyzeExecSql(sql1);
+                }
+
                 command.ExecuteNonQuery();
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 throw e;
-            } finally {
+            }
+            finally
+            {
                 Cmn.DisposeAndSetNull(ref command);
             }
         }
@@ -1727,9 +1785,11 @@ namespace sql.builder
         private static void copyAttribute(XmlNode nodeSrc, XmlNode nodeTag, string name)
         {
             XmlAttribute attribute = nodeSrc.Attributes[name];
-            if (attribute != null) {
+            if (attribute != null)
+            {
                 XmlAttribute attribute1 = nodeTag.Attributes[name];
-                if (attribute1 == null) {
+                if (attribute1 == null)
+                {
                     attribute1 = nodeTag.OwnerDocument.CreateAttribute(name);
                     nodeTag.Attributes.Append(attribute1);
                 }
@@ -1738,16 +1798,19 @@ namespace sql.builder
         }
         private static void copyAttributes(XmlNode nodeSrc, XmlNode nodeTag)
         {
-            foreach (XmlAttribute attribute in nodeSrc.Attributes) {
+            foreach (XmlAttribute attribute in nodeSrc.Attributes)
+            {
                 copyAttribute(nodeSrc, nodeTag, attribute.Name);
             }
         }
         private static void copyAttributeNoReplace(XmlNode nodeSrc, XmlNode nodeTag, string name)
         {
             XmlAttribute attribute = nodeSrc.Attributes[name];
-            if (attribute != null) {
+            if (attribute != null)
+            {
                 XmlAttribute attribute1 = nodeTag.Attributes[name];
-                if (attribute1 == null) {
+                if (attribute1 == null)
+                {
                     attribute1 = nodeTag.OwnerDocument.CreateAttribute(name);
                     nodeTag.Attributes.Append(attribute1);
                     attribute1.Value = attribute.Value;
@@ -1763,9 +1826,11 @@ namespace sql.builder
         internal static string[] GetInputFolderNames()
         {
             string[] folder_names = { };
-            if (InputParams != null) {
+            if (InputParams != null)
+            {
                 XElement folder = InputParams.Elements(EName.param).SearchByAttribute(AName.name, "folder");
-                if (folder != null) {
+                if (folder != null)
+                {
                     folder_names = folder.Elements(EName.@const).Select(EPredicate.ElementValue).ToArray();
                     folder.Remove();
                 }
@@ -1775,9 +1840,11 @@ namespace sql.builder
         internal static string GetInputReportName()
         {
             string report_name = string.Empty;
-            if (InputParams != null) {
+            if (InputParams != null)
+            {
                 XElement report = InputParams.Elements(EName.param).SearchByAttribute(AName.name, "report");
-                if (report != null) {
+                if (report != null)
+                {
                     report_name = report.Element(EName.@const).Value;
                     report.Remove();
                 }
@@ -1788,19 +1855,25 @@ namespace sql.builder
         internal static string GetMainTitle()
         {
             string title = null;
-            if (InputParams != null) {
+            if (InputParams != null)
+            {
                 XElement xtitle = InputParams.Elements(EName.param).SearchByAttribute(AName.name, "title");
-                if (xtitle != null) {
+                if (xtitle != null)
+                {
                     title = xtitle.Element(EName.@const).Value;
                     xtitle.Remove();
                 }
             }
-            if (sql.builder.UI.UIStatic.IsMpep) {
+            if (sql.builder.UI.UIStatic.IsMpep)
+            {
                 title = "Мониторинг планово-экономической деятельности";
-            } else if (title == null) {
+            }
+            else if (title == null)
+            {
                 title = "Отчёты";
             }
-            if (!IsInfoenergo) {
+            if (!IsInfoenergo)
+            {
                 //title = title + " (" + db.Connection.GetAlias() + ") " + DepTitle;
             }
             return title;

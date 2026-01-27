@@ -1012,7 +1012,7 @@ namespace sql.builder.DataApi
             // (table as VDataTable).ResumeChangeEvent();
             #if DEBUG
             sw.Stop();
-            Debug.WriteLine("VSXElement.ToDataRow(): " + sw.ElapsedTicks.ToString() + " тактов = " + sw.ElapsedMilliseconds.ToString() + " мс");
+            // Debug.WriteLine("VSXElement.ToDataRow(): " + sw.ElapsedTicks.ToString() + " тактов = " + sw.ElapsedMilliseconds.ToString() + " мс");
             #endif
             return row;
         }

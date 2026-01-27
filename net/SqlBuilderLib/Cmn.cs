@@ -1676,7 +1676,7 @@ namespace sql.builder
             {
                 if (_db_info == null)
                 {
-                    _db_info = DataHelper.SqlGetString(@"select UPPER(sys_context('userenv','instance_name'))||' '||version from rs_esys", db.Connection);
+                    _db_info = DataHelper.SqlGetString(@"select UPPER(sys_context('userenv','instance_name'))||' '||version from rs_esys", db.Connection, false);
                 }
 
                 return _db_info;

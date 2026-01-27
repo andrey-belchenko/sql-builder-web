@@ -29,11 +29,14 @@ namespace sql.builder.DataApi
         private bool _refreshed;
         private XElement _scheme;
         private List<VDataTable> _top_tables;
-        internal XElement Scheme {
-            get {
+        internal XElement Scheme
+        {
+            get
+            {
                 return this._scheme;
             }
-            set {
+            set
+            {
                 this._scheme = value;
             }
         }
@@ -52,9 +55,12 @@ namespace sql.builder.DataApi
         internal UIFormC Form;
         internal bool IsVisibleInLayout()
         {
-            if (this.Form == null) {
+            if (this.Form == null)
+            {
                 return false;
-            } else {
+            }
+            else
+            {
                 return this.Form.IsVisibleInLayout();
             }
         }
@@ -70,14 +76,18 @@ namespace sql.builder.DataApi
         //    private OracleTransaction transaction;
         static readonly char _num_separator = CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator[0];
         internal VXElement schemePreset;
-        internal VXElement SchemePreset {
-            get {
-                if (this.schemePreset == null) {
+        internal VXElement SchemePreset
+        {
+            get
+            {
+                if (this.schemePreset == null)
+                {
                     this.schemePreset = new VXElement(Report.Scheme);
                 }
                 return this.schemePreset;
             }
-            set {
+            set
+            {
                 this.schemePreset = value;
             }
         }
@@ -91,14 +101,16 @@ namespace sql.builder.DataApi
         internal event EventHandler NeedSelection;
         internal void AddTopTable(VDataTable table)
         {
-            if (this._top_tables == null) {
+            if (this._top_tables == null)
+            {
                 this._top_tables = new List<VDataTable>(1);
             }
             this._top_tables.Add(table);
         }
         internal void RefreshTopTableIfClear()
         {
-            if (this.isClear) {
+            if (this.isClear)
+            {
                 this.RefreshTopTable(false);
             }
         }
@@ -110,40 +122,56 @@ namespace sql.builder.DataApi
         internal void RefreshTopTable(bool isCreation)
         {
             this._refreshing = true;
-            if (!isCreation) {
+            if (!isCreation)
+            {
                 this.ClearData();
             }
             this.isClear = false;
-            if (this.ParentDataTable != null) {
+            if (this.ParentDataTable != null)
+            {
                 List<object> pars = new List<object>();
-                if (this.ParentDataTable.CurrentRow != null) {
+                if (this.ParentDataTable.CurrentRow != null)
+                {
                     pars.Add(ParentDataTable.CurrentRow[ParentColumnName]);
-                } else {
+                }
+                else
+                {
                     pars.Add(null);
                 }
                 this.SetParamsValues(pars);
             }
-            if (this._top_tables != null) {
-                for (int index = 0; index < this._top_tables.Count; index++) {
+            if (this._top_tables != null)
+            {
+                for (int index = 0; index < this._top_tables.Count; index++)
+                {
                     VDataTable table = this._top_tables[index];
-                    if (!isCreation || index > 0) {
+                    if (!isCreation || index > 0)
+                    {
                         table.Refresh();
-                        if (table.SelectedRows.Count > 0) {
+                        if (table.SelectedRows.Count > 0)
+                        {
                             table.RaiseCurrentRowChanged();
-                        } else if (table.Rows.Count > 0 && (table.Grid == null || !table.Grid.IsTree())) {
+                        }
+                        else if (table.Rows.Count > 0 && (table.Grid == null || !table.Grid.IsTree()))
+                        {
                             table.CurrentRow = table.Rows[0];
-                        } else {
+                        }
+                        else
+                        {
                             table.RaiseCurrentRowChanged();
                         }
                     }
                 }
             }
-            if (this.TopTableRefreshed != null) {
+            if (this.TopTableRefreshed != null)
+            {
                 this.TopTableRefreshed(this, EventArgs.Empty);
             }
-            for (int index = 0; index < this.Tables.Count; index++) {
+            for (int index = 0; index < this.Tables.Count; index++)
+            {
                 VDataTable tbl = (VDataTable)this.Tables[index];
-                if (!string.IsNullOrEmpty(tbl.MultiselectSource())) {
+                if (!string.IsNullOrEmpty(tbl.MultiselectSource()))
+                {
                     tbl.SyncTargetSelection();
                 }
             }
@@ -152,9 +180,11 @@ namespace sql.builder.DataApi
         internal IList<VDataTable> MultiselectSourceTables()
         {
             var list = new List<VDataTable>();
-            for (int index = 0; index < this.Tables.Count; index++) {
+            for (int index = 0; index < this.Tables.Count; index++)
+            {
                 VDataTable dt = (VDataTable)this.Tables[index];
-                if (!string.IsNullOrEmpty(dt.MultiselectTargetName)) {
+                if (!string.IsNullOrEmpty(dt.MultiselectTargetName))
+                {
                     list.Add(dt);
                 }
             }
@@ -163,9 +193,11 @@ namespace sql.builder.DataApi
         internal IList<VDataTable> MultiselectTargetTables()
         {
             var list = new List<VDataTable>();
-            for (int index = 0; index < this.Tables.Count; index++) {
+            for (int index = 0; index < this.Tables.Count; index++)
+            {
                 VDataTable dt = (VDataTable)this.Tables[index];
-                if (!string.IsNullOrEmpty(dt.MultiselectSource())) {
+                if (!string.IsNullOrEmpty(dt.MultiselectSource()))
+                {
                     list.Add(dt);
                 }
             }
@@ -174,8 +206,10 @@ namespace sql.builder.DataApi
         private bool isClear = true;
         internal void ClearData()
         {
-            if (this._top_tables != null) {
-                for (int index = 0; index < this._top_tables.Count; index++) {
+            if (this._top_tables != null)
+            {
+                for (int index = 0; index < this._top_tables.Count; index++)
+                {
                     this._top_tables[index].ClearData();
                 }
             }
@@ -185,10 +219,12 @@ namespace sql.builder.DataApi
         public SaveResult Save()
         {
             var result = new SaveResult();
-            foreach (VDataTable table in this._top_tables) {
+            foreach (VDataTable table in this._top_tables)
+            {
                 result.AppendResult(table.SaveWithChilds());
             }
-            if (result.Success && TopTableCommited != null) {
+            if (result.Success && TopTableCommited != null)
+            {
                 TopTableCommited(this, EventArgs.Empty);
             }
             return result;
@@ -204,8 +240,10 @@ namespace sql.builder.DataApi
             var result = new ValidationResult();
             var stack = new Stack<VDataTable>();
 
-            if (this._top_tables != null) {
-                foreach (var t in this._top_tables) {
+            if (this._top_tables != null)
+            {
+                foreach (var t in this._top_tables)
+                {
                     stack.Push(t);
                 }
                 //!!! Раньше был поиск всех ошибок, оставил до первой
@@ -215,8 +253,8 @@ namespace sql.builder.DataApi
                 {
                     var table = stack.Pop();
                     //errors_info.Clear();
-                  
-                    var tableResult= table.CheckValidation();
+
+                    var tableResult = table.CheckValidation();
                     result.Error = tableResult.Error;
                     if (result.Error != "")
                     {
@@ -232,8 +270,10 @@ namespace sql.builder.DataApi
 
                     if (table.childDataSets != null)
                     {
-                        foreach (var ds in table.childDataSets) {
-                            foreach (var t in ds.TopTable) {
+                        foreach (var ds in table.childDataSets)
+                        {
+                            foreach (var t in ds.TopTable)
+                            {
                                 stack.Push(t);
                             }
                         }
@@ -255,7 +295,8 @@ namespace sql.builder.DataApi
         //{
         //    return mainThresdId == System.Threading.Thread.CurrentThread.ManagedThreadId;
         //}
-        internal VDataSet() { 
+        internal VDataSet()
+        {
         }
         /*internal VDataColumn GetColumnByName(string name)
         {
@@ -275,9 +316,12 @@ namespace sql.builder.DataApi
         }*/
         internal VDataTable GetTable(string tablename)
         {
-            if (string.IsNullOrEmpty(tablename)) {
+            if (string.IsNullOrEmpty(tablename))
+            {
                 return this.ParamsTable;
-            } else {
+            }
+            else
+            {
                 return (VDataTable)this.Tables[tablename];
             }
         }
@@ -288,7 +332,7 @@ namespace sql.builder.DataApi
                 Changed(sender, e);
             }
         }
-       
+
         public void RaiseNeedSelection()
         {
             if (NeedSelection != null)
@@ -309,42 +353,55 @@ namespace sql.builder.DataApi
 
         public void Refresh(int useRepository = 2)
         {
-            Refresh( null, useRepository);
+            Refresh(null, useRepository);
         }
         internal OracleConnection GetConnection()
         {
-            if (this.Connection == null) {
+            if (this.Connection == null)
+            {
                 //return (IsVertica) ? (DbConnection)Report.environment.VConnection : Report.environment.Connection;
                 return XmlReports.Environment.Connection;
-            } else {
+            }
+            else
+            {
                 return this.Connection;
             }
         }
         internal static XElement ParsObjectArrayToXelement(object[] pars, XElement xformalParams)
         {
             //пока только для числовых параметров;
-            if (xformalParams == null) {
+            if (xformalParams == null)
+            {
                 return null;
             }
             XElement xpars = new XElement(xformalParams);
             xpars.Elements().Elements().Remove();
-            if (pars != null) {
-                for (int index = 0; index < pars.Length; index++) {
+            if (pars != null)
+            {
+                for (int index = 0; index < pars.Length; index++)
+                {
                     object obj = pars[index];
                     XElement xformalParam = xpars.Elements().ElementAt(index);
                     XElement xval;
                     object[] array = obj as object[];
-                    if (array != null) {
+                    if (array != null)
+                    {
                         xval = Factory.NewCall(TextConst.AVFunction.Array);
-                        for (int index_2 = 0; index_2 < array.Length; index_2++) {
+                        for (int index_2 = 0; index_2 < array.Length; index_2++)
+                        {
                             string val = Cmn.ToOracleString(array[index_2]);
                             XElement xval1 = Factory.NewConst(val);
                             xval.Add(xval1);
                         }
-                    } else {
-                        if (Cmn.undefinedString.Equals(obj)) {
+                    }
+                    else
+                    {
+                        if (Cmn.undefinedString.Equals(obj))
+                        {
                             xval = new XElement(EName.undefined);
-                        } else{                           
+                        }
+                        else
+                        {
                             string val = Cmn.ToOracleString(obj);
                             xval = Factory.NewConst(val);
                         }
@@ -366,7 +423,8 @@ namespace sql.builder.DataApi
         }
         internal void AddInputParam(string name, OracleParameter dbPar, object value)
         {
-            if (this.InputParams == null) {
+            if (this.InputParams == null)
+            {
                 this.InputParams = new Dictionary<string, OracleParameter>();
                 this.InputParamsNames = new SortedList<int, string>();
                 this.InputParamsValues = new SortedList<string, object>();
@@ -382,13 +440,16 @@ namespace sql.builder.DataApi
         }
         internal void SetParamsValues(IList<object> values)
         {
-            if (values == null) {
+            if (values == null)
+            {
                 return;
             }
-            for (int index = 0; index < values.Count; index++) {
+            for (int index = 0; index < values.Count; index++)
+            {
                 object val = values[index];
                 OracleParameter par = this.GetInputParam(index);
-                if (par.OracleDbType == OracleDbType.Array) {
+                if (par.OracleDbType == OracleDbType.Array)
+                {
                     ArrayStorage arrayStorage = new ArrayStorage(par.ParameterName);
                     arrayStorage.SetValues(val as object[]);
                     val = arrayStorage.GetSql();
@@ -399,33 +460,51 @@ namespace sql.builder.DataApi
         private void SetParams(XElement pars)
         {
             object val;
-            foreach (OracleParameter dbPar in this.InputParams.Values) {
+            foreach (OracleParameter dbPar in this.InputParams.Values)
+            {
                 XElement factParam = pars.Elements().SearchByAttribute(AName.name, dbPar.ParameterName);
                 // ищем параметр среди глобальных
                 //if (SqlBuilder.InputParams != null && factParam == null)
                 //{
                 //    factParam = SqlBuilder.InputParams.Elements().FirstOrDefault(e => e.Attribute("name").Value == dbPar.ParameterName);
                 //}
-                if (factParam == null || factParam.Value == Cmn.undefinedString) {
+                if (factParam == null || factParam.Value == Cmn.undefinedString)
+                {
                     val = Cmn.undefinedString;
-                } else {
-                    if (!factParam.HasElements || factParam.Elements().First().Name == EName.undefined) {
+                }
+                else
+                {
+                    if (!factParam.HasElements || factParam.Elements().First().Name == EName.undefined)
+                    {
                         val = Cmn.undefinedString;
-                    } else {
-                        if (dbPar.DbType == DbType.Decimal) {
+                    }
+                    else
+                    {
+                        if (dbPar.DbType == DbType.Decimal)
+                        {
                             val = Cmn.ToDecimal(factParam.Value);
-                        } else {
-                            if (dbPar.OracleDbType == OracleDbType.Array) {
+                        }
+                        else
+                        {
+                            if (dbPar.OracleDbType == OracleDbType.Array)
+                            {
                                 object[] arrVal = ArrayParamXElementContentToObjectArray(factParam.Elements().First());
                                 ArrayStorage arrayStorage = new ArrayStorage(factParam.Attribute(AName.name).Value);
                                 arrayStorage.SetValues(arrVal);
                                 val = arrayStorage.GetSql();
-                            } else {
-                                if (dbPar.OracleDbType == OracleDbType.Date) {
+                            }
+                            else
+                            {
+                                if (dbPar.OracleDbType == OracleDbType.Date)
+                                {
                                     val = Cmn.ExtractDateFromOracleToDateString(factParam.Value);
-                                } else if (dbPar.OracleDbType == OracleDbType.VarChar) {
+                                }
+                                else if (dbPar.OracleDbType == OracleDbType.VarChar)
+                                {
                                     val = Cmn.ExtractStringFromOracleString(factParam.Value);
-                                } else {
+                                }
+                                else
+                                {
                                     val = factParam.Value;
                                 }
                             }
@@ -438,50 +517,65 @@ namespace sql.builder.DataApi
         private void ExecuteReportProc(ref string retSql, bool onlyGetSql)
         {
             VReportProc repProc = this.Report.GetReportProc();
-            if (repProc != null) {
+            if (repProc != null)
+            {
                 //WaitUIHelper.LastUsedUIHelper.Show("Загрузка данных", WaitUIMode.WaitCursor);
-                OracleCommand procCmd = new VOracleCommand(); 
+                OracleCommand procCmd = new VOracleCommand();
                 procCmd.Connection = this.GetConnection();
                 procCmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
                 procCmd.CommandText = repProc.Value;
                 string[] ParamNames = Cmn.GetParameterNames(procCmd.Parameters);
                 procCmd.ParameterCheck = false;
                 procCmd.Parameters.Clear();
-                if (this.Report.IsSimpleParams) {
+                if (this.Report.IsSimpleParams)
+                {
                     VDataTable.SetCommandParams(this, null, procCmd, ParamNames);
-                } else {
-                    foreach (string name in ParamNames) {
+                }
+                else
+                {
+                    foreach (string name in ParamNames)
+                    {
                         XElement par = this.Report.Elements(EName.@params).Elements(EName.param).First(e => e.Attribute(AName.name).Value == name);
                         string parVal;
-                        if (par.Element(EName.undefined) != null) {
+                        if (par.Element(EName.undefined) != null)
+                        {
                             parVal = Cmn.undefinedString;
-                        } else {
+                        }
+                        else
+                        {
                             parVal = par.Value;
                         }
                         procCmd.CommandText = procCmd.CommandText.Replace(":" + name, parVal);
                     }
                 }
-                if (onlyGetSql) {
+                if (onlyGetSql)
+                {
                     procCmd.CommandText = Cmn.ClearUndefined(procCmd.CommandText); // Для совместимости
                     retSql = retSql + Environment.NewLine
                                     + VDBSelectCommand.GetCmdParametrizedText(procCmd)
                                     + Environment.NewLine
                                     + "/";
-                } else {
+                }
+                else
+                {
                     WaitUIHelper.LastUsedUIHelper.SetDescription("Выполнение хранимой процедуры...");
                     bool undefined_without_brace;
                     procCmd.CommandText = Cmn.ClearUndefined(procCmd.CommandText, out undefined_without_brace);
-                    #if DEBUG
+#if DEBUG
                     Stopwatch sw = new Stopwatch();
                     sw.Start();
-                    #endif
+#endif
                     DevAnalyzer.AnalyzePrepSql(procCmd.CommandText);
-                    DevAnalyzer.AnalyzeExecSql(procCmd.CommandText);
-                    procCmd.ExecuteNonQuery();
-                    #if DEBUG
+
+                    if (!DevAnalyzer.PrepareOnly)
+                    {
+                        procCmd.ExecuteNonQuery();
+                    }
+
+#if DEBUG
                     sw.Stop();
-                    Debug.WriteLine("OracleCommnad.ExecuteNonQuery(): report \"" + this.Report.AttrOrEmpty(AName.name) + "\" за " + sw.ElapsedTicks.ToString() + " тактов = " + sw.ElapsedMilliseconds.ToString() + " мс");
-                    #endif
+                    // Debug.WriteLine("OracleCommnad.ExecuteNonQuery(): report \"" + this.Report.AttrOrEmpty(AName.name) + "\" за " + sw.ElapsedTicks.ToString() + " тактов = " + sw.ElapsedMilliseconds.ToString() + " мс");
+#endif
                     WaitUIHelper.LastUsedUIHelper.SetDescription(WaitUIHelper.DESCRIPTION_DEFAULT);
                 }
                 //var connection=GetConnection();
@@ -503,48 +597,62 @@ namespace sql.builder.DataApi
         {
             // Значительная часть алгоритма ниже заявязана на Report , который равен null для DataSet полученного не из Report
             // Пока закрыто заглушками и проверками 
-            if (this.CustomRefresh != null) {
+            if (this.CustomRefresh != null)
+            {
                 this.CustomRefresh.Invoke(this);
                 this._refreshed = true;
                 return;
             }
-            if (XmlReports.SourceFolder == null) {
+            if (XmlReports.SourceFolder == null)
+            {
                 WaitUIHelper.LastUsedUIHelper.Show("Загрузка данных", WaitUIMode.WaitCursor);
             }
-            try {
-                if (this.Report != null && this.Report.Pivot) {
+            try
+            {
+                if (this.Report != null && this.Report.Pivot)
+                {
                     this.ExecuteReportProc(ref retSql, onlyGetSql);
                     this.Report.Result(pars, useRepository, this, false, this.SchemePreset);
                     this.addBandsForTransposed();
                 }
-                if (pars != null && this.InputParams != null) {
+                if (pars != null && this.InputParams != null)
+                {
                     this.SetParams(pars);
                 }
                 int index;
                 // !! Организовать транзакции
                 //if (!IsVertica) ((OracleConnection)GetConnection()).AutoCommit = false;
-                if (this.Report != null && this.Report.Complicated) {
+                if (this.Report != null && this.Report.Complicated)
+                {
                     XmlDocument result = XmlReports.executeReportOld(this.Report.Attribute(AName.name).Value, false, this.CompiledReport);
                     this.Scheme.Elements().Remove();
                     this.Scheme.Add(XDocument.Parse(result.SelectSingleNode("root/scheme").OuterXml).Root.Elements());
                     Parser.LoadReportDataFromXml(XDocument.Parse(result.InnerXml).Root, this);
-                    foreach (VDataTable table in this.Tables) {
+                    foreach (VDataTable table in this.Tables)
+                    {
                         table.ClientCalculations();
                     }
-                } else {
-                    if (this.Report != null && !this.Report.Pivot) {
+                }
+                else
+                {
+                    if (this.Report != null && !this.Report.Pivot)
+                    {
                         this.ExecuteReportProc(ref retSql, onlyGetSql);
                     }
-                    if (this.UseTempTable) {
-                        if (!onlyGetSql) {
+                    if (this.UseTempTable)
+                    {
+                        if (!onlyGetSql)
+                        {
                             WaitUIHelper.LastUsedUIHelper.SetDescription("Заполнение временной таблицы...");
                         }
-                        if (this.MatQueriesNames.Count != 0) {
+                        if (this.MatQueriesNames.Count != 0)
+                        {
                             string namesToClear = "'" + this.MatQueriesNames[0] + "'";
-                            for (index = 1; index < this.MatQueriesNames.Count; index++) {
+                            for (index = 1; index < this.MatQueriesNames.Count; index++)
+                            {
                                 namesToClear = namesToClear + ",'" + this.MatQueriesNames[index] + "'";
                             }
-                            XmlReports.executeNonQuery("delete from rr_temp where skod in (" + namesToClear + ")", (OracleConnection)GetConnection());
+                            XmlReports.executeNonQuery("delete from rr_temp where skod in (" + namesToClear + ")", (OracleConnection)GetConnection(), null, false);
                         }
                         //IEnumerable<string> ProcParamNames = VReport.ExtractParamsFromSqlText(this.ProcedureText).OrderByDescending(Cmn.LengthOfString);
                         OracleParameter[] parsList;
@@ -554,40 +662,58 @@ namespace sql.builder.DataApi
                         string[] ProcParamNames = Cmn.GetParameterNames(cmd.Parameters);
                         cmd.ParameterCheck = false;
                         cmd.Parameters.Clear();
-                        if (ProcParamNames.Length != 0) {
+                        if (ProcParamNames.Length != 0)
+                        {
                             // Сортируем так, чтобы подстановка значений параметров прошла в правильном порядке (сначала kodd_flat, затем kodd, см. 71061 и 71118 в SD)
                             System.Array.Sort<string>(ProcParamNames, Cmn.DescComparsionByLength);
                             VDataTable.SetCommandParams(this, null, cmd, ProcParamNames);
                             parsList = new OracleParameter[cmd.Parameters.Count];
                             cmd.Parameters.CopyTo(parsList, 0);
-                            for (index = cmd.Parameters.Count - 1; index >= 0; index--) {
+                            for (index = cmd.Parameters.Count - 1; index >= 0; index--)
+                            {
                                 cmd.Parameters.RemoveAt(index);
                             }
-                        } else {
+                        }
+                        else
+                        {
                             parsList = null;
                         }
-                        if (onlyGetSql) {
+                        if (onlyGetSql)
+                        {
                             retSql += Environment.NewLine + VDBSelectCommand.GetCmdParametrizedText(cmd) + Environment.NewLine + "/";
-                        } else {
-                            DevAnalyzer.AnalyzePrepSql(cmd.CommandText);
-                            XmlReports.executeNonQuery(cmd.CommandText, (OracleConnection)GetConnection(), parsList);
                         }
-                        if (this.UpdateTempTable) {
+                        else
+                        {
+                            DevAnalyzer.AnalyzePrepSql(cmd.CommandText);
+                            // DevAnalyzer.AnalyzeSuppressedSql(cmd.CommandText);
+                            if (!DevAnalyzer.PrepareOnly)
+                            {
+                                XmlReports.executeNonQuery(cmd.CommandText, (OracleConnection)GetConnection(), parsList);
+                            }
+                        }
+                        if (this.UpdateTempTable)
+                        {
                             var tbl = (VDataTable)this.Tables[0];
                             VDataColumn col_dog = tbl.GetColumn("kod_dog");
                             VDataColumn col_kodp = tbl.GetColumn("kodp");
-                            if (col_dog != null) {
+                            if (col_dog != null)
+                            {
                                 SqlUslPoisk.FillDogovorDataByt(col_dog.TempColumnName, tbl.QueryName, (OracleConnection)GetConnection());
-                            } else if (col_kodp != null) {
+                            }
+                            else if (col_kodp != null)
+                            {
                                 SqlUslPoisk.FillAbonentDataByt(col_kodp.TempColumnName, tbl.QueryName, (OracleConnection)GetConnection());
                             }
                         }
-                        if (!onlyGetSql) {
+                        if (!onlyGetSql)
+                        {
                             WaitUIHelper.LastUsedUIHelper.SetDescription(WaitUIHelper.DESCRIPTION_DEFAULT);
                         }
                     }
-                    if (!this.IsVertica) {
-                        for (index = 0; index < this.Tables.Count; index++) {
+                    if (!this.IsVertica)
+                    {
+                        for (index = 0; index < this.Tables.Count; index++)
+                        {
                             VDataTable table = (VDataTable)this.Tables[index];
                             string cmd_text = table.DataAdapter.SelectCommand.CommandText;
                             table.DataAdapter.SelectCommand.Dispose();
@@ -599,38 +725,48 @@ namespace sql.builder.DataApi
                         }
                     }
                     // Емцов. иногда данные не нужно грузить на клиент
-                    for (index = 0; index < this.Tables.Count; index++) {
+                    for (index = 0; index < this.Tables.Count; index++)
+                    {
                         VDataTable table = (VDataTable)this.Tables[index];
-                        if (!VDataTable.IsDependantRefresh(table)) {  // См. SD 71981 в тепловой Казани 
+                        if (!VDataTable.IsDependantRefresh(table))
+                        {  // См. SD 71981 в тепловой Казани 
                             VDataTable vdt = table as VDataTable;
                             Contract.Assume(vdt != null);
                             vdt.Refresh(ref retSql, onlyProc || onlyGetSql);
                         }
                     }
-                    for (index = 0; index < this.Tables.Count; index++) {
+                    for (index = 0; index < this.Tables.Count; index++)
+                    {
                         DataTable table = this.Tables[index];
-                        if (!VDataTable.IsDependantRefresh(table)) {  // См. SD 71981 в тепловой Казани 
+                        if (!VDataTable.IsDependantRefresh(table))
+                        {  // См. SD 71981 в тепловой Казани 
                             VDataTable vdt = table as VDataTable;
-                            Contract.Assume(vdt != null);                
+                            Contract.Assume(vdt != null);
                             VDataTableTransposeUtils.TransposeIfNeed(vdt);
                             vdt.DoClientCalculations();
                         }
                     }
                 }
                 this._refreshed = true;
-            } finally {
-                if (XmlReports.SourceFolder == null) {
+            }
+            finally
+            {
+                if (XmlReports.SourceFolder == null)
+                {
                     WaitUIHelper.LastUsedUIHelper.Hide();
                 }
             }
-            if (this.Scheme != null) {
+            if (this.Scheme != null)
+            {
                 this.Scheme.SetAttrValue(AName.timestamp, DateTime.Now);
             }
         }
         internal void addBandsForTransposedPre()
         {
-            foreach (XElement col in this.Scheme.Descendants(EName.table).Elements(EName.viewcolumns).Descendants(EName.column).Where(e => e.AttrOrEmpty(AName.pivot) == "1").ToList()) { // Множественные колонки меняем на бенды
-                if (!col.AncestorsAndSelf().Any(e => e.Attribute(AName.dimension) != null)) {
+            foreach (XElement col in this.Scheme.Descendants(EName.table).Elements(EName.viewcolumns).Descendants(EName.column).Where(e => e.AttrOrEmpty(AName.pivot) == "1").ToList())
+            { // Множественные колонки меняем на бенды
+                if (!col.AncestorsAndSelf().Any(e => e.Attribute(AName.dimension) != null))
+                {
                     XElement band = new XElement(EName.band);
                     band.CopyAttributes(col.Attributes());
                     //XElement newcol = new XElement(col);
@@ -644,12 +780,12 @@ namespace sql.builder.DataApi
         private void addBandsForTransposed()
         {
 
-            var dimNames = new SortedList<string,List<string>>();
+            var dimNames = new SortedList<string, List<string>>();
 
 
             foreach (XElement tbl in Scheme.Descendants("table").ToArray()) //Меняем обратно, чтобы не переписывать то, что ниже
             {
-                dimNames.Add(tbl.Attribute(TextConst.AName.As).Value,new List<string>());
+                dimNames.Add(tbl.Attribute(TextConst.AName.As).Value, new List<string>());
                 foreach (XElement band in tbl.Elements("viewcolumns").Descendants("band").Where(e => Cmn.GetAttrValue(e, "pivot") == "1").ToArray()) //Меняем обратно, чтобы не переписывать то, что ниже
                 {
 
@@ -719,7 +855,7 @@ namespace sql.builder.DataApi
                                     }
                                     else
                                     {
-                                        title = Cmn.GetAttrValue(cols[0],"value-title");
+                                        title = Cmn.GetAttrValue(cols[0], "value-title");
                                     }
                                     band = new XElement("band", new XAttribute("title", title)
                                        , new XAttribute("value-column", cols[0].Attribute("value-column").Value)
@@ -754,14 +890,17 @@ namespace sql.builder.DataApi
                                             viewCol.SetAttributeValue("title", plCol.Attribute("title").Value);
                                         }
                                     }
-                                    else {
+                                    else
+                                    {
                                         viewCol.SetAttributeValue("title", col.Attribute("band-title").Value.SubstringAfter('|'));
-                                        if (plCol != null) {
+                                        if (plCol != null)
+                                        {
                                             viewCol.SetAttributeValue("visible", "1");
                                             Cmn.CopyAttribute(plCol, viewCol, "agg");
                                             Cmn.CopyAttribute(plCol, col, "agg");
                                         }
-                                        if (band.Parent == null) {
+                                        if (band.Parent == null)
+                                        {
                                             viewCol.AddBeforeSelf(band);
                                         }
                                         viewCol.Remove();
@@ -809,9 +948,11 @@ namespace sql.builder.DataApi
             List<string> titleArray = title.Split('|').ToList();
             XElement tgBand = rootBand;
             XElement newBand = null;
-            for (int i = 0; i < titleArray.Count - 1; i++) {
+            for (int i = 0; i < titleArray.Count - 1; i++)
+            {
                 newBand = tgBand.Elements(EName.band).FirstOrDefault(e => e.AttrOrDefault(AName.title, string.Empty) == titleArray[i]);
-                if (newBand == null) {
+                if (newBand == null)
+                {
                     newBand = new XElement(EName.band, new XAttribute(AName.title, titleArray[i]));
                     tgBand.Add(newBand);
                 }
@@ -822,7 +963,8 @@ namespace sql.builder.DataApi
         internal List<string> GetParNames()
         {
             var ss = new List<string>();
-            if (InputParams != null) {
+            if (InputParams != null)
+            {
                 ss.AddRange(InputParams.Values.Select(Cmn.GetParameterName).Distinct());
             }
             return ss;
@@ -831,7 +973,8 @@ namespace sql.builder.DataApi
         {
             VDataTable tbl = this.GetTable("params_info");
             DataColumn col_name, col_text;
-            if (tbl == null) {
+            if (tbl == null)
+            {
                 tbl = new VDataTable(false);
                 tbl.TableName = "params_info";
                 tbl.StructureType = StructureType.Info;
@@ -841,26 +984,33 @@ namespace sql.builder.DataApi
                 tbl.Columns.Add(col_text);
                 tbl.PrimaryKey = new DataColumn[1] { col_name };
                 this.Tables.Add(tbl);
-            } else {
+            }
+            else
+            {
                 col_name = tbl.Columns["param_name"];
                 col_text = tbl.Columns["text"];
             }
             DataRow row = tbl.Rows.Find(paramName);
-            if (row == null) {
+            if (row == null)
+            {
                 row = tbl.NewRow();
                 row[col_name] = paramName;
                 row[col_text] = value;
                 tbl.Rows.Add(row);
-            } else {
+            }
+            else
+            {
                 row[col_text] = value;
             }
         }
         private IList<VDataTable> ArrayValueTables()
         {
             List<VDataTable> list = new List<VDataTable>();
-            for (int index = 0; index < this.Tables.Count; index++) {
+            for (int index = 0; index < this.Tables.Count; index++)
+            {
                 VDataTable dt = (VDataTable)this.Tables[index];
-                if (dt.StructureType == StructureType.Array) {
+                if (dt.StructureType == StructureType.Array)
+                {
                     list.Add(dt);
                 }
             }
@@ -869,9 +1019,12 @@ namespace sql.builder.DataApi
         internal VDataTable ArrayValueTable(string name)
         {
             VDataTable dt = (VDataTable)this.Tables[name];
-            if (dt != null && dt.StructureType == StructureType.Array) {
+            if (dt != null && dt.StructureType == StructureType.Array)
+            {
                 return dt;
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
@@ -898,15 +1051,20 @@ namespace sql.builder.DataApi
                     }
                 }
             }*/
-            if (!string.IsNullOrEmpty(formName)) {
+            if (!string.IsNullOrEmpty(formName))
+            {
                 DataTable params_info = this.Tables["params_info"];
-                if (params_info != null) {
-                    if (this.formInfoFieldsTextNodes == null) {
+                if (params_info != null)
+                {
+                    if (this.formInfoFieldsTextNodes == null)
+                    {
                         XElement formInfoQuery = XmlReports.Environment.Manager.GetScheme().Elements(EName.queries).Elements(EName.query).SearchByAttribute(AName.name, "form:" + formName);
-                        if (formInfoQuery == null) {
+                        if (formInfoQuery == null)
+                        {
                             formInfoQuery = XmlReports.Environment.Manager.GetOldScheme().Elements(EName.queries).Elements(EName.query).SearchByAttribute(AName.name, "form:" + formName);
                         }
-                        if (formInfoQuery != null) {
+                        if (formInfoQuery != null)
+                        {
                             // Здесь анализируется query, созданный в Compiler.addFormInfoQueries()
                             // 1. Определяем позицию колонок "name" и "text" внутри select
                             XElement select = formInfoQuery.Element(EName.select);
@@ -921,13 +1079,15 @@ namespace sql.builder.DataApi
                             //
                             IList<XElement> sub_queries = formInfoQuery.Element(EName.from).Elements().Elements(EName.union).Elements(EName.query).ToList();
                             int count = sub_queries.Count;
-                            if (count == 0) {
+                            if (count == 0)
+                            {
                                 sub_queries = new XElement[1] { formInfoQuery };
                                 count = 1;
                             }
                             // 2. Формируем коллекцию this.formInfoFieldsTextNodes
                             this.formInfoFieldsTextNodes = new SortedList<string, XElement>(count);
-                            for (index = 0; index < count; index++) {
+                            for (index = 0; index < count; index++)
+                            {
                                 select = sub_queries[index].Element(EName.select);
                                 Contract.Assert(select != null);
                                 cols = select.Elements();
@@ -942,24 +1102,33 @@ namespace sql.builder.DataApi
                             }
                         }
                     }
-                    if (this.formInfoFieldsTextNodes != null) {
+                    if (this.formInfoFieldsTextNodes != null)
+                    {
                         // заполняем теги из this.formInfoFieldsTextNodes значениями полей формы
                         DataColumn name_column = params_info.Columns["param_name"];
                         Contract.Assert(name_column != null && name_column.DataType == typeof(string));
                         DataColumn text_column = params_info.Columns["text"];
                         Contract.Assert(text_column != null && text_column.DataType == typeof(string));
-                        for (index = 0; index < params_info.Rows.Count; index++) {
+                        for (index = 0; index < params_info.Rows.Count; index++)
+                        {
                             DataRow row = params_info.Rows[index];
                             string param_name = row.Field<string>(name_column);
                             XElement node;
-                            if (this.formInfoFieldsTextNodes.TryGetValue(param_name, out node)) {
+                            if (this.formInfoFieldsTextNodes.TryGetValue(param_name, out node))
+                            {
                                 string text = row.Field<string>(text_column);
-                                if (string.IsNullOrEmpty(text)) {
+                                if (string.IsNullOrEmpty(text))
+                                {
                                     node.Value = "''";
-                                } else {
-                                    if (text.Length > 4000) {
+                                }
+                                else
+                                {
+                                    if (text.Length > 4000)
+                                    {
                                         text = "'" + text.Substring(0, 3995) + "...'";
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         text = "'" + text + "'";
                                     }
                                     node.Value = text;
@@ -971,40 +1140,58 @@ namespace sql.builder.DataApi
             }
             VXElement pars = new VXElement(EName.@params);
             IList<VDataTable> list = this.ArrayValueTables();
-            for (index = 0; index < list.Count; index++) {
+            for (index = 0; index < list.Count; index++)
+            {
                 VDataTable tbl = list[index];
-                if (fieldNames.Contains(tbl.TableName)) {
+                if (fieldNames.Contains(tbl.TableName))
+                {
                     VXElement param = new VXElement(EName.param);
                     param.Add(new XAttribute(AName.name, tbl.TableName));
                     param.Tag = tbl; // зачем нужен tag?
-                    if (!tbl.ParamUsed && !onlyForSelectedValues) {
+                    if (!tbl.ParamUsed && !onlyForSelectedValues)
+                    {
                         param.Add(new XElement(EName.undefined));
-                    } else {
+                    }
+                    else
+                    {
                         param.Add(ArrayTableParamValueAsParamXelementContent(tbl));
                     }
                     pars.Add(param);
                 }
             }
             DataColumnCollection columns = this.ParamsTable.Columns;
-            for (index = 0; index < columns.Count; index++) {
+            for (index = 0; index < columns.Count; index++)
+            {
                 VDataColumn col = (VDataColumn)columns[index];
-                if (VDataColumn.HasBoundControl(col)) {
+                if (VDataColumn.HasBoundControl(col))
+                {
                     UIBase control = col.BoundControls[0];
-                    if (fieldNames.Contains(control.FieldName) && control.SourceType != ReturnType.Array) {
+                    if (fieldNames.Contains(control.FieldName) && control.SourceType != ReturnType.Array)
+                    {
                         VXElement param = new VXElement(EName.param);
                         param.Add(new XAttribute(AName.name, col.ColumnName));
-                        if (!col.ParamUsed && !onlyForSelectedValues) { // 20171030 Бельченко, раньше этого условия не было, странно, как вообще работало ...
+                        if (!col.ParamUsed && !onlyForSelectedValues)
+                        { // 20171030 Бельченко, раньше этого условия не было, странно, как вообще работало ...
                             param.Add(new XElement(EName.undefined));
-                        } else {
+                        }
+                        else
+                        {
                             // Емцов - обработка null-значений
                             object val = ParamsTable.Rows[0][col];
-                            if (col.BoundControls.First().ShowNulls) {
-                                if (Cmn.IsNullOrDBNull(val)) {
-                                    if (col.DataType == typeof(decimal)) {
+                            if (col.BoundControls.First().ShowNulls)
+                            {
+                                if (Cmn.IsNullOrDBNull(val))
+                                {
+                                    if (col.DataType == typeof(decimal))
+                                    {
                                         val = Cmn.ToDecimal(TextConst.NullConsts.NNULL);
-                                    } else if (col.DataType == typeof(string)) {
+                                    }
+                                    else if (col.DataType == typeof(string))
+                                    {
                                         val = TextConst.NullConsts.SNULL;
-                                    } else if (col.DataType == typeof(DateTime)) {
+                                    }
+                                    else if (col.DataType == typeof(DateTime))
+                                    {
                                         val = DateTime.Parse(TextConst.NullConsts.DNULL);
                                     }
                                 }
@@ -1016,9 +1203,12 @@ namespace sql.builder.DataApi
                     }
                 }
             }
-            if (this.InputParams != null) {
-                foreach (OracleParameter par in this.InputParams.Values) {
-                    if (fieldNames.Contains(par.ParameterName)) {
+            if (this.InputParams != null)
+            {
+                foreach (OracleParameter par in this.InputParams.Values)
+                {
+                    if (fieldNames.Contains(par.ParameterName))
+                    {
                         VXElement param = new VXElement(EName.param);
                         param.Add(new XAttribute(AName.name, par.ParameterName));
                         param.Add(Factory.NewConst(Cmn.ToOracleString(par.Value)));
@@ -1031,13 +1221,17 @@ namespace sql.builder.DataApi
         private static XElement ArrayTableParamValueAsParamXelementContent(VDataTable tbl)
         {
             XElement call;
-            if (!tbl.IsArrayParamStringUse) {
+            if (!tbl.IsArrayParamStringUse)
+            {
                 call = Factory.NewCall(TextConst.AVFunction.Array);
-            } else {
+            }
+            else
+            {
                 call = Factory.NewCall("sarray");
             }
             DataColumn col = tbl.Columns[0];
-            for (int index = 0; index < tbl.Rows.Count; index++) {
+            for (int index = 0; index < tbl.Rows.Count; index++)
+            {
                 string val = Cmn.ToOracleString(tbl.Rows[index][col]);
                 call.Add(Factory.NewConst(val));
             }
@@ -1050,28 +1244,40 @@ namespace sql.builder.DataApi
             string q = string.Empty;
             int isString = -1;
             var list = new List<object>();
-            foreach (string val in factParamContent.DescendantsAndSelf(EName.@const).Select(EPredicate.ElementValue)) {
+            foreach (string val in factParamContent.DescendantsAndSelf(EName.@const).Select(EPredicate.ElementValue))
+            {
                 string val1 = val;
-                if (isStringArray) {
+                if (isStringArray)
+                {
                     s += q + val1;
-                } else {
-                    if (isString == -1) {
-                        if (val1.StartsWith("'")) {
+                }
+                else
+                {
+                    if (isString == -1)
+                    {
+                        if (val1.StartsWith("'"))
+                        {
                             isString = 1;
-                        } else {
+                        }
+                        else
+                        {
                             isString = 0;
                         }
                     }
-                    if (isString == 0) {
+                    if (isString == 0)
+                    {
                         list.Add(Cmn.ToDecimal(val1));
-                    } else {
+                    }
+                    else
+                    {
                         val1 = val1.Substring(1, val1.Length - 2);
                         list.Add(val1);
                     }
                 }
                 q = ",";
             }
-            if (isStringArray) {
+            if (isStringArray)
+            {
                 list.Add(s);
             }
             return list.ToArray();
@@ -1079,12 +1285,14 @@ namespace sql.builder.DataApi
         private static object[] ArrayTableParamValueToObjectArray(DataTable tbl)
         {
             int count = tbl.Rows.Count;
-            if (count == 0) {
+            if (count == 0)
+            {
                 return Array.Empty<object>();
             }
             object[] array = new object[count];
             DataColumn col = tbl.Columns[0];
-            for (int index = 0; index < count; index++) {
+            for (int index = 0; index < count; index++)
+            {
                 array[index] = tbl.Rows[index][col];
             }
             return array;
@@ -1092,58 +1300,80 @@ namespace sql.builder.DataApi
         public DataColumn GetParamColumn(string paramName)
         {
             string[] ss = paramName.Split('.');
-            if (ss.Length == 2) {
+            if (ss.Length == 2)
+            {
                 DataTable tbl = this.Tables[ss[0]];
                 DataColumn col = tbl.Columns[ss[1]];
                 return col;
-            } else {
+            }
+            else
+            {
                 return this.GetVariableColumn(paramName);
             }
         }
         internal object GetParamValueByName(string paramName, DataRow row)
         {
-            if (this.InputParams != null) {
+            if (this.InputParams != null)
+            {
                 OracleParameter param;
-                if (this.InputParams.TryGetValue(paramName, out param)) {
-                    if (param.OracleDbType == OracleDbType.Array) { // может что то словмать, пока оставлю только для array
+                if (this.InputParams.TryGetValue(paramName, out param))
+                {
+                    if (param.OracleDbType == OracleDbType.Array)
+                    { // может что то словмать, пока оставлю только для array
                         return this.InputParamsValues[paramName];
-                    } else {
+                    }
+                    else
+                    {
                         return param.Value;
                     }
                 }
             }
             VDataTable paramsTable = this.ParamsTable;
-            if (paramsTable != null) {
+            if (paramsTable != null)
+            {
                 VDataTable paramTable = this.ArrayValueTable(paramName);
-                if (paramTable != null) {                   
-                    if (paramTable.ParamUsed) {
+                if (paramTable != null)
+                {
+                    if (paramTable.ParamUsed)
+                    {
                         object[] arrVal = ArrayTableParamValueToObjectArray(paramTable);
                         //ArrayStorage arrayStorage = new ArrayStorage(paramName);
                         //arrayStorage.SetValues(arrVal);
                         //var val = arrayStorage.GetSql();
                         return arrVal;
                         //ArrayTableParamValueToString(paramTable);
-                    } else {
-                       return Cmn.undefinedString;
                     }
-                } else if (paramsTable.Columns.Contains(paramName)) {
+                    else
+                    {
+                        return Cmn.undefinedString;
+                    }
+                }
+                else if (paramsTable.Columns.Contains(paramName))
+                {
                     VDataColumn parCol = paramsTable.GetColumn(paramName);
-                    if (parCol.ParamUsed) {
+                    if (parCol.ParamUsed)
+                    {
                         return paramsTable.CurrentRow[parCol];
-                    } else {
+                    }
+                    else
+                    {
                         return Cmn.undefinedString;
                     }
                 }
             }
             DataColumn col = GetParamColumn(paramName);
-            if (col != null) {
+            if (col != null)
+            {
                 DataRow row1 = (col.Table as VDataTable).CurrentRow;
-                if (row != null) {
-                    if (row.Table == col.Table) {
+                if (row != null)
+                {
+                    if (row.Table == col.Table)
+                    {
                         row1 = row;
                     }
                 }
-                if (row1 == null) {
+                if (row1 == null)
+                {
                     return null;
                 }
                 return (col as VDataColumn).GetValue(row1);// row1[col];
@@ -1153,35 +1383,48 @@ namespace sql.builder.DataApi
         internal OracleParameter GetParamAsOracleParametr(string paramName)
         {
             OracleParameter dbPar;
-            if (!VDBSelectCommand.TryGetGlobalDbParam(paramName, out dbPar)) {
+            if (!VDBSelectCommand.TryGetGlobalDbParam(paramName, out dbPar))
+            {
                 VDataTable paramsTable = this.ParamsTable;
-                if (paramsTable != null) {
+                if (paramsTable != null)
+                {
                     VDataTable paramTable = (paramsTable.DataSet as VDataSet).ArrayValueTable(paramName);
-                    if (paramTable != null) {
+                    if (paramTable != null)
+                    {
                         dbPar = new OracleParameter(paramName, OracleDbType.Array);
-                        if (paramTable.ParamUsed) {
+                        if (paramTable.ParamUsed)
+                        {
                             object[] arrVal = ArrayTableParamValueToObjectArray(paramTable);
                             ArrayStorage arrayStorage = new ArrayStorage(paramName);
                             arrayStorage.SetValues(arrVal);
                             string val = arrayStorage.GetSql();
                             dbPar.Value = val;
-                        } else {
+                        }
+                        else
+                        {
                             dbPar.Value = Cmn.undefinedString;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         VDataColumn parCol = this.GetVariableColumn(paramName);
                         //var parCol = (VDataColumn)paramsTable.Columns[paramName];
                         dbPar = new OracleParameter(paramName, Cmn.GetDBType(parCol.DataType));
-                        if (paramsTable.Columns.Contains(paramName)) {
-                            if (parCol.ParamUsed || TextConst.AVParamArray.FormExtPars.Contains(paramName) || TextConst.AVParamArray.TableExtPars.Contains(paramName)) {
+                        if (paramsTable.Columns.Contains(paramName))
+                        {
+                            if (parCol.ParamUsed || TextConst.AVParamArray.FormExtPars.Contains(paramName) || TextConst.AVParamArray.TableExtPars.Contains(paramName))
+                            {
                                 object val = paramsTable.CurrentRow[parCol];
-                                if (VDataColumn.HasBoundControl(parCol) && parCol.BoundControls[0].IsStringToArray()) {
+                                if (VDataColumn.HasBoundControl(parCol) && parCol.BoundControls[0].IsStringToArray())
+                                {
                                     dbPar.OracleDbType = OracleDbType.Array;
-                                    if (Cmn.IsNullOrDBNull(val)) {
+                                    if (Cmn.IsNullOrDBNull(val))
+                                    {
                                         val = string.Empty;
                                     }
                                     List<object> arrVal = Cmn.SplitString((string)val).ToList<object>();
-                                    if (arrVal.Count == 0) {
+                                    if (arrVal.Count == 0)
+                                    {
                                         arrVal.Add(" ");
                                     }
                                     ArrayStorage arrayStorage = new ArrayStorage(paramName);
@@ -1189,10 +1432,14 @@ namespace sql.builder.DataApi
                                     val = arrayStorage.GetSql();
                                 }
                                 dbPar.Value = val;
-                            } else {
+                            }
+                            else
+                            {
                                 dbPar.Value = Cmn.undefinedString;
                             }
-                        } else {
+                        }
+                        else
+                        {
                             dbPar.Value = this.GetVariableValue(paramName);
                         }
                     }
@@ -1203,21 +1450,27 @@ namespace sql.builder.DataApi
         internal static VDataSet FromXml(XElement xParams, VDataSet dataSet = null, bool clean_ds = true)
         {
             VDataSet dsReport = dataSet;
-            if (dsReport == null) {
+            if (dsReport == null)
+            {
                 dsReport = new VDataSet();
-            } else if (clean_ds) {
+            }
+            else if (clean_ds)
+            {
                 // чистим констрэйнты
                 dsReport.EnforceConstraints = false;
                 dsReport.Relations.Clear();
-                foreach (DataTable dt in dsReport.Tables) {
+                foreach (DataTable dt in dsReport.Tables)
+                {
                     dt.ChildRelations.Clear();
                     dt.ParentRelations.Clear();
                     var constraints = dt.Constraints.OfType<ForeignKeyConstraint>().Reverse();
-                    foreach (ForeignKeyConstraint constraint in constraints) {
+                    foreach (ForeignKeyConstraint constraint in constraints)
+                    {
                         dt.Constraints.Remove(constraint);
                     }
                 }
-                foreach (DataTable dt in dsReport.Tables) {
+                foreach (DataTable dt in dsReport.Tables)
+                {
                     dt.Constraints.Clear();
                 }
                 dsReport.Tables.Clear();
@@ -1225,20 +1478,23 @@ namespace sql.builder.DataApi
             // ищем узел с данными 
             XElement xData = xParams.Element(EName.data);
             // рекурсивно заполняем 
-            foreach (var xTable in xParams.Element(EName.scheme).Elements(EName.table)) {
+            foreach (var xTable in xParams.Element(EName.scheme).Elements(EName.table))
+            {
                 getDataTableFromXml(dsReport, xTable, xData);
             }
             return dsReport;
         }
         internal static XElement ToXml(VDataSet ds, XName root_name)
         {
-            if (ds.Scheme == null || !ds.Scheme.HasElements) {
+            if (ds.Scheme == null || !ds.Scheme.HasElements)
+            {
                 ds.Scheme = GetXmlSchemeFromDataSet(ds);
             }
             XElement xRoot = new XElement(root_name, ds.Scheme);
             XElement xData = new XElement(EName.data);
             // перебираем описания таблиц
-            foreach (XElement xSchemeTable in xRoot.Element(EName.scheme).Elements(EName.table)) {
+            foreach (XElement xSchemeTable in xRoot.Element(EName.scheme).Elements(EName.table))
+            {
                 string alias = xSchemeTable.Attribute(AName.@as).Value;
                 // каждому описанию сопоставляем DataTable
                 VDataTable dt = (VDataTable)ds.Tables[alias];
@@ -1258,7 +1514,8 @@ namespace sql.builder.DataApi
             // ищем таблицу с таким псевдонимом
             VDataTable dt = (VDataTable)ds.Tables[table_name];
             // если таблица не найдена - создаем новую
-            if (dt == null) {
+            if (dt == null)
+            {
                 is_new_dt = true;
                 // формируем DataTable с псевдонимом таблицы
                 dt = new VDataTable(xTable, false, table_name);
@@ -1270,20 +1527,24 @@ namespace sql.builder.DataApi
                 ds.Tables.Add(dt);
             }
             // получаем данные и заполняем ими DataTable
-            if (xData != null) {
+            if (xData != null)
+            {
                 // дополнительные сведения о колонках
                 XElement xColumns = xTable.Element(EName.columns);
                 fillTableDataFromXml(ref dt, xData, xColumns);
             }
             // если есть дочерние таблицы
             XElement xChilds = xTable.Element(EName.childs);
-            if (xChilds != null) {
+            if (xChilds != null)
+            {
                 // перебираем все дочерние таблицы
-                foreach (XElement xchild_table in xChilds.Elements(EName.table)) {
+                foreach (XElement xchild_table in xChilds.Elements(EName.table))
+                {
                     // формируем дочернюю таблицу
                     DataTable dt_child = getDataTableFromXml(ds, xchild_table, xData);
                     // добавляем связь в DataSet
-                    if (is_new_dt) {
+                    if (is_new_dt)
+                    {
                         DataRelation dr = ds.Relations.Add(dt.Columns[TextConst.AVColumn.Sid], dt_child.Columns[TextConst.AVColumn.SparentId]);
                         dr.RelationName = dt_child.TableName;
                     }
@@ -1432,60 +1693,77 @@ namespace sql.builder.DataApi
         }
         private static void fillTableColumnsFromXml(VDataTable dt, XElement xColumns, VDataSet ds)
         {
-            foreach (XElement xcolumn in xColumns.Elements()) {
-                if (xcolumn.Name == EName.column) {
+            foreach (XElement xcolumn in xColumns.Elements())
+            {
+                if (xcolumn.Name == EName.column)
+                {
                     VDataColumn col = VDataColumn.Create(xcolumn);
                     XAttribute attr = xcolumn.Attribute(AName.into);
-                    if (attr != null) {
+                    if (attr != null)
+                    {
                         col.TempColumnName = attr.Value;
                     }
                     attr = xcolumn.Attribute(TextConst.AName.ValueColumn);
-                    if (attr != null) {
+                    if (attr != null)
+                    {
                         col.OriginalNameForPivotColumn = attr.Value;
                     }
                     attr = xcolumn.Attribute(TextConst.AName.DimensionValue);
-                    if (attr != null) {
+                    if (attr != null)
+                    {
                         object val = attr.Value;
-                        if (Cmn.IsNumeric(val)) {
+                        if (Cmn.IsNumeric(val))
+                        {
                             col.PivotDimensionValue = Cmn.ToDecimal(val.ToString()); // Пока только числовые, если нужно доделать
                         }
                     }
                     attr = xcolumn.Attribute(TextConst.AName.DimensionColumn);
-                    if (attr != null) {
+                    if (attr != null)
+                    {
                         col.PivotDimensionName = attr.Value;
                     }
                     dt.Columns.Add(col);
                     attr = xcolumn.Attribute(AName.@default);
-                    if (attr != null) {
+                    if (attr != null)
+                    {
                         col.DefaultValue = attr.Value;
                     }
-                    if (xcolumn.AttrOrDefault(AName.client_calc, false)) {
+                    if (xcolumn.AttrOrDefault(AName.client_calc, false))
+                    {
                         col.IsClientCalculations = true; // можно устанавливать только после добавления колонки в DataTable
                     }
-                    if (xcolumn.AttrOrDefault(AName.excel_calc, false)) {
+                    if (xcolumn.AttrOrDefault(AName.excel_calc, false))
+                    {
                         col.IsExcelCalculations = true; // можно устанавливать только после добавления колонки в DataTable
                     }
                     attr = xcolumn.Attribute(AName.color);
-                    if (attr != null) {
+                    if (attr != null)
+                    {
                         col.BackColorSource = attr.Value;
                     }
                     attr = xcolumn.Attribute(AName.font_color);
-                    if (attr != null) {
+                    if (attr != null)
+                    {
                         col.FontColorSource = attr.Value;
-                    }                    
+                    }
                     attr = xcolumn.Attribute(AName.merge_key);
-                    if (attr != null) {
+                    if (attr != null)
+                    {
                         col.MergeKey = attr.Value;
                     }
-                    if (xcolumn.Attribute(TextConst.AName.ParentNodeId) != null) {
+                    if (xcolumn.Attribute(TextConst.AName.ParentNodeId) != null)
+                    {
                         dt.TreeParentFieldName = col.ColumnName;
                     }
                     attr = xcolumn.Attribute(AName.parname);
-                    if (attr != null) {
+                    if (attr != null)
+                    {
                         ds.AddVariableColumn(attr.Value, col);
                     }
-                } else if (xcolumn.Name == EName.band) {
-                    fillTableColumnsFromXml(dt, xcolumn,ds);
+                }
+                else if (xcolumn.Name == EName.band)
+                {
+                    fillTableColumnsFromXml(dt, xcolumn, ds);
                 }
             }
         }
@@ -1495,7 +1773,7 @@ namespace sql.builder.DataApi
             var table_name = dt.TableName;
 
             // Емцов - вернул, т.к. некорректно работала загрузка дефолтных значений
-          
+
             dt.SuppressChangeEvent();
             // Достаем описание всех строк для таблицы
             var xtrs = (xData.Descendants("table")
@@ -1511,10 +1789,10 @@ namespace sql.builder.DataApi
             foreach (var xtr in xtrs)
             {
                 var row = dt.NewRow();
-                
 
-                
-                bool isFormatError=false;
+
+
+                bool isFormatError = false;
 
                 int col_num = 0;
 
@@ -1568,10 +1846,12 @@ namespace sql.builder.DataApi
 
         void CreateBinding(UIBase ctrl)
         {
-            if (ctrl.SourceType == ReturnType.Simple) {
+            if (ctrl.SourceType == ReturnType.Simple)
+            {
                 var dt = GetTable(ctrl.TableName);
                 var vcol = dt.Columns.Cast<VDataColumn>().FirstOrDefault(e => e.ColumnName == ctrl.FieldName);
-                if (vcol == null) {
+                if (vcol == null)
+                {
                     dt.AddColumn(ctrl.FieldName, ctrl.ValueType);
                 }
 
@@ -1585,7 +1865,7 @@ namespace sql.builder.DataApi
             var stack = new Stack<VDataTable>();
             foreach (var t in Tables.Cast<VDataTable>()) stack.Push(t);
 
-            while(stack.Count > 0)
+            while (stack.Count > 0)
             {
                 var table = stack.Pop();
                 foreach (var t in table.GetChildTables()) stack.Push(t);

@@ -101,6 +101,7 @@ namespace sql.builder
         public static void Main(string[] args)
         {
             DevAnalyzer.Enabled = true;
+            DevAnalyzer.PrepareOnly =  true;
             DevAnalyzer.ClearTempFolder();
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
