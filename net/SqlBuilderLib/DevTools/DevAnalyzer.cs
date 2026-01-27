@@ -11,14 +11,6 @@ using sql.builder;
 using sql.builder.Clean.Extensions;
 using sql.builder.DataApi;
 
-//VReportProc repProc = this.Report.GetReportProc();
-//if (repProc != null)
-//{
-//    //WaitUIHelper.LastUsedUIHelper.Show("�������� ������", WaitUIMode.WaitCursor);
-//    OracleCommand procCmd = new OracleCommand();
-//    procCmd.Connection = this.GetConnection();
-//    procCmd.ParameterCheck = true; // ����� ��������� Parameters ����������� ��� ��������� CommandText
-//    procCmd.CommandText = repProc.Value;
 
 namespace SqlBuilderLib.DevTools
 {
