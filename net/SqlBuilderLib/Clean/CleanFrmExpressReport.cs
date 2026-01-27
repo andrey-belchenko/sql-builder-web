@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
@@ -23,6 +23,7 @@ using sql.builder.DataApi;
 using sql.builder.Print.Xlsx;
 using sql.builder.UI;
 using sql.builder.XmlHelpers;
+using SqlBuilderLib.DevTools;
 
 namespace sql.builder.WinForms
 {
@@ -36,7 +37,7 @@ namespace sql.builder.WinForms
         /// ������� ��������� ������������ �������� �����
         /// </summary>
         internal event EventHandler<CleanExpressReportEventArgs> CustomPrint;
-        
+
         private bool _openDocumentAfterPrint = true;
         /// <summary>
         /// ����� �� ��������� ������������� �����
@@ -99,7 +100,7 @@ namespace sql.builder.WinForms
         private string _reg_path;
         #endregion
         #region ��������
- 
+
         private XElement ParamValues
         {
             get
@@ -463,14 +464,18 @@ namespace sql.builder.WinForms
                 this.ShowMessages = false;
             }
             this.BeginForming();
-            string path;
+            string path = null;
             try
             {
+
                 VDataSet ds = this.RefreshData();
-                path = this.TryCustomPrint(ds);
-                if (path == null)
+                if (!DevAnalyzer.PrepareOnly)
                 {
-                    path = this.PrintData(ds, templateInfo);
+                    path = this.TryCustomPrint(ds);
+                    if (path == null)
+                    {
+                        path = this.PrintData(ds, templateInfo);
+                    }
                 }
                 var args = new CleanExpressReportEventArgs();
                 args.Path = path;
