@@ -13,6 +13,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
+    <PackageReference Include="Npgsql" Version="9.0.2" />
   </ItemGroup>
 
   <!-- Use direct DLL reference instead of ProjectReference to prevent automatic builds -->

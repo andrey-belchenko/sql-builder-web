@@ -8,7 +8,7 @@ namespace SqlBuilderLib.DevTools
 {
     internal class AnalyzerReportInfo
     {
-        public string FullName;
+        public string Name;
         public string Title;
         public string Path;
         public string NavId;

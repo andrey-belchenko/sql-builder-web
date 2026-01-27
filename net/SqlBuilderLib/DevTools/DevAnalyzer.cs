@@ -35,7 +35,7 @@ namespace SqlBuilderLib.DevTools
             SetReport(repInfo);
             var rep = new CleanExpressReport();
             rep.OpenDocumentAfterPrint = false;
-            rep.Initialize(repInfo.FullName);
+            rep.Initialize(repInfo.Name);
 
 
             foreach (var p in rep.GetParamFields())
@@ -116,8 +116,14 @@ namespace SqlBuilderLib.DevTools
             }
 
             rep.ExecuteReport();
+
+            SaveReportAnalysisResults();
         }
 
+        public static void SaveReportAnalysisResults(){
+            AnalyzerStorage.SaveReports(new []{ReportInfo});
+            AnalyzerStorage.SaveDependencies(GetReportDependencyRecords());
+        }
 
         public static IEnumerable<AnalyzerDependency> GetReportDependencyRecords()
         {
@@ -126,7 +132,7 @@ namespace SqlBuilderLib.DevTools
             {
                 list.Add(new AnalyzerDependency()
                 {
-                    ObjectName = ReportInfo.FullName,
+                    ObjectName = ReportInfo.Name,
                     ObjectType = "report",
                     UsedObjectName = tbl,
                     UsedObjectType = "table or view"

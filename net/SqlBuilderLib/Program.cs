@@ -175,13 +175,13 @@ namespace sql.builder
                     var fullName = $"{userep.P_Project}.{userep.P_Report}";
                     var info = new AnalyzerReportInfo()
                     {
-                        FullName = fullName,
+                        Name = fullName,
                         Title = userep.P_Title,
                         Path = path,
                         NavId = nav.P_IdName,
                         NavInfo = nav.P_Title ?? nav.P_Comment
                     };
-                    Console.WriteLine($"Analyze report: {info.FullName}");
+                    Console.WriteLine($"Analyze report: {info.Name}");
                     DevAnalyzer.AnalyzeRep(info);
                     Console.WriteLine("Extracted source tables:");
                     foreach (var tableName in DevAnalyzer.TableNames.OrderBy(t => t))
