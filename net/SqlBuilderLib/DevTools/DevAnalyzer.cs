@@ -75,7 +75,7 @@ namespace SqlBuilderLib.DevTools
                 
             }
 
-            var procNames = DevSqlParserAntlr.GetSourceProcedures(sql);
+            var procNames = DevSqlParserAntlr.GetSourceProcedures(Cmn.ClearUndefined(sql));
             ProcNames.UnionWith(procNames);
             LogSql(sql);
         }

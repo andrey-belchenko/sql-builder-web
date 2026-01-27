@@ -27,58 +27,54 @@ namespace SqlBuilderLib.DevTools
 
             var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            try
+            // Create case-insensitive character stream (PL/SQL grammar is case-sensitive but SQL is case-insensitive)
+            var input = new AntlrInputStream(plsqlText);
+            var caseChangingStream = new CaseChangingCharStream(input, true); // Convert to uppercase
+
+            // Create lexer and parser
+            var lexer = new PlSqlLexer(caseChangingStream);
+            var tokens = new CommonTokenStream(lexer);
+            var parser = new PlSqlParser(tokens);
+
+            // Remove default error listeners and add a throwing error listener
+            var errorListener = new ThrowingErrorListener();
+            lexer.RemoveErrorListeners();
+            lexer.AddErrorListener(errorListener);
+            parser.RemoveErrorListeners();
+            parser.AddErrorListener(errorListener);
+
+            // Parse the input
+            var tree = parser.sql_script();
+
+            // Check if we got a valid parse tree
+            if (tree == null)
             {
-                // Create case-insensitive character stream (PL/SQL grammar is case-sensitive but SQL is case-insensitive)
-                var input = new AntlrInputStream(plsqlText);
-                var caseChangingStream = new CaseChangingCharStream(input, true); // Convert to uppercase
-
-                // Create lexer and parser
-                var lexer = new PlSqlLexer(caseChangingStream);
-                var tokens = new CommonTokenStream(lexer);
-                var parser = new PlSqlParser(tokens);
-
-                // Remove default error listeners and add a non-throwing one
-                // This allows us to extract table names even if there are parse errors
-                parser.RemoveErrorListeners();
-                parser.AddErrorListener(new ConsoleErrorListener());
-
-                // Parse the input (may produce partial parse tree on errors)
-                var tree = parser.sql_script();
-
-                // Check if we got a valid parse tree
-                if (tree == null)
-                {
-                    return result;
-                }
-
-                // Normalize procedure name for comparison (case-insensitive)
-                string normalizedProcedureName = null;
-                if (!string.IsNullOrWhiteSpace(procedureName))
-                {
-                    normalizedProcedureName = procedureName.Trim().ToUpperInvariant();
-                }
-
-                // Create visitor to extract table names
-                var visitor = new TableNameExtractorVisitor(normalizedProcedureName);
-                visitor.Visit(tree);
-
-                // Get results
-                foreach (var tableName in visitor.TableNames)
-                {
-                    if (!string.IsNullOrWhiteSpace(tableName))
-                    {
-                        var normalized = NormalizeTableName(tableName);
-                        result.Add(normalized);
-                    }
-                }
+                errorListener.ThrowIfErrors();
+                return result;
             }
-            catch (Exception ex)
+
+            // Throw if any parsing errors occurred
+            errorListener.ThrowIfErrors();
+
+            // Normalize procedure name for comparison (case-insensitive)
+            string normalizedProcedureName = null;
+            if (!string.IsNullOrWhiteSpace(procedureName))
             {
-                // If parsing fails, return empty set (graceful degradation)
-                // Log the error for debugging
-                System.Diagnostics.Debug.WriteLine($"PL/SQL parsing error: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                normalizedProcedureName = procedureName.Trim().ToUpperInvariant();
+            }
+
+            // Create visitor to extract table names
+            var visitor = new TableNameExtractorVisitor(normalizedProcedureName);
+            visitor.Visit(tree);
+
+            // Get results
+            foreach (var tableName in visitor.TableNames)
+            {
+                if (!string.IsNullOrWhiteSpace(tableName))
+                {
+                    var normalized = NormalizeTableName(tableName);
+                    result.Add(normalized);
+                }
             }
 
             return result;
@@ -97,58 +93,54 @@ namespace SqlBuilderLib.DevTools
 
             var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            try
+            // Create case-insensitive character stream (PL/SQL grammar is case-sensitive but SQL is case-insensitive)
+            var input = new AntlrInputStream(plsqlText);
+            var caseChangingStream = new CaseChangingCharStream(input, true); // Convert to uppercase
+
+            // Create lexer and parser
+            var lexer = new PlSqlLexer(caseChangingStream);
+            var tokens = new CommonTokenStream(lexer);
+            var parser = new PlSqlParser(tokens);
+
+            // Remove default error listeners and add a throwing error listener
+            var errorListener = new ThrowingErrorListener();
+            lexer.RemoveErrorListeners();
+            lexer.AddErrorListener(errorListener);
+            parser.RemoveErrorListeners();
+            parser.AddErrorListener(errorListener);
+
+            // Parse the input
+            var tree = parser.sql_script();
+
+            // Check if we got a valid parse tree
+            if (tree == null)
             {
-                // Create case-insensitive character stream (PL/SQL grammar is case-sensitive but SQL is case-insensitive)
-                var input = new AntlrInputStream(plsqlText);
-                var caseChangingStream = new CaseChangingCharStream(input, true); // Convert to uppercase
-
-                // Create lexer and parser
-                var lexer = new PlSqlLexer(caseChangingStream);
-                var tokens = new CommonTokenStream(lexer);
-                var parser = new PlSqlParser(tokens);
-
-                // Remove default error listeners and add a non-throwing one
-                // This allows us to extract procedure names even if there are parse errors
-                parser.RemoveErrorListeners();
-                parser.AddErrorListener(new ConsoleErrorListener());
-
-                // Parse the input (may produce partial parse tree on errors)
-                var tree = parser.sql_script();
-
-                // Check if we got a valid parse tree
-                if (tree == null)
-                {
-                    return result;
-                }
-
-                // Normalize procedure name for comparison (case-insensitive)
-                string normalizedProcedureName = null;
-                if (!string.IsNullOrWhiteSpace(procedureName))
-                {
-                    normalizedProcedureName = procedureName.Trim().ToUpperInvariant();
-                }
-
-                // Create visitor to extract procedure names
-                var visitor = new ProcedureCallExtractorVisitor(normalizedProcedureName);
-                visitor.Visit(tree);
-
-                // Get results
-                foreach (var procName in visitor.ProcedureNames)
-                {
-                    if (!string.IsNullOrWhiteSpace(procName))
-                    {
-                        var normalized = NormalizeProcedureName(procName);
-                        result.Add(normalized);
-                    }
-                }
+                errorListener.ThrowIfErrors();
+                return result;
             }
-            catch (Exception ex)
+
+            // Throw if any parsing errors occurred
+            errorListener.ThrowIfErrors();
+
+            // Normalize procedure name for comparison (case-insensitive)
+            string normalizedProcedureName = null;
+            if (!string.IsNullOrWhiteSpace(procedureName))
             {
-                // If parsing fails, return empty set (graceful degradation)
-                // Log the error for debugging
-                System.Diagnostics.Debug.WriteLine($"PL/SQL parsing error: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                normalizedProcedureName = procedureName.Trim().ToUpperInvariant();
+            }
+
+            // Create visitor to extract procedure names
+            var visitor = new ProcedureCallExtractorVisitor(normalizedProcedureName);
+            visitor.Visit(tree);
+
+            // Get results
+            foreach (var procName in visitor.ProcedureNames)
+            {
+                if (!string.IsNullOrWhiteSpace(procName))
+                {
+                    var normalized = NormalizeProcedureName(procName);
+                    result.Add(normalized);
+                }
             }
 
             return result;
@@ -189,15 +181,70 @@ namespace SqlBuilderLib.DevTools
         }
 
         /// <summary>
-        /// Error listener that logs errors but doesn't throw exceptions.
-        /// This allows partial parsing to extract table names even when there are syntax errors.
+        /// Error listener that collects parsing errors and throws exceptions when parsing fails.
+        /// Implements both lexer (int) and parser (IToken) error listener interfaces.
         /// </summary>
-        private class ConsoleErrorListener : Antlr4.Runtime.BaseErrorListener
+        private class ThrowingErrorListener : Antlr4.Runtime.BaseErrorListener, Antlr4.Runtime.IAntlrErrorListener<int>
         {
+            private readonly List<string> _errors = new List<string>();
+
+            public bool HasErrors => _errors.Count > 0;
+
+            public IReadOnlyList<string> Errors => _errors;
+
+            // Parser error handler (IToken)
             public override void SyntaxError(System.IO.TextWriter output, IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
             {
-                // Log the error but don't throw - allows partial parsing
-                System.Diagnostics.Debug.WriteLine($"PL/SQL parse warning at line {line}, position {charPositionInLine}: {msg}");
+                string errorMessage = $"line {line}:{charPositionInLine} {msg}";
+                if (offendingSymbol != null)
+                {
+                    errorMessage += $" at: '{offendingSymbol.Text}'";
+                }
+                _errors.Add(errorMessage);
+            }
+
+            // Lexer error handler (int)
+            void Antlr4.Runtime.IAntlrErrorListener<int>.SyntaxError(System.IO.TextWriter output, IRecognizer recognizer, int offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
+            {
+                string errorMessage = $"line {line}:{charPositionInLine} {msg}";
+                if (offendingSymbol >= 0)
+                {
+                    // Try to get the text from the recognizer if possible
+                    if (recognizer is Antlr4.Runtime.Lexer lexer)
+                    {
+                        var vocab = lexer.Vocabulary;
+                        if (vocab != null)
+                        {
+                            string symbolName = vocab.GetSymbolicName(offendingSymbol) ?? vocab.GetLiteralName(offendingSymbol);
+                            if (!string.IsNullOrEmpty(symbolName))
+                            {
+                                errorMessage += $" at: {symbolName}";
+                            }
+                            else
+                            {
+                                errorMessage += $" at: '{offendingSymbol}'";
+                            }
+                        }
+                        else
+                        {
+                            errorMessage += $" at: '{offendingSymbol}'";
+                        }
+                    }
+                    else
+                    {
+                        errorMessage += $" at: '{offendingSymbol}'";
+                    }
+                }
+                _errors.Add(errorMessage);
+            }
+
+            public void ThrowIfErrors()
+            {
+                if (_errors.Count > 0)
+                {
+                    string combinedMessage = string.Join(Environment.NewLine, _errors);
+                    throw new InvalidOperationException($"PL/SQL parsing failed with {_errors.Count} error(s):{Environment.NewLine}{combinedMessage}");
+                }
             }
         }
 
