@@ -35,11 +35,11 @@ namespace sql.builder
     public static class Program
     {
 
-        public static void Main(string[] args)
+        public static void Main0(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            var sqlFileName = "2.sql";
+            var sqlFileName = "17.sql";
             string procedureName = null;
             // string procedureName = "dog_obj";
 
@@ -98,7 +98,7 @@ namespace sql.builder
             Console.WriteLine("done");
         }
 
-        public static void Main3(string[] args)
+        public static void Main(string[] args)
         {
             DevAnalyzer.Enabled = true;
             DevAnalyzer.ClearTempFolder();
@@ -117,10 +117,23 @@ namespace sql.builder
             pars.Add("p_ym_beg", 2025.06m);
 
             var path = CleanSqlBuilder.ExecReportGetPath("ryazan.76607", pars, "76607.xlsx");
-            // Output as file URI for VS Code debug console to recognize as clickable link
-            //var fileUri = new Uri(path).ToString();
-            Console.WriteLine(path);
-            var tablenames = DevAnalyzer.tableNames;
+           
+            Console.WriteLine("Extracted source tables:");
+            foreach (var tableName in DevAnalyzer.TableNames.OrderBy(t => t))
+            {
+                Console.WriteLine($"  - {tableName}");
+            }
+            Console.WriteLine($"Total: {DevAnalyzer.TableNames.Count} tables");
+            Console.WriteLine();
+
+
+            Console.WriteLine("Extracted source procedures:");
+            foreach (var procName in DevAnalyzer.ProcNames.OrderBy(p => p))
+            {
+                Console.WriteLine($"  - {procName}");
+            }
+            Console.WriteLine($"Total: { DevAnalyzer.ProcNames.Count} procedures");
+            Console.WriteLine();
             Console.WriteLine("done");
 
         }

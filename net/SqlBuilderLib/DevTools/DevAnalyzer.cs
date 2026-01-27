@@ -21,18 +21,21 @@ using sql.builder.DataApi;
 
 namespace SqlBuilderLib.DevTools
 {
-   
+
     internal static class DevAnalyzer
     {
         public static bool Enabled = false;
 
-        public static HashSet<string> tableNames = new HashSet<string>();
-
+        public static HashSet<string> TableNames = new HashSet<string>();
+        public static HashSet<string> ProcNames = new HashSet<string>();
         public static void AnalyzeSql(string sql)
         {
             if (!Enabled) return;
-            var names = DevSqlParser.GetSourceTables(sql);
-            tableNames.UnionWith(names);
+            var tableNames = DevSqlParserAntlr.GetSourceTables(sql);
+            TableNames.UnionWith(tableNames);
+
+            var procNames = DevSqlParserAntlr.GetSourceProcedures(sql);
+            ProcNames.UnionWith(procNames);
             LogSql(sql);
         }
 
@@ -64,17 +67,18 @@ namespace SqlBuilderLib.DevTools
         public static void AnalyzeReport(XElement xelement, string name = null)
         {
             if (!Enabled) return;
-            var xtables = xelement.Descendants(TextConst.EName.Table);
-            foreach (var xtable in xtables) { 
-                var xtext = xelement.Element(TextConst.EName.Text);
-                if (xtext == null)
-                {
-                    tableNames.Add(xtable.GetAttributeValue(TextConst.AName.Name));
-                }
-            }
+            // var xtables = xelement.Descendants(TextConst.EName.Table);
+            // foreach (var xtable in xtables)
+            // {
+            //     var xtext = xelement.Element(TextConst.EName.Text);
+            //     if (xtext == null)
+            //     {
+            //         TableNames.Add(xtable.GetAttributeValue(TextConst.AName.Name));
+            //     }
+            // }
             LogXElement(xelement, name);
         }
-        public static void LogXElement(XElement element, string name= null)
+        public static void LogXElement(XElement element, string name = null)
         {
             if (!Enabled) return;
             if (element == null) return;
@@ -90,7 +94,7 @@ namespace SqlBuilderLib.DevTools
                         .FirstOrDefault(e => e.Attribute("name") != null);
                     nameAttr = elementWithName?.Attribute("name");
                 }
-                
+
                 if (nameAttr != null)
                 {
                     name = nameAttr.Value;
@@ -113,14 +117,14 @@ namespace SqlBuilderLib.DevTools
             // Generate filename with index if file already exists
             string baseFileName = $"{name}-par-val.xml";
             string filePath = Path.Combine(tempFolder, baseFileName);
-            
+
             // If file exists, add index to filename
             if (File.Exists(filePath))
             {
                 int index = 1;
                 string fileNameWithoutExt = Path.GetFileNameWithoutExtension(baseFileName);
                 string extension = Path.GetExtension(baseFileName);
-                
+
                 do
                 {
                     string indexedFileName = $"{fileNameWithoutExt}-{index}{extension}";
@@ -142,7 +146,7 @@ namespace SqlBuilderLib.DevTools
 
             // Get Temp folder path
             string tempFolder = Path.Combine(projectRoot, "Temp");
-            
+
             // Check if Temp folder exists
             if (!Directory.Exists(tempFolder)) return;
 
@@ -183,7 +187,7 @@ namespace SqlBuilderLib.DevTools
                 }
 
                 DirectoryInfo dir = new DirectoryInfo(Path.GetDirectoryName(assemblyLocation));
-                
+
                 // Navigate up the directory tree to find SqlBuilder.slnx
                 while (dir != null)
                 {
@@ -198,7 +202,7 @@ namespace SqlBuilderLib.DevTools
             {
                 // Return empty string if we can't determine the root
             }
-            
+
             return string.Empty;
         }
     }
