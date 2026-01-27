@@ -69,21 +69,29 @@ namespace SqlBuilderLib.DevTools
                         NavInfo = nav.P_Title ?? nav.P_Comment
                     };
                     Console.WriteLine($"Analyze report: {info.Name}");
-                    DevAnalyzer.AnalyzeRep(info);
-                    Console.WriteLine("Extracted source tables:");
-                    foreach (var tableName in DevAnalyzer.TableNames.OrderBy(t => t))
+                    var isNew = DevAnalyzer.AnalyzeRep(info);
+                    if (isNew)
                     {
-                        Console.WriteLine($"  - {tableName}");
+                        Console.WriteLine("Extracted source tables:");
+                        foreach (var tableName in DevAnalyzer.TableNames.OrderBy(t => t))
+                        {
+                            Console.WriteLine($"  - {tableName}");
+                        }
+                        Console.WriteLine($"Total: {DevAnalyzer.TableNames.Count} tables");
+                        Console.WriteLine();
+                        Console.WriteLine("Extracted source procedures:");
+                        foreach (var procName in DevAnalyzer.ProcNames.OrderBy(p => p))
+                        {
+                            Console.WriteLine($"  - {procName}");
+                        }
+                        Console.WriteLine($"Total: {DevAnalyzer.ProcNames.Count} procedures");
+                        Console.WriteLine();
                     }
-                    Console.WriteLine($"Total: {DevAnalyzer.TableNames.Count} tables");
-                    Console.WriteLine();
-                    Console.WriteLine("Extracted source procedures:");
-                    foreach (var procName in DevAnalyzer.ProcNames.OrderBy(p => p))
+                    else
                     {
-                        Console.WriteLine($"  - {procName}");
+                        Console.WriteLine($"{info.Name} SKIPPED");
                     }
-                    Console.WriteLine($"Total: {DevAnalyzer.ProcNames.Count} procedures");
-                    Console.WriteLine();
+
                 }
             }
 
@@ -92,8 +100,13 @@ namespace SqlBuilderLib.DevTools
         }
 
 
-        public static void AnalyzeRep(AnalyzerReportInfo repInfo)
+        public static bool AnalyzeRep(AnalyzerReportInfo repInfo)
         {
+
+            if (AnalyzerStorage.IsReportExists(repInfo))
+            {
+                return false;
+            }
             SetReport(repInfo);
             var rep = new CleanExpressReport();
             rep.OpenDocumentAfterPrint = false;
@@ -180,6 +193,7 @@ namespace SqlBuilderLib.DevTools
             rep.ExecuteReport();
 
             SaveReportAnalysisResults();
+            return true;
         }
 
         public static void SaveReportAnalysisResults()
