@@ -20,6 +20,7 @@ using sql.builder.UI;
 using sql.builder.XmlHelpers;
 //using Vertica.Data.VerticaClient;
 using SqlBuilderLib.DevTools;
+using sql.builder.Clean;
 
 namespace sql.builder.DataApi
 {
@@ -439,7 +440,7 @@ namespace sql.builder.DataApi
             VReportProc repProc = this.Report.GetReportProc();
             if (repProc != null) {
                 //WaitUIHelper.LastUsedUIHelper.Show("Загрузка данных", WaitUIMode.WaitCursor);
-                OracleCommand procCmd = new OracleCommand(); 
+                OracleCommand procCmd = new VOracleCommand(); 
                 procCmd.Connection = this.GetConnection();
                 procCmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
                 procCmd.CommandText = repProc.Value;
@@ -547,7 +548,7 @@ namespace sql.builder.DataApi
                         }
                         //IEnumerable<string> ProcParamNames = VReport.ExtractParamsFromSqlText(this.ProcedureText).OrderByDescending(Cmn.LengthOfString);
                         OracleParameter[] parsList;
-                        OracleCommand cmd = new OracleCommand();
+                        OracleCommand cmd = new VOracleCommand();
                         cmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
                         cmd.CommandText = this.ProcedureText;
                         string[] ProcParamNames = Cmn.GetParameterNames(cmd.Parameters);
@@ -593,7 +594,7 @@ namespace sql.builder.DataApi
                             table.DataAdapter.SelectCommand = null;
                             Cmn.DisposeAndSetNull(ref table.DataAdapter);
                             table.DataAdapter = new OracleDataAdapter();
-                            table.DataAdapter.SelectCommand = new OracleCommand(cmd_text);
+                            table.DataAdapter.SelectCommand = new VOracleCommand(cmd_text);
                             DevAnalyzer.AnalyzePrepSql(cmd_text);
                         }
                     }

@@ -8,6 +8,7 @@ using infoenergo.sys;
 using infoenergo.core.Data; // DataHelper, OracleSqlException
 using sql.builder.DataApi; // TextConst
 using SqlBuilderLib.DevTools;
+using sql.builder.Clean;
 
 namespace sql.builder.Core
 {
@@ -85,7 +86,7 @@ namespace sql.builder.Core
                     if (array_type != null)
                     {
                         // FORALL INSERT INTO примерно в 48 раз быстрее простого INSERT'а
-                        cmd = new OracleCommand("DECLARE\n" +
+                        cmd = new VOracleCommand("DECLARE\n" +
                                                 "  s_array_id vr_array_storage.array_id%TYPE;\n" +
                                                 "BEGIN\n" +
                                                 "  s_array_id := :array_id;\n" +
@@ -103,7 +104,7 @@ namespace sql.builder.Core
                     }
                     else
                     {
-                        cmd = new OracleCommand("delete from vr_array_storage where array_id = :array_id", Global.Connection);
+                        cmd = new VOracleCommand("delete from vr_array_storage where array_id = :array_id", Global.Connection);
                         OracleParameter par_array_id = new OracleParameter("array_id", OracleDbType.NVarChar, this._id, ParameterDirection.Input);
                         cmd.Parameters.Add(par_array_id);
                         DevAnalyzer.AnalyzeSql(cmd.CommandText);

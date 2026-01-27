@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Devart.Data.Oracle;
+using sql.builder;
 using sql.builder.Clean.Extensions;
 using sql.builder.DataApi;
 
@@ -32,27 +33,42 @@ namespace SqlBuilderLib.DevTools
         public static HashSet<string> ProcNames = new HashSet<string>();
         public static void AnalyzeSql(string sql)
         {
-            if (!Enabled) return;
-            var tableNames = DevSqlParserAntlr.GetSourceTables(sql);
-            TableNames.UnionWith(tableNames);
+            // if (!Enabled) return;
+            // var tableNames = DevSqlParserAntlr.GetSourceTables(sql);
+            // TableNames.UnionWith(tableNames);
 
-            if (tableNames.Overlaps(new[] { "adr_m", "k_house", "kr_calc" })){
+            // if (tableNames.Overlaps(new[] { "adr_m", "k_house", "kr_calc" })){
                 
-            }
+            // }
 
-            var procNames = DevSqlParserAntlr.GetSourceProcedures(sql);
-            ProcNames.UnionWith(procNames);
-            LogSql(sql);
+            // var procNames = DevSqlParserAntlr.GetSourceProcedures(sql);
+            // ProcNames.UnionWith(procNames);
+            // LogSql(sql);
         }
 
-        public static void AnalyzeSysSql(string sql)
-        {
-        }
+        // public static void AnalyzeSysSql(string sql)
+        // {
+        // }
 
         public static void AnalyzePrepSql(string sql)
         {
+            // if (!Enabled) return;
+            // var tableNames = DevSqlParserAntlr.GetSourceTables(sql);
+            // TableNames.UnionWith(tableNames);
+
+            // if (tableNames.Overlaps(new[] { "adr_m", "k_house", "kr_calc" })){
+                
+            // }
+
+            // var procNames = DevSqlParserAntlr.GetSourceProcedures(sql);
+            // ProcNames.UnionWith(procNames);
+            // LogSql(sql);
+        }
+
+         public static void AnalyzeCmdSql(string sql)
+        {
             if (!Enabled) return;
-            var tableNames = DevSqlParserAntlr.GetSourceTables(sql);
+            var tableNames = DevSqlParserAntlr.GetSourceTables(Cmn.ClearUndefined(sql));
             TableNames.UnionWith(tableNames);
 
             if (tableNames.Overlaps(new[] { "adr_m", "k_house", "kr_calc" })){

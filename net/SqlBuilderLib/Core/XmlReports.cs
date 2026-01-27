@@ -1524,7 +1524,7 @@ namespace sql.builder
             //connection.Open(useGlobalSettings: true);
             OracleCommand command = null;
             try {
-                command = new OracleCommand(sql1, connection);
+                command = new VOracleCommand(sql1, connection);
                 if (!Array.IsNullOrEmpty(pars)) {
                     command.Parameters.AddRange(pars);
                 }

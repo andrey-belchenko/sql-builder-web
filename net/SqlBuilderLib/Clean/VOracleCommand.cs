@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using Devart.Data.Oracle;
+using SqlBuilderLib.DevTools;
 
 namespace sql.builder.Clean
 {
@@ -64,10 +65,20 @@ namespace sql.builder.Clean
         }
 
         /// <summary>
+        /// Constructor with command text and transaction (uses transaction.Connection)
+        /// </summary>
+        public VOracleCommand(string commandText, OracleTransaction transaction)
+            : base(commandText, transaction.Connection, transaction)
+        {
+            OnCommandTextChanged(null, commandText);
+        }
+
+        /// <summary>
         /// Raises the CommandTextChanged event
         /// </summary>
         protected virtual void OnCommandTextChanged(string oldValue, string newValue)
         {
+            DevAnalyzer.AnalyzeCmdSql(newValue);
             CommandTextChanged?.Invoke(this, new CommandTextChangedEventArgs(oldValue, newValue));
         }
     }

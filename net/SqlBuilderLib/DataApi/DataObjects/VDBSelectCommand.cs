@@ -18,6 +18,7 @@ using Devart.Data.Oracle;
 using sql.builder.Core;
 //using sql.builder.Test;
 using SqlBuilderLib.DevTools;
+using sql.builder.Clean;
 
 namespace sql.builder.DataApi
 {
@@ -188,7 +189,7 @@ namespace sql.builder.DataApi
             }
             string selectText = VForm.ReadElementAsString(xselect, EName.query);
             if (selectText != null) {
-                cmd.mainCommand = new OracleCommand(selectText);
+                cmd.mainCommand = new VOracleCommand(selectText);
                 foreach (XElement xpar in xSelPars.Elements()) {
                     OracleParameter par = CreateDBParameter(xpar.Attribute(AName.name).Value, xpar.Attribute(AName.type).Value);
                     if (xpar.Attribute(AName.column) != null) {
@@ -199,7 +200,7 @@ namespace sql.builder.DataApi
             }
             string procText = VForm.ReadElementAsString(xproc, EName.query);
             if (procText != null) {
-                cmd.procedureCommand = new OracleCommand(procText);
+                cmd.procedureCommand = new VOracleCommand(procText);
                 foreach (XElement xpar in xSelPars.Elements()) {
                     OracleParameter par = CreateDBParameter(xpar.Attribute(AName.name).Value, xpar.Attribute(AName.type).Value);
                     XAttribute attr = xpar.Attribute(AName.column);
@@ -216,7 +217,7 @@ namespace sql.builder.DataApi
             Contract.Assert(query_params != null);
             OracleCommand cmd = null;
             try {
-                cmd = new OracleCommand();
+                cmd = new VOracleCommand();
                 cmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
                 cmd.CommandText = command_text;
                 DevAnalyzer.AnalyzePrepSql(command_text);
@@ -386,7 +387,7 @@ namespace sql.builder.DataApi
         }
         internal static OracleCommand CopyCommand(OracleCommand other)
         {
-            var newCmd = new OracleCommand(other.CommandText, other.Connection);
+            var newCmd = new VOracleCommand(other.CommandText, other.Connection);
             for (int index = 0; index < other.Parameters.Count; index++) {
                 OracleParameter param = other.Parameters[index];
                 newCmd.Parameters.Add(param.ParameterName, param.OracleDbType, param.Value, param.Direction);

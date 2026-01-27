@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -7,6 +7,7 @@ using Devart.Data.Oracle;
 //using DevExpress.XtraCharts.Design;
 using sql.builder.DataApi;
 using System.Collections.Generic;
+using sql.builder.Clean;
 
 
 namespace sql.builder.XmlHelpers
@@ -38,7 +39,7 @@ namespace sql.builder.XmlHelpers
             }
             sb.AppendLine(string.Format("public {2} {0}({1})", methdName, sParams,retType));
             sb.AppendLine("{");
-            sb.AppendLine(string.Format("var cmd = new OracleCommand();"));
+            sb.AppendLine(string.Format("var cmd = new VOracleCommand();"));
             if (!isDelete)
             {
                 sb.AppendLine("object ret=null;");
@@ -200,7 +201,7 @@ namespace sql.builder.XmlHelpers
          
             var cmdName = "cmd" + className+"Del";
             
-            sb.AppendLine(string.Format("var {0} = new OracleCommand();", cmdName));
+            sb.AppendLine(string.Format("var {0} = new VOracleCommand();", cmdName));
             sb.AppendLine("try {");
             sb.AppendLine(string.Format("{0}.Connection = {1};", cmdName, ConnectionExpr()));
 
@@ -264,7 +265,7 @@ namespace sql.builder.XmlHelpers
             var className = ParseToUpper(dt.TableName);
             var objName = ParseParam(dt.TableName);
             var cmdName = "cmd" + className;
-            sb.AppendLine(string.Format("var {0} = new OracleCommand();", cmdName));
+            sb.AppendLine(string.Format("var {0} = new VOracleCommand();", cmdName));
             sb.AppendLine("try {");
             sb.AppendLine(string.Format("{0}.Connection = {1};", cmdName, ConnectionExpr()));
         

@@ -19,6 +19,7 @@ using Devart.Data.Oracle;
 using sql.builder.UI;
 using _AName = sql.builder.DataApi.AName;
 using SqlBuilderLib.DevTools; // из-за конфликта с экземплярным методом VForm.AName()
+using sql.builder.Clean;
 
 namespace sql.builder.DataApi
 {
@@ -571,12 +572,12 @@ namespace sql.builder.DataApi
             //string selectText = getSelectText(compiledQuery);
             //dataAdapter.SelectCommand = new OracleCommand(selectText);
 
-            dataAdapter.SelectCommand = new OracleCommand(ReadElementAsString(xtable, EName.select_text));
+            dataAdapter.SelectCommand = new VOracleCommand(ReadElementAsString(xtable, EName.select_text));
             DevAnalyzer.AnalyzePrepSql(dataAdapter.SelectCommand.CommandText);
             string procText = ReadElementAsString(xtable, EName.proc_text);
             if (procText != null)
             {
-                table.ProcedureCommand = new OracleCommand(procText.Replace('\r', ' '));
+                table.ProcedureCommand = new VOracleCommand(procText.Replace('\r', ' '));
             }
             table.DataAdapter = dataAdapter;
             var xcols = xtable.Element(EName.columns).Elements();
@@ -600,22 +601,22 @@ namespace sql.builder.DataApi
             }
             // 09,01,08 Емцов, добавил ClearSql, тк падало при update с непонятной ошибкой
             var pars = getOracleParams(xparCols).ToArray();
-            dataAdapter.UpdateCommand = new OracleCommand(Cmn.ClearSql(ReadElementAsString(xtable, EName.update_text)));
+            dataAdapter.UpdateCommand = new VOracleCommand(Cmn.ClearSql(ReadElementAsString(xtable, EName.update_text)));
             dataAdapter.UpdateCommand.Parameters.AddRange(pars);
             //pars = getOracleParams(updatebleColumns, keyColumn.XName).ToArray();
             pars = getOracleParams(xupdatebleColumns, keyColName).ToArray();
-            dataAdapter.InsertCommand = new OracleCommand(Cmn.ClearSql(ReadElementAsString(xtable, EName.insert_text)));
+            dataAdapter.InsertCommand = new VOracleCommand(Cmn.ClearSql(ReadElementAsString(xtable, EName.insert_text)));
             dataAdapter.InsertCommand.Parameters.AddRange(pars);
             //pars = getOracleParams(updatebleColumns.Where(e => e.IsKey).ToList()).ToArray();
             pars = getOracleParams(xkeyColumns).ToArray();
-            dataAdapter.DeleteCommand = new OracleCommand(Cmn.ClearSql(ReadElementAsString(xtable, EName.delete_text)));
+            dataAdapter.DeleteCommand = new VOracleCommand(Cmn.ClearSql(ReadElementAsString(xtable, EName.delete_text)));
             dataAdapter.DeleteCommand.Parameters.AddRange(pars);
             pars = getOracleParams(xkeyColumns).ToArray();
             string cmdText = ReadElementAsString(xtable, EName.clear_temp_text);
             var par = new OracleParameter(TextConst.Pfx.Param + TextConst.DBParams.FormId, OracleDbType.VarChar);
             if (!string.IsNullOrEmpty(cmdText))
             {
-                table.ClearTempCommand = new OracleCommand(cmdText);
+                table.ClearTempCommand = new VOracleCommand(cmdText);
                 table.ClearTempCommand.Parameters.Add(par);
             }
             var parsList = getOracleParams(xupdatebleColumnsExt);
@@ -631,7 +632,7 @@ namespace sql.builder.DataApi
             string updateTempText = ReadElementAsString(xtable, EName.update_temp_text);
             if (!string.IsNullOrEmpty(updateTempText))
             {
-                table.UpdateTempCommand = new OracleCommand(updateTempText);
+                table.UpdateTempCommand = new VOracleCommand(updateTempText);
                 table.UpdateTempCommand.Parameters.AddRange(pars);
             }
             //table.UpdateTempCommand = new OracleCommand(getUpdateTempText(table, queryCall, updatebleColumns, keyColumn));

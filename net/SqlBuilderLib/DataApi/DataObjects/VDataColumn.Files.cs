@@ -9,6 +9,7 @@ using System.Xml.XPath;
 using System.Linq;
 using System.IO;
 using SqlBuilderLib.DevTools;
+using sql.builder.Clean;
 namespace sql.builder.DataApi
 {
     internal partial class VDataColumn
@@ -93,7 +94,7 @@ namespace sql.builder.DataApi
             s += " where ";
             s += FileIdColumnName + "=";
             s += TextConst.Pfx.Param + TextConst.DBParams.FileId;
-            var cmd = new OracleCommand(s, (OracleConnection)GetTable().GetConnection());
+            var cmd = new VOracleCommand(s, (OracleConnection)GetTable().GetConnection());
             var par = new OracleParameter(TextConst.DBParams.FileId, fileId);
             par.OracleDbType = OracleDbType.Number;
             cmd.Parameters.Add(par);
@@ -144,7 +145,7 @@ namespace sql.builder.DataApi
 
 
                 s += " end; ";
-                var cmd = new OracleCommand(s, (OracleConnection)GetTable().GetConnection());
+                var cmd = new VOracleCommand(s, (OracleConnection)GetTable().GetConnection());
 
                 var par = new OracleParameter(TextConst.DBParams.FileId, fileId);
                 par.OracleDbType = OracleDbType.Number;
@@ -176,7 +177,7 @@ namespace sql.builder.DataApi
                 s += TextConst.Pfx.Param + TextConst.DBParams.FileId;
 
 
-                cmd = new OracleCommand(s, (OracleConnection)GetTable().GetConnection());
+                cmd = new VOracleCommand(s, (OracleConnection)GetTable().GetConnection());
 
                 par = new OracleParameter(TextConst.DBParams.FileId, fileId);
                 par.OracleDbType = OracleDbType.Number;
@@ -216,7 +217,7 @@ namespace sql.builder.DataApi
                 s += TextConst.Pfx.Param + TextConst.DBParams.FileId + ";";
             }
             s += " end; ";
-            var cmd = new OracleCommand(s, this.GetTable().GetConnection());
+            var cmd = new VOracleCommand(s, this.GetTable().GetConnection());
             cmd.Parameters.Add(TextConst.DBParams.FileId, OracleDbType.Number, fileId, ParameterDirection.InputOutput);
 
 

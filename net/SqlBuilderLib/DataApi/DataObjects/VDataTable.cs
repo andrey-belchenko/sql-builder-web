@@ -17,6 +17,7 @@ using sql.builder.FieldInfo;
 using sql.builder.UI;
 using sql.builder.XmlHelpers;
 using SqlBuilderLib.DevTools;
+using sql.builder.Clean;
  
 namespace sql.builder.DataApi
 {
@@ -167,7 +168,7 @@ namespace sql.builder.DataApi
         {
             this.CaseSensitive = true;
             this.DataAdapter = new OracleDataAdapter();
-            this.DataAdapter.SelectCommand = new OracleCommand();
+            this.DataAdapter.SelectCommand = new VOracleCommand();
             this.Scheme = null;
             this.attachEvents(withExtraEvents);
             this.InitManualDelete();
@@ -177,7 +178,7 @@ namespace sql.builder.DataApi
         {
             this.CaseSensitive = true;
             this.DataAdapter = new OracleDataAdapter();
-            this.DataAdapter.SelectCommand = new OracleCommand();
+            this.DataAdapter.SelectCommand = new VOracleCommand();
             this.Scheme = scheme;
             this.EditableOld = false;
             this.attachEvents(withExtraEvents);

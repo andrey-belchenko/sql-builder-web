@@ -14,6 +14,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Devart.Data.Oracle;
 using SqlBuilderLib.DevTools;
+using sql.builder.Clean;
 
 
 namespace infoenergo.core.Data
@@ -23,7 +24,7 @@ namespace infoenergo.core.Data
         public static object SqlGetValue(string sql, OracleParameter[] parameters, OracleConnection connection)
         {
             object result = null;
-            OracleCommand oracleCommand = new OracleCommand(sql, connection);
+            OracleCommand oracleCommand = new VOracleCommand(sql, connection);
             try
             {
                 if (parameters != null && parameters.Length != 0)
@@ -116,7 +117,7 @@ namespace infoenergo.core.Data
         public static DateTime? SqlGetDate(string sql, OracleParameter[] parameters, OracleConnection connection)
         {
             DateTime? dateTime = null;
-            OracleCommand oracleCommand = new OracleCommand(sql, connection);
+            OracleCommand oracleCommand = new VOracleCommand(sql, connection);
             try
             {
                 if (parameters != null && parameters.Length != 0)
@@ -214,7 +215,7 @@ namespace infoenergo.core.Data
         public static OracleLob SqlGetLob(string sql, OracleParameter[] parameters, OracleConnection connection)
         {
             OracleLob result = null;
-            OracleCommand oracleCommand = new OracleCommand(sql, connection);
+            OracleCommand oracleCommand = new VOracleCommand(sql, connection);
             try
             {
                 if (parameters != null && parameters.Length != 0)
@@ -252,7 +253,7 @@ namespace infoenergo.core.Data
         {
             DataTable dataTable = new DataTable();
             object[] array = null;
-            OracleCommand oracleCommand = new OracleCommand(sql, connection);
+            OracleCommand oracleCommand = new VOracleCommand(sql, connection);
             try
             {
                 if (parameters != null && parameters.Length != 0)
@@ -321,7 +322,7 @@ namespace infoenergo.core.Data
         {
             DataTable dataTable = new DataTable();
             object[] array = null;
-            OracleCommand oracleCommand = new OracleCommand(sql, transaction);
+            OracleCommand oracleCommand = new VOracleCommand(sql, transaction);
             try
             {
                 if (parameters != null && parameters.Length != 0)
@@ -614,7 +615,7 @@ namespace infoenergo.core.Data
             }
 
             string sqlCommand = "ALTER SESSION SET current_schema=" + schema;
-            OracleCommand oracleCommand = new OracleCommand(sqlCommand, connection);
+            OracleCommand oracleCommand = new VOracleCommand(sqlCommand, connection);
             try
             {
                 DevAnalyzer.AnalyzeSql(sqlCommand);
@@ -797,7 +798,7 @@ namespace infoenergo.core.Data
             serial = null;
             spid = null;
             string commandText = "SELECT s.sid, s.SERIAL#, p.SPID\r\n                        FROM v$session s   \r\n                            INNER JOIN v$process p ON p.addr = s.paddr\r\n                        WHERE \r\n                        s.AUDSID = Sys_Context('USERENV', 'SESSIONID') ";
-            OracleCommand oracleCommand = new OracleCommand(commandText, connection);
+            OracleCommand oracleCommand = new VOracleCommand(commandText, connection);
             try
             {
                 DevAnalyzer.AnalyzeSql(commandText);
@@ -920,7 +921,7 @@ namespace infoenergo.core.Data
                     {
                         newPassword = setPasswordCharCase(newPassword);
                         string commandText = "ALTER USER " + user + " IDENTIFIED BY \"" + newPassword + "\"";
-                        OracleCommand oracleCommand = new OracleCommand(commandText, connection);
+                        OracleCommand oracleCommand = new VOracleCommand(commandText, connection);
                         DevAnalyzer.AnalyzeSql(commandText);
                         ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                         result = true;

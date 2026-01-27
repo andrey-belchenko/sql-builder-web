@@ -32,6 +32,7 @@ using System.Text.RegularExpressions;
 //using DevExpress.XtraBars;
 //using infoenergo.core.Extensions;
 using sql.builder.UI;
+using sql.builder.Clean;
 // Cross-platform: Drawing2D and Imaging are Windows-only, commented out
 //using System.Drawing.Drawing2D;
 //using System.Drawing.Imaging;
@@ -1903,7 +1904,7 @@ namespace sql.builder
         internal static string[] ExtractParameterNamesFromSQL(string sql)
         {
             string[] param_names;
-            using (Devart.Data.Oracle.OracleCommand cmd = new Devart.Data.Oracle.OracleCommand()) {
+            using (Devart.Data.Oracle.OracleCommand cmd = new VOracleCommand()) {
                 cmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
                 cmd.CommandText = sql;
                 param_names = Cmn.GetParameterNames(cmd.Parameters);
