@@ -831,11 +831,11 @@ namespace sql.builder.UI
             while (queue.Count > 0)
             {
                 var item = queue.Dequeue();
-                var item_info = this._layout.GetNodeByTag(item.Item1);
+                //var item_info = this._layout.GetNodeByTag(item.Item1);
                 xitem_new = new XElement(item.Item1.Name);
                 xitem_new.CopyAttributes(item.Item1.Attributes());
                 xitem_new.Elements().Remove();
-                xitem_new.SetAttrValue(AName.visible, item_info.IsSelfVisible());
+                //xitem_new.SetAttrValue(AName.visible, item_info.IsSelfVisible());
                 if (item.Item1.Name == EName.field)
                 {
                     //var crtl = ((item_info as VLayoutControlContainerInfo).GetContainedControl() as UIBase);
@@ -844,7 +844,7 @@ namespace sql.builder.UI
                 }
                 else if (item.Item1.Name == EName.fieldgroup)
                 {
-                    xitem_new.SetAttrValue(AName.expanded, (item_info as VLayoutGroupInfo).IsExpanded());
+                    //xitem_new.SetAttrValue(AName.expanded, (item_info as VLayoutGroupInfo).IsExpanded());
                 }
                 item.Item2.Add(xitem_new);
                 foreach (var xi in item.Item1.Elements().Where(EPredicate.IsFieldGroupOrFieldOrTabContainer))
@@ -924,12 +924,12 @@ namespace sql.builder.UI
             }
 
 
-            // КОСТЫЛЬ для WEB
-            if (typeName == typeof(UIComboRange).Name)
-            {
-                typeName = typeof(UIList).Name;
-                xfield.SetAttributeValue(TextConst.AName.DataType, TextConst.AVDataType.Number);
-            }
+            // // КОСТЫЛЬ для WEB
+            // if (typeName == typeof(UIComboRange).Name)
+            // {
+            //     typeName = typeof(UIList).Name;
+            //     xfield.SetAttributeValue(TextConst.AName.DataType, TextConst.AVDataType.Number);
+            // }
 
             Type control_type = UIBase.GetConcreteType(typeName);
             // создаем объект, вызывая нужный конструктор
@@ -985,56 +985,87 @@ namespace sql.builder.UI
             Contract.Assert(xparent != null);
             VLayoutNodeInfo item_info = null;
             UIBase f = null;
-            foreach (XElement xitem in xparent.Elements())
+            foreach (XElement xitemOrig in xparent.Elements())
             {
-                XName name = xitem.Name;
-                if (name == EName.field)
+
+                var xitems = new[] { xitemOrig };
+                if (xitemOrig.Attribute(AName.controlType) != null)
                 {
-                    item_info = this.CreateFieldNew(xitem, (VLayoutGroupInfo)parent, ref f);
+                    string typeName = xitemOrig.Attribute(AName.controlType).Value;
+                    if (typeName == typeof(UIComboRange).Name)
+                    {
+                        string name = xitemOrig.Attribute(AName.name).Value;
+                        typeName = typeof(UICombo).Name;
+                        var xitem1 = new XElement(xitemOrig);
+                        var xitem2 = new XElement(xitemOrig);
+
+                        xitem1.SetAttributeValue(AName.name, $"{name}1");
+                        xitem2.SetAttributeValue(AName.name, $"{name}2");
+
+
+                        xitem1.SetAttributeValue(TextConst.AName.DataType, TextConst.AVDataType.Number);
+                        xitem2.SetAttributeValue(TextConst.AName.DataType, TextConst.AVDataType.Number);
+
+                        xitem1.SetAttributeValue(AName.controlType, typeof(UICombo).Name);
+                        xitem2.SetAttributeValue(AName.controlType, typeof(UICombo).Name);
+
+                        xitems = new[] { xitem1, xitem2 };
+                    }
+
                 }
-                else if (name == EName.empty_item)
+                
+
+                foreach (var xitem in xitems)
                 {
-                    item_info = this.CreateEmptyItemNew(xitem, (VLayoutGroupInfo)parent);
-                }
-                // else if (name == EName.menu)
-                // {
-                //     item_info = this.CreateButtonNew(xitem, (VLayoutGroupInfo)parent);
-                // }
-                // else if (name == EName.uicommand)
-                // {
-                //     item_info = this.CreateButtonNew(xitem, (VLayoutGroupInfo)parent);
-                // }
-                else if (name == EName.fieldgroup)
-                {
-                    item_info = this.CreateFieldGroupNew(xitem, parent);
-                    this.LoadContentFromXmlNew(xitem, item_info as VLayoutGroupInfo, null, tabItem);
-                    //} else if (name == EName.ScrollArea) {
-                    //    item_info = CreateScrollArea(xitem, parent);
-                    //    LoadContentFromXml(xitem, item_info.ScrollControl.Root, null, tabItem);
-                }
-                else if (name == EName.tabcontainer)
-                {
-                    item_info = this.CreateTabContainerNew(xitem, (VLayoutGroupInfo)parent, tabItem);
-                    // item_info = GetAnyItemInfo(tab_container.TabContainer);
-                }
-                else if (name == EName.splitcontainer)
-                {
-                    item_info = this.CreateSplitContainerNew(xitem, (VLayoutGroupInfo)parent);
-                    // item_info = GetAnyItemInfo(tab_container.TabContainer);
-                    this.LoadContentFromXmlNew(xitem, (VLayoutContainerInfo)item_info, null, tabItem);
-                }
-                else if (name == EName.grid)
-                {
-                    item_info = this.CreateFieldGridNew(xitem, (VLayoutGroupInfo)parent);
-                    //} else if (name == EName.Splitter) {
-                    //    item_info = CreateSplitter(xitem, parent);
-                    //} else if (name == EName.UseForm) {
-                    //    item_info = CreateFieldSubForm(xitem, parent);
-                    //    break;
-                }
-                else if (name == EName.label)
-                {
-                    item_info = this.CreateLabelNew(xitem, (VLayoutGroupInfo)parent);
+                    XName name = xitem.Name;
+                    if (name == EName.field)
+                    {
+                        item_info = this.CreateFieldNew(xitem, (VLayoutGroupInfo)parent, ref f);
+                    }
+                    else if (name == EName.empty_item)
+                    {
+                        item_info = this.CreateEmptyItemNew(xitem, (VLayoutGroupInfo)parent);
+                    }
+                    // else if (name == EName.menu)
+                    // {
+                    //     item_info = this.CreateButtonNew(xitem, (VLayoutGroupInfo)parent);
+                    // }
+                    // else if (name == EName.uicommand)
+                    // {
+                    //     item_info = this.CreateButtonNew(xitem, (VLayoutGroupInfo)parent);
+                    // }
+                    else if (name == EName.fieldgroup)
+                    {
+                        item_info = this.CreateFieldGroupNew(xitem, parent);
+                        this.LoadContentFromXmlNew(xitem, item_info as VLayoutGroupInfo, null, tabItem);
+                        //} else if (name == EName.ScrollArea) {
+                        //    item_info = CreateScrollArea(xitem, parent);
+                        //    LoadContentFromXml(xitem, item_info.ScrollControl.Root, null, tabItem);
+                    }
+                    else if (name == EName.tabcontainer)
+                    {
+                        item_info = this.CreateTabContainerNew(xitem, (VLayoutGroupInfo)parent, tabItem);
+                        // item_info = GetAnyItemInfo(tab_container.TabContainer);
+                    }
+                    else if (name == EName.splitcontainer)
+                    {
+                        item_info = this.CreateSplitContainerNew(xitem, (VLayoutGroupInfo)parent);
+                        // item_info = GetAnyItemInfo(tab_container.TabContainer);
+                        this.LoadContentFromXmlNew(xitem, (VLayoutContainerInfo)item_info, null, tabItem);
+                    }
+                    else if (name == EName.grid)
+                    {
+                        item_info = this.CreateFieldGridNew(xitem, (VLayoutGroupInfo)parent);
+                        //} else if (name == EName.Splitter) {
+                        //    item_info = CreateSplitter(xitem, parent);
+                        //} else if (name == EName.UseForm) {
+                        //    item_info = CreateFieldSubForm(xitem, parent);
+                        //    break;
+                    }
+                    else if (name == EName.label)
+                    {
+                        item_info = this.CreateLabelNew(xitem, (VLayoutGroupInfo)parent);
+                    }
                 }
             }
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Reflection;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
@@ -37,7 +38,7 @@ namespace SqlBuilderLib.DevTools
             var parser = new PlSqlParser(tokens);
 
             // Remove default error listeners and add a throwing error listener
-            var errorListener = new ThrowingErrorListener();
+            var errorListener = new ThrowingErrorListener(plsqlText);
             lexer.RemoveErrorListeners();
             lexer.AddErrorListener(errorListener);
             parser.RemoveErrorListeners();
@@ -103,7 +104,7 @@ namespace SqlBuilderLib.DevTools
             var parser = new PlSqlParser(tokens);
 
             // Remove default error listeners and add a throwing error listener
-            var errorListener = new ThrowingErrorListener();
+            var errorListener = new ThrowingErrorListener(plsqlText);
             lexer.RemoveErrorListeners();
             lexer.AddErrorListener(errorListener);
             parser.RemoveErrorListeners();
@@ -181,16 +182,57 @@ namespace SqlBuilderLib.DevTools
         }
 
         /// <summary>
+        /// Gets the project root directory (where SqlBuilder.slnx is located).
+        /// </summary>
+        private static string GetProjectRoot()
+        {
+            try
+            {
+                // Start from the assembly location
+                string assemblyLocation = Assembly.GetExecutingAssembly().Location;
+                if (string.IsNullOrEmpty(assemblyLocation))
+                {
+                    // Fallback to AppContext.BaseDirectory for .NET 8
+                    assemblyLocation = AppContext.BaseDirectory;
+                }
+
+                DirectoryInfo dir = new DirectoryInfo(Path.GetDirectoryName(assemblyLocation));
+
+                // Navigate up the directory tree to find SqlBuilder.slnx
+                while (dir != null)
+                {
+                    if (File.Exists(Path.Combine(dir.FullName, "SqlBuilder.slnx")))
+                    {
+                        return dir.FullName;
+                    }
+                    dir = dir.Parent;
+                }
+            }
+            catch
+            {
+                // Return empty string if we can't determine the root
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
         /// Error listener that collects parsing errors and throws exceptions when parsing fails.
         /// Implements both lexer (int) and parser (IToken) error listener interfaces.
         /// </summary>
         private class ThrowingErrorListener : Antlr4.Runtime.BaseErrorListener, Antlr4.Runtime.IAntlrErrorListener<int>
         {
             private readonly List<string> _errors = new List<string>();
+            private readonly string _plsqlText;
 
             public bool HasErrors => _errors.Count > 0;
 
             public IReadOnlyList<string> Errors => _errors;
+
+            public ThrowingErrorListener(string plsqlText = null)
+            {
+                _plsqlText = plsqlText;
+            }
 
             // Parser error handler (IToken)
             public override void SyntaxError(System.IO.TextWriter output, IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
@@ -242,6 +284,30 @@ namespace SqlBuilderLib.DevTools
             {
                 if (_errors.Count > 0)
                 {
+                    // Save SQL text to Temp folder if available
+                    if (!string.IsNullOrWhiteSpace(_plsqlText))
+                    {
+                        try
+                        {
+                            // Get project root directory (where SqlBuilder.slnx is located)
+                            string projectRoot = DevSqlParserAntlr.GetProjectRoot();
+                            if (!string.IsNullOrEmpty(projectRoot))
+                            {
+                                // Ensure Temp folder exists
+                                string tempFolder = Path.Combine(projectRoot, "Temp");
+                                Directory.CreateDirectory(tempFolder);
+
+                                string fileName = $"plsql_error_{DateTime.Now:yyyyMMdd_HHmmss_fff}.sql";
+                                string filePath = Path.Combine(tempFolder, fileName);
+                                File.WriteAllText(filePath, _plsqlText, Encoding.UTF8);
+                            }
+                        }
+                        catch
+                        {
+                            // Ignore errors when saving file - don't prevent exception from being thrown
+                        }
+                    }
+
                     string combinedMessage = string.Join(Environment.NewLine, _errors);
                     throw new InvalidOperationException($"PL/SQL parsing failed with {_errors.Count} error(s):{Environment.NewLine}{combinedMessage}");
                 }

@@ -791,12 +791,18 @@ namespace sql.builder.UI
                         values.Add(row[0]);
                         names.Add(name);
                     }
-                    this.array_edit_value.SuppressChangeEvent();
-                    var changes = SetArraySourceValueMultiple(values, names, true);
-                    if (changes)
+
+                    //// TODO: костыль для web
+                    if (this.array_edit_value != null)
                     {
-                        RaiseChanged();
+                        this.array_edit_value.SuppressChangeEvent();
+                        var changes = SetArraySourceValueMultiple(values, names, true);
+                        if (changes)
+                        {
+                            RaiseChanged();
+                        }
                     }
+
                 }
             } else if (this.mandatory && Form.DefaultParams == null) {
                 ReloadListData();

@@ -65,8 +65,15 @@ namespace sql.builder.Controls.FormFields
                             list.Add(o);
                         }
                     }
-                    control.ArrayEditValue.SuppressChangeEvent();
-                    control.SetArraySourceValueMultiple(list, null, true);
+
+                    //TODO: костыль для web
+                    if (control.ArrayEditValue != null)
+                    {
+                        control.ArrayEditValue.SuppressChangeEvent();
+                        control.SetArraySourceValueMultiple(list, null, true);
+
+                    }
+                   
                     // _control.SetArraySourceValue((val as IEnumerable).ConvertAll(v => v).ToArray());   
                 }
             } else {

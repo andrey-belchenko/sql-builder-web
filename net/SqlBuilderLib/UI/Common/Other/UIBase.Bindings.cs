@@ -818,6 +818,9 @@ namespace sql.builder.UI
                 this.array_edit_value.Refresh();
             }
             // обновляем таблицу контрола значениями из главной
+
+            //TODO: костыль для web
+            if (this.array_edit_value == null) return;
             IList<DataRow> rows = this.array_edit_value.GetRowsForCurrentParent();
             HashSet<object> keys = new HashSet<object>();
             int index;

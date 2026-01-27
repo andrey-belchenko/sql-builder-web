@@ -74,7 +74,13 @@ namespace sql.builder.UI
                 //{
                 //    (Form.DataSource.ParamsTable.Columns[FieldName] as VDataColumn).ParamUsed = value;
                 //}
-                this.Form.DataSource.ArrayValueTable(this.field_name).ParamUsed = value;
+                var tbl = this.Form.DataSource.ArrayValueTable(this.field_name);
+
+                if (tbl != null)
+                {
+                    this.Form.DataSource.ArrayValueTable(this.field_name).ParamUsed = value;
+                }
+               
             }
         }
         public bool Used {

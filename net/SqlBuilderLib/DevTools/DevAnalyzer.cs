@@ -32,7 +32,9 @@ namespace SqlBuilderLib.DevTools
 
 
         public static IEnumerable<string> SkipReports = new[]{
-            "ies_garant.64650_2" // не парсится процедура скорее всего в ней ошибки
+            "ies_garant.64650_2", // не парсится процедура скорее всего в ней ошибки
+            "asuse2.10653(45)-new", // казань тепло, sql не распарсился он некорректный
+            "kazan_el.74988", // какие то проблемы с формой
             };
 
 
@@ -152,8 +154,8 @@ namespace SqlBuilderLib.DevTools
                     case nameof(UIDateRange):
                         value = new object[] { DateTime.Now, DateTime.Now };
                         break;
-                    case nameof(UIComboRange):
-                        value = new object[] { null, null };
+                    case nameof(UICombo):
+                        value = 0m;
                         break;
                     case nameof(UICheck):
                         value = 0m;
@@ -200,6 +202,10 @@ namespace SqlBuilderLib.DevTools
                         else if (type == typeof(DateTime))
                         {
                             value = DateTime.Now;
+                        }
+                        else if (type==null)
+                        {
+                            value = DBNull.Value;
                         }
                         else if (type.IsValueType)
                         {

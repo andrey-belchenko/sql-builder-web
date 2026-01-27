@@ -280,7 +280,11 @@ namespace sql.builder.WinForms
                 //        this.gcRepositories.Visible = true;
                 //    }
                 //}
-                this._uIForm.RefreshData();
+                if (!DevAnalyzer.PrepareOnly)
+                {
+                    this._uIForm.RefreshData();
+                }
+                
                 //_no_params_mode = (!_uIForm.controls.Any() && (_dt_repository_info == null || _dt_repository_info.Rows.Count == 0));
                 //this.FillWorkFolder();
             }
