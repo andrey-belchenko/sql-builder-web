@@ -2581,7 +2581,7 @@ namespace sql.builder.DataApi
             if (!IsNonDb)
             {
                 hasTemp = true;
-                DevAnalyzer.AnalyzeSql(UpdateTempCommand.CommandText);
+                DevAnalyzer.AnalyzeExecSql(UpdateTempCommand.CommandText);
                 UpdateTempCommand.ExecuteNonQuery();
 
             }
@@ -2597,7 +2597,7 @@ namespace sql.builder.DataApi
             {
                 ClearTempCommand.Connection = (OracleConnection)GetConnection();
                 ClearTempCommand.Parameters[TextConst.DBParams.FormId].Value = GetDataSet().GetFormId();
-                DevAnalyzer.AnalyzeSql(ClearTempCommand.CommandText);
+                DevAnalyzer.AnalyzeExecSql(ClearTempCommand.CommandText);
                 ClearTempCommand.ExecuteNonQuery();
                 hasTemp = false;
             }

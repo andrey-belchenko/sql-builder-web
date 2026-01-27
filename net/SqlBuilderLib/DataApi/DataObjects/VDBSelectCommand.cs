@@ -309,7 +309,7 @@ namespace sql.builder.DataApi
             if (this.procedureCommand != null) {
                 using (OracleCommand procedure = GetParametrizedCommand(this.procedureCommand)) {
                     procedure.Connection = connection;
-                    DevAnalyzer.AnalyzeSql(procedure.CommandText);
+                    DevAnalyzer.AnalyzeExecSql(procedure.CommandText);
                     procedure.ExecuteNonQuery();
                 }
             }
@@ -343,7 +343,7 @@ namespace sql.builder.DataApi
         {
             DataTable tbl;
             OracleCommand preparedCmd = this.PrepareToExecute(connection);
-            DevAnalyzer.AnalyzeSql(preparedCmd.CommandText);
+            DevAnalyzer.AnalyzeExecSql(preparedCmd.CommandText);
             using (OracleDataAdapter da = new OracleDataAdapter(preparedCmd)) {
                 tbl = new DataTable();
                 da.Fill(tbl);
@@ -356,7 +356,7 @@ namespace sql.builder.DataApi
                 return;
             }
             using (OracleCommand command = this.PrepareToExecute(connection)) {
-                DevAnalyzer.AnalyzeSql(command.CommandText);
+                DevAnalyzer.AnalyzeExecSql(command.CommandText);
                 command.ExecuteNonQuery();
                 foreach (OracleParameter par in command.Parameters) {
                     if (par.Direction == ParameterDirection.Output || par.Direction == ParameterDirection.InputOutput) {

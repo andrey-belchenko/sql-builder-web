@@ -476,7 +476,7 @@ namespace sql.builder.DataApi
                     sw.Start();
                     #endif
                     DevAnalyzer.AnalyzePrepSql(procCmd.CommandText);
-                    DevAnalyzer.AnalyzeSql(procCmd.CommandText);
+                    DevAnalyzer.AnalyzeExecSql(procCmd.CommandText);
                     procCmd.ExecuteNonQuery();
                     #if DEBUG
                     sw.Stop();

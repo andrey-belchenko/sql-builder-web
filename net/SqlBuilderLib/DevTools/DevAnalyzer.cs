@@ -31,7 +31,7 @@ namespace SqlBuilderLib.DevTools
 
         public static HashSet<string> TableNames = new HashSet<string>();
         public static HashSet<string> ProcNames = new HashSet<string>();
-        public static void AnalyzeSql(string sql)
+        public static void AnalyzeExecSql(string sql)
         {
             // if (!Enabled) return;
             // var tableNames = DevSqlParserAntlr.GetSourceTables(sql);

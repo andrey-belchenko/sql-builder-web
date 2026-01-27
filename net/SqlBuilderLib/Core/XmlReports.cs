@@ -1535,7 +1535,7 @@ namespace sql.builder
                 //con.Open(useGlobalSettings: true);
                 //var cmd = new OracleCommand(VDBCommand.GetCmdParametrizedText(command), con);
                 //cmd.ExecuteNonQuery();
-                DevAnalyzer.AnalyzeSql(sql1);
+                DevAnalyzer.AnalyzeExecSql(sql1);
                 command.ExecuteNonQuery();
             } catch (Exception e) {
                 throw e;

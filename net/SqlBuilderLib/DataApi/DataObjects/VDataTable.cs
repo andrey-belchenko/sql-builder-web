@@ -1248,7 +1248,7 @@ namespace sql.builder.DataApi
                 try {
                     if (this.ProcedureCommand != null) {
                         this.ProcedureCommand.Connection = sel_cmd.Connection;
-                        DevAnalyzer.AnalyzeSql(this.ProcedureCommand.CommandText);
+                        DevAnalyzer.AnalyzeExecSql(this.ProcedureCommand.CommandText);
                         this.ProcedureCommand.ExecuteNonQuery();
                     }
                     bool done = false;
@@ -1266,7 +1266,7 @@ namespace sql.builder.DataApi
                         this.cmd.FetchSize = 100;
                         this.fetchedRowsCount = 0;
                         WaitUIHelper.LastUsedUIHelper.SetDescription("Выполнение запроса к БД...");
-                        DevAnalyzer.AnalyzeSql(this.cmd.CommandText);
+                        DevAnalyzer.AnalyzeExecSql(this.cmd.CommandText);
                         this.Reader = this.cmd.ExecuteReader();// !!! выполняется при печати тут наверное не нужно, проверить/убрать
                         WaitUIHelper.LastUsedUIHelper.SetDescription(WaitUIHelper.DESCRIPTION_DEFAULT);
                         //Теперь нужно, при !UseTempTable см. PrintTableReferense.cs 408
@@ -1279,7 +1279,7 @@ namespace sql.builder.DataApi
                     if (!done) {
                         if (!this.IsNonDb) {
                             if (this.IsDeferredFetch()) {
-                                DevAnalyzer.AnalyzeSql(this.DataAdapter.SelectCommand.CommandText);
+                                DevAnalyzer.AnalyzeExecSql(this.DataAdapter.SelectCommand.CommandText);
                                 this.otherReader = this.DataAdapter.SelectCommand.ExecuteReader();
                                 this.fetchedRowsCount = 0;
                                 if (this.defaultFetch > 0) {
@@ -1293,7 +1293,7 @@ namespace sql.builder.DataApi
                                 Stopwatch fetch_sw = new Stopwatch();
                                 fetch_sw.Start();
                                 #endif
-                                DevAnalyzer.AnalyzeSql(this.DataAdapter.SelectCommand.CommandText);
+                                DevAnalyzer.AnalyzeExecSql(this.DataAdapter.SelectCommand.CommandText);
                                 this.DataAdapter.Fill(this);
                                 #if DEBUG
                                 fetch_sw.Stop();
@@ -1927,7 +1927,7 @@ namespace sql.builder.DataApi
 
                         if (!IsNonDb)
                         {
-                            DevAnalyzer.AnalyzeSql(DataAdapter.InsertCommand.CommandText);
+                            DevAnalyzer.AnalyzeExecSql(DataAdapter.InsertCommand.CommandText);
                             DataAdapter.InsertCommand.ExecuteNonQuery();
                             row[PrimaryKey[0]] = retPar.Value;
                         }
@@ -1983,7 +1983,7 @@ namespace sql.builder.DataApi
                             {
                                
                                 DataAdapter.UpdateCommand.CommandText = DataAdapter.UpdateCommand.CommandText.Replace("\r", " ");
-                                DevAnalyzer.AnalyzeSql(DataAdapter.UpdateCommand.CommandText);
+                                DevAnalyzer.AnalyzeExecSql(DataAdapter.UpdateCommand.CommandText);
                                 DataAdapter.UpdateCommand.ExecuteNonQuery();
                             }
                             else
@@ -2020,7 +2020,7 @@ namespace sql.builder.DataApi
                                 DataAdapter.DeleteCommand.Parameters.Cast<OracleParameter>().ToList(), true);
                             if (!IsNonDb)
                             {
-                                DevAnalyzer.AnalyzeSql(DataAdapter.DeleteCommand.CommandText);
+                                DevAnalyzer.AnalyzeExecSql(DataAdapter.DeleteCommand.CommandText);
                                 DataAdapter.DeleteCommand.ExecuteNonQuery();
                             }
                             else
@@ -2475,7 +2475,7 @@ namespace sql.builder.DataApi
                 DataTable dt = null;
                 try {
                     // 1. Выполнение запроса
-                    DevAnalyzer.AnalyzeSql(this.command.CommandText);
+                    DevAnalyzer.AnalyzeExecSql(this.command.CommandText);
                     IAsyncResult result = this.command.BeginExecuteReader(CommandBehavior.SingleResult);
                     while (!result.IsCompleted) {
                         token.ThrowIfCancellationRequested();
