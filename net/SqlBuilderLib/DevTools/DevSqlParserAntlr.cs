@@ -85,6 +85,93 @@ namespace SqlBuilderLib.DevTools
         }
 
         /// <summary>
+        /// Extracts all stored procedure calls from PL/SQL code using Antlr4 parser.
+        /// </summary>
+        /// <param name="plsqlText">PL/SQL code string (can include anonymous blocks, procedures, packages, etc.)</param>
+        /// <param name="procedureName">Optional procedure or function name. If specified, only extracts procedures from that procedure/function.</param>
+        /// <returns>HashSet of procedure names (package-qualified names are preserved, same-package calls are resolved)</returns>
+        public static HashSet<string> GetSourceProcedures(string plsqlText, string procedureName = null)
+        {
+            if (string.IsNullOrWhiteSpace(plsqlText))
+                return new HashSet<string>();
+
+            var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            try
+            {
+                // Create case-insensitive character stream (PL/SQL grammar is case-sensitive but SQL is case-insensitive)
+                var input = new AntlrInputStream(plsqlText);
+                var caseChangingStream = new CaseChangingCharStream(input, true); // Convert to uppercase
+
+                // Create lexer and parser
+                var lexer = new PlSqlLexer(caseChangingStream);
+                var tokens = new CommonTokenStream(lexer);
+                var parser = new PlSqlParser(tokens);
+
+                // Remove default error listeners and add a non-throwing one
+                // This allows us to extract procedure names even if there are parse errors
+                parser.RemoveErrorListeners();
+                parser.AddErrorListener(new ConsoleErrorListener());
+
+                // Parse the input (may produce partial parse tree on errors)
+                var tree = parser.sql_script();
+
+                // Check if we got a valid parse tree
+                if (tree == null)
+                {
+                    return result;
+                }
+
+                // Normalize procedure name for comparison (case-insensitive)
+                string normalizedProcedureName = null;
+                if (!string.IsNullOrWhiteSpace(procedureName))
+                {
+                    normalizedProcedureName = procedureName.Trim().ToUpperInvariant();
+                }
+
+                // Create visitor to extract procedure names
+                var visitor = new ProcedureCallExtractorVisitor(normalizedProcedureName);
+                visitor.Visit(tree);
+
+                // Get results
+                foreach (var procName in visitor.ProcedureNames)
+                {
+                    if (!string.IsNullOrWhiteSpace(procName))
+                    {
+                        var normalized = NormalizeProcedureName(procName);
+                        result.Add(normalized);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // If parsing fails, return empty set (graceful degradation)
+                // Log the error for debugging
+                System.Diagnostics.Debug.WriteLine($"PL/SQL parsing error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Normalizes procedure name (handles schema qualification, removes quotes, etc.).
+        /// </summary>
+        private static string NormalizeProcedureName(string procedureName)
+        {
+            if (string.IsNullOrWhiteSpace(procedureName))
+                return string.Empty;
+
+            // Remove surrounding quotes
+            procedureName = procedureName.Trim().Trim('"', '\'');
+            
+            // Trim whitespace
+            procedureName = procedureName.Trim();
+            
+            return procedureName;
+        }
+
+        /// <summary>
         /// Normalizes table name (handles schema qualification, removes quotes, etc.).
         /// </summary>
         private static string NormalizeTableName(string tableName)
@@ -1102,6 +1189,548 @@ namespace SqlBuilderLib.DevTools
                 if (identifier != null)
                 {
                     return GetIdentifierText(identifier).ToUpperInvariant();
+                }
+
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Custom visitor to extract procedure calls from the parse tree.
+        /// </summary>
+        private class ProcedureCallExtractorVisitor : PlSqlParserBaseVisitor<object>
+        {
+            private readonly HashSet<string> _procedureNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            private readonly string _targetProcedureName;
+            private string _currentProcedureName;
+            private string _currentPackageName;
+
+            public HashSet<string> ProcedureNames => _procedureNames;
+
+            public ProcedureCallExtractorVisitor(string targetProcedureName = null)
+            {
+                _targetProcedureName = targetProcedureName;
+            }
+
+            /// <summary>
+            /// Checks if we should extract procedures in the current context.
+            /// Returns true if no target procedure is specified, or if we're inside the target procedure.
+            /// </summary>
+            private bool ShouldExtractProcedures()
+            {
+                return string.IsNullOrWhiteSpace(_targetProcedureName) || 
+                       (string.Equals(_currentProcedureName, _targetProcedureName, StringComparison.OrdinalIgnoreCase));
+            }
+
+            // Visit SQL script (entry point)
+            public override object VisitSql_script(PlSqlParser.Sql_scriptContext context)
+            {
+                if (context == null) return null;
+                return base.VisitSql_script(context);
+            }
+
+            // Visit anonymous blocks
+            public override object VisitAnonymous_block(PlSqlParser.Anonymous_blockContext context)
+            {
+                if (context == null) return null;
+                
+                var seqOfStatements = context.seq_of_statements();
+                if (seqOfStatements != null)
+                {
+                    Visit(seqOfStatements);
+                }
+                
+                return null;
+            }
+
+            // Visit CREATE PACKAGE BODY statements - extract package name
+            public override object VisitCreate_package_body(PlSqlParser.Create_package_bodyContext context)
+            {
+                if (context == null) return null;
+
+                // Extract package name
+                // Grammar: CREATE PACKAGE BODY [schema_object_name.]package_name
+                // schema_object_name is optional schema name
+                // package_name is the actual package name
+                string packageName = null;
+                var packageNames = context.package_name();
+                if (packageNames != null && packageNames.Length > 0)
+                {
+                    // Get the actual package name (last one if multiple)
+                    packageName = GetPackageNameText(packageNames[packageNames.Length - 1]);
+                    
+                    // Prepend schema if present
+                    var schemaObjectName = context.schema_object_name();
+                    if (schemaObjectName != null && !string.IsNullOrWhiteSpace(packageName))
+                    {
+                        string schema = GetSchemaObjectNameText(schemaObjectName);
+                        if (!string.IsNullOrWhiteSpace(schema))
+                        {
+                            packageName = schema + "." + packageName;
+                        }
+                    }
+                }
+
+                string previousPackageName = _currentPackageName;
+                if (!string.IsNullOrWhiteSpace(packageName))
+                {
+                    _currentPackageName = packageName.ToUpperInvariant();
+                }
+
+                try
+                {
+                    // Visit all package_obj_body elements (procedures, functions, etc.)
+                    foreach (var packageObjBody in context.package_obj_body())
+                    {
+                        if (packageObjBody != null)
+                        {
+                            Visit(packageObjBody);
+                        }
+                    }
+
+                    // Visit optional BEGIN seq_of_statements section (package initialization)
+                    var seqOfStatements = context.seq_of_statements();
+                    if (seqOfStatements != null)
+                    {
+                        Visit(seqOfStatements);
+                    }
+                }
+                finally
+                {
+                    // Restore previous package name (for nested packages)
+                    _currentPackageName = previousPackageName;
+                }
+
+                return null;
+            }
+
+            // Visit package object body
+            public override object VisitPackage_obj_body(PlSqlParser.Package_obj_bodyContext context)
+            {
+                if (context == null) return null;
+
+                var procedureBody = context.procedure_body();
+                if (procedureBody != null)
+                {
+                    Visit(procedureBody);
+                }
+
+                var functionBody = context.function_body();
+                if (functionBody != null)
+                {
+                    Visit(functionBody);
+                }
+
+                return null;
+            }
+
+            // Visit procedure body
+            public override object VisitProcedure_body(PlSqlParser.Procedure_bodyContext context)
+            {
+                if (context == null) return null;
+
+                var identifier = context.identifier();
+                if (identifier != null)
+                {
+                    string procName = GetIdentifierText(identifier).ToUpperInvariant();
+                    string previousProcName = _currentProcedureName;
+                    _currentProcedureName = procName;
+
+                    try
+                    {
+                        var body = context.body();
+                        if (body != null)
+                        {
+                            Visit(body);
+                        }
+                    }
+                    finally
+                    {
+                        _currentProcedureName = previousProcName;
+                    }
+                }
+                else
+                {
+                    var body = context.body();
+                    if (body != null)
+                    {
+                        Visit(body);
+                    }
+                }
+
+                return null;
+            }
+
+            // Visit function body
+            public override object VisitFunction_body(PlSqlParser.Function_bodyContext context)
+            {
+                if (context == null) return null;
+
+                var identifier = context.identifier();
+                if (identifier != null)
+                {
+                    string funcName = GetIdentifierText(identifier).ToUpperInvariant();
+                    string previousProcName = _currentProcedureName;
+                    _currentProcedureName = funcName;
+
+                    try
+                    {
+                        var body = context.body();
+                        if (body != null)
+                        {
+                            Visit(body);
+                        }
+                    }
+                    finally
+                    {
+                        _currentProcedureName = previousProcName;
+                    }
+                }
+                else
+                {
+                    var body = context.body();
+                    if (body != null)
+                    {
+                        Visit(body);
+                    }
+                }
+
+                return null;
+            }
+
+            // Visit CREATE PROCEDURE statements (standalone procedures)
+            public override object VisitCreate_procedure_body(PlSqlParser.Create_procedure_bodyContext context)
+            {
+                if (context == null) return null;
+
+                var procedureName = context.procedure_name();
+                if (procedureName != null)
+                {
+                    string procName = GetProcedureNameText(procedureName);
+                    string previousProcName = _currentProcedureName;
+                    _currentProcedureName = procName;
+
+                    try
+                    {
+                        var body = context.body();
+                        if (body != null)
+                        {
+                            Visit(body);
+                        }
+                    }
+                    finally
+                    {
+                        _currentProcedureName = previousProcName;
+                    }
+                }
+                else
+                {
+                    var body = context.body();
+                    if (body != null)
+                    {
+                        Visit(body);
+                    }
+                }
+
+                return null;
+            }
+
+            // Visit CREATE FUNCTION statements (standalone functions)
+            public override object VisitCreate_function_body(PlSqlParser.Create_function_bodyContext context)
+            {
+                if (context == null) return null;
+
+                var functionName = context.function_name();
+                if (functionName != null)
+                {
+                    string funcName = GetFunctionNameText(functionName);
+                    string previousProcName = _currentProcedureName;
+                    _currentProcedureName = funcName;
+
+                    try
+                    {
+                        var body = context.body();
+                        if (body != null)
+                        {
+                            Visit(body);
+                        }
+                    }
+                    finally
+                    {
+                        _currentProcedureName = previousProcName;
+                    }
+                }
+                else
+                {
+                    var body = context.body();
+                    if (body != null)
+                    {
+                        Visit(body);
+                    }
+                }
+
+                return null;
+            }
+
+            // Visit body (BEGIN ... END block)
+            public override object VisitBody(PlSqlParser.BodyContext context)
+            {
+                if (context == null) return null;
+
+                var seqOfStatements = context.seq_of_statements();
+                if (seqOfStatements != null)
+                {
+                    Visit(seqOfStatements);
+                }
+
+                return null;
+            }
+
+            // Visit sequence of statements
+            public override object VisitSeq_of_statements(PlSqlParser.Seq_of_statementsContext context)
+            {
+                if (context == null) return null;
+                
+                foreach (var statement in context.statement())
+                {
+                    Visit(statement);
+                }
+                
+                return null;
+            }
+
+            // Visit statement - handle call_statement
+            public override object VisitStatement(PlSqlParser.StatementContext context)
+            {
+                if (context == null) return null;
+
+                // Visit call_statement if present
+                var callStmt = context.call_statement();
+                if (callStmt != null)
+                {
+                    VisitCall_statement(callStmt);
+                    return null; // Don't visit children to avoid double-visiting
+                }
+
+                // Visit other statement types that may contain nested call_statements
+                // Visit children to find nested statements
+                VisitChildren(context);
+
+                return null;
+            }
+
+            // Visit call statement - extract procedure calls
+            public override object VisitCall_statement(PlSqlParser.Call_statementContext context)
+            {
+                if (context == null) return null;
+
+                // Only extract if we should extract procedures (filtering by procedure name)
+                if (!ShouldExtractProcedures())
+                {
+                    return null;
+                }
+
+                // call_statement contains one or more routine_name() separated by periods
+                // Examples:
+                // - proc_name() -> routine_name[0] = proc_name
+                // - package.proc_name() -> routine_name[0] = package, routine_name[1] = proc_name
+                // - schema.package.proc_name() -> routine_name[0] = schema.package, routine_name[1] = proc_name
+                var routineNames = context.routine_name();
+                if (routineNames != null && routineNames.Length > 0)
+                {
+                    // Build the full qualified name
+                    var parts = new List<string>();
+
+                    // First routine_name might be schema.package or just package
+                    if (routineNames.Length > 0)
+                    {
+                        string firstRoutine = GetRoutineNameText(routineNames[0]);
+                        if (!string.IsNullOrWhiteSpace(firstRoutine))
+                        {
+                            parts.Add(firstRoutine);
+                        }
+                    }
+
+                    // Remaining routine_names are package.proc or just proc
+                    for (int i = 1; i < routineNames.Length; i++)
+                    {
+                        string routine = GetRoutineNameText(routineNames[i]);
+                        if (!string.IsNullOrWhiteSpace(routine))
+                        {
+                            parts.Add(routine);
+                        }
+                    }
+
+                    if (parts.Count > 0)
+                    {
+                        string fullName = string.Join(".", parts);
+
+                        // If unqualified call (single part) and we're inside a package, prepend package name
+                        if (parts.Count == 1 && !string.IsNullOrWhiteSpace(_currentPackageName))
+                        {
+                            // Check if it's already qualified (contains dot from schema qualification)
+                            if (!fullName.Contains("."))
+                            {
+                                fullName = _currentPackageName + "." + fullName;
+                            }
+                        }
+
+                        _procedureNames.Add(fullName);
+                    }
+                }
+
+                return null;
+            }
+
+            // Helper to get text from routine_name
+            private string GetRoutineNameText(PlSqlParser.Routine_nameContext context)
+            {
+                if (context == null) return string.Empty;
+
+                // routine_name: identifier ('.' id_expression)* ('@' link_name)?
+                // The identifier is the base name, id_expression parts are schema qualification
+                var identifier = context.identifier();
+                if (identifier == null) return string.Empty;
+
+                string baseName = GetIdentifierText(identifier);
+                if (string.IsNullOrWhiteSpace(baseName)) return string.Empty;
+
+                // Check for schema qualification (id_expression parts)
+                var idExpressions = context.id_expression();
+                if (idExpressions != null && idExpressions.Length > 0)
+                {
+                    // Build schema.package or schema.proc
+                    var parts = new List<string> { baseName };
+                    foreach (var idExpr in idExpressions)
+                    {
+                        string part = GetIdExpressionText(idExpr);
+                        if (!string.IsNullOrWhiteSpace(part))
+                        {
+                            parts.Add(part);
+                        }
+                    }
+                    return string.Join(".", parts);
+                }
+
+                return baseName;
+            }
+
+            // Helper to get text from identifier
+            private string GetIdentifierText(PlSqlParser.IdentifierContext context)
+            {
+                if (context == null) return string.Empty;
+
+                var idExpr = context.id_expression();
+                if (idExpr != null)
+                {
+                    return GetIdExpressionText(idExpr);
+                }
+
+                return string.Empty;
+            }
+
+            // Helper to get text from id_expression
+            private string GetIdExpressionText(PlSqlParser.Id_expressionContext context)
+            {
+                if (context == null) return string.Empty;
+
+                var delimitedId = context.DELIMITED_ID();
+                if (delimitedId != null)
+                {
+                    string text = delimitedId.GetText();
+                    if (text.Length >= 2 && text.StartsWith("\"") && text.EndsWith("\""))
+                    {
+                        text = text.Substring(1, text.Length - 2).Replace("\"\"", "\"");
+                    }
+                    return text;
+                }
+
+                var regularId = context.regular_id();
+                if (regularId != null)
+                {
+                    var regularIdToken = regularId.REGULAR_ID();
+                    if (regularIdToken != null)
+                    {
+                        return regularIdToken.GetText();
+                    }
+                    return regularId.GetText();
+                }
+
+                return string.Empty;
+            }
+
+            // Helper to get text from procedure_name
+            private string GetProcedureNameText(PlSqlParser.Procedure_nameContext context)
+            {
+                if (context == null) return string.Empty;
+
+                string fullText = context.GetText();
+                if (!string.IsNullOrWhiteSpace(fullText))
+                {
+                    return fullText.Trim().ToUpperInvariant();
+                }
+
+                var identifier = context.identifier();
+                if (identifier != null)
+                {
+                    return GetIdentifierText(identifier).ToUpperInvariant();
+                }
+
+                return string.Empty;
+            }
+
+            // Helper to get text from function_name
+            private string GetFunctionNameText(PlSqlParser.Function_nameContext context)
+            {
+                if (context == null) return string.Empty;
+
+                string fullText = context.GetText();
+                if (!string.IsNullOrWhiteSpace(fullText))
+                {
+                    return fullText.Trim().ToUpperInvariant();
+                }
+
+                var identifier = context.identifier();
+                if (identifier != null)
+                {
+                    return GetIdentifierText(identifier).ToUpperInvariant();
+                }
+
+                return string.Empty;
+            }
+
+            // Helper to get text from package_name
+            private string GetPackageNameText(PlSqlParser.Package_nameContext context)
+            {
+                if (context == null) return string.Empty;
+
+                var identifier = context.identifier();
+                if (identifier != null)
+                {
+                    return GetIdentifierText(identifier);
+                }
+
+                return string.Empty;
+            }
+
+            // Helper to get text from schema_object_name
+            private string GetSchemaObjectNameText(PlSqlParser.Schema_object_nameContext context)
+            {
+                if (context == null) return string.Empty;
+
+                // schema_object_name contains id_expression (which can be schema.package or just package)
+                // Get the full text
+                string fullText = context.GetText();
+                if (!string.IsNullOrWhiteSpace(fullText))
+                {
+                    return fullText.Trim();
+                }
+
+                // Try to extract from id_expression
+                var idExpression = context.id_expression();
+                if (idExpression != null)
+                {
+                    return GetIdExpressionText(idExpression);
                 }
 
                 return string.Empty;
