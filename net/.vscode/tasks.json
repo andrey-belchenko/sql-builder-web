@@ -11,6 +11,7 @@
         "/property:GenerateFullPaths=true",
         "/property:BuildInParallel=false",
         "/property:SkipCopyBuildProduct=false",
+        "/property:DisableFastUpToDateCheck=false",
         "/consoleloggerparameters:NoSummary"
       ],
       "problemMatcher": "$msCompile"

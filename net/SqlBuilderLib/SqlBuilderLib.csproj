@@ -16,7 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SqlBuilderLib.Generated\SqlBuilderLib.Generated.csproj" />
+    <ProjectReference Include="..\SqlBuilderLib.Generated\SqlBuilderLib.Generated.csproj">
+      <!-- Optimize: Skip building referenced project if it's up-to-date -->
+      <SkipGetTargetFrameworkProperties>false</SkipGetTargetFrameworkProperties>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>
