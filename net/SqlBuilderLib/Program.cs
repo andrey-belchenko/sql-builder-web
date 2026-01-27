@@ -396,9 +396,10 @@ adr on p.kod_d_p = adr.kodd--\k_house
 ) mtr
 ;
 --\title_info
+
 end;");
 
-            Console.WriteLine("Extracted source tables:");
+            Console.WriteLine("Extracted source tables :");
             foreach (var tableName in tableNames.OrderBy(t => t))
             {
                 Console.WriteLine($"  - {tableName}");

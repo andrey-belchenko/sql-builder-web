@@ -13,9 +13,10 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
-    <PackageReference Include="Antlr4BuildTasks" Version="12.11.0" />
   </ItemGroup>
 
-  <!-- Pre-generated ANTLR files are in Grammars\Generated\ folder and are automatically included by the SDK -->
+  <ItemGroup>
+    <ProjectReference Include="..\SqlBuilderLib.Generated\SqlBuilderLib.Generated.csproj" />
+  </ItemGroup>
 
 </Project>
