@@ -573,7 +573,7 @@ namespace sql.builder.DataApi
             //dataAdapter.SelectCommand = new OracleCommand(selectText);
 
             dataAdapter.SelectCommand = new VOracleCommand(ReadElementAsString(xtable, EName.select_text));
-            DevAnalyzer.AnalyzePrepSql(dataAdapter.SelectCommand.CommandText);
+            // DevAnalyzer.AnalyzePrepSql(dataAdapter.SelectCommand.CommandText);
             string procText = ReadElementAsString(xtable, EName.proc_text);
             if (procText != null)
             {

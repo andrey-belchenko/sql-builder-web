@@ -38,25 +38,6 @@ namespace SqlBuilderLib.DevTools
 
         }
 
-        // public static void AnalyzeSysSql(string sql)
-        // {
-        // }
-
-        public static void AnalyzePrepSql(string sql)
-        {
-            // if (!Enabled) return;
-            // var tableNames = DevSqlParserAntlr.GetSourceTables(sql);
-            // TableNames.UnionWith(tableNames);
-
-            // if (tableNames.Overlaps(new[] { "adr_m", "k_house", "kr_calc" })){
-
-            // }
-
-            // var procNames = DevSqlParserAntlr.GetSourceProcedures(sql);
-            // ProcNames.UnionWith(procNames);
-            // LogSql(sql);
-        }
-
         public static void AnalyzeCmdSql(string sql)
         {
             if (!Enabled) return;

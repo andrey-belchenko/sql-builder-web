@@ -565,7 +565,7 @@ namespace sql.builder.DataApi
                     Stopwatch sw = new Stopwatch();
                     sw.Start();
 #endif
-                    DevAnalyzer.AnalyzePrepSql(procCmd.CommandText);
+                    // DevAnalyzer.AnalyzePrepSql(procCmd.CommandText);
 
                     if (!DevAnalyzer.PrepareOnly)
                     {
@@ -684,7 +684,7 @@ namespace sql.builder.DataApi
                         }
                         else
                         {
-                            DevAnalyzer.AnalyzePrepSql(cmd.CommandText);
+                            // DevAnalyzer.AnalyzePrepSql(cmd.CommandText);
                             // DevAnalyzer.AnalyzeSuppressedSql(cmd.CommandText);
                             if (!DevAnalyzer.PrepareOnly)
                             {
@@ -721,7 +721,7 @@ namespace sql.builder.DataApi
                             Cmn.DisposeAndSetNull(ref table.DataAdapter);
                             table.DataAdapter = new OracleDataAdapter();
                             table.DataAdapter.SelectCommand = new VOracleCommand(cmd_text);
-                            DevAnalyzer.AnalyzePrepSql(cmd_text);
+                            // DevAnalyzer.AnalyzePrepSql(cmd_text);
                         }
                     }
                     // Емцов. иногда данные не нужно грузить на клиент

@@ -798,7 +798,7 @@ namespace sql.builder.DataApi
                                 compiledQuery = compiled.Elements(EName.query).First(e => e.Attribute(AName_.name).Value == table.QueryName);
                             }
                             table.DataAdapter.SelectCommand.CommandText = getQuerySelectText(compiledQuery, dataSet.UseTempTable);
-                            DevAnalyzer.AnalyzePrepSql(table.DataAdapter.SelectCommand.CommandText);
+                            // DevAnalyzer.AnalyzePrepSql(table.DataAdapter.SelectCommand.CommandText);
                         }
                     }
                     table.EditableOld = false;
