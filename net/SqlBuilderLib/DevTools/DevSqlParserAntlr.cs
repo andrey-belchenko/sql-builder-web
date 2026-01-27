@@ -68,13 +68,26 @@ namespace SqlBuilderLib.DevTools
                 // #endregion
 
                 // Get results
+                // #region agent log
+                try { File.AppendAllText(@"c:\Repos\github\sql-builder-web\net\.cursor\debug.log", $"{{\"id\":\"log_{DateTime.UtcNow.Ticks}\",\"timestamp\":{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()},\"location\":\"DevSqlParserAntlr.cs:70\",\"message\":\"Before foreach\",\"data\":{{\"visitorTableCount\":{visitor.TableNames.Count}}},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"E\"}}\n"); } catch { }
+                // #endregion
                 foreach (var tableName in visitor.TableNames)
                 {
+                    // #region agent log
+                    try { File.AppendAllText(@"c:\Repos\github\sql-builder-web\net\.cursor\debug.log", $"{{\"id\":\"log_{DateTime.UtcNow.Ticks}\",\"timestamp\":{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()},\"location\":\"DevSqlParserAntlr.cs:73\",\"message\":\"Processing table\",\"data\":{{\"tableName\":\"{tableName?.Replace("\"", "\\\"")}\",\"isNullOrWhiteSpace\":{string.IsNullOrWhiteSpace(tableName)}}},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"E\"}}\n"); } catch { }
+                    // #endregion
                     if (!string.IsNullOrWhiteSpace(tableName))
                     {
-                        result.Add(NormalizeTableName(tableName));
+                        var normalized = NormalizeTableName(tableName);
+                        // #region agent log
+                        try { File.AppendAllText(@"c:\Repos\github\sql-builder-web\net\.cursor\debug.log", $"{{\"id\":\"log_{DateTime.UtcNow.Ticks}\",\"timestamp\":{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()},\"location\":\"DevSqlParserAntlr.cs:77\",\"message\":\"Adding to result\",\"data\":{{\"normalized\":\"{normalized?.Replace("\"", "\\\"")}\"}},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"E\"}}\n"); } catch { }
+                        // #endregion
+                        result.Add(normalized);
                     }
                 }
+                // #region agent log
+                try { File.AppendAllText(@"c:\Repos\github\sql-builder-web\net\.cursor\debug.log", $"{{\"id\":\"log_{DateTime.UtcNow.Ticks}\",\"timestamp\":{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()},\"location\":\"DevSqlParserAntlr.cs:82\",\"message\":\"After foreach\",\"data\":{{\"resultCount\":{result.Count}}},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"E\"}}\n"); } catch { }
+                // #endregion
             }
             catch (Exception ex)
             {
@@ -87,6 +100,9 @@ namespace SqlBuilderLib.DevTools
                 System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
             }
 
+            // #region agent log
+            try { File.AppendAllText(@"c:\Repos\github\sql-builder-web\net\.cursor\debug.log", $"{{\"id\":\"log_{DateTime.UtcNow.Ticks}\",\"timestamp\":{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()},\"location\":\"DevSqlParserAntlr.cs:90\",\"message\":\"Returning result\",\"data\":{{\"resultCount\":{result.Count}}},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"E\"}}\n"); } catch { }
+            // #endregion
             return result;
         }
 
@@ -519,21 +535,53 @@ namespace SqlBuilderLib.DevTools
             public override object VisitQuery_block(PlSqlParser.Query_blockContext context)
             {
                 // #region agent log
-                try { File.AppendAllText(@"c:\Repos\github\sql-builder-web\net\.cursor\debug.log", $"{{\"id\":\"log_{DateTime.UtcNow.Ticks}\",\"timestamp\":{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()},\"location\":\"DevSqlParserAntlr.cs:505\",\"message\":\"VisitQuery_block entry\",\"data\":{{\"contextIsNull\":{((context == null) ? "true" : "false")}}},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"E\"}}\n"); } catch { }
+                try { File.AppendAllText(@"c:\Repos\github\sql-builder-web\net\.cursor\debug.log", $"{{\"id\":\"log_{DateTime.UtcNow.Ticks}\",\"timestamp\":{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()},\"location\":\"DevSqlParserAntlr.cs:535\",\"message\":\"VisitQuery_block entry\",\"data\":{{\"contextIsNull\":{((context == null) ? "true" : "false")}}},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"E\"}}\n"); } catch { }
                 // #endregion
                 if (context == null) return null;
+
+                // Visit SELECT list (may contain subqueries in expressions)
+                var selectedList = context.selected_list();
+                if (selectedList != null)
+                {
+                    Visit(selectedList);
+                }
 
                 // Visit FROM clause
                 var fromClause = context.from_clause();
                 // #region agent log
-                try { File.AppendAllText(@"c:\Repos\github\sql-builder-web\net\.cursor\debug.log", $"{{\"id\":\"log_{DateTime.UtcNow.Ticks}\",\"timestamp\":{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()},\"location\":\"DevSqlParserAntlr.cs:511\",\"message\":\"from_clause check\",\"data\":{{\"fromClauseIsNull\":{((fromClause == null) ? "true" : "false")}}},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"E\"}}\n"); } catch { }
+                try { File.AppendAllText(@"c:\Repos\github\sql-builder-web\net\.cursor\debug.log", $"{{\"id\":\"log_{DateTime.UtcNow.Ticks}\",\"timestamp\":{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()},\"location\":\"DevSqlParserAntlr.cs:542\",\"message\":\"from_clause check\",\"data\":{{\"fromClauseIsNull\":{((fromClause == null) ? "true" : "false")}}},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"E\"}}\n"); } catch { }
                 // #endregion
                 if (fromClause != null)
                 {
                     Visit(fromClause);
                 }
 
+                // Visit WHERE clause (may contain subqueries with tables)
+                var whereClause = context.where_clause();
+                // #region agent log
+                try { File.AppendAllText(@"c:\Repos\github\sql-builder-web\net\.cursor\debug.log", $"{{\"id\":\"log_{DateTime.UtcNow.Ticks}\",\"timestamp\":{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()},\"location\":\"DevSqlParserAntlr.cs:551\",\"message\":\"where_clause check in query_block\",\"data\":{{\"whereClauseIsNull\":{((whereClause == null) ? "true" : "false")}}},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"F\"}}\n"); } catch { }
+                // #endregion
+                if (whereClause != null)
+                {
+                    Visit(whereClause);
+                }
+
                 // Don't call base.VisitQuery_block to avoid double-visiting
+                return null;
+            }
+
+            // Visit WHERE clause to extract tables from subqueries
+            public override object VisitWhere_clause(PlSqlParser.Where_clauseContext context)
+            {
+                // #region agent log
+                try { File.AppendAllText(@"c:\Repos\github\sql-builder-web\net\.cursor\debug.log", $"{{\"id\":\"log_{DateTime.UtcNow.Ticks}\",\"timestamp\":{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()},\"location\":\"DevSqlParserAntlr.cs:564\",\"message\":\"VisitWhere_clause entry\",\"data\":{{\"contextIsNull\":{((context == null) ? "true" : "false")}}},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"F\"}}\n"); } catch { }
+                // #endregion
+                if (context == null) return null;
+                
+                // Visit children to find subqueries and other expressions that may contain tables
+                // This will automatically visit subqueries through the visitor pattern
+                VisitChildren(context);
+                
                 return null;
             }
 
@@ -771,18 +819,10 @@ namespace SqlBuilderLib.DevTools
                 return null;
             }
 
-            // Override VisitTableview_name to catch any tableview_name contexts visited through VisitChildren
-            public override object VisitTableview_name(PlSqlParser.Tableview_nameContext context)
-            {
-                // #region agent log
-                try { File.AppendAllText(@"c:\Repos\github\sql-builder-web\net\.cursor\debug.log", $"{{\"id\":\"log_{DateTime.UtcNow.Ticks}\",\"timestamp\":{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()},\"location\":\"DevSqlParserAntlr.cs:742\",\"message\":\"VisitTableview_name (via VisitChildren)\",\"data\":{{\"contextIsNull\":{((context == null) ? "true" : "false")}}},\"sessionId\":\"debug-session\",\"runId\":\"run1\",\"hypothesisId\":\"D\"}}\n"); } catch { }
-                // #endregion
-                if (context != null)
-                {
-                    ExtractTableName(context);
-                }
-                return null;
-            }
+            // Do NOT override VisitTableview_name globally - we only want to extract tables from tableview_name
+            // when they're in FROM clauses, not from qualified column references in SELECT expressions.
+            // Table extraction from tableview_name is handled in VisitDml_table_expression_clause which
+            // is only called from FROM clause contexts.
 
             // Extract table name from tableview_name context
             private void ExtractTableName(PlSqlParser.Tableview_nameContext context)
