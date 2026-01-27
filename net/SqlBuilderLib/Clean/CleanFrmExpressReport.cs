@@ -30,17 +30,17 @@ namespace sql.builder.WinForms
     internal sealed partial class CleanFrmExpressReport
     {
         /// <summary>
-        /// ��������� ����� ��������� ������ � �������� ���� � �������� �����
+        ///          
         /// </summary>
         internal event EventHandler<CleanExpressReportEventArgs> ReportOpening;
         /// <summary>
-        /// ������� ��������� ������������ �������� �����
+        ///     
         /// </summary>
         internal event EventHandler<CleanExpressReportEventArgs> CustomPrint;
 
         private bool _openDocumentAfterPrint = true;
         /// <summary>
-        /// ����� �� ��������� ������������� �����
+        ///     
         /// </summary>
         internal bool OpenDocumentAfterPrint
         {
@@ -68,11 +68,11 @@ namespace sql.builder.WinForms
 
         internal DataSet GetParamsData()
         {
-            // ������� �������, ������� �����������
+            //  ,  
             return (DataSet)this._uIForm.DataSource;
         }
         /// <summary>
-        /// ������������� ��������� ResultData � ���������� CustomPrint
+        ///   ResultData   CustomPrint
         /// </summary>
         /// <param name="param"></param>
         internal void DoCustomPrint(string param)
@@ -84,7 +84,7 @@ namespace sql.builder.WinForms
             VDataSet ds = this.RefreshData();
             this.TryCustomPrint(ds, param);
         }
-        #region �������� ����������
+        #region  
         private string _report_name;
         private VReport _report;
         private VDataSet _dataSet;
@@ -99,7 +99,7 @@ namespace sql.builder.WinForms
         private Dictionary<string, object> _user_settings;
         private string _reg_path;
         #endregion
-        #region ��������
+        #region 
 
         private XElement ParamValues
         {
@@ -145,24 +145,24 @@ namespace sql.builder.WinForms
             }
         }
         #endregion
-        #region �������
+        #region 
         //
         #endregion
-        #region �������� ������
+        #region  
 
         internal UIFormC GetUIForm()
         {
             return this._uIForm;
         }
         /// <summary>
-        /// ����� �������� ���������� ������� Initialize(string report_name)
+        ///     Initialize(string report_name)
         /// </summary>
         internal CleanFrmExpressReport()
         {
             //this.InitializeComponent();
             this._user_settings = new Dictionary<string, object>();
         }
-        internal static string GetProjectNameFromNavigator(string reportName) //��������� ���� ������
+        internal static string GetProjectNameFromNavigator(string reportName) //  
         {
             XElement xusereport = XmlReports.GetUseReport(reportName);
             if (xusereport != null)
@@ -179,7 +179,7 @@ namespace sql.builder.WinForms
             try
             {
 
-                // ������ report_name
+                //  report_name
                 string project;
                 int n_pos = report_name.IndexOf('.');
                 if (n_pos >= 0)
@@ -192,7 +192,7 @@ namespace sql.builder.WinForms
                     project = GetProjectNameFromNavigator(report_name);
                 }
                 this._report = XmlReports.Environment.GetPrecompiledReport(report_name, project);
-                // ��������� ������ �������� ����
+                //    
                 this._dt_print_forms = new DataTable();
                 DataColumn col_name = this._dt_print_forms.Columns.Add("name", typeof(string));
                 DataColumn col_title = this._dt_print_forms.Columns.Add("title", typeof(string));
@@ -209,12 +209,12 @@ namespace sql.builder.WinForms
                     row[col_node] = printFormNode;
                     this._dt_print_forms.Rows.Add(row);
                 }
-                // �������������� ����� � �����������
+                //    
                 XElement xform = XmlReports.GetForm(this._report.P_Form, report_name);
                 this._isWithBehavior = !xform.AttrOrDefault(TextConst.AName.WithBehavior, true);
                 if (this._isWithBehavior)
                 {
-                    // ����� - ������� ��������-�������, �.�. ������ ����� � colsets
+                    //  -  -, ..    colsets
                     this._uIForm = UIStatic.CreateForm(xform.Attribute(AName.name).Value, null, false, false, false, this.GetReportScheme);
                     if (this._uIForm.Init)
                     {
@@ -269,7 +269,7 @@ namespace sql.builder.WinForms
                 //ctrl.Dock = DockStyle.Fill;
                 //pParams.Controls.Add(ctrl);
                 this._uIForm.ApplyVisibitlity();
-                // �������������� ������� �����
+                //   
                 //this.Text = _report.P_SelfTitle;
                 this._report_name = report_name;
                 //if (this._report.AttrOrDefault(AName.use_repository, false))
@@ -291,7 +291,7 @@ namespace sql.builder.WinForms
             return true;
         }
         #endregion
-        #region �������� ������
+        #region  
         private VDataSet RefreshData(bool async = false)
         {
             lock (lockObj)
@@ -304,7 +304,7 @@ namespace sql.builder.WinForms
                     XElement rep_params2 = new XElement(EName.root);
                     Parser.SaveReportParamsToXml(rep_params2, GetUIForm());
                     kod_log = Logger.ReportStart(this._report_name, rep_params2);
-                    // ������
+                    // 
                     ds = _report.Result(rep_params, 2, null, true, this._dataSet != null ? _dataSet.SchemePreset : null);
                     if (ds.Connection == null)
                     {
@@ -330,7 +330,7 @@ namespace sql.builder.WinForms
                 }
                 catch (ThreadAbortException)
                 {
-                    // �����
+                    // 
                     return null;
                 }
                 catch (Exception ex)
@@ -349,7 +349,7 @@ namespace sql.builder.WinForms
             var data = new XDocument();
             data.Add(new XElement(EName.root, new XElement(ds.Scheme)));
             if (template.Attributes["print-proc"] == null)
-            { // �������������� dataSet � xml �� ��������� ��� ������ �������� ������������ excel
+            { //  dataSet  xml       excel
                 Parser.SaveReportDataToXml(data.Root, ds);
             }
             var xmlDoc = new XmlDocument();
@@ -381,7 +381,7 @@ namespace sql.builder.WinForms
                 //{
                 //    if (ShowMessages)
                 //    {
-                //        XtraMessageBox.Show("�� �������� �������� ��� ������ ��� ������");
+                //        XtraMessageBox.Show("      ");
                 //    }
                 //    output_path = string.Empty;
                 //}
@@ -409,7 +409,7 @@ namespace sql.builder.WinForms
         //{
         //    if (!string.IsNullOrEmpty(path))
         //    {
-        //        if (XtraMessageBox.Show("������� " + path + "?", "�������� ���������", MessageBoxButtons.YesNo) == DialogResult.Yes)
+        //        if (XtraMessageBox.Show(" " + path + "?", " ", MessageBoxButtons.YesNo) == DialogResult.Yes)
         //        {
         //            Process.Start(path);
         //        }
@@ -444,7 +444,7 @@ namespace sql.builder.WinForms
         {
             this.in_process = true;
             //this.TaskBarAssistent.ProgressMode = TaskbarButtonProgressMode.Indeterminate;
-            WaitUIHelper.LastUsedUIHelper.Show("���� ������������ ������", WaitUIMode.WaitPanel, true);
+            WaitUIHelper.LastUsedUIHelper.Show("  ", WaitUIMode.WaitPanel, true);
         }
         private void EndForming()
         {
@@ -458,7 +458,7 @@ namespace sql.builder.WinForms
             {
                 return string.Empty;
             }
-            // ���� ���, ���� ������ �� ExpressReport
+            //  ,    ExpressReport
             if (templateInfo == null)
             {
                 this.ShowMessages = false;
@@ -536,7 +536,7 @@ namespace sql.builder.WinForms
                 }
                 finally
                 {
-                    // ����� ������� connection �� �� �������� ������ RefreshData
+                    //   connection     RefreshData
                     if (ds != null && ds.Connection != null && ds.Connection != XmlReports.Environment.Connection)
                     {
                         ds.Connection.Close();
@@ -588,11 +588,11 @@ namespace sql.builder.WinForms
             //base.Dispose(disposing);
         }
         #endregion
-        #region ����������� �������
+        #region  
         private void start()
         {
             XmlNode templateInfo = this.GetTemplateInfo();
-            //�������� ��� ������� ������ (2 ������ �� ����� �����)
+            //    (2    )
             if (this.changeReportName != null && this._report.P_IdName != this.changeReportName)
             {
                 this._report = XmlReports.Environment.GetPrecompiledReport(this.changeReportName);
@@ -631,7 +631,7 @@ namespace sql.builder.WinForms
             }
         }
         #region WorkFolder
-        private const string WORK_FOLDER_PROMPT = "�������� �����, � ������� ����� ����������� ������";
+        private const string WORK_FOLDER_PROMPT = " ,     ";
         private bool _folder_button_pressed;
         #endregion
         private string changeReportName;
@@ -789,7 +789,7 @@ namespace sql.builder.WinForms
             }
         }
         /// <summary>
-        /// ����������� ��� ������ DoCustomPrint
+        ///    DoCustomPrint
         /// </summary>
         public string Param
         {
