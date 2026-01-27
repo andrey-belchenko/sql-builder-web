@@ -2,6 +2,7 @@ using System;
 using System.Xml;
 using ParamField = sql.builder.Controls.FormFields.ParamField;
 using sql.builder.WinForms;
+using System.Collections.Generic;
 
 namespace sql.builder
 {
@@ -91,6 +92,11 @@ namespace sql.builder
         public ParamField GetParamField(string name)
         {
             return _frm.GetUIForm().GetParamField(name);
+        }
+
+        public IEnumerable<ParamField> GetParamFields()
+        {
+            return _frm.GetUIForm().GetParamFields();
         }
 
         /// <summary>

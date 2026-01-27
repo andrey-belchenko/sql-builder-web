@@ -38,8 +38,10 @@ namespace sql.builder.UI
         /// <summary>
         /// XML-описание формы
         /// </summary>
-        public XElement XForm { 
-            get {
+        public XElement XForm
+        {
+            get
+            {
                 return this._xform;
             }
         }
@@ -60,54 +62,66 @@ namespace sql.builder.UI
         /// </summary>
         public string SecurityID
         {
-            get {
+            get
+            {
                 return _security_id;
             }
         }
         public bool WithBehavior
         {
-            get {
+            get
+            {
                 return this._useType == UseType.DataEditor;
             }
         }
         private SortedList<string, object> _props = null;
         public void SetProp(string name, object value = null)
         {
-            if (this._props == null){
+            if (this._props == null)
+            {
                 this._props = new SortedList<string, object>();
             }
             this._props[name] = value;
         }
         public void RemoveProp(string name)
         {
-            if (this._props != null) {
-                if (this._props.ContainsKey(name)) {
+            if (this._props != null)
+            {
+                if (this._props.ContainsKey(name))
+                {
                     this._props.Remove(name);
                 }
             }
         }
         public object GetPropVal(string name)
         {
-            if (this._props == null) {
+            if (this._props == null)
+            {
                 return null;
             }
             object value;
-            if (this._props.TryGetValue(name, out value)) {
+            if (this._props.TryGetValue(name, out value))
+            {
                 return value;
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
         public bool HasProp(string name)
         {
-            if (this._props == null) {
+            if (this._props == null)
+            {
                 return false;
             }
             return this._props.ContainsKey(name);
         }
         private bool _auto_refresh;
-        public bool AutoRefresh {
-            get {
+        public bool AutoRefresh
+        {
+            get
+            {
                 return this._auto_refresh;
             }
         }
@@ -115,8 +129,10 @@ namespace sql.builder.UI
         public bool ClearDataOnClose { get; set; }
         public string GroupName { get; set; }
         public XElement DefaultParams { get; set; }
-        public bool HasDefaultParams {
-            get {
+        public bool HasDefaultParams
+        {
+            get
+            {
                 return this.DefaultParams != null;
             }
         }
@@ -127,7 +143,8 @@ namespace sql.builder.UI
         /// </summary>
         public List<string> TitleVariables
         {
-            get {
+            get
+            {
                 return this._title_variables;
             }
         }
@@ -135,11 +152,14 @@ namespace sql.builder.UI
         /// <summary>
         /// Заголовок окна с подстановочными символами
         /// </summary>
-        public string TitleOriginal {
-            get {
+        public string TitleOriginal
+        {
+            get
+            {
                 return titleOriginal;
             }
-            set {
+            set
+            {
                 titleOriginal = value;
                 // Емцов поставил проверку, тк вылетало
                 if (titleOriginal != null)
@@ -183,16 +203,19 @@ namespace sql.builder.UI
         }
         private string ReplaceParameters(string text, List<string> titleVars)
         {
-            if (titleVars == null) {
+            if (titleVars == null)
+            {
                 titleVars = Cmn.ExtractParamsFromString(text);
-                if (titleVars == null) {
+                if (titleVars == null)
+                {
                     titleVars = new List<string>(0);
                 }
             }
             foreach (string varName in titleVars)
             {
                 UIBase fld = null;
-                if (this._controls.TryGetValue(varName, out fld)) {
+                if (this._controls.TryGetValue(varName, out fld))
+                {
                     text = text.Replace("[:" + varName + "]", fld.GetText());
                 }
             }
@@ -202,8 +225,10 @@ namespace sql.builder.UI
         /// <summary>
         /// Набор полей формы
         /// </summary>
-        internal Dictionary<string, UIBase> controls {
-            get {
+        internal Dictionary<string, UIBase> controls
+        {
+            get
+            {
                 return this._controls;
             }
             //set;
@@ -212,9 +237,12 @@ namespace sql.builder.UI
         //bool _layout_shown;
         public XElement XParams;
         private VDataSet dataSource;
-        internal VDataSet DataSource {
-            get {
-                if (this.dataSource == null) {
+        internal VDataSet DataSource
+        {
+            get
+            {
+                if (this.dataSource == null)
+                {
                     dataSource = new VDataSet();
                     dataSource.ParamsTable = new VDataTable(true);
                     dataSource.Tables.Add(dataSource.ParamsTable);
@@ -224,8 +252,10 @@ namespace sql.builder.UI
                 }
                 return dataSource;
             }
-            set {
-                if (dataSource != null) {
+            set
+            {
+                if (dataSource != null)
+                {
                     dataSource.Form = null;
                     DetachDataSourceEvents();
                     foreach (VDataTable t in dataSource.Tables)
@@ -261,26 +291,35 @@ namespace sql.builder.UI
             }
         }
         private UseType _useType;
-        internal UseType FormUseType {
-            get {
+        internal UseType FormUseType
+        {
+            get
+            {
                 return this._useType;
             }
         }
         /// <summary>
         /// Количество контролов на форме
         /// </summary>
-        public int UIControlsCount {
-            get {
-                if (this._controls == null) {
+        public int UIControlsCount
+        {
+            get
+            {
+                if (this._controls == null)
+                {
                     return 0;
-                } else {
+                }
+                else
+                {
                     return this._controls.Count;
                 }
             }
         }
         private bool _no_data;
-        public bool NoData {
-            get {
+        public bool NoData
+        {
+            get
+            {
                 return this._no_data;
             }
         }
@@ -300,8 +339,10 @@ namespace sql.builder.UI
         /// <summary>
         /// Возвращает true, если форма была проинициализирована
         /// </summary>
-        public bool Init {
-            get {
+        public bool Init
+        {
+            get
+            {
                 return _init;
             }
         }
@@ -341,7 +382,8 @@ namespace sql.builder.UI
         private void OnDisposed(object sender, EventArgs args)
         {
             // контролы могут не лежать на форме, но Dispose должен быть вызван
-            foreach (UIBase c in this._controls.Values) {
+            foreach (UIBase c in this._controls.Values)
+            {
                 c.Dispose();
             }
             this._controls.Clear();
@@ -366,8 +408,10 @@ namespace sql.builder.UI
                 this.detachChangeCompletedEvent();
                 this.detachControlStateEvent();
             }
-            if (this.SubForms != null) {
-                foreach (UIFormC f in this.SubForms) {
+            if (this.SubForms != null)
+            {
+                foreach (UIFormC f in this.SubForms)
+                {
                     //(f.TmpGetControlAsWinFormCtrl() as Control).Dispose();
                 }
             }
@@ -386,8 +430,10 @@ namespace sql.builder.UI
             this.Equip(ds, useType, noData, selectionTarget);
         }
         private bool _equiped;
-        public bool Equiped {
-            get {
+        public bool Equiped
+        {
+            get
+            {
                 return this._equiped;
             }
         }
@@ -400,8 +446,10 @@ namespace sql.builder.UI
             this._useType = useType;
         }
         private VLayout _layout;
-        public VLayout Layout {
-            get {
+        public VLayout Layout
+        {
+            get
+            {
                 return this._layout;
             }
         }
@@ -431,10 +479,10 @@ namespace sql.builder.UI
         public void Initialize(XElement xform, bool isDialog = false, VLayoutGroupInfo parentLayoutGroup = null)
         {
             Contract.Assert(xform != null);
-            #if DEBUG
+#if DEBUG
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            #endif
+#endif
             VCashUtils.ClearCashNotErrors(); // Нужно чтобы периодически кеш зачищался наверняка есть утечка поставлю зачистку на открытие формы 
             this._init = false;
             this._xform = xform;
@@ -460,7 +508,8 @@ namespace sql.builder.UI
             this.MainLayoutGroup = parentLayoutGroup;
             this.UpdateFormToolbar(xform, Command_ItemClick, BarItemControl_EditValueChanged, BarItemRepository_EditValueChanged, this, isDialog);
             XElement xevents = xform.Element(EName.events);
-            if (xevents != null) {
+            if (xevents != null)
+            {
                 this.UpdateEvents(xevents);
             }
             XElement xcontent = xform.Element(EName.content) ?? xform;
@@ -503,23 +552,27 @@ namespace sql.builder.UI
             //var item_names = layoutControl.Items.OfType<LayoutControlItem>().Select(i => i.Text.Trim()).ToArray();
             //rteSearch.Items.AddRange(item_names);
             this._init = true;
-            #if DEBUG
+#if DEBUG
             sw.Stop();
             Debug.WriteLine("UIFormC.Initialize(), " + this._form_name + ": " + sw.ElapsedMilliseconds.ToString() + " мс");
-            #endif
+#endif
         }
         internal void UpdateControlDependence(UIBase control)
         {
             foreach (string name in control.GetParamsNames())
             {
-                if (!name.EndsWith("_filter")) {
+                if (!name.EndsWith("_filter"))
+                {
                     UIBase master = null;
                     this._controls.TryGetValue(name, out master);
-                    if (!control.Masters.ContainsKey(name)) {
+                    if (!control.Masters.ContainsKey(name))
+                    {
                         control.Masters.Add(name, master);
                     }
-                    if (master != null) {
-                        if (!master.Dependants.ContainsKey(control.FieldName)) {
+                    if (master != null)
+                    {
+                        if (!master.Dependants.ContainsKey(control.FieldName))
+                        {
                             master.Dependants.Add(control.FieldName, control);
                         }
                     }
@@ -542,8 +595,10 @@ namespace sql.builder.UI
                     this.SpecialTypeChanged(this, "colsets", Enumerable.Empty<string>());
                 }
             }
-            foreach (UIBase c in this._controls.Values) {
-                if (!c.Mandatory) {
+            foreach (UIBase c in this._controls.Values)
+            {
+                if (!c.Mandatory)
+                {
                     c.Used = false;
                 }
             }
@@ -555,8 +610,10 @@ namespace sql.builder.UI
             //{
             //    controls.Values[i].RefreshData();
             //}
-            if (defaultParams != null) {
-                foreach (UIBase c in this._controls.Values) {
+            if (defaultParams != null)
+            {
+                foreach (UIBase c in this._controls.Values)
+                {
                     c.UseDefaultQuery = false;
                 }
             }
@@ -564,8 +621,10 @@ namespace sql.builder.UI
             {
                 control.RefreshData();
             }
-            if (defaultParams != null) {
-                foreach (UIBase c in this._controls.Values) {
+            if (defaultParams != null)
+            {
+                foreach (UIBase c in this._controls.Values)
+                {
                     c.UseDefaultQuery = true;
                 }
             }
@@ -592,7 +651,8 @@ namespace sql.builder.UI
         internal void SetControlOptions(string name, VFieldStateAndOtherInfo options)
         {
             UIBase control = null;
-            if (!this._controls.TryGetValue(name, out control)) {
+            if (!this._controls.TryGetValue(name, out control))
+            {
                 return;
             }
             // теперь работает как надо
@@ -608,18 +668,22 @@ namespace sql.builder.UI
         }
         public void SetDefaultParams(XElement xParams, bool allow_defaults = false)
         {
-            if (xParams == null) {
+            if (xParams == null)
+            {
                 this.DefaultParams = null;
                 return;
             }
             if (!allow_defaults)
             {
                 var loaded_params_names = new HashSet<string>();
-                foreach (XElement field in xParams.Element(EName.content).Descendants(EName.field)) {
+                foreach (XElement field in xParams.Element(EName.content).Descendants(EName.field))
+                {
                     loaded_params_names.Add(field.Attribute(AName.name).Value);
                 }
-                foreach (UIBase ctrl in this._controls.Values) {
-                    if (loaded_params_names.Contains(ctrl.FieldName)) {
+                foreach (UIBase ctrl in this._controls.Values)
+                {
+                    if (loaded_params_names.Contains(ctrl.FieldName))
+                    {
                         ctrl.UseDefaultQuery = false;
                     }
                 }
@@ -691,29 +755,39 @@ namespace sql.builder.UI
             if (this.dataSource == null) return null;
             List<UIBase> controls;
             ICollection<string> names = new HashSet<string>();
-            if (namedControls == null) {
+            if (namedControls == null)
+            {
                 controls = new List<UIBase>(this._controls.Count);
-                foreach (UIBase c in this._controls.Values) {
+                foreach (UIBase c in this._controls.Values)
+                {
                     controls.Add(c);
-                    if (c.Used) {
+                    if (c.Used)
+                    {
                         names.Add(c.FieldName);
                     }
                 }
-            } else {
+            }
+            else
+            {
                 controls = new List<UIBase>(namedControls.Count);
-                foreach (KeyValuePair<string, UIBase> pair in namedControls) {
-                    if (pair.Value != null) {
+                foreach (KeyValuePair<string, UIBase> pair in namedControls)
+                {
+                    if (pair.Value != null)
+                    {
                         controls.Add(pair.Value);
                         names.Add(pair.Key);
                     }
                 }
             }
             List<XElement> returns = new List<XElement>();
-            if (this._useType == UseType.ParamEditor) {
-                for (int index = 0; index < controls.Count; index++) {
+            if (this._useType == UseType.ParamEditor)
+            {
+                for (int index = 0; index < controls.Count; index++)
+                {
                     UIBase control = controls[index];
                     this.DataSource.SetParamInfo(control.FieldName, control.GetText());
-                    if (control.XField.Element("return") != null) {
+                    if (control.XField.Element("return") != null)
+                    {
                         returns.Add(control.XField);
                     }
                 }
@@ -726,10 +800,12 @@ namespace sql.builder.UI
             //    var par = pars.Elements(TextConst.EName.Param).FirstOrDefault(p => p.Attribute(TextConst.AName.Name).Value == inDBName);
             //    if(par != null) par.SetAttributeValue(TextConst.AName.StoreInDB, TextConst.AVBool.True);
             //}
-            foreach (XElement ret in returns) { // старый вариант применения опциональных параметров, например отчет  21445-2
+            foreach (XElement ret in returns)
+            { // старый вариант применения опциональных параметров, например отчет  21445-2
                 string name = ret.AttrOrDefault(AName.name, string.Empty);
                 XElement par = pars.Elements().SearchByAttribute(AName.name, name);
-                if (par != null) {
+                if (par != null)
+                {
                     XElement retEl = new XElement(ret.Element("return"));
                     XElement retVal = retEl.Descendants("fieldvalue").First();
                     retVal.ReplaceWith(par.Elements());
@@ -747,26 +823,32 @@ namespace sql.builder.UI
             xparams.Add(xcontent);
             XElement xcontent_native = this._xform.Element(EName.content) ?? this._xform;
             var queue = new Queue<Tuple<XElement, XElement>>();
-            foreach (var xi in xcontent_native.Elements().Where(EPredicate.IsFieldGroupOrFieldOrTabContainer)) {
+            foreach (var xi in xcontent_native.Elements().Where(EPredicate.IsFieldGroupOrFieldOrTabContainer))
+            {
                 queue.Enqueue(new Tuple<XElement, XElement>(xi, xcontent));
             }
             XElement xitem_new = null;
-            while (queue.Count > 0) {
+            while (queue.Count > 0)
+            {
                 var item = queue.Dequeue();
                 var item_info = this._layout.GetNodeByTag(item.Item1);
                 xitem_new = new XElement(item.Item1.Name);
                 xitem_new.CopyAttributes(item.Item1.Attributes());
                 xitem_new.Elements().Remove();
                 xitem_new.SetAttrValue(AName.visible, item_info.IsSelfVisible());
-                if (item.Item1.Name == EName.field) {
+                if (item.Item1.Name == EName.field)
+                {
                     //var crtl = ((item_info as VLayoutControlContainerInfo).GetContainedControl() as UIBase);
                     //xitem_new.SetAttributeValue(AName.Mandatory, crtl.Mandatory);
                     xitem_new.SetAttributeValue(AName.mandatory, item.Item1.AttrOrDefault(AName.mandatory, null));
-                } else if (item.Item1.Name == EName.fieldgroup) {
+                }
+                else if (item.Item1.Name == EName.fieldgroup)
+                {
                     xitem_new.SetAttrValue(AName.expanded, (item_info as VLayoutGroupInfo).IsExpanded());
                 }
                 item.Item2.Add(xitem_new);
-                foreach (var xi in item.Item1.Elements().Where(EPredicate.IsFieldGroupOrFieldOrTabContainer)) {
+                foreach (var xi in item.Item1.Elements().Where(EPredicate.IsFieldGroupOrFieldOrTabContainer))
+                {
                     queue.Enqueue(new Tuple<XElement, XElement>(xi, xitem_new));
                 }
             }
@@ -784,16 +866,20 @@ namespace sql.builder.UI
             foreach (XElement element in parent.Elements())
             {
                 XElement newElement = null;
-                if (element.Name == EName.fieldgroup) {
+                if (element.Name == EName.fieldgroup)
+                {
                     newElement = new XElement(EName.band);
-                } else if (element.Name == EName.field) {
+                }
+                else if (element.Name == EName.field)
+                {
                     newElement = new XElement(EName.column);
                 }
                 if (newElement != null)
                 {
                     VLayoutNodeInfo item_info = this._layout.GetNodeByTag(element);
                     newElement.CopyAttributes(element.Attributes());
-                    if (newElement.Attribute(AName.title) == null) {
+                    if (newElement.Attribute(AName.title) == null)
+                    {
                         newElement.Add(new XAttribute(AName.title, "  "));
                     }
                     newElement.SetAttributeValue(AName.id, item_info.GetId().ToString());
@@ -819,7 +905,7 @@ namespace sql.builder.UI
                     ctrl.SetChecked(false);
                     if (ctrl.GetBoundColumn().GetMandatory(null))
                     {
-                        visible = true; 
+                        visible = true;
                     }
                 }
                 item.SetVisibility(visible);
@@ -833,9 +919,9 @@ namespace sql.builder.UI
             Contract.Assert(xfield != null);
             string typeName = xfield.Attribute(AName.controlType).Value;
             if (UIStatic.IsWeb() && typeName == TextConst.AVControlType.Number)
-             {
-                 typeName = TextConst.AVControlType.Text;
-             }
+            {
+                typeName = TextConst.AVControlType.Text;
+            }
             Type control_type = UIBase.GetConcreteType(typeName);
             // создаем объект, вызывая нужный конструктор
             UIBase control = Activator.CreateInstance(control_type) as UIBase;
@@ -849,38 +935,39 @@ namespace sql.builder.UI
             }
             else
             {
-                  // подписываемся на события
-                  control.EditValueChanged += this.UIForm_EditValueChanged;
-                  control.NeedMasterValues += this.UIForm_NeedMasterValues;
-                  control.SpecialTypeChanged += this.UIForm_SpecialTypeChanged;
-                  control.Form = this;
-                  //if (!UIStatic.IsWeb())
-                  //{
-                  //     ( control.GetRootControl() as Control).Dock = DockStyle.Fill; // временно
-                  //}
-                  if (!this._no_data) {
-                      control.BindData();
-                  }
-                  //int i = 1;
-                  //while (controls.ContainsKey(fullName))
-                  //{
-                  //    fullName = control.FullName + i++;
-                  //}
-                  control.FullName = fullName;
-                  this._controls.Add(control.FullName, control);
-                  XElement xbuttons = xfield.Element(EName.buttons);
-                  if (xbuttons != null)
-                  {
-                      if (!UIStatic.IsWeb())// временно
-                      {
-                          foreach (XElement xcmd in xbuttons.Elements())
-                          {
-                              EditorButtonInfo btn = this.CreateEditorButton(xcmd, fullName);
-                              //control.AddEditorButton(btn.ButtonControl, null, Button_Click);
-                              //control.AddEditorAdditionalButton(btn, null, EditorButton_Click/*,xcmd.Attributes(AName.Visible).Any()*/);
+                // подписываемся на события
+                control.EditValueChanged += this.UIForm_EditValueChanged;
+                control.NeedMasterValues += this.UIForm_NeedMasterValues;
+                control.SpecialTypeChanged += this.UIForm_SpecialTypeChanged;
+                control.Form = this;
+                //if (!UIStatic.IsWeb())
+                //{
+                //     ( control.GetRootControl() as Control).Dock = DockStyle.Fill; // временно
+                //}
+                if (!this._no_data)
+                {
+                    control.BindData();
+                }
+                //int i = 1;
+                //while (controls.ContainsKey(fullName))
+                //{
+                //    fullName = control.FullName + i++;
+                //}
+                control.FullName = fullName;
+                this._controls.Add(control.FullName, control);
+                XElement xbuttons = xfield.Element(EName.buttons);
+                if (xbuttons != null)
+                {
+                    if (!UIStatic.IsWeb())// временно
+                    {
+                        foreach (XElement xcmd in xbuttons.Elements())
+                        {
+                            EditorButtonInfo btn = this.CreateEditorButton(xcmd, fullName);
+                            //control.AddEditorButton(btn.ButtonControl, null, Button_Click);
+                            //control.AddEditorAdditionalButton(btn, null, EditorButton_Click/*,xcmd.Attributes(AName.Visible).Any()*/);
                         }
-                      }
-                  }
+                    }
+                }
             }
             return control;
         }
@@ -889,37 +976,55 @@ namespace sql.builder.UI
             Contract.Assert(xparent != null);
             VLayoutNodeInfo item_info = null;
             UIBase f = null;
-            foreach (XElement xitem in xparent.Elements()) {
+            foreach (XElement xitem in xparent.Elements())
+            {
                 XName name = xitem.Name;
-                if (name == EName.field) {
+                if (name == EName.field)
+                {
                     item_info = this.CreateFieldNew(xitem, (VLayoutGroupInfo)parent, ref f);
-                } else if (name == EName.empty_item) {
+                }
+                else if (name == EName.empty_item)
+                {
                     item_info = this.CreateEmptyItemNew(xitem, (VLayoutGroupInfo)parent);
-                } else if (name == EName.menu) {
+                }
+                else if (name == EName.menu)
+                {
                     item_info = this.CreateButtonNew(xitem, (VLayoutGroupInfo)parent);
-                } else if (name == EName.uicommand) {
+                }
+                else if (name == EName.uicommand)
+                {
                     item_info = this.CreateButtonNew(xitem, (VLayoutGroupInfo)parent);
-                } else if (name == EName.fieldgroup) {
+                }
+                else if (name == EName.fieldgroup)
+                {
                     item_info = this.CreateFieldGroupNew(xitem, parent);
                     this.LoadContentFromXmlNew(xitem, item_info as VLayoutGroupInfo, null, tabItem);
-               //} else if (name == EName.ScrollArea) {
-               //    item_info = CreateScrollArea(xitem, parent);
-               //    LoadContentFromXml(xitem, item_info.ScrollControl.Root, null, tabItem);
-                } else if (name == EName.tabcontainer) {
+                    //} else if (name == EName.ScrollArea) {
+                    //    item_info = CreateScrollArea(xitem, parent);
+                    //    LoadContentFromXml(xitem, item_info.ScrollControl.Root, null, tabItem);
+                }
+                else if (name == EName.tabcontainer)
+                {
                     item_info = this.CreateTabContainerNew(xitem, (VLayoutGroupInfo)parent, tabItem);
                     // item_info = GetAnyItemInfo(tab_container.TabContainer);
-                } else if (name == EName.splitcontainer) {
+                }
+                else if (name == EName.splitcontainer)
+                {
                     item_info = this.CreateSplitContainerNew(xitem, (VLayoutGroupInfo)parent);
                     // item_info = GetAnyItemInfo(tab_container.TabContainer);
                     this.LoadContentFromXmlNew(xitem, (VLayoutContainerInfo)item_info, null, tabItem);
-                } else if (name == EName.grid) {
+                }
+                else if (name == EName.grid)
+                {
                     item_info = this.CreateFieldGridNew(xitem, (VLayoutGroupInfo)parent);
-                //} else if (name == EName.Splitter) {
-                //    item_info = CreateSplitter(xitem, parent);
-                //} else if (name == EName.UseForm) {
-                //    item_info = CreateFieldSubForm(xitem, parent);
-                //    break;
-                } else if (name == EName.label) {
+                    //} else if (name == EName.Splitter) {
+                    //    item_info = CreateSplitter(xitem, parent);
+                    //} else if (name == EName.UseForm) {
+                    //    item_info = CreateFieldSubForm(xitem, parent);
+                    //    break;
+                }
+                else if (name == EName.label)
+                {
                     item_info = this.CreateLabelNew(xitem, (VLayoutGroupInfo)parent);
                 }
             }
@@ -929,19 +1034,23 @@ namespace sql.builder.UI
             UIBase control = this.CreateUIControl(xfield);
             control.isInGrid = isInGrid;
             ctrl = control;
-            if (parent_group == null) {
+            if (parent_group == null)
+            {
                 return null;
             }
-            VLayoutItemInfo item_info = this.CreateControlContainerNew(xfield, 
+            VLayoutItemInfo item_info = this.CreateControlContainerNew(xfield,
                 //control.GetRootControl(), 
                 null,
                 parent_group);
-            if (!isInGrid) {
+            if (!isInGrid)
+            {
                 XElement list_query = xfield.Element(EName.listquery);
-                if (list_query != null) {
-                    foreach (XElement usepar in list_query.Descendants(EName.useparam)) {
+                if (list_query != null)
+                {
+                    foreach (XElement usepar in list_query.Descendants(EName.useparam))
+                    {
                         this.AddVariableStateDependance(
-                             //control.GetRootControl(), 
+                            //control.GetRootControl(), 
                             null,
                             usepar.Attribute(AName.name).Value, TextConst.EName.ListQuery);
                     }
@@ -1006,15 +1115,15 @@ namespace sql.builder.UI
                 }
             }
 
-            if (xfieldgroup.Parent!=null && xfieldgroup.Parent.Name.LocalName != TextConst.EName.TabContainer && xfieldgroup.Elements(EName.useform).Any())
+            if (xfieldgroup.Parent != null && xfieldgroup.Parent.Name.LocalName != TextConst.EName.TabContainer && xfieldgroup.Elements(EName.useform).Any())
             {
                 item_info.SetProperty(TextConst.EName.UseForm, xfieldgroup.Elements(EName.useform).FirstOrDefault());
                 item_info.IsFiller = true;
                 item_info.Showed += onGroupShowed;
             }
 
-            
-           
+
+
 
 
             if (xfieldgroup.AttrOrDefault(AName.show_toolbar, false))
@@ -1048,12 +1157,14 @@ namespace sql.builder.UI
             Contract.Assert(xfield != null);
             IVButton control = this.CreateButtonControl(xfield);
             var item_info = CreateControlContainerNew(xfield, control, parent_group);
-            if (xfield.Name == EName.menu) {
+            if (xfield.Name == EName.menu)
+            {
                 IVPopupMenu menu = this.CreatePopupMenu(xfield);
                 control.Menu = menu;
             }
             XAttribute widthFixedAttr = xfield.Attribute(AName.width_fixed);
-            if (widthFixedAttr != null) {
+            if (widthFixedAttr != null)
+            {
                 int val = control.GetTextWith();
                 item_info.SetWidthFixed(val);
             }
@@ -1078,14 +1189,14 @@ namespace sql.builder.UI
                 item_info.SetWidthPercent(perc);
             }
             string hintText = xfield.AttrOrDefault(AName.hint, string.Empty);
-			if (hintText == "LIKE")
+            if (hintText == "LIKE")
             {
-				hintText = "Символ % соответствует любой строке любой длины." + Environment.NewLine + "Для поиска значения, включающего подстроку, следует вводить %подстрока% .";
-			}
+                hintText = "Символ % соответствует любой строке любой длины." + Environment.NewLine + "Для поиска значения, включающего подстроку, следует вводить %подстрока% .";
+            }
             else if (!string.IsNullOrEmpty(hintText))
             {
-				item_info.SetHint(hintText);
-			}
+                item_info.SetHint(hintText);
+            }
             widthMin = Convert.ToInt32((decimal)item_info.GetWidthPercentWithParents() / 100m * (decimal)widthMin);
             item_info.SetWidthMin(widthMin);
             if ((!xfield.AttrOrDefault(AName.visible, true)) || (!xfield.AttrOrDefault(AName.column_visible, true)))
@@ -1156,9 +1267,9 @@ namespace sql.builder.UI
         }
         private void onSelectedPageChangedNew(object sender, EventArgs args)
         {
-           
+
             loadFormForSelectedTabNew((VLayoutGroupInfo)sender);
-          
+
         }
 
 
@@ -1205,9 +1316,9 @@ namespace sql.builder.UI
         }
         internal class EditorButtonInfo
         {
-           public IVEditorButton ButtonControl = null;
-           public UIBase FieldControl = null;
-           public string VisibilitySource = null;
+            public IVEditorButton ButtonControl = null;
+            public UIBase FieldControl = null;
+            public string VisibilitySource = null;
         }
         private EditorButtonInfo CreateEditorButton(XElement xcmd, string fieldName, string default_side = TextConst.AVSides.Left)
         {
@@ -1282,18 +1393,22 @@ namespace sql.builder.UI
                 this.GetBarButton(TextConst.AVFormButtonType.LoadSettings).SetVisible(true);//.Visibility = BarItemVisibility.Always;
             }
             XElement xtoolbar = xform.Element(EName.toolbar);
-            if (xtoolbar != null) {
+            if (xtoolbar != null)
+            {
                 // настраиваем дефолтные кнопки
-                foreach (XElement xcmd in xtoolbar.Elements(EName.uicommand)) {
+                foreach (XElement xcmd in xtoolbar.Elements(EName.uicommand))
+                {
                     XAttribute attr = xcmd.Attribute(AName.control_name);
-                    if (attr != null) {
+                    if (attr != null)
+                    {
                         IVBarButton btn = this.GetBarButton(attr.Value);
                         //var btn = (this.GetControl() as sql.builder.UI.WinForms.UIFormControl).GetToolBarItem(xcmd.Attribute(AName.ControlName).Value);
                         bool visible = xcmd.AttrOrDefault(AName.column_visible, false);
                         this.SetControlVisible(btn, visible);
                     }
                 }
-                if (!UIStatic.IsWeb()) {//временно
+                if (!UIStatic.IsWeb())
+                {//временно
                     //Cmn.UpdateToolbar(this.TmpGetBarManager(), this.GetToolBar(), xtoolbar, handler, ctrlEditValueChangedHandler, repEditValueChangedHandler, form, this.getVariableDepandantceController());
                 }
             }
@@ -1321,8 +1436,10 @@ namespace sql.builder.UI
             this.DataSource.Changed += this.OnDataChanged;
             this.DataSource.TopTableRefreshed += this.Data_OnTopTableRefreshed;
             this.DataSource.TopTableCommited += this.Data_OnTopTableCommited;
-            foreach (VDataTable tbl in this.DataSource.Tables) {
-                if (tbl.StructureType == StructureType.Table) {
+            foreach (VDataTable tbl in this.DataSource.Tables)
+            {
+                if (tbl.StructureType == StructureType.Table)
+                {
                     tbl.CurrentRowChanged += this.OnDataCurrentRowChanged;
                     tbl.CurrentRowRefreshed += this.OnDataCurrentRowChanged;
                     tbl.UserChangedData += this.OnUserChangedData;
@@ -1334,8 +1451,10 @@ namespace sql.builder.UI
             this.DataSource.Changed -= this.OnDataChanged;
             this.DataSource.TopTableRefreshed -= this.Data_OnTopTableRefreshed;
             this.DataSource.TopTableCommited -= this.Data_OnTopTableCommited;
-            foreach (VDataTable tbl in this.DataSource.Tables) {
-                if (tbl.StructureType == StructureType.Table) {
+            foreach (VDataTable tbl in this.DataSource.Tables)
+            {
+                if (tbl.StructureType == StructureType.Table)
+                {
                     tbl.CurrentRowChanged -= this.OnDataCurrentRowChanged;
                     tbl.CurrentRowRefreshed -= this.OnDataCurrentRowChanged;
                     tbl.UserChangedData -= this.OnUserChangedData;
@@ -1381,12 +1500,14 @@ namespace sql.builder.UI
         public void UpdateButtonsState()
         {
             if (!this._toolBarVisible) return;
-            if (this._useType == UseType.DataEditor) {
+            if (this._useType == UseType.DataEditor)
+            {
                 bool modified = this.IsModifiedSelfOrSub();
                 this.SetButtonEnable(TextConst.AVFormButtonType.Save, modified);
                 //this.SetButtonEnable(FormBarButtonType.SaveAndClose, modified);
                 this.SetButtonEnable(TextConst.AVFormButtonType.Delete, (DataSource.TopTable[0].CurrentRow != null));
-                if (ContainerForm != null) {
+                if (ContainerForm != null)
+                {
                     this.ContainerForm.UpdateButtonsState();
                 }
             }
@@ -1454,7 +1575,8 @@ namespace sql.builder.UI
         {
             this.FlagRefreshingAll = true;
             VDataTable table = (VDataTable)sender;
-            foreach (VDataColumn col in table.Columns) {
+            foreach (VDataColumn col in table.Columns)
+            {
                 if (!VDataColumn.HasBoundControl(col)) continue;
                 if (this._useType == UseType.SchemeEditor) //!!! Для редактора запросов
                 {
@@ -1470,7 +1592,7 @@ namespace sql.builder.UI
                             ctrl.Changed(e.Row[col.ColumnName] == null);
                         }
                     }
-                } 
+                }
                 else if (this._useType == UseType.DataEditor)
                 {
                     foreach (UIBase ctrl in col.BoundControls)
@@ -1521,8 +1643,10 @@ namespace sql.builder.UI
                                     if (!(col.BoundControls.First() as UIBase).Form.FlagRefreshingAll)
                                     {
                                         (col.BoundControls.First() as UIBase).Form.FlagRefreshingAll = true;
-                                        foreach (VDataColumn col1 in table.Columns) {
-                                            if (VDataColumn.HasBoundControl(col1)) {
+                                        foreach (VDataColumn col1 in table.Columns)
+                                        {
+                                            if (VDataColumn.HasBoundControl(col1))
+                                            {
                                                 if (col1.BoundControls.First() != ctrl)
                                                 {
                                                     VFieldStateAndOtherInfo fs = col1.GetFieldState();
@@ -1582,20 +1706,25 @@ namespace sql.builder.UI
         }
         public bool LoadData(object[] pars)
         {
-           return UIStatic.UpdateForm(this, pars);
+            return UIStatic.UpdateForm(this, pars);
         }
         public void RefreshSource(object[] new_pars = null, bool isCreation = false)
         {
             LayoutSuspend();
             //RefreshData();
             dataSource.RefreshTopTable(isCreation);
-            if (isCreation) {
+            if (isCreation)
+            {
                 dataSource.WasRefresh = true;// поставил т.к. не работала подгрузка доп. информации об абоненте при создании карточки ПИР
             }
-            if (SubForms != null) {
-                foreach (var frm in SubForms) {
-                    if (frm.Equiped) {
-                        if (frm.DataSource.ParentDataTable == null) {
+            if (SubForms != null)
+            {
+                foreach (var frm in SubForms)
+                {
+                    if (frm.Equiped)
+                    {
+                        if (frm.DataSource.ParentDataTable == null)
+                        {
                             frm.RefreshSource();
                         }
                     }
@@ -1620,7 +1749,7 @@ namespace sql.builder.UI
         {
             throw new NotImplementedException();
         }
-		//private static UIBase _popupMenuOwner = null;
+        //private static UIBase _popupMenuOwner = null;
         private void EditorButton_Click(object sender)
         {
             var btn = (IVEditorButton)sender;
@@ -1649,19 +1778,19 @@ namespace sql.builder.UI
         }
         #region Сохранение/загрузка настроек формы
         private decimal _selected_kod_gs;
-		internal XElement SaveParamsXML()
-		{
+        internal XElement SaveParamsXML()
+        {
             throw new NotImplementedException();
-			//var xroot = new XElement(EName.root);
-			//Parser.SaveReportParamsToXml(xroot, this);
-			//return xroot;
-		}
-		internal void LoadParamsXML(XElement reportParams)
-		{
+            //var xroot = new XElement(EName.root);
+            //Parser.SaveReportParamsToXml(xroot, this);
+            //return xroot;
+        }
+        internal void LoadParamsXML(XElement reportParams)
+        {
             throw new NotImplementedException();
             //Parser.LoadReportParamsFromXml(reportParams, this);
-		}
-		internal void SaveGS()
+        }
+        internal void SaveGS()
         {
             throw new NotImplementedException();
         }
@@ -1739,7 +1868,7 @@ namespace sql.builder.UI
             //DialogResult result = ShowMessage.Show(ShowMessage.MType.UnsavedChangesQuestion);
             //return (result == DialogResult.Yes);
 
-        
+
         }
         /*
         public bool AskDeleteRow(string title)
@@ -1790,15 +1919,23 @@ namespace sql.builder.UI
         public ParamField GetParamField(string name)
         {
             UIBase control = null;
-            if (this._controls.TryGetValue(name, out control)) {
+            if (this._controls.TryGetValue(name, out control))
+            {
                 return ParamField.Create(control);
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
+
+        public IEnumerable<ParamField> GetParamFields()
+        {
+            return this._controls.Select(it => ParamField.Create(it.Value));
+        }
         #region реализация IForm
         public object _dialogContainer = null;
-        public void SetDialogContainer( object value)
+        public void SetDialogContainer(object value)
         {
             this._dialogContainer = value;
         }

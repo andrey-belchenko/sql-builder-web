@@ -7,7 +7,7 @@ namespace SqlBuilderApp
     {
         static void Main(string[] args)
         {
-            sql.builder.Program.Main(args);
+            sql.builder.Program.TestReportsAnalysis(args);
         }
     }
 }

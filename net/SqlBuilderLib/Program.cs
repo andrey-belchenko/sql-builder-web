@@ -35,7 +35,7 @@ namespace sql.builder
     public static class Program
     {
 
-        public static void Main0(string[] args)
+        public static void TestSqlParsing(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
 
@@ -98,10 +98,10 @@ namespace sql.builder
             Console.WriteLine("done");
         }
 
-        public static void Main(string[] args)
+        public static void TestReportAnalysis(string[] args)
         {
             DevAnalyzer.Enabled = true;
-            DevAnalyzer.PrepareOnly =  true;
+            DevAnalyzer.PrepareOnly = true;
             DevAnalyzer.ClearTempFolder();
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
@@ -118,7 +118,7 @@ namespace sql.builder
             pars.Add("p_ym_beg", 2025.06m);
 
             var path = CleanSqlBuilder.ExecReportGetPath("ryazan.76607", pars, "76607.xlsx");
-           
+
             Console.WriteLine("Extracted source tables:");
             foreach (var tableName in DevAnalyzer.TableNames.OrderBy(t => t))
             {
@@ -133,13 +133,63 @@ namespace sql.builder
             {
                 Console.WriteLine($"  - {procName}");
             }
-            Console.WriteLine($"Total: { DevAnalyzer.ProcNames.Count} procedures");
+            Console.WriteLine($"Total: {DevAnalyzer.ProcNames.Count} procedures");
             Console.WriteLine();
             Console.WriteLine("done");
 
         }
 
-        public static void Main2(string[] args)
+
+        public static void TestReportsAnalysis(string[] args)
+        {
+
+
+
+
+            DevAnalyzer.Enabled = true;
+            DevAnalyzer.PrepareOnly = true;
+            DevAnalyzer.ClearTempFolder();
+            Console.OutputEncoding = Encoding.UTF8;
+            XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
+            var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
+
+            CleanSqlBuilder.ChangeConnectionString(conStr);
+            Console.WriteLine(conStr);
+
+            XmlReports.SetGlobalParValue("dep", 3580m);
+
+
+            var vnavs = XmlReports.Environment.GetElements(TextConst.EName.Navigators).Cast<VNavigator>()
+            .Where(it => it.P_IdName == "nav310")
+            .ToList();
+
+            foreach (var vnav in vnavs){
+
+            }
+
+            CleanSqlBuilder.AnalyzeRep("ryazan.76607");
+
+            Console.WriteLine("Extracted source tables:");
+            foreach (var tableName in DevAnalyzer.TableNames.OrderBy(t => t))
+            {
+                Console.WriteLine($"  - {tableName}");
+            }
+            Console.WriteLine($"Total: {DevAnalyzer.TableNames.Count} tables");
+            Console.WriteLine();
+
+
+            Console.WriteLine("Extracted source procedures:");
+            foreach (var procName in DevAnalyzer.ProcNames.OrderBy(p => p))
+            {
+                Console.WriteLine($"  - {procName}");
+            }
+            Console.WriteLine($"Total: {DevAnalyzer.ProcNames.Count} procedures");
+            Console.WriteLine();
+            Console.WriteLine("done");
+
+        }
+
+        public static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";

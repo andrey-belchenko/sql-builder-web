@@ -9,6 +9,23 @@ namespace sql.builder.Clean
 
     internal static class CleanSqlBuilder
     {
+
+        public static void AnalyzeRep(string repName)
+        {
+            var rep = new CleanExpressReport();
+            rep.OpenDocumentAfterPrint = false;
+            rep.Initialize(repName);
+            
+            foreach (var p in rep.GetParamFields()) {
+               
+            }
+            // string path = string.Empty;
+            // rep.ReportOpening += (obj, sender) =>
+            // {
+            //     path = sender.Path;
+            // };
+            // rep.ExecuteReport();
+        }
         public static string ExecReportGetPath(string repName, Dictionary<string, object> param, string templateName)
         {
             var rep = new CleanExpressReport();
