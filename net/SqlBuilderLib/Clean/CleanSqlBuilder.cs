@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Devart.Data.Oracle;
+using infoenergo.sys;
 using sql.builder.DataApi;
 using sql.builder.UI;
 using SqlBuilderLib.DevTools;
@@ -33,6 +34,7 @@ namespace sql.builder.Clean
         public static void ChangeConnection(OracleConnection con, string source_folder = null)
         {
             db.Connection = con;
+            Global.Connection =  con;
             XmlReports.Init(source_folder: source_folder);
         }
 

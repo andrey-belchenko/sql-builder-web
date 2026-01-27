@@ -987,14 +987,14 @@ namespace sql.builder.UI
                 {
                     item_info = this.CreateEmptyItemNew(xitem, (VLayoutGroupInfo)parent);
                 }
-                else if (name == EName.menu)
-                {
-                    item_info = this.CreateButtonNew(xitem, (VLayoutGroupInfo)parent);
-                }
-                else if (name == EName.uicommand)
-                {
-                    item_info = this.CreateButtonNew(xitem, (VLayoutGroupInfo)parent);
-                }
+                // else if (name == EName.menu)
+                // {
+                //     item_info = this.CreateButtonNew(xitem, (VLayoutGroupInfo)parent);
+                // }
+                // else if (name == EName.uicommand)
+                // {
+                //     item_info = this.CreateButtonNew(xitem, (VLayoutGroupInfo)parent);
+                // }
                 else if (name == EName.fieldgroup)
                 {
                     item_info = this.CreateFieldGroupNew(xitem, parent);

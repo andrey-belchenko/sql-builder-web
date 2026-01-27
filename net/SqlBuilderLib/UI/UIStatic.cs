@@ -179,7 +179,7 @@ namespace sql.builder.UI
 
        
 
-        public static bool UpdateForm(UIFormC form, object[] pars, bool isCreation=false, bool checkModified = true)
+        public static bool UpdateForm(UIFormC form, object[] pars, bool isCreation=false, bool checkModified = false)
         {
             try
             {

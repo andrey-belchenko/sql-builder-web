@@ -31,6 +31,11 @@ namespace SqlBuilderLib.DevTools
         public static AnalyzerReportInfo ReportInfo = null;
 
 
+        public static IEnumerable<string> SkipReports = new[]{
+            "ies_garant.64650_2" // не парсится процедура скорее всего в ней ошибки
+            };
+
+
         public static void AnalyzeReports()
         {
             DevAnalyzer.Enabled = true;
@@ -47,11 +52,20 @@ namespace SqlBuilderLib.DevTools
             .Where(it => it.P_IdName == "nav310")
             .ToList();
 
+            // Count total reports first
+            int totalReports = navs
+                .SelectMany(nav => nav.GetDescedantsP(EName.usereport).Cast<VUseReport>().Where(it => it.P_Invisible != TextConst.AVBool.True))
+                .Count();
+
+            int currentReport = 0;
+
             foreach (var nav in navs)
             {
-                var usereps = nav.GetDescedantsP(EName.usereport).Cast<VUseReport>();
+                var usereps = nav.GetDescedantsP(EName.usereport).Cast<VUseReport>()
+                .Where(it => it.P_Invisible != TextConst.AVBool.True);
                 foreach (var userep in usereps)
                 {
+                    currentReport++;
                     var path = "";
                     var folder = userep.Parent as VFolder;
                     while (folder != null)
@@ -60,6 +74,8 @@ namespace SqlBuilderLib.DevTools
                         folder = folder.Parent as VFolder;
                     }
                     var fullName = $"{userep.P_Project}.{userep.P_Report}";
+                    
+                    if (SkipReports.Contains(fullName)) continue;
                     var info = new AnalyzerReportInfo()
                     {
                         Name = fullName,
@@ -68,7 +84,7 @@ namespace SqlBuilderLib.DevTools
                         NavId = nav.P_IdName,
                         NavInfo = nav.P_Title ?? nav.P_Comment
                     };
-                    Console.WriteLine($"Analyze report: {info.Name}");
+                    Console.WriteLine($"Analyze report: {info.Name} ({currentReport} of {totalReports})");
                     var isNew = DevAnalyzer.AnalyzeRep(info);
                     if (isNew)
                     {
