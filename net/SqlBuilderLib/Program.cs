@@ -152,39 +152,58 @@ namespace sql.builder
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
             var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
-
             CleanSqlBuilder.ChangeConnectionString(conStr);
             Console.WriteLine(conStr);
 
-            XmlReports.SetGlobalParValue("dep", 3580m);
 
-
-            var vnavs = XmlReports.Environment.GetElements(TextConst.EName.Navigators).Cast<VNavigator>()
+            var navs = XmlReports.Environment.GetElements(TextConst.EName.Navigators).Cast<VNavigator>()
             .Where(it => it.P_IdName == "nav310")
             .ToList();
 
-            foreach (var vnav in vnavs){
-
-            }
-
-            CleanSqlBuilder.AnalyzeRep("ryazan.76607");
-
-            Console.WriteLine("Extracted source tables:");
-            foreach (var tableName in DevAnalyzer.TableNames.OrderBy(t => t))
+            foreach (var nav in navs)
             {
-                Console.WriteLine($"  - {tableName}");
+                var usereps = nav.GetDescedantsP(EName.usereport).Cast<VUseReport>();
+                foreach (var userep in usereps)
+                {
+                    var path = "";
+                    var folder = userep.Parent as VFolder;
+                    while (folder != null)
+                    {
+                        path = path + "/" + folder.P_Title;
+                        folder = folder.Parent as VFolder;
+                    }
+                    var fullName = $"{userep.P_Project}.{userep.P_Report}";
+                    var info = new AnalyzerReportInfo()
+                    {
+                        FullName = fullName,
+                        Title = userep.P_Title,
+                        Path = path,
+                        NavId = nav.P_IdName,
+                        NavInfo = nav.P_Title ?? nav.P_Comment
+                    };
+                    Console.WriteLine($"Analyze report: {info.FullName}");
+                    DevAnalyzer.AnalyzeRep(info);
+                    Console.WriteLine("Extracted source tables:");
+                    foreach (var tableName in DevAnalyzer.TableNames.OrderBy(t => t))
+                    {
+                        Console.WriteLine($"  - {tableName}");
+                    }
+                    Console.WriteLine($"Total: {DevAnalyzer.TableNames.Count} tables");
+                    Console.WriteLine();
+                    Console.WriteLine("Extracted source procedures:");
+                    foreach (var procName in DevAnalyzer.ProcNames.OrderBy(p => p))
+                    {
+                        Console.WriteLine($"  - {procName}");
+                    }
+                    Console.WriteLine($"Total: {DevAnalyzer.ProcNames.Count} procedures");
+                    Console.WriteLine();
+                }
+
             }
-            Console.WriteLine($"Total: {DevAnalyzer.TableNames.Count} tables");
-            Console.WriteLine();
 
 
-            Console.WriteLine("Extracted source procedures:");
-            foreach (var procName in DevAnalyzer.ProcNames.OrderBy(p => p))
-            {
-                Console.WriteLine($"  - {procName}");
-            }
-            Console.WriteLine($"Total: {DevAnalyzer.ProcNames.Count} procedures");
-            Console.WriteLine();
+
+
             Console.WriteLine("done");
 
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,6 +11,7 @@ using Devart.Data.Oracle;
 using sql.builder;
 using sql.builder.Clean.Extensions;
 using sql.builder.DataApi;
+using sql.builder.UI;
 
 
 namespace SqlBuilderLib.DevTools
@@ -25,6 +27,120 @@ namespace SqlBuilderLib.DevTools
         public static HashSet<string> ProcNames = new HashSet<string>();
 
 
+        public static AnalyzerReportInfo ReportInfo = null;
+
+
+        public static void AnalyzeRep(AnalyzerReportInfo repInfo)
+        {
+            SetReport(repInfo);
+            var rep = new CleanExpressReport();
+            rep.OpenDocumentAfterPrint = false;
+            rep.Initialize(repInfo.FullName);
+
+
+            foreach (var p in rep.GetParamFields())
+            {
+                object value = null;
+
+                switch (p.Control.GetType().Name)
+                {
+                    case nameof(UIText):
+                        value = "dummy";
+                        break;
+                    case nameof(UINumber):
+                        value = 0m;
+                        break;
+                    case nameof(UIDate):
+                    case nameof(UIDateTime):
+                        value = DateTime.Now;
+                        break;
+                    case nameof(UIDateRange):
+                        value = new object[] { DateTime.Now, DateTime.Now };
+                        break;
+                    case nameof(UIComboRange):
+                        value = new object[] { null, null };
+                        break;
+                    case nameof(UICheck):
+                        value = 0m;
+                        break;
+                    case nameof(UIList):
+                        // For UIList, use empty list or check ValueType
+                        Type valueType = p.GetValueType();
+                        if (p.IsArray())
+                        {
+                            value = new List<object>();
+                        }
+                        else
+                        {
+                            // Use default value based on ValueType
+                            if (valueType == typeof(string))
+                            {
+                                value = "dummy";
+                            }
+                            else if (valueType == typeof(decimal))
+                            {
+                                value = 0m;
+                            }
+                            else if (valueType == typeof(DateTime))
+                            {
+                                value = DateTime.Now;
+                            }
+                            else
+                            {
+                                value = Activator.CreateInstance(valueType);
+                            }
+                        }
+                        break;
+                    default:
+                        // Fallback: use ValueType to determine dummy value
+                        Type type = p.GetValueType();
+                        if (type == typeof(string))
+                        {
+                            value = "dummy";
+                        }
+                        else if (type == typeof(decimal))
+                        {
+                            value = 0m;
+                        }
+                        else if (type == typeof(DateTime))
+                        {
+                            value = DateTime.Now;
+                        }
+                        else if (type.IsValueType)
+                        {
+                            value = Activator.CreateInstance(type);
+                        }
+                        break;
+                }
+                p.SetValue(value);
+            }
+
+            rep.ExecuteReport();
+        }
+
+
+        public static IEnumerable<AnalyzerDependency> GetReportDependencyRecords()
+        {
+            var list = new List<AnalyzerDependency>();
+            foreach (var tbl in TableNames)
+            {
+                list.Add(new AnalyzerDependency()
+                {
+                    ObjectName = ReportInfo.FullName,
+                    ObjectType = "report",
+                    UsedObjectName = tbl,
+                    UsedObjectType = "table or view"
+                });
+            }
+            return list;
+        }
+
+        public static void SetReport(AnalyzerReportInfo repInfo)
+        {
+            ReportInfo = repInfo;
+            TableNames = new HashSet<string>();
+            ProcNames = new HashSet<string>();
+        }
         public static void AnalyzeExecSql(string sql)
         {
 
@@ -43,7 +159,7 @@ namespace SqlBuilderLib.DevTools
 
             var procNames = DevSqlParserAntlr.GetSourceProcedures(Cmn.ClearUndefined(sql));
             ProcNames.UnionWith(procNames);
-            LogSql(sql);
+            // LogSql(sql);
         }
 
         private static void LogSql(string sql)

@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Devart.Data.Oracle;
 using sql.builder.DataApi;
+using sql.builder.UI;
+using SqlBuilderLib.DevTools;
 
 namespace sql.builder.Clean
 {
@@ -10,28 +13,13 @@ namespace sql.builder.Clean
     internal static class CleanSqlBuilder
     {
 
-        public static void AnalyzeRep(string repName)
-        {
-            var rep = new CleanExpressReport();
-            rep.OpenDocumentAfterPrint = false;
-            rep.Initialize(repName);
-            
-            foreach (var p in rep.GetParamFields()) {
-               
-            }
-            // string path = string.Empty;
-            // rep.ReportOpening += (obj, sender) =>
-            // {
-            //     path = sender.Path;
-            // };
-            // rep.ExecuteReport();
-        }
         public static string ExecReportGetPath(string repName, Dictionary<string, object> param, string templateName)
         {
             var rep = new CleanExpressReport();
             rep.OpenDocumentAfterPrint = false;
             rep.Initialize(repName);
-            foreach (var p in param) {
+            foreach (var p in param)
+            {
                 rep.GetParamField(p.Key).SetValue(p.Value);
             }
             string path = string.Empty;
