@@ -26,6 +26,8 @@ namespace SqlBuilderLib.DevTools
     {
         public static bool Enabled = false;
 
+        public static bool PrepareOnly = false;
+
         public static HashSet<string> TableNames = new HashSet<string>();
         public static HashSet<string> ProcNames = new HashSet<string>();
         public static void AnalyzeSql(string sql)
@@ -39,7 +41,15 @@ namespace SqlBuilderLib.DevTools
             LogSql(sql);
         }
 
-        public static void LogSql(string sql)
+        public static void AnalyzeSysSql(string sql)
+        {
+        }
+
+        public static void AnalyzePrepSql(string sql)
+        {
+        }
+
+        private static void LogSql(string sql)
         {
 
             if (string.IsNullOrEmpty(sql)) return;
