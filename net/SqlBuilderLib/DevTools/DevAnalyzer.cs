@@ -36,6 +36,10 @@ namespace SqlBuilderLib.DevTools
             var tableNames = DevSqlParserAntlr.GetSourceTables(sql);
             TableNames.UnionWith(tableNames);
 
+            if (tableNames.Overlaps(new[] { "adr_m", "k_house", "kr_calc" })){
+                
+            }
+
             var procNames = DevSqlParserAntlr.GetSourceProcedures(sql);
             ProcNames.UnionWith(procNames);
             LogSql(sql);
@@ -47,6 +51,17 @@ namespace SqlBuilderLib.DevTools
 
         public static void AnalyzePrepSql(string sql)
         {
+            if (!Enabled) return;
+            var tableNames = DevSqlParserAntlr.GetSourceTables(sql);
+            TableNames.UnionWith(tableNames);
+
+            if (tableNames.Overlaps(new[] { "adr_m", "k_house", "kr_calc" })){
+                
+            }
+
+            var procNames = DevSqlParserAntlr.GetSourceProcedures(sql);
+            ProcNames.UnionWith(procNames);
+            LogSql(sql);
         }
 
         private static void LogSql(string sql)

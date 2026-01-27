@@ -86,6 +86,8 @@ namespace sql.builder.DataApi
         private VDBSelectCommand(string commandText, string procedureText, XElement formalParsSource)
             : this()
         {
+            DevAnalyzer.AnalyzePrepSql(commandText);
+            DevAnalyzer.AnalyzePrepSql(procedureText);
             IList<XElement> query_params = formalParsSource.Elements(EName.@params).Elements(EName.param).ToList();
             this.mainCommand = CreateCommand(commandText, query_params);
             if (!string.IsNullOrEmpty(procedureText)) {
@@ -217,6 +219,7 @@ namespace sql.builder.DataApi
                 cmd = new OracleCommand();
                 cmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
                 cmd.CommandText = command_text;
+                DevAnalyzer.AnalyzePrepSql(command_text);
                 // Устанавливаем параметры
                 for (int index = 0; index < cmd.Parameters.Count; index++) {
                     OracleParameter param = cmd.Parameters[index];
