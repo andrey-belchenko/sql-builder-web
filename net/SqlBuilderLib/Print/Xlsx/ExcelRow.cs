@@ -37,7 +37,7 @@ namespace sql.builder.Print.Xlsx
             }
             if (this._cells.Any(ExcelCell.IsHeadMarker)) {
                 this.head_row = true;
-                // ����� � PostProcess ����� ����� ������ �������� merge_down
+                // нужно в PostProcess чтобы знать откуда начинать merge_down
                 //cells_headmarker.ForEach(c => c.SetValue(""));
             }
         }

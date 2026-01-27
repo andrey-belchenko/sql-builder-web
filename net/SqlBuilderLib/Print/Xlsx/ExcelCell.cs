@@ -41,7 +41,7 @@ namespace sql.builder.Print.Xlsx
                 this.text = string.Empty;
             }
             this.has_formula = (xf != null);
-            // ����� �������� ������������� ��� ��������
+            // чтобы значения пересчитались при открытии
             if (this.has_formula && xv != null) {
                 xv.Remove();
             }
@@ -73,9 +73,9 @@ namespace sql.builder.Print.Xlsx
         internal ExcelCell Copy(ExcelRow row, string column_name)
         {
             XElement xml = new XElement(this.Xml);
-            // ���� ������� ����� �������� - �� �������� ��� ������� ��-�����������
+            // пока формулы будут теряться - не придумал как сделать по-нормальному
             if (this.has_formula) {
-                // ����������� copy ��� ExcelFormula!!
+                // реализовать copy для ExcelFormula!!
                 xml.Element(ns.Main.f).Value = this.formula.GetText();
             }
             ExcelCell cell = new ExcelCell(xml, this.Env, row);
@@ -84,7 +84,7 @@ namespace sql.builder.Print.Xlsx
         }
         internal void ChangeColumnName(string colNameNew)
         {
-            // ������ �� �����
+            // теперь не нужно
             //if (HasFormula)
             //{
                 //int delta = ExcelUtils.GetColumnNumber(colNameNew) - ExcelUtils.GetColumnNumber(ColumnName);
@@ -120,7 +120,7 @@ namespace sql.builder.Print.Xlsx
                 xf.RemoveAttribute(ns.None.t);
                 this.has_shared_formula = false;
             }
-            // ����� �������� ������������� ��� ��������
+            // чтобы значения пересчитались при открытии
             this.Xml.RemoveElement(ns.Main.v);
         }
         internal void CopyValue(ExcelCell cellSource)
@@ -145,7 +145,7 @@ namespace sql.builder.Print.Xlsx
                 this.Xml.Element(ns.Main.v).Value = index.ToString();
                 this.value = index.ToString();
             } else {
-                // �������� ����� ��������, ��� �������� �����
+                // возможно нужна проверка, что значение число
                 this.Xml.Element(ns.Main.v).Value = value;
                 this.value = value;
             }

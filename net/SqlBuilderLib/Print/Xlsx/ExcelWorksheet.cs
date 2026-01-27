@@ -65,8 +65,8 @@ namespace sql.builder.Print.Xlsx
                 xcols.Remove();
                 this.cols = new ExcelWorksheetCols(xcols);
             }
-            // ��� ������ header-� � footer-�
-            root.Element(ns.Main.sheetData).RemoveNodes(); // ������� ������ <sheetData/>
+            // для печати header-а и footer-а
+            root.Element(ns.Main.sheetData).RemoveNodes(); // остаётся только <sheetData/>
             root.Elements(ns.Main.dimension).Remove();
             this.mergedowncols = new MergeDownColumns(this._rows);
         }
@@ -79,7 +79,7 @@ namespace sql.builder.Print.Xlsx
         }
         private void DeleteColumns(IList<string> cols_to_delete)
         {
-            // ������ �������
+            // правим формулы
             foreach (ExcelRow r in this._rows) {
                 foreach (ExcelCell c in r.Cells) {
                     if (c.HasFormula) {
@@ -87,9 +87,9 @@ namespace sql.builder.Print.Xlsx
                     }
                 }
             }
-            // ������.
+            // бардак.
 
-            //1 ��������� ����� ����� ���������� ������� � ��������
+            //1 вычисляем новые имена оставшихся колонок и сдвигаем
             var cols_to_rename = new List<Tuple<string, string>>();
 
             int deleted_cols_count = 0;
@@ -101,28 +101,28 @@ namespace sql.builder.Print.Xlsx
                 }
                 else
                 {
-                    // ���� ����� ������� ���� ��������� ������� - �� ����� �����������
+                    // если перед ячейкой были удалённые колонки - её нужно передвинуть
                     string name_old = col_info.Key;
                     string name_new = name_old;
 
                     if (deleted_cols_count > 0)
                     {
-                        // ��������� ����� ��� ������� � ������ ����� ���������
+                        // вычисляем новое имя колонки с учётом ранее удалённых
                         int col_num = ExcelUtils.GetColumnNumber(name_new);
                         name_new = ExcelUtils.GetColumnName(col_num - deleted_cols_count);
                     }
 
-                    // ������������� �������
+                    // переименовать колонку
                     if (name_old != name_new) cols_to_rename.Add(new Tuple<string, string>(name_old, name_new));
                 }
             }
 
-            //2 ������� �������
-            // �������� shared ������� - �� ���� �����������
-            // ��� ������, �� ���� ������ �� ������, ������� ������ ���� ������ - ����������� � ������������
+            //2 удаляем колонки
+            // съезжали shared формулы - не стал разбираться
+            // это ужасно, но одно влияет на другое, поэтому сделал кучу циклов - разобраться в зависимостях
 
             var columns = GetColumns().ToArray();
-            // ������� ������ �������
+            // удаляем ячейки колонки
             foreach (string col_name in cols_to_delete) {
                 foreach (var c in columns.First(c => c.Key == col_name).ToArray()) {
                     c.Row.DeleteCell(c);
@@ -149,24 +149,24 @@ namespace sql.builder.Print.Xlsx
         }
         private string[] CopyColumns(string[] cols_to_copy)
         {
-            // ������ ������� ��� ���� �����, ����� ����������
+            // правим формулы для всех ячеек, кроме копируемых
             foreach (ExcelCell c in this._rows.SelectMany(r => r.Cells.Where(c => c.HasFormula && !cols_to_copy.Contains(c.CellInfo.ColumnName)))) {
                 c.Formula.CopyColumns(cols_to_copy);
             }
             List<string> newNames = new List<string>();
             int col_replace_index = ExcelUtils.GetColumnNumber(cols_to_copy.Last());
             string col_replace = ExcelUtils.GetColumnName(++col_replace_index);
-            // ����������� ����� ��� ����� ������� ������� ������
+            // освобождаем место под новые колонки сдвигом вправо
             MoveColumnsToRight(col_replace, cols_to_copy.Length);
           
             var columns = GetColumns().ToArray();
-            // �������� ������� � ��������� �� ������������� �����
+            // копируем колонки и вставляем на освобождённое место
             foreach (string col_name in cols_to_copy)
             {
                 col_replace = ExcelUtils.GetColumnName(col_replace_index++);
                 newNames.Add(col_replace);
 
-                // �����������
+                // оптимизация
                 var cells = columns.First(c => c.Key == col_name);
                 foreach (ExcelCell cell in cells)
                 {
@@ -181,7 +181,7 @@ namespace sql.builder.Print.Xlsx
         }
         private void MoveColumnsToRight(string first_column_name, int delta)
         {
-            // ������� ������, ������� ���� ��������
+            // колонки справа, которые надо сдвинуть
             var cols_right = GetColumns().SkipWhile(c => c.Key != first_column_name).Reverse().ToArray();
             foreach (IGrouping<string, ExcelCell> col_info in cols_right) {
                 var cell = col_info.FirstOrDefault();
@@ -195,13 +195,13 @@ namespace sql.builder.Print.Xlsx
             }
         }
         /// <summary>
-        /// ������ �������� [���_�������, ������ �� ExcelCell] � ������� ����� �������
-        /// ��������������� ��� ������ ������!
+        /// Список объектов [имя_колонки, список её ExcelCell] в порядке слева направо
+        /// Пересчитывается при каждом вызове!
         /// </summary>
         /// <returns></returns>
         private IEnumerable<IGrouping<string, ExcelCell>> GetColumns()
         {
-            // ������ ExcelCell ��������������� �� ������ �������
+            // наборы ExcelCell сгруппированные по именам колонки
             IEnumerable<IGrouping<string, ExcelCell>> cols_info = this._rows
                 .SelectMany(r => r.Cells)
                 .GroupBy(c => c.CellInfo.ColumnName)
@@ -232,28 +232,28 @@ namespace sql.builder.Print.Xlsx
                 this.DeleteColumns(cols_to_delete);
             }
         }
-        // ����������� �� ��������� ������ (���� �� ��������� ����� ������ ������), �.�. ���� �������� ��� ������������ ��� ������
+        // Избавляемся от свёрнутых формул (одна на несколько ячеек идущих подряд), т.к. дико неудобно это обрабатывать при печати
         internal void ExpandRefFormulas()
         {
-            // ��� ������, ������� ������ ������� ��� ���������
+            // все ячейки, которые хранят формулы для диапазона
             var cells_with_ref = this._rows.SelectMany(r => r.Cells).Where(c => c.FormulaRef != null);
             foreach (ExcelCell cell_with_ref in cells_with_ref) {
                 ExcelRefToken fr = cell_with_ref.FormulaRef;
-                // ������, �� ������� ��������� �������
+                // ячейки, на которые действует формула
                 var cells = this._rows
                     .Where(r => r.RowID >= fr.Cell1.RowID && r.RowID <= fr.Cell2.RowID)
                     .SelectMany(r => r.Cells.Where(c => c.CellInfo.ColumnID >= fr.Cell1.ColumnID && c.CellInfo.ColumnID <= fr.Cell2.ColumnID));
                 string formula = cell_with_ref.Xml.Element(ns.Main.f).Value;
                 foreach (ExcelCell cell in cells) {
-                    // ������� ����������� � ������, �� ������� ��������� �������, ������ ���� � ������ ���� ������ �� ������ � ��������
+                    // формулу подставляем в ячейку, на которую действует формула, только если в ячейке есть ссылка на ячейку с формулой
                     XElement f = cell.Xml.Element(ns.Main.f);
                     if (f != null && f.AttrOrDefault(ns.None.si, null) == cell_with_ref.Xml.Element(ns.Main.f).Attribute(ns.None.si).Value) {
-                        // ������������ ������� � ����������� � ������ ��������
+                        // корректируем формулу и подставляем в ячейку напрямую
                         string formula2 = ExcelUtils.CorrectFormulaReferences(formula, cell.CellInfo.ColumnID - cell_with_ref.CellInfo.ColumnID, cell.CellInfo.RowID - cell_with_ref.CellInfo.RowID);
                         cell.SetFormula(formula2);
                     }
                 }
-                // ������� ����������, ��� � ������ ��������� �������
+                // убираем информацию, что в ячейке свёрнутая формула
                 cell_with_ref.DeleteFormulaRef();
             }
         }
@@ -261,12 +261,12 @@ namespace sql.builder.Print.Xlsx
         {
             string cbegin_name = null;
             List<IGrouping<string, ExcelCell>> columns_list = new List<IGrouping<string, ExcelCell>>();
-            // �������� ������ - �������� + ����� ������������� �������
+            // найденные пивоты - название + набор размазываемых колонок
             List<Tuple<string, IGrouping<string, ExcelCell>[]>> pivots = new List<Tuple<string, IGrouping<string, ExcelCell>[]>>();
-            // ���������� ������� ������� ��� ��������� ������
+            // реализовал простой вариант без вложенных циклов
             foreach (IGrouping<string, ExcelCell> col_info in this.GetColumns()) {
                 if (cbegin_name == null) {
-                    // ���� ������ � �������, ����� � cbegin
+                    // ищем ячейку в колонке, нач с cbegin
                     var ci_begin = col_info.Select(c => new Tuple<ExcelCell, Match>(c, Regex.Match(c.Text, "^cbegin:(.*)"))).FirstOrDefault(t => t.Item2.Success);
                     if (ci_begin != null) {
                         cbegin_name = ci_begin.Item2.Groups[1].Value;
@@ -274,14 +274,14 @@ namespace sql.builder.Print.Xlsx
                         ci_begin.Item1.SetValue(string.Empty);
                     }
                 }
-                // ���� ������ if ��������, ��� ����� ���� ���������
+                // если первый if сработал, всё равно надо проверить
                 if (cbegin_name != null) {
                     if (!columns_list.Contains(col_info)) {
                         columns_list.Add(col_info);
                     }
-                    // ���� ������ � �������, ����� � cbegin
+                    // ищем ячейку в колонке, нач с cbegin
                     ExcelCell cell_cend = col_info.FirstOrDefault(c => c.Text.StartsWith(string.Format("cend:{0};", cbegin_name)));
-                    // ����� �����, ����� ������������ ��������� �������
+                    // нашли конец, можно обрабатывать найденные колонки
                     if (cell_cend != null) {
                         pivots.Add(new Tuple<string, IGrouping<string, ExcelCell>[]>(cbegin_name, columns_list.ToArray()));
                         columns_list.Clear();
@@ -290,19 +290,19 @@ namespace sql.builder.Print.Xlsx
                     }
                 }
             }
-            // ������������ ��������� ������������� ��������� � �������� �������, ����� �� �������� ��������� �������
+            // обрабатываем найденные размазываемые диапазоны в обратном порядке, чтобы не съезжала нумерация колонок
             for (int index = pivots.Count - 1; index >= 0; index--) {
                 Tuple<string, IGrouping<string, ExcelCell>[]> pivot = pivots[index];
                 DataTable columns_info = data.Tables[pivot.Item1];
-                // �������������� ��������� ������� � �����������
-                // ����������� ������ ������� � ������ - ������������ �������� � 33324-11, 33324-10
+                // автоматическая генерация таблицы с измерениями
+                // преобразуем старый вариант к новому - используется например в 33324-11, 33324-10
                 if (columns_info == null) {
                     columns_info = getColumnsInfoFromPivotInfo(pivot.Item1, ((VDataSet)data).Scheme);
                 }
                 this.ProcessPivotColumns(pivot.Item2, pivot.Item1, columns_info, width_column_name);
             }
         }
-        // ������������ �������
+        // размазывание кейсами
         private static DataTable getColumnsInfoFromPivotInfo(string dimName, XElement scheme)
         {
             DataTable columns_info = new DataTable(dimName);
@@ -326,7 +326,7 @@ namespace sql.builder.Print.Xlsx
             if (pivot_info is VDataTable) {
                 (pivot_info as VDataTable).ReadAll();
             }
-            // ��� ������ ��� ������������
+            // нет данных для размазывания
             if (pivot_info.Rows.Count <= 0) {
                 this.DeleteColumns(col_names);
             } else {
@@ -342,7 +342,7 @@ namespace sql.builder.Print.Xlsx
                     cols_with_vars.Add(column.ColumnName, cells_with_title);
                 }
                 DataColumn width_column = pivot_info.Columns[width_column_name];
-                // ��������� ������ ������, ����� �� �������������� � ���������� ��������� �������
+                // вставляем справа налево, чтобы не заморочиваться с изменением нумерации колонок
                 for (int row_index = pivot_info.Rows.Count - 1; row_index >= 0; row_index--) {
                     DataRow pv = pivot_info.Rows[row_index];
                     foreach (var col_info in cols_with_vars) {
@@ -377,7 +377,7 @@ namespace sql.builder.Print.Xlsx
         }
         private void MergeHeaderCells(string[] col_names)
         {
-            // ��������� ��������� ������ ����� ��� �������� ���������
+            // формируем двумерный массив ячеек для удобства обработки
             ExcelRow[] rows = this._rows.Where(r => r.IsHeadRow).ToArray();
             ExcelCell[,] cells = new ExcelCell[rows.Length, col_names.Length];
             for (int i = 0; i < rows.Length; i++) {
@@ -399,12 +399,12 @@ namespace sql.builder.Print.Xlsx
 
                     if (cells[i, j].Text != "") {
                         if (i > 0) {
-                            // ������� ������
+                            // смотрим сверху
                             if (cells[i, j].Text == cells[i - 1, j].Text) {
-                                // ���� ������ � ����� �������
-                                // ���� ��� ����� - ������ � �������� ������� ������
+                                // ищем правые и левые границы
+                                // если они равны - мержим с ячейками верхней строки
 
-                                // ������
+                                // правые
                                 int b1 = -1;
                                 int b2 = -1;
                                 for (int x = j; x < col_names.Length; x++) {
@@ -416,7 +416,7 @@ namespace sql.builder.Print.Xlsx
                                     else break;
                                 }
 
-                                // �����
+                                // левые
                                 int b3 = -1;
                                 int b4 = -1;
                                 for (int x = j; x >= 0; x--) {
@@ -428,7 +428,7 @@ namespace sql.builder.Print.Xlsx
                                     else break;
                                 }
 
-                                // ������ ������� ���������, � ����� ������������ - ������ � ��������
+                                // правые границы совпадают, а левые пересекаются - мержим с верхними
                                 if (b1 == b2 && b3 >= b4) {
                                     map[i, j] = map[i - 1, j];
                                     merges_info[map[i, j]].BottomRow = i;
@@ -437,18 +437,18 @@ namespace sql.builder.Print.Xlsx
                             }
                         }
 
-                        // ������� �����
+                        // смотрим слева
                         if (j > 0 && cells[i, j].Text == cells[i, j - 1].Text) {
-                            // �������� ��� ������ � ������ ���� ��������
+                            // проверяем что ячейки в строке выше смержены
                             if (i == 0 || map[i - 1, j - 1] == map[i - 1, j]) {
-                                // ������ � ������
+                                // мержим с левыми
                                 map[i, j] = map[i, j - 1];
                                 merges_info[map[i, j]].RightColumn = j;
                                 continue;
                             }
                         }
 
-                        // �� ����� ������, � ��� ����� ��������
+                        // не нашли ничего, с чем можно смержить
                         map[i, j] = id_new++;
                         merges_info.Add(map[i, j], new MergeArea(i, j));
                     }
@@ -456,14 +456,14 @@ namespace sql.builder.Print.Xlsx
             }
 
             foreach (MergeArea area in merges_info.Values) {
-                // ���� ������ � ������ - ����������
+                // одна ячейка в группе - игнорируем
                 if (area.TopRow == area.BottomRow && area.RightColumn == area.LeftColumn) continue;
 
                 var cell1 = cells[area.TopRow, area.LeftColumn].CellInfo;
                 var cell2 = cells[area.BottomRow, area.RightColumn].CellInfo;
                 bool success = this.merges.CreateMergeChecked(cell1, cell2);
                 if (!success) {
-                    throw new InvalidOperationException(string.Format("�� ������� ���������� �������� {0}:{1}", cell1.CellName, cell2.CellName));
+                    throw new InvalidOperationException(string.Format("Не удалось объединить диапазон {0}:{1}", cell1.CellName, cell2.CellName));
                 }
             }
         }
