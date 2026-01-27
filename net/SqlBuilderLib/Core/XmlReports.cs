@@ -72,7 +72,7 @@ namespace sql.builder
             System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("ru-RU");
             //db.ExecuteNonQuery("ALTER SESSION SET session_cached_cursors = 300");
             string customer_id, scheme;
-            using (DataTable dt = db.ExecuteDataTable("select customer_id, scheme from rs_rep_sets")) {
+            using (DataTable dt = db.ExecuteDataTable("select customer_id, scheme from rs_rep_sets", null, false)) {
                 DataRow row = dt.Rows[0];
                 customer_id = row["customer_id"].ToString();
                 scheme = row["scheme"].ToString();

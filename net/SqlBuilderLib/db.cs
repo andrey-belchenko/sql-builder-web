@@ -296,7 +296,7 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
             return (cnt > 0);
         }
         #region Вспомогательные функции
-        public static DataTable ExecuteDataTable(string sql, DbConnection conn = null)
+        public static DataTable ExecuteDataTable(string sql, DbConnection conn = null,bool analyze=false)
         {
             conn = conn ?? Connection;
 
@@ -308,7 +308,10 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
                 DbDataReader reader = null;
                 try
                 {
-                    DevAnalyzer.AnalyzeExecSql(sql);
+                    if (analyze){
+                        DevAnalyzer.AnalyzeExecSql(sql);
+                    }
+                   
                     reader = cmd.ExecuteReader();
                 }
                 catch (OracleException e)
