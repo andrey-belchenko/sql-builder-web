@@ -3,12 +3,12 @@ using System.Data;
 using System.Data.Common;
 using Devart.Data.Oracle;
 
-namespace infoenergo.core.Data
+namespace sql.builder.Clean
 {
     /// <summary>
     /// Wrapper class for OracleCommand that intercepts CommandText assignments
     /// </summary>
-    public class SbOracleCommand : OracleCommand
+    public class VOracleCommand : OracleCommand
     {
         /// <summary>
         /// Event raised when CommandText is set
@@ -34,14 +34,14 @@ namespace infoenergo.core.Data
         /// <summary>
         /// Default constructor
         /// </summary>
-        public SbOracleCommand() : base()
+        public VOracleCommand() : base()
         {
         }
 
         /// <summary>
         /// Constructor with command text
         /// </summary>
-        public SbOracleCommand(string commandText) : base(commandText)
+        public VOracleCommand(string commandText) : base(commandText)
         {
             OnCommandTextChanged(null, commandText);
         }
@@ -49,7 +49,7 @@ namespace infoenergo.core.Data
         /// <summary>
         /// Constructor with command text and connection
         /// </summary>
-        public SbOracleCommand(string commandText, OracleConnection connection) : base(commandText, connection)
+        public VOracleCommand(string commandText, OracleConnection connection) : base(commandText, connection)
         {
             OnCommandTextChanged(null, commandText);
         }
@@ -57,7 +57,7 @@ namespace infoenergo.core.Data
         /// <summary>
         /// Constructor with command text, connection, and transaction
         /// </summary>
-        public SbOracleCommand(string commandText, OracleConnection connection, OracleTransaction transaction) 
+        public VOracleCommand(string commandText, OracleConnection connection, OracleTransaction transaction) 
             : base(commandText, connection, transaction)
         {
             OnCommandTextChanged(null, commandText);
