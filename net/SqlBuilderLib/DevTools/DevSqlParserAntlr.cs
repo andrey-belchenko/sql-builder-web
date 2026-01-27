@@ -18,8 +18,9 @@ namespace SqlBuilderLib.DevTools
         /// Extracts all database table names from PL/SQL code using Antlr4 parser.
         /// </summary>
         /// <param name="plsqlText">PL/SQL code string (can include anonymous blocks, procedures, packages, etc.)</param>
+        /// <param name="procedureName">Optional procedure or function name. If specified, only extracts tables from that procedure/function.</param>
         /// <returns>HashSet of table names (schema-qualified names are preserved)</returns>
-        public static HashSet<string> GetSourceTables(string plsqlText)
+        public static HashSet<string> GetSourceTables(string plsqlText, string procedureName = null)
         {
             if (string.IsNullOrWhiteSpace(plsqlText))
                 return new HashSet<string>();
@@ -51,8 +52,15 @@ namespace SqlBuilderLib.DevTools
                     return result;
                 }
 
+                // Normalize procedure name for comparison (case-insensitive)
+                string normalizedProcedureName = null;
+                if (!string.IsNullOrWhiteSpace(procedureName))
+                {
+                    normalizedProcedureName = procedureName.Trim().ToUpperInvariant();
+                }
+
                 // Create visitor to extract table names
-                var visitor = new TableNameExtractorVisitor();
+                var visitor = new TableNameExtractorVisitor(normalizedProcedureName);
                 visitor.Visit(tree);
 
                 // Get results
@@ -113,8 +121,25 @@ namespace SqlBuilderLib.DevTools
         {
             private readonly HashSet<string> _tableNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             private readonly HashSet<string> _cteNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            private readonly string _targetProcedureName;
+            private string _currentProcedureName;
 
             public HashSet<string> TableNames => _tableNames;
+
+            public TableNameExtractorVisitor(string targetProcedureName = null)
+            {
+                _targetProcedureName = targetProcedureName;
+            }
+
+            /// <summary>
+            /// Checks if we should extract tables in the current context.
+            /// Returns true if no target procedure is specified, or if we're inside the target procedure.
+            /// </summary>
+            private bool ShouldExtractTables()
+            {
+                return string.IsNullOrWhiteSpace(_targetProcedureName) || 
+                       (string.Equals(_currentProcedureName, _targetProcedureName, StringComparison.OrdinalIgnoreCase));
+            }
 
             // Visit SQL script (entry point)
             public override object VisitSql_script(PlSqlParser.Sql_scriptContext context)
@@ -139,6 +164,238 @@ namespace SqlBuilderLib.DevTools
                 }
                 
                 // Don't call base.VisitAnonymous_block to avoid double-visiting
+                return null;
+            }
+
+            // Visit CREATE PACKAGE BODY statements
+            public override object VisitCreate_package_body(PlSqlParser.Create_package_bodyContext context)
+            {
+                if (context == null) return null;
+
+                // Visit all package_obj_body elements (procedures, functions, etc.)
+                foreach (var packageObjBody in context.package_obj_body())
+                {
+                    if (packageObjBody != null)
+                    {
+                        Visit(packageObjBody);
+                    }
+                }
+
+                // Visit optional BEGIN seq_of_statements section (package initialization)
+                var seqOfStatements = context.seq_of_statements();
+                if (seqOfStatements != null)
+                {
+                    Visit(seqOfStatements);
+                }
+
+                // Don't call base.VisitCreate_package_body to avoid double-visiting
+                return null;
+            }
+
+            // Visit package object body (can be procedure_body, function_body, etc.)
+            public override object VisitPackage_obj_body(PlSqlParser.Package_obj_bodyContext context)
+            {
+                if (context == null) return null;
+
+                // Visit procedure_body if present
+                var procedureBody = context.procedure_body();
+                if (procedureBody != null)
+                {
+                    Visit(procedureBody);
+                }
+
+                // Visit function_body if present
+                var functionBody = context.function_body();
+                if (functionBody != null)
+                {
+                    Visit(functionBody);
+                }
+
+                // Don't call base.VisitPackage_obj_body to avoid double-visiting
+                return null;
+            }
+
+            // Visit procedure body
+            public override object VisitProcedure_body(PlSqlParser.Procedure_bodyContext context)
+            {
+                if (context == null) return null;
+
+                // Extract procedure name
+                var identifier = context.identifier();
+                if (identifier != null)
+                {
+                    string procName = GetIdentifierText(identifier).ToUpperInvariant();
+                    string previousProcName = _currentProcedureName;
+                    _currentProcedureName = procName;
+
+                    try
+                    {
+                        // Visit body which contains seq_of_statements
+                        var body = context.body();
+                        if (body != null)
+                        {
+                            Visit(body);
+                        }
+                    }
+                    finally
+                    {
+                        // Restore previous procedure name (for nested procedures)
+                        _currentProcedureName = previousProcName;
+                    }
+                }
+                else
+                {
+                    // Visit body even if we can't get the name
+                    var body = context.body();
+                    if (body != null)
+                    {
+                        Visit(body);
+                    }
+                }
+
+                // Don't call base.VisitProcedure_body to avoid double-visiting
+                return null;
+            }
+
+            // Visit function body
+            public override object VisitFunction_body(PlSqlParser.Function_bodyContext context)
+            {
+                if (context == null) return null;
+
+                // Extract function name
+                var identifier = context.identifier();
+                if (identifier != null)
+                {
+                    string funcName = GetIdentifierText(identifier).ToUpperInvariant();
+                    string previousProcName = _currentProcedureName;
+                    _currentProcedureName = funcName;
+
+                    try
+                    {
+                        // Visit body which contains seq_of_statements
+                        var body = context.body();
+                        if (body != null)
+                        {
+                            Visit(body);
+                        }
+                    }
+                    finally
+                    {
+                        // Restore previous procedure name (for nested functions)
+                        _currentProcedureName = previousProcName;
+                    }
+                }
+                else
+                {
+                    // Visit body even if we can't get the name
+                    var body = context.body();
+                    if (body != null)
+                    {
+                        Visit(body);
+                    }
+                }
+
+                // Don't call base.VisitFunction_body to avoid double-visiting
+                return null;
+            }
+
+            // Visit CREATE PROCEDURE statements (standalone procedures)
+            public override object VisitCreate_procedure_body(PlSqlParser.Create_procedure_bodyContext context)
+            {
+                if (context == null) return null;
+
+                // Extract procedure name
+                var procedureName = context.procedure_name();
+                if (procedureName != null)
+                {
+                    string procName = GetProcedureNameText(procedureName);
+                    string previousProcName = _currentProcedureName;
+                    _currentProcedureName = procName;
+
+                    try
+                    {
+                        // Visit body which contains seq_of_statements
+                        var body = context.body();
+                        if (body != null)
+                        {
+                            Visit(body);
+                        }
+                    }
+                    finally
+                    {
+                        // Restore previous procedure name
+                        _currentProcedureName = previousProcName;
+                    }
+                }
+                else
+                {
+                    // Visit body even if we can't get the name
+                    var body = context.body();
+                    if (body != null)
+                    {
+                        Visit(body);
+                    }
+                }
+
+                // Don't call base.VisitCreate_procedure_body to avoid double-visiting
+                return null;
+            }
+
+            // Visit CREATE FUNCTION statements (standalone functions)
+            public override object VisitCreate_function_body(PlSqlParser.Create_function_bodyContext context)
+            {
+                if (context == null) return null;
+
+                // Extract function name
+                var functionName = context.function_name();
+                if (functionName != null)
+                {
+                    string funcName = GetFunctionNameText(functionName);
+                    string previousProcName = _currentProcedureName;
+                    _currentProcedureName = funcName;
+
+                    try
+                    {
+                        // Visit body which contains seq_of_statements
+                        var body = context.body();
+                        if (body != null)
+                        {
+                            Visit(body);
+                        }
+                    }
+                    finally
+                    {
+                        // Restore previous procedure name
+                        _currentProcedureName = previousProcName;
+                    }
+                }
+                else
+                {
+                    // Visit body even if we can't get the name
+                    var body = context.body();
+                    if (body != null)
+                    {
+                        Visit(body);
+                    }
+                }
+
+                // Don't call base.VisitCreate_function_body to avoid double-visiting
+                return null;
+            }
+
+            // Visit body (BEGIN ... END block)
+            public override object VisitBody(PlSqlParser.BodyContext context)
+            {
+                if (context == null) return null;
+
+                // Visit seq_of_statements which contains the actual DML statements
+                var seqOfStatements = context.seq_of_statements();
+                if (seqOfStatements != null)
+                {
+                    Visit(seqOfStatements);
+                }
+
+                // Don't call base.VisitBody to avoid double-visiting
                 return null;
             }
 
@@ -738,12 +995,20 @@ namespace SqlBuilderLib.DevTools
                                 string tablePart = baseTableName.Substring(dotIndex + 1);
                                 if (!_cteNames.Contains(tablePart))
                                 {
-                                    _tableNames.Add(tableName);
+                                    // Only add table if we should extract tables (filtering by procedure name)
+                                    if (ShouldExtractTables())
+                                    {
+                                        _tableNames.Add(tableName);
+                                    }
                                 }
                             }
                             else
                             {
-                                _tableNames.Add(tableName);
+                                // Only add table if we should extract tables (filtering by procedure name)
+                                if (ShouldExtractTables())
+                                {
+                                    _tableNames.Add(tableName);
+                                }
                             }
                         }
                     }
@@ -793,6 +1058,50 @@ namespace SqlBuilderLib.DevTools
                     }
                     // If it's a keyword, get the text from the context
                     return regularId.GetText();
+                }
+
+                return string.Empty;
+            }
+
+            // Helper to get text from procedure_name (handles schema.procedure_name)
+            private string GetProcedureNameText(PlSqlParser.Procedure_nameContext context)
+            {
+                if (context == null) return string.Empty;
+
+                // Get the full text and normalize (remove extra whitespace)
+                string fullText = context.GetText();
+                if (!string.IsNullOrWhiteSpace(fullText))
+                {
+                    return fullText.Trim().ToUpperInvariant();
+                }
+
+                // Fallback: try to get from identifier
+                var identifier = context.identifier();
+                if (identifier != null)
+                {
+                    return GetIdentifierText(identifier).ToUpperInvariant();
+                }
+
+                return string.Empty;
+            }
+
+            // Helper to get text from function_name (handles schema.function_name)
+            private string GetFunctionNameText(PlSqlParser.Function_nameContext context)
+            {
+                if (context == null) return string.Empty;
+
+                // Get the full text and normalize (remove extra whitespace)
+                string fullText = context.GetText();
+                if (!string.IsNullOrWhiteSpace(fullText))
+                {
+                    return fullText.Trim().ToUpperInvariant();
+                }
+
+                // Fallback: try to get from identifier
+                var identifier = context.identifier();
+                if (identifier != null)
+                {
+                    return GetIdentifierText(identifier).ToUpperInvariant();
                 }
 
                 return string.Empty;
