@@ -1,4 +1,4 @@
-PACKAGE BODY kg_rep_dog
+CREATE OR REPLACE PACKAGE BODY kg_rep_dog
 
 IS
   -- функция возвращает таблицу с заполненым полем kod_dog.
@@ -297,10 +297,10 @@ IS
       DELETE rr_rep_dog_obj;
 
       -- Test procedure calls for parsing
-      kg_rep_dog.dog_short(202501);
-      kg_rep_dog.dog_gr_customer(1, 202501);
-      kg_rep_dog.dog_obj_short(202501);
-      kg_rep_dog.dog_obj_dat(SYSDATE);
+      dog_short(202501);
+      dog_gr_customer(1, 202501);
+      dog_obj_short(202501);
+      dog_obj_dat(SYSDATE);
    
 
       INSERT INTO rr_rep_dog_obj ( kod_dog,

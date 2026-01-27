@@ -39,14 +39,18 @@ namespace sql.builder
         {
             Console.OutputEncoding = Encoding.UTF8;
 
+            var sqlFileName = "1.sql";
+
+            string procedureName = "dog_obj";
+
             // Read SQL from file - try multiple possible paths
             string sqlFilePath = null;
             string[] possiblePaths = new[]
             {
-                Path.Combine(Directory.GetCurrentDirectory(), "Sql", "13.sql"),
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Sql", "13.sql"),
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sql", "13.sql"),
-                Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "Sql", "13.sql"))
+                Path.Combine(Directory.GetCurrentDirectory(), "Sql", sqlFileName),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Sql",sqlFileName),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sql", sqlFileName),
+                Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "Sql", sqlFileName))
             };
 
             foreach (var path in possiblePaths)
@@ -73,7 +77,7 @@ namespace sql.builder
             Console.WriteLine();
 
             // Extract tables
-            var tableNames = DevSqlParserAntlr.GetSourceTables(plsqlText);
+            var tableNames = DevSqlParserAntlr.GetSourceTables(plsqlText, procedureName);
             Console.WriteLine("Extracted source tables:");
             foreach (var tableName in tableNames.OrderBy(t => t))
             {
@@ -83,7 +87,7 @@ namespace sql.builder
             Console.WriteLine();
 
             // Extract procedures
-            var procedureNames = DevSqlParserAntlr.GetSourceProcedures(plsqlText);
+            var procedureNames = DevSqlParserAntlr.GetSourceProcedures(plsqlText, procedureName);
             Console.WriteLine("Extracted source procedures:");
             foreach (var procName in procedureNames.OrderBy(p => p))
             {
@@ -137,7 +141,7 @@ namespace sql.builder
             pars.Add("p_dep", 3580m);
             pars.Add("p_ym_beg", 2025.06m);
 
-            var path =  CleanSqlBuilder.ExecReportGetPath("ryazan.76607", pars, "76607.xlsx");
+            var path = CleanSqlBuilder.ExecReportGetPath("ryazan.76607", pars, "76607.xlsx");
             // Output as file URI for VS Code debug console to recognize as clickable link
             //var fileUri = new Uri(path).ToString();
             Console.WriteLine(path);
@@ -156,7 +160,7 @@ namespace sql.builder
             Console.WriteLine(conStr);
 
             var pars = new Dictionary<string, object>();
-          
+
 
             pars.Add("p_date_s", new DateTime(2020, 1, 8));
             pars.Add("p_date_po", new DateTime(2025, 1, 8));
