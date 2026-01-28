@@ -237,6 +237,17 @@ namespace SqlBuilderLib.DevTools
             // Parser error handler (IToken)
             public override void SyntaxError(System.IO.TextWriter output, IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
             {
+                // #region agent log
+                try
+                {
+                    var logPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? ".", ".cursor", "debug.log");
+                    var logDir = Path.GetDirectoryName(logPath);
+                    if (logDir != null && !Directory.Exists(logDir)) Directory.CreateDirectory(logDir);
+                    var logEntry = new { sessionId = "debug-session", runId = "run1", hypothesisId = "A", location = "DevSqlParserAntlr.cs:238", message = "Parser syntax error", data = new { line, charPositionInLine, msg, offendingSymbolText = offendingSymbol?.Text, expectedTokens = e?.GetExpectedTokens()?.ToString() }, timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() };
+                    File.AppendAllText(logPath, System.Text.Json.JsonSerializer.Serialize(logEntry) + Environment.NewLine);
+                }
+                catch { }
+                // #endregion
                 string errorMessage = $"line {line}:{charPositionInLine} {msg}";
                 if (offendingSymbol != null)
                 {
