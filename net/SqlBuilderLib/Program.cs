@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Text;
 using sql.builder.Clean;
 using SqlBuilderLib.DevTools;
+using System.Text.RegularExpressions;
 
 // Basic usage
 
@@ -73,6 +74,8 @@ namespace sql.builder
             }
 
             string plsqlText = File.ReadAllText(sqlFilePath, Encoding.UTF8);
+
+            // plsqlText  =    Regex.Replace(plsqlText, @"\bas\s+end(?![a-zA-Z0-9_])", "as \"end\"", RegexOptions.IgnoreCase);
             Console.WriteLine($"Reading SQL from: {sqlFilePath}");
             Console.WriteLine();
 

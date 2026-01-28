@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Devart.Data.Oracle;
@@ -281,7 +282,11 @@ namespace SqlBuilderLib.DevTools
 
             }
             var cleanSql = Cmn.ClearUndefined(sql);
-            var tableNames = DevSqlParserAntlr.GetSourceTables(Cmn.ClearUndefined(cleanSql));
+            // Replace "as end" alias when followed by non-alphanumeric character (or end of string)
+            // This handles SQL columns named "end" which is a reserved word
+            cleanSql = Regex.Replace(cleanSql, @"\bas\s+end(?![a-zA-Z0-9_])", "as \"end\"", RegexOptions.IgnoreCase);
+        
+            var tableNames = DevSqlParserAntlr.GetSourceTables(cleanSql);
             TableNames.UnionWith(tableNames);
 
             if (tableNames.Overlaps(new[] { "adr_m", "k_house", "kr_calc" }))
@@ -289,7 +294,7 @@ namespace SqlBuilderLib.DevTools
 
             }
 
-            var procNames = DevSqlParserAntlr.GetSourceProcedures(Cmn.ClearUndefined(sql));
+            var procNames = DevSqlParserAntlr.GetSourceProcedures(cleanSql);
             ProcNames.UnionWith(procNames);
             // LogSql(sql);
         }

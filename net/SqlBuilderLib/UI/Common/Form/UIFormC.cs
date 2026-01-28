@@ -1011,9 +1011,28 @@ namespace sql.builder.UI
 
                         xitems = new[] { xitem1, xitem2 };
                     }
+                    else if (typeName == typeof(UIDateRange).Name)
+                    {
+                        string name = xitemOrig.Attribute(AName.name).Value;
+                        typeName = typeof(UICombo).Name;
+                        var xitem1 = new XElement(xitemOrig);
+                        var xitem2 = new XElement(xitemOrig);
+
+                        xitem1.SetAttributeValue(AName.name, $"{name}1");
+                        xitem2.SetAttributeValue(AName.name, $"{name}2");
+
+
+                        xitem1.SetAttributeValue(TextConst.AName.DataType, TextConst.AVDataType.Date);
+                        xitem2.SetAttributeValue(TextConst.AName.DataType, TextConst.AVDataType.Date);
+
+                        xitem1.SetAttributeValue(AName.controlType, typeof(UIDate).Name);
+                        xitem2.SetAttributeValue(AName.controlType, typeof(UIDate).Name);
+
+                        xitems = new[] { xitem1, xitem2 };
+                    }
 
                 }
-                
+
 
                 foreach (var xitem in xitems)
                 {
