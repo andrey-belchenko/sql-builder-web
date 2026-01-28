@@ -345,7 +345,16 @@ namespace sql.builder.DataApi
                         }
                         else if (dbPar.DbType == DbType.Decimal)
                         {
+                            if (DevAnalyzer.Enabled)
+                            {
+                                if (factParam.Value.GetType() == typeof(string))
+                                {
+                                    factParam.Value = "0";
+                                }
+                            }
                             val = Cmn.ToDecimal(factParam.Value);
+
+
                         }
                         else
                         {
@@ -527,18 +536,18 @@ namespace sql.builder.DataApi
         internal VDataSet Result(XElement pars, int useRepository, VDataSet dataSet = null, bool noPivot = true, VXElement schemePreset = null)
         {
             applyPreset(schemePreset);
-//            var parsText = @"<params>
-//  <param name=""ym"">
-//    <const>2025.02</const>
-//  </param>
-//  <param name=""dep"">
-//    <const>1219</const>
-//  </param>
-//  <param name=""year"">
-//    <const>2022</const>
-//  </param>
-//</params>";
-//            pars = XElement.Parse(parsText);
+            //            var parsText = @"<params>
+            //  <param name=""ym"">
+            //    <const>2025.02</const>
+            //  </param>
+            //  <param name=""dep"">
+            //    <const>1219</const>
+            //  </param>
+            //  <param name=""year"">
+            //    <const>2022</const>
+            //  </param>
+            //</params>";
+            //            pars = XElement.Parse(parsText);
             applyParams(pars);
             VDataSet res = result(pars, useRepository, false, dataSet, noPivot, schemePreset);
             cancelPreset();
@@ -770,7 +779,7 @@ namespace sql.builder.DataApi
                     {
                         dataSet.ProcedureText = XmlReports.getProcedureSqlOld(XmlReports.XElementToXmlNode(compiled).OwnerDocument);
                     }
-                   
+
                 }
             }
             if (!Complicated)
@@ -817,7 +826,7 @@ namespace sql.builder.DataApi
                             {
                                 table.DataAdapter.SelectCommand.CommandText = getQuerySelectText(compiledQuery, dataSet.UseTempTable);
                             }
-                                
+
                             // DevAnalyzer.AnalyzePrepSql(table.DataAdapter.SelectCommand.CommandText);
                         }
                     }

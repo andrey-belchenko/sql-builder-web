@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
 using System.Data;
@@ -6,6 +6,7 @@ using System.Linq;
 using System.Xml.Linq;
 using sql.builder.FieldInfo;
 using sql.builder.UI;
+using SqlBuilderLib.DevTools;
 
 namespace sql.builder.DataApi
 {
@@ -19,9 +20,12 @@ namespace sql.builder.DataApi
             Type data_type = Cmn.GetTypeFromStringType(scheme.Attribute(AName.type).Value, typeof(string));
             string caption;
             XAttribute attr = scheme.Attribute(AName.title);
-            if (attr != null && (!string.IsNullOrEmpty(attr.Value)) && scheme.Attribute("hidden") == null) {
+            if (attr != null && (!string.IsNullOrEmpty(attr.Value)) && scheme.Attribute("hidden") == null)
+            {
                 caption = attr.Value;
-            } else {
+            }
+            else
+            {
                 caption = column_name;  // временное решение, не показываются колонки у которых заголовок равен имени (считаем что нет заголовка)
             }
             VDataColumn column;
@@ -29,9 +33,12 @@ namespace sql.builder.DataApi
                                                 column_name == TextConst.AVSpecColumnGrset.GrSetName ||
                                                 column_name == TextConst.AVSpecColumnGrset.OrigGrSetName ||
                                                 column_name == TextConst.AVSpecColumnGrset.ParentGrSetId ||
-                                                scheme.AttrOrDefault(AName.intern, false))) {
+                                                scheme.AttrOrDefault(AName.intern, false)))
+            {
                 column = new VInternedStringDataColumn(column_name, caption);
-            } else {
+            }
+            else
+            {
                 column = new VDataColumn(column_name, data_type, caption);
             }
             column.scheme = scheme;
@@ -79,26 +86,34 @@ namespace sql.builder.DataApi
         #region свойства
         public new Type DataType { get { return base.DataType; } }
         internal XElement Scheme { get { return this.scheme; } }
-        internal bool EditableOld {
-            get {
+        internal bool EditableOld
+        {
+            get
+            {
                 return this.editableOld;
             }
-            set {
+            set
+            {
                 this.editableOld = value;
-                if (this.scheme != null) {
+                if (this.scheme != null)
+                {
                     this.scheme.SetAttrValue(AName.editable, value);
                     XElement viewcolumn = this.GetViewColumn();
-                    if (viewcolumn != null && viewcolumn.Attribute(AName.editable) == null) {
+                    if (viewcolumn != null && viewcolumn.Attribute(AName.editable) == null)
+                    {
                         viewcolumn.SetAttrValue(AName.editable, value);
                     }
                 }
             }
         }
-        internal VDataSet SelectionList {
-            get {
+        internal VDataSet SelectionList
+        {
+            get
+            {
                 return this.selectionList;
             }
-            set {
+            set
+            {
                 this.selectionList = value;
             }
         }
@@ -109,42 +124,73 @@ namespace sql.builder.DataApi
         }
         internal object GetValue(DataRow row)
         {
-            if (row.RowState == DataRowState.Deleted) {
+            if (row.RowState == DataRowState.Deleted)
+            {
                 return row[this, DataRowVersion.Original];
-            } else {
+            }
+            else
+            {
                 return row[this];
             }
         }
         internal bool SetValue(DataRow row, object value, bool isUser = false)
         {
-            if (row.RowState == DataRowState.Deleted) {
+            if (row.RowState == DataRowState.Deleted)
+            {
                 return false;
             }
             VDataTable table = this.GetTable();
-            if (table.GetDataSet().IsColumnChanging(this)) {
+            if (table.GetDataSet().IsColumnChanging(this))
+            {
                 return false;
             }
-            if (Cmn.IsNullOrDBNull(row[this]) && Cmn.IsNullOrDBNull(value)) {
+            if (Cmn.IsNullOrDBNull(row[this]) && Cmn.IsNullOrDBNull(value))
+            {
                 return false;
             }
-            if (this._bound_controls.Count > 0 && this._bound_controls[0] is UICheck && Cmn.ToDecimal(row[this]) == Cmn.ToDecimal(value)) {
+            if (this._bound_controls.Count > 0 && this._bound_controls[0] is UICheck && Cmn.ToDecimal(row[this]) == Cmn.ToDecimal(value))
+            {
                 return false;
             }
-            if (Cmn.IsNullOrDBNull(row[this])) {
+            if (Cmn.IsNullOrDBNull(row[this]))
+            {
                 table.SuppressChangeEvent();
+
+                // костыль для web (анализ отчетов)
+                if (DevAnalyzer.Enabled)
+                {
+                    if (value.GetType() != this.DataType)
+                    {
+                        if (this.DataType == typeof(decimal))
+                        {
+                            value = 0m;
+                        }
+                        else if (this.DataType == typeof(DateTime))
+                        {
+                            value = DateTime.Now;
+                        }
+                    }
+                }
+
+
                 row[this] = value;// почему то событие columnchange срабатывает дважды , сделал отмену и вызов вручную
                 table.ResumeChangeEvent();
-                if (isUser) {
+                if (isUser)
+                {
                     var args = new DataColumnChangeEventArgs(row, this, value);
                     table.RaiseUserChangedData(this, args);
                 }
                 table.RaiseColumnChanged(this, row);
                 return true;
-            } else {
-                if (value.GetType() == typeof(double)) {
+            }
+            else
+            {
+                if (value.GetType() == typeof(double))
+                {
                     value = Convert.ToDecimal(value);
                 }
-                if (!row[this].Equals(value)) {
+                if (!row[this].Equals(value))
+                {
                     table.SuppressChangeEvent();
                     row[this] = value;// почему то событие columnchange срабатывает дважды , сделал отмену и вызов вручную
                     table.ResumeChangeEvent();
@@ -161,9 +207,12 @@ namespace sql.builder.DataApi
         }
         private XElement GetViewColumn()
         {
-            if (this.scheme != null) {
+            if (this.scheme != null)
+            {
                 return this.scheme.Parent.Parent.Elements(EName.viewcolumns).Descendants(EName.column).SearchByAttribute(AName.name, this.scheme.Attribute(AName.name).Value);
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
@@ -194,7 +243,8 @@ namespace sql.builder.DataApi
         internal string GetFieldValueName(UIFormC.UseType useType)
         {
             string s = null;
-            switch (useType) {
+            switch (useType)
+            {
                 case UIFormC.UseType.SchemeEditor:
                     s = this.GetFieldInfo(new[] { VFieldInfo.InfoTypesToGet.ValueName }).ValueName;
                     break;
@@ -210,18 +260,26 @@ namespace sql.builder.DataApi
         internal string GetFieldValueName(DataRow row = null)
         {
             string s = null;
-            if (row == null) {
+            if (row == null)
+            {
                 row = this.GetTable().CurrentRow;
             }
-            if (row != null) {
-                if (this.TextSourceSource != null) {
+            if (row != null)
+            {
+                if (this.TextSourceSource != null)
+                {
                     object o = row[this.TextSourceSource];
-                    if (!Cmn.IsNullOrDBNull(o)) {
+                    if (!Cmn.IsNullOrDBNull(o))
+                    {
                         s = o.ToString();
-                    } else {
+                    }
+                    else
+                    {
                         s = string.Empty;
                     }
-                } else {
+                }
+                else
+                {
                     s = string.Empty;
                 }
             }
@@ -230,10 +288,14 @@ namespace sql.builder.DataApi
         internal void SetFieldValueName(string name)
         {
             DataRow row = this.GetTable().CurrentRow;
-            if (row != null) {
-                if (string.IsNullOrEmpty(name)) {
+            if (row != null)
+            {
+                if (string.IsNullOrEmpty(name))
+                {
                     row[this.TextSourceSource] = DBNull.Value;
-                } else {
+                }
+                else
+                {
                     row[this.TextSourceSource] = name;
                 }
             }
@@ -245,9 +307,12 @@ namespace sql.builder.DataApi
         private VFieldStateAndOtherInfo GetFieldInfo(VFieldInfo.InfoTypesToGet[] getWhat)
         {
             VDataTable dt = (VDataTable)this.Table;
-            if (dt.CustomFieldInfoProc != null) {
+            if (dt.CustomFieldInfoProc != null)
+            {
                 return dt.CustomFieldInfoProc(this, dt.CurrentRow, getWhat);
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
@@ -259,14 +324,16 @@ namespace sql.builder.DataApi
         }
         internal void BindControl(UIBase ctrl)
         {
-            if (!this._bound_controls.Contains(ctrl)) {
+            if (!this._bound_controls.Contains(ctrl))
+            {
                 _bound_controls.Add(ctrl);
                 this.GetTable().HasControls = true;
             }
         }
         internal void UnbindControl(UIBase ctrl)
         {
-            if (this._bound_controls.Contains(ctrl)) {
+            if (this._bound_controls.Contains(ctrl))
+            {
                 this._bound_controls.Remove(ctrl);
             }
         }
@@ -305,5 +372,5 @@ namespace sql.builder.DataApi
             : base(column_name, typeof(string))
         {
         }
-   }
+    }
 }

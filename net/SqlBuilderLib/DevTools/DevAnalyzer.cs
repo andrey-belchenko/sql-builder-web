@@ -64,7 +64,8 @@ namespace SqlBuilderLib.DevTools
             var navs = XmlReports.Environment.GetElements(TextConst.EName.Navigators).Cast<VNavigator>()
             .Where(it =>
             //  it.P_IdName == "nav310"
-               it.P_IdName == "nav10"
+            //    it.P_IdName == "nav10"
+              it.P_IdName == "nav101"
              )
             .ToList();
 
