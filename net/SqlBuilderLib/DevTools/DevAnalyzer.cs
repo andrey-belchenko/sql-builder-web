@@ -31,6 +31,11 @@ namespace SqlBuilderLib.DevTools
 
         public static AnalyzerReportInfo ReportInfo = null;
 
+        public static bool DoSave = true;
+
+        public static bool DoCheck = false;
+        public static bool ErrorOnMissing = false;
+
 
         public static IEnumerable<string> SkipReports = new[]{
             "ies_garant.64650_2", // не парсится процедура скорее всего в ней ошибки
@@ -52,6 +57,9 @@ namespace SqlBuilderLib.DevTools
         {
             DevAnalyzer.Enabled = true;
             DevAnalyzer.PrepareOnly = true;
+            DevAnalyzer.DoSave = false;
+            DevAnalyzer.DoCheck = true;
+            DevAnalyzer.ErrorOnMissing = true;
             DevAnalyzer.ClearTempFolder();
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
@@ -103,6 +111,8 @@ namespace SqlBuilderLib.DevTools
                     };
                     Console.WriteLine($"Analyze report: {info.Name} ({currentReport} of {totalReports})");
                     var isNew = DevAnalyzer.AnalyzeRep(info);
+                    
+
                     if (isNew)
                     {
                         Console.WriteLine("Extracted source tables:");
@@ -136,7 +146,7 @@ namespace SqlBuilderLib.DevTools
         public static bool AnalyzeRep(AnalyzerReportInfo repInfo)
         {
 
-            if (AnalyzerStorage.IsReportExists(repInfo))
+            if (DoSave && AnalyzerStorage.IsReportExists(repInfo))
             {
                 return false;
             }
@@ -178,7 +188,7 @@ namespace SqlBuilderLib.DevTools
                         Type valueType = p.GetValueType();
                         if (p.IsArray())
                         {
-                            value = new List<int>() { 0};
+                            value = new List<int>() { 0 };
                         }
                         else
                         {
@@ -216,7 +226,7 @@ namespace SqlBuilderLib.DevTools
                         {
                             value = DateTime.Now;
                         }
-                        else if (type==null)
+                        else if (type == null)
                         {
                             value = DBNull.Value;
                         }
@@ -231,14 +241,18 @@ namespace SqlBuilderLib.DevTools
 
             rep.ExecuteReport();
 
+
             SaveReportAnalysisResults();
             return true;
         }
 
         public static void SaveReportAnalysisResults()
         {
-            AnalyzerStorage.SaveReports(new[] { ReportInfo });
-            AnalyzerStorage.SaveDependencies(GetReportDependencyRecords());
+            if (DoSave)
+            {
+                AnalyzerStorage.SaveReports(new[] { ReportInfo });
+                AnalyzerStorage.SaveDependencies(GetReportDependencyRecords());
+            }
         }
 
         public static IEnumerable<AnalyzerDependency> GetReportDependencyRecords()
@@ -273,14 +287,14 @@ namespace SqlBuilderLib.DevTools
             ReportInfo = repInfo;
             TableNames = new HashSet<string>();
             ProcNames = new HashSet<string>();
-            ProcessedSql =  new HashSet<string>();
+            ProcessedSql = new HashSet<string>();
         }
         public static void AnalyzeExecSql(string sql)
         {
 
         }
 
-        private static HashSet<string> ProcessedSql =  new HashSet<string>();
+        private static HashSet<string> ProcessedSql = new HashSet<string>();
 
         public static void AnalyzeCmdSql(string sql)
         {
@@ -288,7 +302,8 @@ namespace SqlBuilderLib.DevTools
             if (ProcessedSql.Contains(sql)) return;
             ProcessedSql.Add(sql);
             if (!Enabled) return;
-            if (sql.Length>2000) {
+            if (sql.Length > 2000)
+            {
 
             }
             var cleanSql = Cmn.ClearUndefined(sql);
@@ -296,19 +311,71 @@ namespace SqlBuilderLib.DevTools
             // This handles SQL columns named "end" which is a reserved word
             cleanSql = Regex.Replace(cleanSql, @"\bas\s+end(?![a-zA-Z0-9_])", "as \"end\"", RegexOptions.IgnoreCase);
 
-             cleanSql = cleanSql.Replace("stragg_dist", "max");
-              cleanSql = cleanSql.Replace("stragg", "max");
-        
+            cleanSql = cleanSql.Replace("stragg_dist", "max");
+            cleanSql = cleanSql.Replace("stragg", "max");
+
             var tableNames = DevSqlParserAntlr.GetSourceTables(cleanSql);
             TableNames.UnionWith(tableNames);
 
-            if (tableNames.Overlaps(new[] { "adr_m", "k_house", "kr_calc" }))
-            {
-
-            }
-
             var procNames = DevSqlParserAntlr.GetSourceProcedures(cleanSql);
             ProcNames.UnionWith(procNames);
+
+            // Validate DevSqlParserCustom extraction if checking is enabled
+            if (DoCheck)
+            {
+                var customTableNames = DevSqlParserCustom.GetSourceTables(cleanSql);
+                var customPackageNames = DevSqlParserCustom.GetSourcePackages(cleanSql);
+
+                // Extract package names from procedure names (first part before dot)
+                var antlrPackageNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var procName in ProcNames)
+                {
+                    var dotIndex = procName.IndexOf('.');
+                    if (dotIndex > 0)
+                    {
+                        var packageName = procName.Substring(0, dotIndex);
+                        antlrPackageNames.Add(packageName);
+                    }
+                }
+
+                // Find missed table names
+                var missedTables = customTableNames.Except(TableNames).ToList();
+                // Find missed package names
+                var missedPackages = customPackageNames.Except(antlrPackageNames).ToList();
+
+                bool hasMissedItems = missedTables.Count > 0 || missedPackages.Count > 0;
+
+                if (hasMissedItems)
+                {
+                    if (missedTables.Count > 0)
+                    {
+                        Console.WriteLine($"Missed table names from DevSqlParserCustom: {string.Join(", ", missedTables)}");
+                    }
+
+                    if (missedPackages.Count > 0)
+                    {
+                        Console.WriteLine($"Missed package names from DevSqlParserCustom: {string.Join(", ", missedPackages)}");
+                    }
+
+                    if (ErrorOnMissing)
+                    {
+                        LogSql(sql);
+                        var errorMessage = new StringBuilder();
+                        errorMessage.AppendLine("DevSqlParserCustom found items not extracted by DevSqlParserAntlr:");
+                        if (missedTables.Count > 0)
+                        {
+                            errorMessage.AppendLine($"  Missed tables: {string.Join(", ", missedTables)}");
+                        }
+                        if (missedPackages.Count > 0)
+                        {
+                            errorMessage.AppendLine($"  Missed packages: {string.Join(", ", missedPackages)}");
+                        }
+                        errorMessage.AppendLine($"SQL query saved to Temp folder.");
+                        throw new InvalidOperationException(errorMessage.ToString());
+                    }
+                }
+            }
+
             // LogSql(sql);
         }
 
