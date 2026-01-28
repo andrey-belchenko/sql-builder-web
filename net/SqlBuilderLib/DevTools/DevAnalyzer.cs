@@ -59,7 +59,7 @@ namespace SqlBuilderLib.DevTools
             DevAnalyzer.PrepareOnly = true;
             DevAnalyzer.DoSave = false;
             DevAnalyzer.DoCheck = true;
-            DevAnalyzer.ErrorOnMissing = true;
+            DevAnalyzer.ErrorOnMissing = false;
             DevAnalyzer.ClearTempFolder();
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
@@ -352,19 +352,21 @@ namespace SqlBuilderLib.DevTools
 
                 if (hasMissedItems)
                 {
+                    // Save SQL anyway when there are missed items
+                    string sqlFileName = LogSql(sql) ?? "unknown.sql";
+
                     if (missedTables.Count > 0)
                     {
-                        Console.WriteLine($"Missed table names from DevSqlParserCustom: {string.Join(", ", missedTables)}");
+                        Console.WriteLine($"Missed table names from DevSqlParserCustom: {string.Join(", ", missedTables)} (SQL saved to {sqlFileName})");
                     }
 
                     if (missedPackages.Count > 0)
                     {
-                        Console.WriteLine($"Missed package names from DevSqlParserCustom: {string.Join(", ", missedPackages)}");
+                        Console.WriteLine($"Missed package names from DevSqlParserCustom: {string.Join(", ", missedPackages)} (SQL saved to {sqlFileName})");
                     }
 
                     if (ErrorOnMissing)
                     {
-                        LogSql(sql);
                         var errorMessage = new StringBuilder();
                         errorMessage.AppendLine("DevSqlParserCustom found items not extracted by DevSqlParserAntlr:");
                         if (missedTables.Count > 0)
@@ -375,7 +377,7 @@ namespace SqlBuilderLib.DevTools
                         {
                             errorMessage.AppendLine($"  Missed packages: {string.Join(", ", missedPackages)}");
                         }
-                        errorMessage.AppendLine($"SQL query saved to Temp folder.");
+                        errorMessage.AppendLine($"SQL query saved to Temp folder: {sqlFileName}");
                         throw new InvalidOperationException(errorMessage.ToString());
                     }
                 }
@@ -384,14 +386,14 @@ namespace SqlBuilderLib.DevTools
             // LogSql(sql);
         }
 
-        private static void LogSql(string sql)
+        private static string LogSql(string sql)
         {
 
-            if (string.IsNullOrEmpty(sql)) return;
+            if (string.IsNullOrEmpty(sql)) return null;
 
             // Get project root directory (where SqlBuilder.slnx is located)
             string projectRoot = GetProjectRoot();
-            if (string.IsNullOrEmpty(projectRoot)) return;
+            if (string.IsNullOrEmpty(projectRoot)) return null;
 
             // Ensure Temp folder exists
             string tempFolder = Path.Combine(projectRoot, "Temp");
@@ -406,6 +408,8 @@ namespace SqlBuilderLib.DevTools
 
             // Increment fileIndex for next call
             fileIndex++;
+
+            return fileName;
         }
 
 
