@@ -36,6 +36,15 @@ namespace SqlBuilderLib.DevTools
             "ies_garant.64650_2", // не парсится процедура скорее всего в ней ошибки
             "asuse2.10653(45)-new", // казань тепло, sql не распарсился он некорректный
             // "kazan_el.74988","kazan_el.74989" // казань какие то проблемы с формой (вроде UIList без списка)
+            "asuse2.ur_journal_mat_ba",
+            "asuse2.ur_journal_kazn",
+            "asuse2.ur_journal_ssp",
+            "asuse2.ur_journal_inkasso",
+            "asuse2.ur_journal_mat",
+            "asuse2.ur_journal_sogl",
+            "asuse2.ur_journal_isp",
+            "asuse2.ur_journal_pretenz",
+            "asuse2.arbitrage_journal"
             };
 
 
@@ -287,6 +296,7 @@ namespace SqlBuilderLib.DevTools
             cleanSql = Regex.Replace(cleanSql, @"\bas\s+end(?![a-zA-Z0-9_])", "as \"end\"", RegexOptions.IgnoreCase);
 
              cleanSql = cleanSql.Replace("stragg_dist", "max");
+              cleanSql = cleanSql.Replace("stragg", "max");
         
             var tableNames = DevSqlParserAntlr.GetSourceTables(cleanSql);
             TableNames.UnionWith(tableNames);
