@@ -148,6 +148,8 @@ namespace SqlBuilderLib.DevTools
                         value = 0m;
                         break;
                     case nameof(UIDate):
+                        value = 0m; //TODO: колонка в DataTable типа decimal, пока  не понял почему
+                        break;
                     case nameof(UIDateTime):
                         value = DateTime.Now;
                         break;

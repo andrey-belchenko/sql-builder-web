@@ -351,6 +351,12 @@ namespace sql.builder
         internal static XElement GetForm(string name, string repname)
         {
             XElement xform;
+
+            // TODO: костыль для web. Пока не понял почему в оригинальном решении форма подтягивается не смотря на то что явно она не задана, а тут нет
+            if (name == "empty")
+            {
+                name = repname;
+            }
             if (string.IsNullOrEmpty(name))
             {
                 if (XmlReports.Environment.Manager.IsOldOnly())
