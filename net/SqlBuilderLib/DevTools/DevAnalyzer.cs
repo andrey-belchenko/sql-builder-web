@@ -277,7 +277,7 @@ namespace SqlBuilderLib.DevTools
             if (ProcessedSql.Contains(sql)) return;
             ProcessedSql.Add(sql);
             if (!Enabled) return;
-            if (sql.Length>8000) {
+            if (sql.Length>2000) {
 
             }
             var cleanSql = Cmn.ClearUndefined(sql);

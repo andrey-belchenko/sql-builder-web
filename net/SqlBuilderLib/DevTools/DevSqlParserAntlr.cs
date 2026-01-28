@@ -624,7 +624,45 @@ namespace SqlBuilderLib.DevTools
                 if (sqlStmt != null)
                 {
                     Visit(sqlStmt);
+                    return null; // Don't visit other children if we found sql_statement
                 }
+
+                // Visit loop_statement which may contain cursor FOR loops with SELECT statements
+                var loopStmt = context.loop_statement();
+                if (loopStmt != null)
+                {
+                    Visit(loopStmt);
+                    return null; // Don't visit other children if we found loop_statement
+                }
+
+                // Visit block statements (nested BEGIN...END blocks)
+                var block = context.block();
+                if (block != null)
+                {
+                    Visit(block);
+                    return null; // Don't visit other children if we found block
+                }
+
+                // Visit if_statement (may contain nested statements)
+                var ifStmt = context.if_statement();
+                if (ifStmt != null)
+                {
+                    Visit(ifStmt);
+                    return null;
+                }
+
+                // Visit body (BEGIN...END block)
+                var body = context.body();
+                if (body != null)
+                {
+                    Visit(body);
+                    return null;
+                }
+
+                // For other statement types, visit children to find nested statements
+                // This handles assignment_statement, continue_statement, exit_statement, etc.
+                // that might contain expressions with subqueries
+                VisitChildren(context);
 
                 // Don't call base.VisitStatement to avoid double-visiting
                 return null;
@@ -973,6 +1011,46 @@ namespace SqlBuilderLib.DevTools
                 // This will automatically visit subqueries through the visitor pattern
                 VisitChildren(context);
                 
+                return null;
+            }
+
+            // Visit loop statement (FOR loops, WHILE loops, etc.)
+            public override object VisitLoop_statement(PlSqlParser.Loop_statementContext context)
+            {
+                if (context == null) return null;
+
+                // Visit cursor_loop_param which may contain SELECT statements
+                var cursorLoopParam = context.cursor_loop_param();
+                if (cursorLoopParam != null)
+                {
+                    Visit(cursorLoopParam);
+                }
+
+                // Visit seq_of_statements inside the loop body
+                var seqOfStatements = context.seq_of_statements();
+                if (seqOfStatements != null)
+                {
+                    Visit(seqOfStatements);
+                }
+
+                // Don't call base.VisitLoop_statement to avoid double-visiting
+                return null;
+            }
+
+            // Visit cursor loop parameter (FOR rec IN (SELECT ...) or FOR rec IN cursor_name)
+            public override object VisitCursor_loop_param(PlSqlParser.Cursor_loop_paramContext context)
+            {
+                if (context == null) return null;
+
+                // cursor_loop_param: record_name IN (cursor_name ('(' expressions_? ')')? | '(' select_statement ')')
+                // Check for SELECT statement in parentheses (inline cursor)
+                var selectStmt = context.select_statement();
+                if (selectStmt != null)
+                {
+                    VisitSelect_statement(selectStmt);
+                }
+
+                // Don't call base.VisitCursor_loop_param to avoid double-visiting
                 return null;
             }
 

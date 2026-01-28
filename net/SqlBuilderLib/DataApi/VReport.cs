@@ -527,6 +527,18 @@ namespace sql.builder.DataApi
         internal VDataSet Result(XElement pars, int useRepository, VDataSet dataSet = null, bool noPivot = true, VXElement schemePreset = null)
         {
             applyPreset(schemePreset);
+//            var parsText = @"<params>
+//  <param name=""ym"">
+//    <const>2025.02</const>
+//  </param>
+//  <param name=""dep"">
+//    <const>1219</const>
+//  </param>
+//  <param name=""year"">
+//    <const>2022</const>
+//  </param>
+//</params>";
+//            pars = XElement.Parse(parsText);
             applyParams(pars);
             VDataSet res = result(pars, useRepository, false, dataSet, noPivot, schemePreset);
             cancelPreset();
@@ -754,7 +766,11 @@ namespace sql.builder.DataApi
                     dataSet.MatQueriesNames = compiled.Elements(EName.query)
                         .Where(e => e.AttrOrEmpty(AName_.materialize) == TextConst.AVBool.True && e.AttrOrEmpty(TextConst.AName.IsDone) != TextConst.AVBool.True)
                         .Select(e1 => e1.Attribute(AName_.name).Value).ToList();
-                    dataSet.ProcedureText = XmlReports.getProcedureSqlOld(XmlReports.XElementToXmlNode(compiled).OwnerDocument);
+                    if (!(this.Pivot && noPivot && DevAnalyzer.Enabled))
+                    {
+                        dataSet.ProcedureText = XmlReports.getProcedureSqlOld(XmlReports.XElementToXmlNode(compiled).OwnerDocument);
+                    }
+                   
                 }
             }
             if (!Complicated)
@@ -797,7 +813,11 @@ namespace sql.builder.DataApi
                             {
                                 compiledQuery = compiled.Elements(EName.query).First(e => e.Attribute(AName_.name).Value == table.QueryName);
                             }
-                            table.DataAdapter.SelectCommand.CommandText = getQuerySelectText(compiledQuery, dataSet.UseTempTable);
+                            if (!(this.Pivot && noPivot && DevAnalyzer.Enabled))
+                            {
+                                table.DataAdapter.SelectCommand.CommandText = getQuerySelectText(compiledQuery, dataSet.UseTempTable);
+                            }
+                                
                             // DevAnalyzer.AnalyzePrepSql(table.DataAdapter.SelectCommand.CommandText);
                         }
                     }

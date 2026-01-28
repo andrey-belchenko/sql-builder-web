@@ -917,6 +917,10 @@ namespace sql.builder
         private static bool dontUseRepositories = false;
         internal static XElement compileReport(XElement element, int useRepository, bool noPivot = false, XElement pars = null)
         {
+            if (element.GetAttributeValue(TextConst.AName.Name)== "54148")
+            {
+
+            }
             Contract.Assert(element != null);
             Reset();
             if (element.AttrOrDefault("use-repository", false)) { 
