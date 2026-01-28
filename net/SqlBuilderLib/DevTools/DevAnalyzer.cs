@@ -134,8 +134,8 @@ namespace SqlBuilderLib.DevTools
             rep.OpenDocumentAfterPrint = false;
             rep.Initialize(repInfo.Name);
 
-
-            foreach (var p in rep.GetParamFields())
+            var fields = rep.GetParamFields();
+            foreach (var p in fields)
             {
                 object value = null;
 
