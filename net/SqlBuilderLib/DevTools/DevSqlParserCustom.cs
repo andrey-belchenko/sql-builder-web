@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text.RegularExpressions;
 using sql.builder;
 using DataHelper = infoenergo.core.Data.DataHelper;
@@ -97,10 +98,32 @@ namespace SqlBuilderLib.DevTools
         }
 
         /// <summary>
+        /// Removes SQL comments (single-line -- and multi-line /* */) from SQL text.
+        /// </summary>
+        /// <param name="sqlText">SQL or PL/SQL code string</param>
+        /// <returns>SQL text with comments removed</returns>
+        private static string RemoveComments(string sqlText)
+        {
+            if (string.IsNullOrWhiteSpace(sqlText))
+                return sqlText;
+
+            string result = sqlText;
+
+            // Remove multi-line comments /* ... */
+            result = Regex.Replace(result, @"/\*.*?\*/", "", RegexOptions.Singleline | RegexOptions.Multiline);
+
+            // Remove single-line comments -- ... (but not if -- is part of a string)
+            // This regex matches -- followed by any characters until end of line
+            result = Regex.Replace(result, @"--.*?$", "", RegexOptions.Multiline);
+
+            return result;
+        }
+
+        /// <summary>
         /// Extracts all Latin words from SQL text.
         /// </summary>
         /// <param name="sqlText">SQL or PL/SQL code string</param>
-        /// <returns>HashSet of extracted Latin words</returns>
+        /// <returns>HashSet of extracted Latin words that contain underscore</returns>
         private static HashSet<string> ExtractLatinWords(string sqlText)
         {
             var words = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -108,11 +131,15 @@ namespace SqlBuilderLib.DevTools
             if (string.IsNullOrWhiteSpace(sqlText))
                 return words;
 
-            var matches = LatinWordPattern.Matches(sqlText);
+            // Remove comments before extracting words
+            string cleanedSql = RemoveComments(sqlText);
+
+            var matches = LatinWordPattern.Matches(cleanedSql);
             foreach (Match match in matches)
             {
                 string word = match.Value;
-                if (!string.IsNullOrWhiteSpace(word))
+                // Only keep words that contain underscore
+                if (!string.IsNullOrWhiteSpace(word) && word.Contains("_"))
                 {
                     words.Add(word);
                 }
@@ -144,8 +171,8 @@ namespace SqlBuilderLib.DevTools
                     result.Add(word);
                 }
             }
-
-            return result;
+            
+            return result.Where(it => it != "rr_temp").ToHashSet();
         }
 
         /// <summary>
@@ -172,7 +199,7 @@ namespace SqlBuilderLib.DevTools
                 }
             }
 
-            return result;
+            return result.Where(it=>it!= "kg_common" && it!="ng_account") .ToHashSet();
         }
     }
 }

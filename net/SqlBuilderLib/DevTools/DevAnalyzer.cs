@@ -72,8 +72,8 @@ namespace SqlBuilderLib.DevTools
             var navs = XmlReports.Environment.GetElements(TextConst.EName.Navigators).Cast<VNavigator>()
             .Where(it =>
             //  it.P_IdName == "nav310"
-            //    it.P_IdName == "nav10"
-              it.P_IdName == "nav101"
+                it.P_IdName == "nav10"
+              //it.P_IdName == "nav101"
              )
             .ToList();
 
@@ -326,9 +326,14 @@ namespace SqlBuilderLib.DevTools
                 var customTableNames = DevSqlParserCustom.GetSourceTables(cleanSql);
                 var customPackageNames = DevSqlParserCustom.GetSourcePackages(cleanSql);
 
+                if (customTableNames.Count > 5)
+                {
+
+                }
+
                 // Extract package names from procedure names (first part before dot)
                 var antlrPackageNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                foreach (var procName in ProcNames)
+                foreach (var procName in procNames)
                 {
                     var dotIndex = procName.IndexOf('.');
                     if (dotIndex > 0)
@@ -339,7 +344,7 @@ namespace SqlBuilderLib.DevTools
                 }
 
                 // Find missed table names
-                var missedTables = customTableNames.Except(TableNames).ToList();
+                var missedTables = customTableNames.Except(tableNames).ToList();
                 // Find missed package names
                 var missedPackages = customPackageNames.Except(antlrPackageNames).ToList();
 

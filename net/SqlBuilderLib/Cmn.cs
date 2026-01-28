@@ -1995,7 +1995,11 @@ namespace sql.builder
         internal static void DisposeAndSetNull<T>(ref T disposable)
             where T : class, IDisposable
         {
-            disposable.Dispose();
+            if (disposable!=null)
+            {
+                disposable.Dispose();
+            }
+           
             disposable = null;
         }
         internal static void RaiseEvent<TEventArgs>(ref EventHandler<TEventArgs> event_delegate, object sender, TEventArgs args)
