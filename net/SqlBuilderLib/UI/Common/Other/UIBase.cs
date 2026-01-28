@@ -417,6 +417,16 @@ namespace sql.builder.UI
         private VDataSet createListSource()
         {
             VDataSet data;
+
+            // костыль для web
+            if (this is UIList || this is UICombo)
+            {
+                if (this.query_name == null)
+                {
+                    this.query_name = this.query_name_default;
+                }
+            }
+
             if (this.special_type == TextConst.AVSpecType.ColSets && String.IsNullOrEmpty(this.query_name)) { // colsets
                 data = this.createListSourceColsets();
             } else if (this.UseType == UIFormC.UseType.ParamEditor && !String.IsNullOrEmpty(this.query_name)) { // UIList 

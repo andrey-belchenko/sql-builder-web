@@ -196,5 +196,29 @@ namespace sql.builder
             Console.WriteLine("done");
 
         }
+
+        public static void Main2(string[] args)
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+            XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
+            var conStr = "User Id=asuse;Password=kl0pik;Server=REALKAZN;Pooling=False;Sid=REALKAZN;Port=1521";
+            //var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
+
+            CleanSqlBuilder.ChangeConnectionString(conStr);
+            Console.WriteLine(conStr);
+
+            var pars = new Dictionary<string, object>();
+
+
+            pars.Add("p_ym_end", 2025.02m);
+           
+
+            var path = CleanSqlBuilder.ExecReportGetPath("kazan_el.74989", pars, "74989.xlsx");
+            // Output as file URI for VS Code debug console to recognize as clickable link
+            var fileUri = new Uri(path).ToString();
+            Console.WriteLine(fileUri); // VS Code will make this clickable
+            Console.WriteLine("done");
+
+        }
     }
 }
