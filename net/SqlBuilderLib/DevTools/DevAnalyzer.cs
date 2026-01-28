@@ -34,7 +34,7 @@ namespace SqlBuilderLib.DevTools
         public static IEnumerable<string> SkipReports = new[]{
             "ies_garant.64650_2", // не парсится процедура скорее всего в ней ошибки
             "asuse2.10653(45)-new", // казань тепло, sql не распарсился он некорректный
-            "kazan_el.74988","kazan_el.74989" // казань какие то проблемы с формой (вроде UIList без списка)
+            // "kazan_el.74988","kazan_el.74989" // казань какие то проблемы с формой (вроде UIList без списка)
             };
 
 
@@ -165,7 +165,7 @@ namespace SqlBuilderLib.DevTools
                         Type valueType = p.GetValueType();
                         if (p.IsArray())
                         {
-                            value = new List<object>();
+                            value = new List<int>() { 0};
                         }
                         else
                         {
