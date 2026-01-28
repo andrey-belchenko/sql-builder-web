@@ -80,7 +80,8 @@ namespace sql.builder.Controls.FormFields
                 if (val == DBNull.Value) {
                     val = null;
                 } else if (val != null && val.GetType() != this.GetValueType()) {
-                    throw new ArgumentException(string.Format("Значение имеет недопустимый тип {0}. Ожидается тип {1}", val.GetType(), this.GetValueType()));
+                    val = null;
+                    //throw new ArgumentException(string.Format("Значение имеет недопустимый тип {0}. Ожидается тип {1}", val.GetType(), this.GetValueType()));
                 }
                 control.SetSourceValue(val);   
             }

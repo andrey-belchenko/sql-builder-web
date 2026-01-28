@@ -793,16 +793,16 @@ namespace sql.builder.UI
                     }
 
                     //// TODO: костыль для web
-                    if (this.array_edit_value != null)
-                    {
+                    //if (this.array_edit_value != null)
+                    //{
                         this.array_edit_value.SuppressChangeEvent();
                         var changes = SetArraySourceValueMultiple(values, names, true);
                         if (changes)
                         {
                             RaiseChanged();
                         }
-                    }
-
+                    //}
+                    
                 }
             } else if (this.mandatory && Form.DefaultParams == null) {
                 ReloadListData();
