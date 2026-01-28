@@ -76,6 +76,7 @@ namespace sql.builder
             string plsqlText = File.ReadAllText(sqlFilePath, Encoding.UTF8);
 
             // plsqlText  =    Regex.Replace(plsqlText, @"\bas\s+end(?![a-zA-Z0-9_])", "as \"end\"", RegexOptions.IgnoreCase);
+            plsqlText = plsqlText.Replace("stragg_dist", "max");
             Console.WriteLine($"Reading SQL from: {sqlFilePath}");
             Console.WriteLine();
 

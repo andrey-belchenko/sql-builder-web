@@ -285,6 +285,8 @@ namespace SqlBuilderLib.DevTools
             // Replace "as end" alias when followed by non-alphanumeric character (or end of string)
             // This handles SQL columns named "end" which is a reserved word
             cleanSql = Regex.Replace(cleanSql, @"\bas\s+end(?![a-zA-Z0-9_])", "as \"end\"", RegexOptions.IgnoreCase);
+
+             cleanSql = cleanSql.Replace("stragg_dist", "max");
         
             var tableNames = DevSqlParserAntlr.GetSourceTables(cleanSql);
             TableNames.UnionWith(tableNames);

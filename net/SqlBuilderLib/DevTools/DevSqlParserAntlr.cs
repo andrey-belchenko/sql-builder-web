@@ -28,6 +28,13 @@ namespace SqlBuilderLib.DevTools
 
             var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
+            // Normalize procedure name for comparison (case-insensitive)
+            string normalizedProcedureName = null;
+            if (!string.IsNullOrWhiteSpace(procedureName))
+            {
+                normalizedProcedureName = procedureName.Trim().ToUpperInvariant();
+            }
+
             // Create case-insensitive character stream (PL/SQL grammar is case-sensitive but SQL is case-insensitive)
             var input = new AntlrInputStream(plsqlText);
             var caseChangingStream = new CaseChangingCharStream(input, true); // Convert to uppercase
@@ -37,6 +44,11 @@ namespace SqlBuilderLib.DevTools
             var tokens = new CommonTokenStream(lexer);
             var parser = new PlSqlParser(tokens);
 
+            // Check if input looks like a standalone SELECT statement (starts with SELECT, no CREATE/BEGIN/DECLARE)
+            string trimmedText = plsqlText.Trim();
+            bool looksLikeStandaloneSelect = trimmedText.StartsWith("SELECT", StringComparison.OrdinalIgnoreCase) ||
+                                             trimmedText.StartsWith("WITH", StringComparison.OrdinalIgnoreCase);
+            
             // Remove default error listeners and add a throwing error listener
             var errorListener = new ThrowingErrorListener(plsqlText);
             lexer.RemoveErrorListeners();
@@ -44,8 +56,47 @@ namespace SqlBuilderLib.DevTools
             parser.RemoveErrorListeners();
             parser.AddErrorListener(errorListener);
 
-            // Parse the input
-            var tree = parser.sql_script();
+            IParseTree tree = null;
+            
+            // Create visitor to extract table names (reused for both paths)
+            var visitor = new TableNameExtractorVisitor(normalizedProcedureName);
+            
+            // If it looks like a standalone SELECT, try parsing as select_statement first
+            if (looksLikeStandaloneSelect)
+            {
+                try
+                {
+                    tree = parser.select_statement();
+                    if (tree != null && !errorListener.HasErrors)
+                    {
+                        // Successfully parsed as standalone SELECT
+                        visitor.VisitSelect_statement((PlSqlParser.Select_statementContext)tree);
+                        
+                        // Get results
+                        foreach (var tableName in visitor.TableNames)
+                        {
+                            if (!string.IsNullOrWhiteSpace(tableName))
+                            {
+                                var normalized = NormalizeTableName(tableName);
+                                result.Add(normalized);
+                            }
+                        }
+                        
+                        return result;
+                    }
+                }
+                catch
+                {
+                    // If standalone SELECT parsing fails, try sql_script instead
+                    tokens.Seek(0);
+                    lexer.Reset();
+                    parser.Reset();
+                    errorListener.ClearErrors();
+                }
+            }
+
+            // Parse as sql_script (for full PL/SQL scripts or if standalone SELECT failed)
+            tree = parser.sql_script();
 
             // Check if we got a valid parse tree
             if (tree == null)
@@ -57,15 +108,7 @@ namespace SqlBuilderLib.DevTools
             // Throw if any parsing errors occurred
             errorListener.ThrowIfErrors();
 
-            // Normalize procedure name for comparison (case-insensitive)
-            string normalizedProcedureName = null;
-            if (!string.IsNullOrWhiteSpace(procedureName))
-            {
-                normalizedProcedureName = procedureName.Trim().ToUpperInvariant();
-            }
-
-            // Create visitor to extract table names
-            var visitor = new TableNameExtractorVisitor(normalizedProcedureName);
+            // Use visitor to extract table names
             visitor.Visit(tree);
 
             // Get results
@@ -278,6 +321,11 @@ namespace SqlBuilderLib.DevTools
                     }
                 }
                 _errors.Add(errorMessage);
+            }
+
+            public void ClearErrors()
+            {
+                _errors.Clear();
             }
 
             public void ThrowIfErrors()
