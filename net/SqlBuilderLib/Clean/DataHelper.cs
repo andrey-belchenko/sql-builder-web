@@ -394,10 +394,10 @@ namespace infoenergo.core.Data
             return dataTable;
         }
 
-        public static DataTable SqlGetTable(string sql, OracleConnection connection)
+        public static DataTable SqlGetTable(string sql, OracleConnection connection, bool analyze= true)
         {
             OracleParameter[] array = new OracleParameter[0];
-            return SqlGetTable(sql, null, connection);
+            return SqlGetTable(sql, null, connection, analyze);
         }
 
         public static bool SqlExecute(string sqlCommand, OracleParameter[] parameters, OracleConnection connection, bool analyze = true)
