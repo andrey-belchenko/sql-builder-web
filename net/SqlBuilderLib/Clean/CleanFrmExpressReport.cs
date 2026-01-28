@@ -201,8 +201,16 @@ namespace sql.builder.WinForms
                 XElement xreport = XmlReports.GetReport(report_name);
                 var xmlreport = new XmlDocument();
                 xmlreport.LoadXml(xreport.ToString());
+                var names = new HashSet<string>();
                 foreach (XmlNode printFormNode in xmlreport.FirstChild.SelectNodes("print-templates//template"))
                 {
+
+                   //TODO: в основном решении ошибки при дублях нет, тут была
+                    var name = printFormNode.Attributes["name"].Value;
+                    if (names.Contains(name)) continue;
+                    names.Add(name);
+                 
+
                     DataRow row = this._dt_print_forms.NewRow();
                     row[col_name] = printFormNode.Attributes["name"].Value;
                     row[col_title] = printFormNode.Attributes["title"].Value;

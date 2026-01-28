@@ -134,7 +134,7 @@ namespace SqlBuilderLib.DevTools
             rep.OpenDocumentAfterPrint = false;
             rep.Initialize(repInfo.Name);
 
-            var fields = rep.GetParamFields();
+            var fields = rep.GetParamFields().ToArray();
             foreach (var p in fields)
             {
                 object value = null;
@@ -262,16 +262,26 @@ namespace SqlBuilderLib.DevTools
             ReportInfo = repInfo;
             TableNames = new HashSet<string>();
             ProcNames = new HashSet<string>();
+            ProcessedSql =  new HashSet<string>();
         }
         public static void AnalyzeExecSql(string sql)
         {
 
         }
 
+        private static HashSet<string> ProcessedSql =  new HashSet<string>();
+
         public static void AnalyzeCmdSql(string sql)
         {
+
+            if (ProcessedSql.Contains(sql)) return;
+            ProcessedSql.Add(sql);
             if (!Enabled) return;
-            var tableNames = DevSqlParserAntlr.GetSourceTables(Cmn.ClearUndefined(sql));
+            if (sql.Length>8000) {
+
+            }
+            var cleanSql = Cmn.ClearUndefined(sql);
+            var tableNames = DevSqlParserAntlr.GetSourceTables(Cmn.ClearUndefined(cleanSql));
             TableNames.UnionWith(tableNames);
 
             if (tableNames.Overlaps(new[] { "adr_m", "k_house", "kr_calc" }))

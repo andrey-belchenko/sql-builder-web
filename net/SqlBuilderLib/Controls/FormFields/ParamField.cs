@@ -80,6 +80,13 @@ namespace sql.builder.Controls.FormFields
                 if (val == DBNull.Value) {
                     val = null;
                 } else if (val != null && val.GetType() != this.GetValueType()) {
+
+                    if (this.GetValueType() == typeof(DateTime) && val.Equals(0m))
+                    {
+                        // TODO: еще один костыль для предвариательной обработки. См. DevAnalyzer.cs
+                        val = DateTime.Now;
+
+                    }
                     //val = null;
                     //throw new ArgumentException(string.Format("Значение имеет недопустимый тип {0}. Ожидается тип {1}", val.GetType(), this.GetValueType()));
                 }

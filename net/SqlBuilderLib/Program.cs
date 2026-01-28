@@ -39,7 +39,7 @@ namespace sql.builder
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            var sqlFileName = "17.sql";
+            var sqlFileName = "1.sql";
             string procedureName = null;
             // string procedureName = "dog_obj";
 
@@ -87,15 +87,15 @@ namespace sql.builder
             Console.WriteLine();
 
             // Extract procedures
-            var procedureNames = DevSqlParserAntlr.GetSourceProcedures(plsqlText, procedureName);
-            Console.WriteLine("Extracted source procedures:");
-            foreach (var procName in procedureNames.OrderBy(p => p))
-            {
-                Console.WriteLine($"  - {procName}");
-            }
-            Console.WriteLine($"Total: {procedureNames.Count} procedures");
-            Console.WriteLine();
-            Console.WriteLine("done");
+            // var procedureNames = DevSqlParserAntlr.GetSourceProcedures(plsqlText, procedureName);
+            // Console.WriteLine("Extracted source procedures:");
+            // foreach (var procName in procedureNames.OrderBy(p => p))
+            // {
+            //     Console.WriteLine($"  - {procName}");
+            // }
+            // Console.WriteLine($"Total: {procedureNames.Count} procedures");
+            // Console.WriteLine();
+            // Console.WriteLine("done");
         }
 
         public static void TestReportAnalysis(string[] args)
