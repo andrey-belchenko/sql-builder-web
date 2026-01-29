@@ -61,7 +61,8 @@ namespace SqlBuilderLib.DevTools
                     {
                         errorCount++;
                         Console.WriteLine($"ERROR processing {dbObject.ObjectName}: {ex.Message}");
-                        // Continue processing other items even if one fails
+                        // Throw exception instead of just logging
+                        throw;
                     }
                 }
 
@@ -92,7 +93,7 @@ namespace SqlBuilderLib.DevTools
                     currentType = tableInfo.Type;
                     
                     // Update the database with the resolved type
-                    AnalyzerStorage.UpdateDbObjectType(dbObject.ObjectName, currentType);
+                    AnalyzerStorage.UpdateDbObjectType(dbObject.ObjectName, tableInfo.Type);
                     Console.WriteLine($"  Resolved type: {currentType}");
                 }
                 catch (Exception ex)
@@ -323,8 +324,9 @@ namespace SqlBuilderLib.DevTools
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"  WARNING: Failed to parse SQL for {objectName}: {ex.Message}");
-                // Don't throw - return what we have
+                Console.WriteLine($"  ERROR: Failed to parse SQL for {objectName}: {ex.Message}");
+                // Throw exception instead of suppressing
+                throw new InvalidOperationException($"Failed to parse SQL for '{objectName}': {ex.Message}", ex);
             }
 
             return dependencies;

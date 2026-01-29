@@ -152,7 +152,7 @@ namespace SqlBuilderLib.DevTools
             {
                 // For mat views, we're interested in VIEW entry only
                 sql = @"
-                    SELECT owner, object_type 
+                    SELECT owner, object_type, object_name 
                     FROM all_objects 
                     WHERE object_name = UPPER(:object_name) 
                       AND owner = USER
@@ -161,7 +161,7 @@ namespace SqlBuilderLib.DevTools
             else
             {
                 sql = @"
-                    SELECT owner, object_type 
+                    SELECT owner, object_type, object_name 
                     FROM all_objects 
                     WHERE object_name = UPPER(:object_name) 
                       AND owner = USER
@@ -181,6 +181,7 @@ namespace SqlBuilderLib.DevTools
                 owner = row.Field<string>("owner");
             }
             string objectType = row.Field<string>("object_type");
+            string actualObjectName = row.Field<string>("object_name"); // Get actual object name from DB
 
             // Determine type
             DbObjectType type;
@@ -203,7 +204,7 @@ namespace SqlBuilderLib.DevTools
             {
                 OracleParameter[] ddlParameters = new OracleParameter[]
                 {
-                    new OracleParameter("object_name", OracleDbType.VarChar, objectName, ParameterDirection.Input),
+                    new OracleParameter("object_name", OracleDbType.VarChar, actualObjectName, ParameterDirection.Input),
                     new OracleParameter("owner", OracleDbType.VarChar, owner, ParameterDirection.Input)
                 };
 
@@ -231,7 +232,7 @@ namespace SqlBuilderLib.DevTools
             };
 
             string sql = @"
-                SELECT owner 
+                SELECT owner, object_name 
                 FROM all_objects 
                 WHERE object_name = UPPER(:package_name) 
                   AND owner = USER
@@ -246,11 +247,12 @@ namespace SqlBuilderLib.DevTools
 
             DataRow row = dt.Rows[0];
             string owner = row.Field<string>("owner");
+            string actualPackageName = row.Field<string>("object_name"); // Get actual package name from DB
 
             // Get PACKAGE BODY DDL
             OracleParameter[] ddlParameters = new OracleParameter[]
             {
-                new OracleParameter("package_name", OracleDbType.VarChar, packageName, ParameterDirection.Input),
+                new OracleParameter("package_name", OracleDbType.VarChar, actualPackageName, ParameterDirection.Input),
                 new OracleParameter("owner", OracleDbType.VarChar, owner, ParameterDirection.Input)
             };
 
@@ -318,7 +320,7 @@ namespace SqlBuilderLib.DevTools
             };
 
             string sql = @"
-                SELECT owner 
+                SELECT owner, object_name 
                 FROM all_objects 
                 WHERE object_name = UPPER(:procedure_name) 
                   AND owner = USER
@@ -333,11 +335,12 @@ namespace SqlBuilderLib.DevTools
 
             DataRow row = dt.Rows[0];
             string owner = row.Field<string>("owner");
+            string actualProcedureName = row.Field<string>("object_name"); // Get actual procedure name from DB
 
             // Get PROCEDURE DDL
             OracleParameter[] ddlParameters = new OracleParameter[]
             {
-                new OracleParameter("procedure_name", OracleDbType.VarChar, procedureName, ParameterDirection.Input),
+                new OracleParameter("procedure_name", OracleDbType.VarChar, actualProcedureName, ParameterDirection.Input),
                 new OracleParameter("owner", OracleDbType.VarChar, owner, ParameterDirection.Input)
             };
 

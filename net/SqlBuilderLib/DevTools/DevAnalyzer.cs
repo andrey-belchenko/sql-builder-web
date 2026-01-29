@@ -53,8 +53,10 @@ namespace SqlBuilderLib.DevTools
             };
 
 
-        public static void SetConnection()
+        public static void SetConnectionAndSourceFolder()
         {
+            Console.OutputEncoding = Encoding.UTF8;
+            XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
             var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
             // var conStr = "User Id=asuse;Password=kl0pik;Server=REALKAZN;Pooling=False;Sid=REALKAZN;Port=1521";
             CleanSqlBuilder.ChangeConnectionString(conStr);
@@ -69,16 +71,15 @@ namespace SqlBuilderLib.DevTools
             DevAnalyzer.DoCheck = true;
             DevAnalyzer.ErrorOnMissing = false;
             DevAnalyzer.ClearTempFolder();
-            Console.OutputEncoding = Encoding.UTF8;
-            XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
-            SetConnection();
+
+            SetConnectionAndSourceFolder();
 
 
             var navs = XmlReports.Environment.GetElements(TextConst.EName.Navigators).Cast<VNavigator>()
             .Where(it =>
             //  it.P_IdName == "nav310"
                 it.P_IdName == "nav10"
-              //it.P_IdName == "nav101"
+             //it.P_IdName == "nav101"
              )
             .ToList();
 
@@ -116,7 +117,7 @@ namespace SqlBuilderLib.DevTools
                     };
                     Console.WriteLine($"Analyze report: {info.Name} ({currentReport} of {totalReports})");
                     var isNew = DevAnalyzer.AnalyzeRep(info);
-                    
+
 
                     if (isNew)
                     {
