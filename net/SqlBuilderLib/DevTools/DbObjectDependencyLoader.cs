@@ -146,7 +146,11 @@ namespace SqlBuilderLib.DevTools
                 if (dependencies.Any())
                 {
                     AnalyzerStorage.SaveDependencies(dependencies);
-                    Console.WriteLine($"  Found {dependencies.Count()} dependencies");
+                    Console.WriteLine($"  Found {dependencies.Count()} dependencies:");
+                    foreach (var dep in dependencies.OrderBy(d => d.UsedObjectType?.ToString() ?? "").ThenBy(d => d.UsedObjectName))
+                    {
+                        Console.WriteLine($"    - {dep.UsedObjectName} ({dep.UsedObjectType?.ToString() ?? "null"})");
+                    }
                 }
                 else
                 {
@@ -189,7 +193,11 @@ namespace SqlBuilderLib.DevTools
                         if (dependencies.Any())
                         {
                             AnalyzerStorage.SaveDependencies(dependencies);
-                            Console.WriteLine($"  Found {dependencies.Count()} dependencies");
+                            Console.WriteLine($"  Found {dependencies.Count()} dependencies:");
+                            foreach (var dep in dependencies.OrderBy(d => d.UsedObjectType?.ToString() ?? "").ThenBy(d => d.UsedObjectName))
+                            {
+                                Console.WriteLine($"    - {dep.UsedObjectName} ({dep.UsedObjectType?.ToString() ?? "null"})");
+                            }
                         }
                         else
                         {
@@ -238,7 +246,11 @@ namespace SqlBuilderLib.DevTools
             if (dependencies.Any())
             {
                 AnalyzerStorage.SaveDependencies(dependencies);
-                Console.WriteLine($"  Found {dependencies.Count()} dependencies");
+                Console.WriteLine($"  Found {dependencies.Count()} dependencies:");
+                foreach (var dep in dependencies.OrderBy(d => d.UsedObjectType?.ToString() ?? "").ThenBy(d => d.UsedObjectName))
+                {
+                    Console.WriteLine($"    - {dep.UsedObjectName} ({dep.UsedObjectType?.ToString() ?? "null"})");
+                }
             }
             else
             {

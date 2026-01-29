@@ -13,6 +13,7 @@ namespace SqlBuilderApp
             //sql.builder.Program.Main2(args);
             // AnalyzerStorage.SaveAllCollectionsToFiles();
 
+            DevAnalyzer.SetConnection();
             string query = @"
         SELECT object_name, object_type, processed
         FROM report_dev_sqlb.db_objects

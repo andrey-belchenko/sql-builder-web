@@ -19,7 +19,7 @@ using sql.builder.UI;
 namespace SqlBuilderLib.DevTools
 {
 
-    internal static class DevAnalyzer
+    public static class DevAnalyzer
     {
         public static bool Enabled = false;
 
@@ -53,6 +53,14 @@ namespace SqlBuilderLib.DevTools
             };
 
 
+        public static void SetConnection()
+        {
+            var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
+            // var conStr = "User Id=asuse;Password=kl0pik;Server=REALKAZN;Pooling=False;Sid=REALKAZN;Port=1521";
+            CleanSqlBuilder.ChangeConnectionString(conStr);
+            Console.WriteLine(conStr);
+        }
+
         public static void AnalyzeReports()
         {
             DevAnalyzer.Enabled = true;
@@ -63,10 +71,7 @@ namespace SqlBuilderLib.DevTools
             DevAnalyzer.ClearTempFolder();
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
-            // var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
-            var conStr = "User Id=asuse;Password=kl0pik;Server=REALKAZN;Pooling=False;Sid=REALKAZN;Port=1521";
-            CleanSqlBuilder.ChangeConnectionString(conStr);
-            Console.WriteLine(conStr);
+            SetConnection();
 
 
             var navs = XmlReports.Environment.GetElements(TextConst.EName.Navigators).Cast<VNavigator>()
