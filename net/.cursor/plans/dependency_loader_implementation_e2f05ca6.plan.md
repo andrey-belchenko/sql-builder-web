@@ -36,6 +36,11 @@ todos:
     status: completed
     dependencies:
       - add_dependency_loader
+  - id: handle_standalone_procedures
+    content: Add support for standalone procedures (procedures without package, no dot in name). Add GetProcedureInfo() to DevOracleSheme and update ProcessProcedure() to handle both standalone and package procedures.
+    status: completed
+    dependencies:
+      - implement_procedure_processing
 ---
 
 # Dependency Loader Implementation
@@ -116,15 +121,25 @@ Create new file with:
 - `LoadDependencies(string customQuery = null)` - main entry point, implements the recursive loop. Accepts optional SQL query for custom filtering
 - `ProcessDbObject(AnalyzerDbObject dbObject)` - processes single object and extracts dependencies
 - `ProcessViewOrMatView(string objectName, DbObjectType type)` - processes views/materialized views
-- `ProcessProcedure(string objectName)` - processes procedures
+- `ProcessProcedure(string objectName)` - processes procedures (both standalone and package procedures)
 - `ExtractDependenciesFromSql(string sql, string objectName, DbObjectType objectType, string procedureName = null)` - extracts dependencies from SQL/DDL
 - Helper method to extract procedure name from `package.procedure` format
+
+### [`SqlBuilderLib/DevTools/DevOracleSheme.cs`](SqlBuilderLib/DevTools/DevOracleSheme.cs)
+
+Add method:
+
+- `GetProcedureInfo(string procedureName)` - gets DDL for standalone procedure using `DBMS_METADATA.GET_DDL('PROCEDURE', ...)`
 
 ## Implementation Notes
 
 1. **Type Resolution**: When object type is `TableOrView`, use `DevOracleSheme.GetTableInfo()` to determine if it's Table, View, or MatView, then update the database record.
 
-2. **Procedure Name Parsing**: Procedure names in `db_objects` may be stored as `package.procedure`. Extract the procedure name (part after the last dot) for use with `GetSourceTables/GetSourceProcedures` `procedureName` parameter.
+2. **Procedure Name Parsing**: Procedure names in `db_objects` may be stored as:
+   - `package.procedure` - package procedure (has dot)
+   - `procedure` - standalone procedure (no dot)
+   - For standalone procedures: Get DDL directly using `DBMS_METADATA.GET_DDL('PROCEDURE', ...)`
+   - For package procedures: Extract procedure name (part after the last dot) for use with `GetSourceTables/GetSourceProcedures` `procedureName` parameter
 
 3. **Error Handling**: Handle cases where:
 
@@ -140,3 +155,9 @@ Create new file with:
 ## Enhancement: Custom Query Support
 
 6. **Custom Query Parameter**: `LoadDependencies()` should accept an optional SQL query parameter that allows custom filtering of unprocessed items. The query should select from `report_dev_sqlb.db_objects` table and can include custom WHERE clauses. Default behavior (when query is null) should select all unprocessed items.
+
+7. **Standalone Procedures**: Handle standalone procedures (no dot in name) differently from package procedures:
+   - If procedure name has no dot: Try to get as standalone procedure first using `GetProcedureInfo()`
+   - If standalone procedure not found or name has dot: Try as package procedure using `GetPackageInfo()`
+   - For standalone procedures: Extract dependencies directly from DDL (no need to filter by procedure name)
+   - For package procedures: Extract dependencies for specific procedure within package

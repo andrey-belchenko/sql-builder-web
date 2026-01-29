@@ -160,56 +160,89 @@ namespace SqlBuilderLib.DevTools
         }
 
         /// <summary>
-        /// Processes a procedure: gets package DDL and extracts dependencies for the specific procedure.
+        /// Processes a procedure: handles both standalone procedures and package procedures.
         /// </summary>
         private static void ProcessProcedure(string objectName)
         {
             try
             {
-                // Extract package name and procedure name
-                // Format: "package.procedure" or just "procedure"
-                string packageName = null;
-                string procedureName = null;
-
                 int lastDotIndex = objectName.LastIndexOf('.');
-                if (lastDotIndex > 0 && lastDotIndex < objectName.Length - 1)
-                {
-                    packageName = objectName.Substring(0, lastDotIndex);
-                    procedureName = objectName.Substring(lastDotIndex + 1);
-                }
-                else
-                {
-                    // If no dot, assume the whole name is the package name
-                    // and we need to extract all procedures from it
-                    packageName = objectName;
-                    procedureName = null; // null means extract from all procedures
-                }
-
-                Console.WriteLine($"  Package: {packageName}, Procedure: {procedureName ?? "ALL"}");
-
-                var packageInfo = DevOracleSheme.GetPackageInfo(packageName);
-                if (string.IsNullOrEmpty(packageInfo.DDL))
-                {
-                    Console.WriteLine($"  No DDL available for package {packageName}");
-                    return;
-                }
-
-                Console.WriteLine($"  Extracting dependencies from package DDL...");
-                var dependencies = ExtractDependenciesFromSql(packageInfo.DDL, objectName, DbObjectType.Procedure, procedureName);
                 
-                if (dependencies.Any())
+                if (lastDotIndex < 0)
                 {
-                    AnalyzerStorage.SaveDependencies(dependencies);
-                    Console.WriteLine($"  Found {dependencies.Count()} dependencies");
+                    // Standalone procedure - no dot in name
+                    Console.WriteLine($"  Standalone procedure: {objectName}");
+                    
+                    try
+                    {
+                        var procedureInfo = DevOracleSheme.GetProcedureInfo(objectName);
+                        if (string.IsNullOrEmpty(procedureInfo.DDL))
+                        {
+                            Console.WriteLine($"  No DDL available for procedure {objectName}");
+                            return;
+                        }
+                        
+                        Console.WriteLine($"  Extracting dependencies from procedure DDL...");
+                        // Extract dependencies directly (no procedureName parameter needed)
+                        var dependencies = ExtractDependenciesFromSql(procedureInfo.DDL, objectName, DbObjectType.Procedure);
+                        
+                        if (dependencies.Any())
+                        {
+                            AnalyzerStorage.SaveDependencies(dependencies);
+                            Console.WriteLine($"  Found {dependencies.Count()} dependencies");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"  No dependencies found");
+                        }
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // If standalone procedure not found, try as package
+                        Console.WriteLine($"  Not found as standalone procedure, trying as package...");
+                        ProcessPackageProcedure(objectName, null);
+                    }
                 }
                 else
                 {
-                    Console.WriteLine($"  No dependencies found");
+                    // Package procedure - has dot
+                    string packageName = objectName.Substring(0, lastDotIndex);
+                    string procedureName = objectName.Substring(lastDotIndex + 1);
+                    ProcessPackageProcedure(packageName, procedureName);
                 }
             }
             catch (Exception ex)
             {
                 throw new InvalidOperationException($"Failed to process procedure '{objectName}': {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Processes a package procedure: gets package DDL and extracts dependencies for the specific procedure.
+        /// </summary>
+        private static void ProcessPackageProcedure(string packageName, string procedureName)
+        {
+            Console.WriteLine($"  Package: {packageName}, Procedure: {procedureName ?? "ALL"}");
+
+            var packageInfo = DevOracleSheme.GetPackageInfo(packageName);
+            if (string.IsNullOrEmpty(packageInfo.DDL))
+            {
+                Console.WriteLine($"  No DDL available for package {packageName}");
+                return;
+            }
+
+            Console.WriteLine($"  Extracting dependencies from package DDL...");
+            var objectName = procedureName != null ? $"{packageName}.{procedureName}" : packageName;
+            var dependencies = ExtractDependenciesFromSql(packageInfo.DDL, objectName, DbObjectType.Procedure, procedureName);
+            
+            if (dependencies.Any())
+            {
+                AnalyzerStorage.SaveDependencies(dependencies);
+                Console.WriteLine($"  Found {dependencies.Count()} dependencies");
+            }
+            else
+            {
+                Console.WriteLine($"  No dependencies found");
             }
         }
 

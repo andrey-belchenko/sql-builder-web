@@ -263,5 +263,92 @@ namespace SqlBuilderLib.DevTools
                 DDL = ddl
             };
         }
+
+        /// <summary>
+        /// Gets information about a standalone procedure.
+        /// Returns cached information if available.
+        /// </summary>
+        /// <param name="procedureName">Name of the standalone procedure</param>
+        /// <returns>PackageInfo with Name and DDL (PROCEDURE DDL)</returns>
+        /// <exception cref="InvalidOperationException">Thrown if procedure is not found</exception>
+        public static PackageInfo GetProcedureInfo(string procedureName)
+        {
+            if (string.IsNullOrWhiteSpace(procedureName))
+                throw new ArgumentException("Procedure name cannot be null or empty", nameof(procedureName));
+
+            string cacheKey = $"PROCEDURE_{procedureName.ToUpper()}";
+
+            // Check cache first
+            lock (_lockObject)
+            {
+                if (_packageCache.TryGetValue(cacheKey, out PackageInfo cachedInfo))
+                {
+                    return cachedInfo;
+                }
+            }
+
+            // Not in cache, query database
+            try
+            {
+                PackageInfo info = QueryProcedureInfo(procedureName);
+                
+                // Cache the result
+                lock (_lockObject)
+                {
+                    _packageCache[cacheKey] = info;
+                }
+
+                return info;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to retrieve procedure info for '{procedureName}': {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Queries the database for standalone procedure information.
+        /// </summary>
+        private static PackageInfo QueryProcedureInfo(string procedureName)
+        {
+            // Query all_objects to verify procedure exists and get owner
+            OracleParameter[] parameters = new OracleParameter[]
+            {
+                new OracleParameter("procedure_name", OracleDbType.VarChar, procedureName, ParameterDirection.Input)
+            };
+
+            string sql = @"
+                SELECT owner 
+                FROM all_objects 
+                WHERE object_name = UPPER(:procedure_name) 
+                  AND owner = USER
+                  AND object_type = 'PROCEDURE'";
+
+            DataTable dt = DataHelper.SqlGetTable(sql, parameters, db.Connection, false);
+            
+            if (dt == null || dt.Rows.Count == 0)
+            {
+                throw new InvalidOperationException($"Procedure '{procedureName}' not found in current schema");
+            }
+
+            DataRow row = dt.Rows[0];
+            string owner = row.Field<string>("owner");
+
+            // Get PROCEDURE DDL
+            OracleParameter[] ddlParameters = new OracleParameter[]
+            {
+                new OracleParameter("procedure_name", OracleDbType.VarChar, procedureName, ParameterDirection.Input),
+                new OracleParameter("owner", OracleDbType.VarChar, owner, ParameterDirection.Input)
+            };
+
+            string ddlSql = "SELECT DBMS_METADATA.GET_DDL('PROCEDURE', :procedure_name, :owner) FROM DUAL";
+            string ddl = DataHelper.SqlGetString(ddlSql, ddlParameters, db.Connection, false);
+
+            return new PackageInfo
+            {
+                Name = procedureName,
+                DDL = ddl
+            };
+        }
     }
 }
