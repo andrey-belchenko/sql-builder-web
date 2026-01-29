@@ -379,5 +379,110 @@ namespace SqlBuilderLib.DevTools
                 SaveDbObjectsToFile(dbObjectsFileName);
             }
         }
+
+        /// <summary>
+        /// Gets unprocessed database objects. If a custom query is provided, it will be used to filter the results.
+        /// The custom query should select from report_dev_sqlb.db_objects table and return columns: object_name, object_type, processed.
+        /// </summary>
+        /// <param name="customQuery">Optional SQL query for custom filtering. If null, returns all unprocessed items.</param>
+        /// <returns>List of unprocessed database objects</returns>
+        public static List<AnalyzerDbObject> GetUnprocessedDbObjects(string customQuery = null)
+        {
+            lock (_lockObject)
+            {
+                if (!_isInitialized)
+                    InitializeCache();
+
+                if (string.IsNullOrWhiteSpace(customQuery))
+                {
+                    // Default behavior: refresh cache and return unprocessed items
+                    LoadDbObjects();
+                    return _cachedDbObjects.Where(db => !db.Processed).ToList();
+                }
+                else
+                {
+                    // Use custom query
+                    var result = new List<AnalyzerDbObject>();
+                    using (var connection = new NpgsqlConnection(ConnectionString))
+                    {
+                        connection.Open();
+                        using (var command = new NpgsqlCommand(customQuery, connection))
+                        {
+                            using (var reader = command.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    result.Add(new AnalyzerDbObject
+                                    {
+                                        ObjectName = reader.IsDBNull(0) ? null : reader.GetString(0),
+                                        ObjectType = reader.IsDBNull(1) ? null : DbObjectTypeExtensions.FromDatabaseString(reader.GetString(1)),
+                                        Processed = reader.IsDBNull(2) ? false : reader.GetBoolean(2)
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    return result;
+                }
+            }
+        }
+
+        public static void UpdateDbObjectProcessed(string objectName, bool processed)
+        {
+            lock (_lockObject)
+            {
+                if (!_isInitialized)
+                    InitializeCache();
+
+                using (var connection = new NpgsqlConnection(ConnectionString))
+                {
+                    connection.Open();
+                    using (var command = new NpgsqlCommand())
+                    {
+                        command.Connection = connection;
+                        command.CommandText = "UPDATE report_dev_sqlb.db_objects SET processed = @processed WHERE object_name = @object_name";
+                        command.Parameters.AddWithValue("@processed", processed);
+                        command.Parameters.AddWithValue("@object_name", objectName ?? (object)DBNull.Value);
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                // Update cache
+                var dbObject = _cachedDbObjects.FirstOrDefault(db => db.ObjectName == objectName);
+                if (dbObject != null)
+                {
+                    dbObject.Processed = processed;
+                }
+            }
+        }
+
+        public static void UpdateDbObjectType(string objectName, DbObjectType newType)
+        {
+            lock (_lockObject)
+            {
+                if (!_isInitialized)
+                    InitializeCache();
+
+                using (var connection = new NpgsqlConnection(ConnectionString))
+                {
+                    connection.Open();
+                    using (var command = new NpgsqlCommand())
+                    {
+                        command.Connection = connection;
+                        command.CommandText = "UPDATE report_dev_sqlb.db_objects SET object_type = @object_type WHERE object_name = @object_name";
+                        command.Parameters.AddWithValue("@object_type", newType.ToDatabaseString());
+                        command.Parameters.AddWithValue("@object_name", objectName ?? (object)DBNull.Value);
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                // Update cache
+                var dbObject = _cachedDbObjects.FirstOrDefault(db => db.ObjectName == objectName);
+                if (dbObject != null)
+                {
+                    dbObject.ObjectType = newType;
+                }
+            }
+        }
     }
 }

@@ -4,33 +4,38 @@ overview: Implement a dependency loader that processes unprocessed database obje
 todos:
   - id: add_storage_methods
     content: Add GetUnprocessedDbObjects(), UpdateDbObjectProcessed(), and UpdateDbObjectType() methods to AnalyzerStorage.cs
-    status: pending
+    status: completed
   - id: add_dependency_loader
     content: Add LoadDependencies() main method to DevAnalyzer.cs that implements the recursive processing loop
-    status: pending
+    status: completed
     dependencies:
       - add_storage_methods
   - id: add_process_object
     content: Add ProcessDbObject() method to DevAnalyzer.cs that handles type resolution, DDL retrieval, and dependency extraction
-    status: pending
+    status: completed
     dependencies:
       - add_storage_methods
   - id: implement_view_processing
     content: "Implement view/matview processing: get DDL, extract dependencies using DevSqlParserAntlr, save dependencies"
-    status: pending
+    status: completed
     dependencies:
       - add_process_object
   - id: implement_procedure_processing
     content: "Implement procedure processing: get package DDL, extract procedure name, analyze dependencies for specific procedure, save dependencies"
-    status: pending
+    status: completed
     dependencies:
       - add_process_object
   - id: add_error_handling
     content: Add error handling for missing objects, DDL retrieval failures, and parsing errors
-    status: pending
+    status: completed
     dependencies:
       - implement_view_processing
       - implement_procedure_processing
+  - id: add_query_parameter
+    content: Enhance LoadDependencies() to accept optional SQL query parameter for custom filtering of unprocessed items
+    status: completed
+    dependencies:
+      - add_dependency_loader
 ---
 
 # Dependency Loader Implementation
@@ -72,7 +77,7 @@ flowchart TD
 - **`UpdateDbObjectProcessed(string objectName, bool processed)`**: Update the `processed` flag for a specific object
 - **`UpdateDbObjectType(string objectName, DbObjectType newType)`**: Update object type when resolving TableOrView
 
-#### 2. Create Dependency Loader in `DevAnalyzer.cs`
+#### 2. Create Dependency Loader in New File `DbObjectDependencyLoader.cs`
 
 - **`LoadDependencies()`**: Main entry point that runs the dependency loading loop
 - **`ProcessDbObject(AnalyzerDbObject dbObject)`**: Process a single database object:
@@ -100,16 +105,19 @@ flowchart TD
 
 Add methods:
 
-- `GetUnprocessedDbObjects()` - returns `List<AnalyzerDbObject>`
+- `GetUnprocessedDbObjects(string customQuery = null)` - returns `List<AnalyzerDbObject>`. Accepts optional SQL query for custom filtering (default: selects all unprocessed items)
 - `UpdateDbObjectProcessed(string objectName, bool processed)` - updates processed flag
 - `UpdateDbObjectType(string objectName, DbObjectType newType)` - updates object type
 
-### [`SqlBuilderLib/DevTools/DevAnalyzer.cs`](SqlBuilderLib/DevTools/DevAnalyzer.cs)
+### [`SqlBuilderLib/DevTools/DbObjectDependencyLoader.cs`](SqlBuilderLib/DevTools/DbObjectDependencyLoader.cs) (NEW FILE)
 
-Add methods:
+Create new file with:
 
-- `LoadDependencies()` - main entry point, implements the recursive loop
+- `LoadDependencies(string customQuery = null)` - main entry point, implements the recursive loop. Accepts optional SQL query for custom filtering
 - `ProcessDbObject(AnalyzerDbObject dbObject)` - processes single object and extracts dependencies
+- `ProcessViewOrMatView(string objectName, DbObjectType type)` - processes views/materialized views
+- `ProcessProcedure(string objectName)` - processes procedures
+- `ExtractDependenciesFromSql(string sql, string objectName, DbObjectType objectType, string procedureName = null)` - extracts dependencies from SQL/DDL
 - Helper method to extract procedure name from `package.procedure` format
 
 ## Implementation Notes
@@ -128,3 +136,7 @@ Add methods:
 4. **Cache Updates**: After saving new dependencies that create new `db_objects` entries, refresh the cache or ensure cache consistency.
 
 5. **Logging**: Add console output to track progress (similar to `AnalyzeReports()` method).
+
+## Enhancement: Custom Query Support
+
+6. **Custom Query Parameter**: `LoadDependencies()` should accept an optional SQL query parameter that allows custom filtering of unprocessed items. The query should select from `report_dev_sqlb.db_objects` table and can include custom WHERE clauses. Default behavior (when query is null) should select all unprocessed items.
