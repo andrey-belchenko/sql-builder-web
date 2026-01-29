@@ -263,7 +263,6 @@ namespace SqlBuilderLib.DevTools
                 list.Add(new AnalyzerDependency()
                 {
                     ObjectName = ReportInfo.Name,
-                    ObjectType = "report",
                     UsedObjectName = tbl,
                     UsedObjectType = "table or view"
                 });
@@ -274,7 +273,6 @@ namespace SqlBuilderLib.DevTools
                 list.Add(new AnalyzerDependency()
                 {
                     ObjectName = ReportInfo.Name,
-                    ObjectType = "report",
                     UsedObjectName = proc,
                     UsedObjectType = "procedure"
                 });

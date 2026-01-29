@@ -9,7 +9,6 @@ namespace SqlBuilderLib.DevTools
     public class AnalyzerDependency
     {
         public string ObjectName;
-        public string ObjectType;
         public string UsedObjectName;
         public string UsedObjectType;
     }

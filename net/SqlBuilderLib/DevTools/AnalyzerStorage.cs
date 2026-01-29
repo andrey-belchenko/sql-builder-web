@@ -43,7 +43,7 @@ namespace SqlBuilderLib.DevTools
             using (var connection = new NpgsqlConnection(ConnectionString))
             {
                 connection.Open();
-                using (var command = new NpgsqlCommand("SELECT object_name, object_type, used_object_name, used_object_type FROM report_dev_sqlb.dependencies", connection))
+                using (var command = new NpgsqlCommand("SELECT object_name, used_object_name FROM report_dev_sqlb.dependencies", connection))
                 {
                     using (var reader = command.ExecuteReader())
                     {
@@ -52,9 +52,7 @@ namespace SqlBuilderLib.DevTools
                             _cachedDependencies.Add(new AnalyzerDependency
                             {
                                 ObjectName = reader.IsDBNull(0) ? null : reader.GetString(0),
-                                ObjectType = reader.IsDBNull(1) ? null : reader.GetString(1),
-                                UsedObjectName = reader.IsDBNull(2) ? null : reader.GetString(2),
-                                UsedObjectType = reader.IsDBNull(3) ? null : reader.GetString(3)
+                                UsedObjectName = reader.IsDBNull(1) ? null : reader.GetString(1)
                             });
                         }
                     }
@@ -116,20 +114,64 @@ namespace SqlBuilderLib.DevTools
         {
             lock (_lockObject)
             {
+                if (!_isInitialized)
+                    InitializeCache();
+
                 using (var connection = new NpgsqlConnection(ConnectionString))
                 {
                     connection.Open();
                     foreach (var dep in dependencies)
                     {
+                        // Check if DbObject exists for used_object_name, create if not exists
+                        if (!string.IsNullOrEmpty(dep.UsedObjectName) && !string.IsNullOrEmpty(dep.UsedObjectType))
+                        {
+                            bool dbObjectExists = _cachedDbObjects.Any(db => db.ObjectName == dep.UsedObjectName);
+                            
+                            if (!dbObjectExists)
+                            {
+                                // Check database if not in cache
+                                using (var checkCommand = new NpgsqlCommand())
+                                {
+                                    checkCommand.Connection = connection;
+                                    checkCommand.CommandText = "SELECT COUNT(*) FROM report_dev_sqlb.db_objects WHERE object_name = @object_name";
+                                    checkCommand.Parameters.AddWithValue("@object_name", dep.UsedObjectName ?? (object)DBNull.Value);
+                                    var count = Convert.ToInt32(checkCommand.ExecuteScalar());
+                                    dbObjectExists = count > 0;
+                                }
+                                
+                                if (!dbObjectExists)
+                                {
+                                    // Create new DbObject
+                                    using (var dbObjectCommand = new NpgsqlCommand())
+                                    {
+                                        dbObjectCommand.Connection = connection;
+                                        dbObjectCommand.CommandText = "INSERT INTO report_dev_sqlb.db_objects (object_name, object_type, processed) VALUES (@object_name, @object_type, @processed)";
+                                        
+                                        dbObjectCommand.Parameters.AddWithValue("@object_name", dep.UsedObjectName ?? (object)DBNull.Value);
+                                        dbObjectCommand.Parameters.AddWithValue("@object_type", dep.UsedObjectType ?? (object)DBNull.Value);
+                                        dbObjectCommand.Parameters.AddWithValue("@processed", false);
+                                        dbObjectCommand.ExecuteNonQuery();
+                                    }
+                                    
+                                    // Update cache
+                                    _cachedDbObjects.Add(new AnalyzerDbObject
+                                    {
+                                        ObjectName = dep.UsedObjectName,
+                                        ObjectType = dep.UsedObjectType,
+                                        Processed = false
+                                    });
+                                }
+                            }
+                        }
+                        
+                        // Save dependency (without type columns)
                         using (var command = new NpgsqlCommand())
                         {
                             command.Connection = connection;
-                            command.CommandText = "INSERT INTO report_dev_sqlb.dependencies (object_name, object_type, used_object_name, used_object_type) VALUES (@object_name, @object_type, @used_object_name, @used_object_type)";
+                            command.CommandText = "INSERT INTO report_dev_sqlb.dependencies (object_name, used_object_name) VALUES (@object_name, @used_object_name)";
                             
                             command.Parameters.AddWithValue("@object_name", dep.ObjectName ?? (object)DBNull.Value);
-                            command.Parameters.AddWithValue("@object_type", dep.ObjectType ?? (object)DBNull.Value);
                             command.Parameters.AddWithValue("@used_object_name", dep.UsedObjectName ?? (object)DBNull.Value);
-                            command.Parameters.AddWithValue("@used_object_type", dep.UsedObjectType ?? (object)DBNull.Value);
                             command.ExecuteNonQuery();
                         }
                         
@@ -137,9 +179,7 @@ namespace SqlBuilderLib.DevTools
                         _cachedDependencies.Add(new AnalyzerDependency
                         {
                             ObjectName = dep.ObjectName,
-                            ObjectType = dep.ObjectType,
-                            UsedObjectName = dep.UsedObjectName,
-                            UsedObjectType = dep.UsedObjectType
+                            UsedObjectName = dep.UsedObjectName
                         });
                     }
                 }
