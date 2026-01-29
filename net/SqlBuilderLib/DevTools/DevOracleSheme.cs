@@ -1,0 +1,267 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using Devart.Data.Oracle;
+using sql.builder;
+using DataHelper = infoenergo.core.Data.DataHelper;
+
+namespace SqlBuilderLib.DevTools
+{
+    /// <summary>
+    /// Information about a table, view, or materialized view.
+    /// </summary>
+    public class TableInfo
+    {
+        public string Name { get; set; }
+        public string Type { get; set; } // "table", "view", or "mat view"
+        public string DDL { get; set; } // null for tables, DDL for views and mat views
+    }
+
+    /// <summary>
+    /// Information about a package.
+    /// </summary>
+    public class PackageInfo
+    {
+        public string Name { get; set; }
+        public string DDL { get; set; } // PACKAGE BODY DDL
+    }
+
+    /// <summary>
+    /// Static class for retrieving Oracle database schema information (tables, views, materialized views, packages) with DDL retrieval and caching.
+    /// Compatible with Oracle 11g.
+    /// </summary>
+    public static class DevOracleSheme
+    {
+        private static readonly Dictionary<string, TableInfo> _tableCache = new Dictionary<string, TableInfo>(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, PackageInfo> _packageCache = new Dictionary<string, PackageInfo>(StringComparer.OrdinalIgnoreCase);
+        private static readonly object _lockObject = new object();
+
+        /// <summary>
+        /// Gets information about a table, view, or materialized view.
+        /// Returns cached information if available.
+        /// </summary>
+        /// <param name="objectName">Name of the table, view, or materialized view</param>
+        /// <returns>TableInfo with Name, Type, and DDL (for views and mat views)</returns>
+        /// <exception cref="InvalidOperationException">Thrown if object is not found</exception>
+        public static TableInfo GetTableInfo(string objectName)
+        {
+            if (string.IsNullOrWhiteSpace(objectName))
+                throw new ArgumentException("Object name cannot be null or empty", nameof(objectName));
+
+            string cacheKey = objectName.ToUpper();
+
+            // Check cache first
+            lock (_lockObject)
+            {
+                if (_tableCache.TryGetValue(cacheKey, out TableInfo cachedInfo))
+                {
+                    return cachedInfo;
+                }
+            }
+
+            // Not in cache, query database
+            try
+            {
+                TableInfo info = QueryTableInfo(objectName);
+                
+                // Cache the result
+                lock (_lockObject)
+                {
+                    _tableCache[cacheKey] = info;
+                }
+
+                return info;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to retrieve table info for '{objectName}': {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Gets information about a package.
+        /// Returns cached information if available.
+        /// </summary>
+        /// <param name="packageName">Name of the package</param>
+        /// <returns>PackageInfo with Name and DDL (PACKAGE BODY)</returns>
+        /// <exception cref="InvalidOperationException">Thrown if package is not found</exception>
+        public static PackageInfo GetPackageInfo(string packageName)
+        {
+            if (string.IsNullOrWhiteSpace(packageName))
+                throw new ArgumentException("Package name cannot be null or empty", nameof(packageName));
+
+            string cacheKey = packageName.ToUpper();
+
+            // Check cache first
+            lock (_lockObject)
+            {
+                if (_packageCache.TryGetValue(cacheKey, out PackageInfo cachedInfo))
+                {
+                    return cachedInfo;
+                }
+            }
+
+            // Not in cache, query database
+            try
+            {
+                PackageInfo info = QueryPackageInfo(packageName);
+                
+                // Cache the result
+                lock (_lockObject)
+                {
+                    _packageCache[cacheKey] = info;
+                }
+
+                return info;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to retrieve package info for '{packageName}': {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Queries the database for table/view/materialized view information.
+        /// </summary>
+        private static TableInfo QueryTableInfo(string objectName)
+        {
+            OracleParameter[] parameters = new OracleParameter[]
+            {
+                new OracleParameter("object_name", OracleDbType.VarChar, objectName, ParameterDirection.Input)
+            };
+
+            // Check if it's a materialized view first (since mat views appear as both TABLE and VIEW in all_objects)
+            bool isMaterializedView = false;
+            string mviewSql = @"
+                SELECT owner 
+                FROM all_mviews 
+                WHERE mview_name = UPPER(:object_name) 
+                  AND owner = USER";
+            
+            DataTable mviewDt = DataHelper.SqlGetTable(mviewSql, parameters, db.Connection, false);
+            string owner = null;
+            if (mviewDt != null && mviewDt.Rows.Count > 0)
+            {
+                isMaterializedView = true;
+                owner = mviewDt.Rows[0].Field<string>("owner");
+            }
+
+            // Query all_objects to get object type and owner (for mat views, prefer VIEW entry)
+            string sql;
+            if (isMaterializedView)
+            {
+                // For mat views, we're interested in VIEW entry only
+                sql = @"
+                    SELECT owner, object_type 
+                    FROM all_objects 
+                    WHERE object_name = UPPER(:object_name) 
+                      AND owner = USER
+                      AND object_type = 'VIEW'";
+            }
+            else
+            {
+                sql = @"
+                    SELECT owner, object_type 
+                    FROM all_objects 
+                    WHERE object_name = UPPER(:object_name) 
+                      AND owner = USER
+                      AND object_type IN ('TABLE', 'VIEW')";
+            }
+
+            DataTable dt = DataHelper.SqlGetTable(sql, parameters, db.Connection, false);
+            
+            if (dt == null || dt.Rows.Count == 0)
+            {
+                throw new InvalidOperationException($"Object '{objectName}' not found in current schema");
+            }
+
+            DataRow row = dt.Rows[0];
+            if (owner == null)
+            {
+                owner = row.Field<string>("owner");
+            }
+            string objectType = row.Field<string>("object_type");
+
+            // Determine type
+            string type;
+            if (isMaterializedView)
+            {
+                type = "mat view";
+            }
+            else if (objectType == "VIEW")
+            {
+                type = "view";
+            }
+            else
+            {
+                type = "table";
+            }
+
+            // Get DDL for views and materialized views
+            string ddl = null;
+            if (type == "view" || type == "mat view")
+            {
+                OracleParameter[] ddlParameters = new OracleParameter[]
+                {
+                    new OracleParameter("object_name", OracleDbType.VarChar, objectName, ParameterDirection.Input),
+                    new OracleParameter("owner", OracleDbType.VarChar, owner, ParameterDirection.Input)
+                };
+
+                string ddlSql = "SELECT DBMS_METADATA.GET_DDL('VIEW', :object_name, :owner) FROM DUAL";
+                ddl = DataHelper.SqlGetString(ddlSql, ddlParameters, db.Connection, false);
+            }
+
+            return new TableInfo
+            {
+                Name = objectName,
+                Type = type,
+                DDL = ddl
+            };
+        }
+
+        /// <summary>
+        /// Queries the database for package information.
+        /// </summary>
+        private static PackageInfo QueryPackageInfo(string packageName)
+        {
+            // Query all_objects to verify package exists and get owner
+            OracleParameter[] parameters = new OracleParameter[]
+            {
+                new OracleParameter("package_name", OracleDbType.VarChar, packageName, ParameterDirection.Input)
+            };
+
+            string sql = @"
+                SELECT owner 
+                FROM all_objects 
+                WHERE object_name = UPPER(:package_name) 
+                  AND owner = USER
+                  AND object_type = 'PACKAGE BODY'";
+
+            DataTable dt = DataHelper.SqlGetTable(sql, parameters, db.Connection, false);
+            
+            if (dt == null || dt.Rows.Count == 0)
+            {
+                throw new InvalidOperationException($"Package '{packageName}' not found in current schema");
+            }
+
+            DataRow row = dt.Rows[0];
+            string owner = row.Field<string>("owner");
+
+            // Get PACKAGE BODY DDL
+            OracleParameter[] ddlParameters = new OracleParameter[]
+            {
+                new OracleParameter("package_name", OracleDbType.VarChar, packageName, ParameterDirection.Input),
+                new OracleParameter("owner", OracleDbType.VarChar, owner, ParameterDirection.Input)
+            };
+
+            string ddlSql = "SELECT DBMS_METADATA.GET_DDL('PACKAGE_BODY', :package_name, :owner) FROM DUAL";
+            string ddl = DataHelper.SqlGetString(ddlSql, ddlParameters, db.Connection, false);
+
+            return new PackageInfo
+            {
+                Name = packageName,
+                DDL = ddl
+            };
+        }
+    }
+}
