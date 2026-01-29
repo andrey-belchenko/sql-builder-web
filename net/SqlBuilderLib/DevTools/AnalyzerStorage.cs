@@ -14,6 +14,7 @@ namespace SqlBuilderLib.DevTools
         
         private static List<AnalyzerDependency> _cachedDependencies = new List<AnalyzerDependency>();
         private static List<AnalyzerReportInfo> _cachedReports = new List<AnalyzerReportInfo>();
+        private static List<AnalyzerDbObject> _cachedDbObjects = new List<AnalyzerDbObject>();
         private static bool _isInitialized = false;
         private static readonly object _lockObject = new object();
 
@@ -31,6 +32,7 @@ namespace SqlBuilderLib.DevTools
 
                 LoadDependencies();
                 LoadReports();
+                LoadDbObjects();
                 _isInitialized = true;
             }
         }
@@ -79,6 +81,30 @@ namespace SqlBuilderLib.DevTools
                                 Path = reader.IsDBNull(2) ? null : reader.GetString(2),
                                 NavId = reader.IsDBNull(3) ? null : reader.GetString(3),
                                 NavInfo = reader.IsDBNull(4) ? null : reader.GetString(4)
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void LoadDbObjects()
+        {
+            _cachedDbObjects.Clear();
+            using (var connection = new NpgsqlConnection(ConnectionString))
+            {
+                connection.Open();
+                using (var command = new NpgsqlCommand("SELECT object_name, object_type, processed FROM report_dev_sqlb.db_objects", connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            _cachedDbObjects.Add(new AnalyzerDbObject
+                            {
+                                ObjectName = reader.IsDBNull(0) ? null : reader.GetString(0),
+                                ObjectType = reader.IsDBNull(1) ? null : reader.GetString(1),
+                                Processed = reader.IsDBNull(2) ? false : reader.GetBoolean(2)
                             });
                         }
                     }
@@ -150,6 +176,38 @@ namespace SqlBuilderLib.DevTools
                             Path = report.Path,
                             NavId = report.NavId,
                             NavInfo = report.NavInfo
+                        });
+                    }
+                }
+            }
+        }
+
+        public static void SaveDbObjects(IEnumerable<AnalyzerDbObject> dbObjects)
+        {
+            lock (_lockObject)
+            {
+                using (var connection = new NpgsqlConnection(ConnectionString))
+                {
+                    connection.Open();
+                    foreach (var dbObject in dbObjects)
+                    {
+                        using (var command = new NpgsqlCommand())
+                        {
+                            command.Connection = connection;
+                            command.CommandText = "INSERT INTO report_dev_sqlb.db_objects (object_name, object_type, processed) VALUES (@object_name, @object_type, @processed)";
+                            
+                            command.Parameters.AddWithValue("@object_name", dbObject.ObjectName ?? (object)DBNull.Value);
+                            command.Parameters.AddWithValue("@object_type", dbObject.ObjectType ?? (object)DBNull.Value);
+                            command.Parameters.AddWithValue("@processed", dbObject.Processed);
+                            command.ExecuteNonQuery();
+                        }
+                        
+                        // Update cache
+                        _cachedDbObjects.Add(new AnalyzerDbObject
+                        {
+                            ObjectName = dbObject.ObjectName,
+                            ObjectType = dbObject.ObjectType,
+                            Processed = dbObject.Processed
                         });
                     }
                 }
@@ -257,12 +315,28 @@ namespace SqlBuilderLib.DevTools
             }
         }
 
-        public static void SaveAllCollectionsToFiles(string dependenciesFileName = "dependencies.json", string reportsFileName = "reports.json")
+        public static void SaveDbObjectsToFile(string fileName = "db_objects.json")
+        {
+            lock (_lockObject)
+            {
+                if (!_isInitialized)
+                    InitializeCache();
+
+                var dataFolder = GetDataFolderPath();
+                var filePath = Path.Combine(dataFolder, fileName);
+                
+                var json = JsonConvert.SerializeObject(_cachedDbObjects, Formatting.Indented);
+                File.WriteAllText(filePath, json);
+            }
+        }
+
+        public static void SaveAllCollectionsToFiles(string dependenciesFileName = "dependencies.json", string reportsFileName = "reports.json", string dbObjectsFileName = "db_objects.json")
         {
             lock (_lockObject)
             {
                 SaveDependenciesToFile(dependenciesFileName);
                 SaveReportsToFile(reportsFileName);
+                SaveDbObjectsToFile(dbObjectsFileName);
             }
         }
     }
