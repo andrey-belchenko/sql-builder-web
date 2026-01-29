@@ -1,0 +1,22 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.4">
+  <diagram name="Page-1" id="iYKNVjF5ZRdl-flNsSUl">
+    <mxGraphModel dx="891" dy="561" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="3qX-JuCeqyuFE4P66xUl-1" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffe6cc;strokeColor=none;fillStyle=auto;rounded=0;" value="PG" vertex="1">
+          <mxGeometry height="70" width="70" x="140" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="3qX-JuCeqyuFE4P66xUl-2" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFF4EB;strokeColor=#d79b00;fillStyle=auto;" value="" vertex="1">
+          <mxGeometry height="70" width="70" x="270" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="3qX-JuCeqyuFE4P66xUl-3" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffe6cc;strokeColor=none;fillStyle=auto;rounded=0;" value="Oracle" vertex="1">
+          <mxGeometry height="70" width="70" x="140" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="3qX-JuCeqyuFE4P66xUl-4" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;fillStyle=auto;rounded=0;strokeColor=none;fillColor=#E4E4E4;shadow=0;" value="" vertex="1">
+          <mxGeometry height="70" width="70" x="350" y="420" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
