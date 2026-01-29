@@ -108,7 +108,7 @@ namespace SqlBuilderLib.DevTools
                 AnalyzerStorage.UpdateDbObjectProcessed(dbObject.ObjectName, true);
                 Console.WriteLine($"  Table - no dependencies to extract");
             }
-            else if (currentType == DbObjectType.View || currentType == DbObjectType.MatView)
+            else if (currentType.HasValue && (currentType.Value == DbObjectType.View || currentType.Value == DbObjectType.MatView))
             {
                 ProcessViewOrMatView(dbObject.ObjectName, currentType.Value);
                 AnalyzerStorage.UpdateDbObjectProcessed(dbObject.ObjectName, true);
