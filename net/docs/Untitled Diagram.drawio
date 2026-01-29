@@ -44,7 +44,7 @@
           <mxGeometry height="30" width="90" x="35" y="330" as="geometry" />
         </mxCell>
         <mxCell id="sXZFpI_yJEiZLbPLbFY5-19" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D4E2F6;strokeColor=none;" value="infoenerro.exe&lt;br&gt;(sql.builder.dll)&lt;br&gt;Net Framework" vertex="1">
-          <mxGeometry height="60" width="120" x="460" y="310" as="geometry" />
+          <mxGeometry height="60" width="120" x="495" y="310" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
