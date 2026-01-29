@@ -13,7 +13,7 @@ namespace SqlBuilderLib.DevTools
     public class TableInfo
     {
         public string Name { get; set; }
-        public string Type { get; set; } // "table", "view", or "mat view"
+        public DbObjectType Type { get; set; }
         public string DDL { get; set; } // null for tables, DDL for views and mat views
     }
 
@@ -183,23 +183,23 @@ namespace SqlBuilderLib.DevTools
             string objectType = row.Field<string>("object_type");
 
             // Determine type
-            string type;
+            DbObjectType type;
             if (isMaterializedView)
             {
-                type = "mat view";
+                type = DbObjectType.MatView;
             }
             else if (objectType == "VIEW")
             {
-                type = "view";
+                type = DbObjectType.View;
             }
             else
             {
-                type = "table";
+                type = DbObjectType.Table;
             }
 
             // Get DDL for views and materialized views
             string ddl = null;
-            if (type == "view" || type == "mat view")
+            if (type == DbObjectType.View || type == DbObjectType.MatView)
             {
                 OracleParameter[] ddlParameters = new OracleParameter[]
                 {

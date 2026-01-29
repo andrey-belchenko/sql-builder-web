@@ -101,7 +101,7 @@ namespace SqlBuilderLib.DevTools
                             _cachedDbObjects.Add(new AnalyzerDbObject
                             {
                                 ObjectName = reader.IsDBNull(0) ? null : reader.GetString(0),
-                                ObjectType = reader.IsDBNull(1) ? null : reader.GetString(1),
+                                ObjectType = reader.IsDBNull(1) ? null : DbObjectTypeExtensions.FromDatabaseString(reader.GetString(1)),
                                 Processed = reader.IsDBNull(2) ? false : reader.GetBoolean(2)
                             });
                         }
@@ -123,7 +123,7 @@ namespace SqlBuilderLib.DevTools
                     foreach (var dep in dependencies)
                     {
                         // Check if DbObject exists for used_object_name, create if not exists
-                        if (!string.IsNullOrEmpty(dep.UsedObjectName) && !string.IsNullOrEmpty(dep.UsedObjectType))
+                        if (!string.IsNullOrEmpty(dep.UsedObjectName) && dep.UsedObjectType.HasValue)
                         {
                             bool dbObjectExists = _cachedDbObjects.Any(db => db.ObjectName == dep.UsedObjectName);
                             
@@ -148,7 +148,7 @@ namespace SqlBuilderLib.DevTools
                                         dbObjectCommand.CommandText = "INSERT INTO report_dev_sqlb.db_objects (object_name, object_type, processed) VALUES (@object_name, @object_type, @processed)";
                                         
                                         dbObjectCommand.Parameters.AddWithValue("@object_name", dep.UsedObjectName ?? (object)DBNull.Value);
-                                        dbObjectCommand.Parameters.AddWithValue("@object_type", dep.UsedObjectType ?? (object)DBNull.Value);
+                                        dbObjectCommand.Parameters.AddWithValue("@object_type", dep.UsedObjectType.Value.ToDatabaseString() ?? (object)DBNull.Value);
                                         dbObjectCommand.Parameters.AddWithValue("@processed", false);
                                         dbObjectCommand.ExecuteNonQuery();
                                     }
@@ -237,7 +237,7 @@ namespace SqlBuilderLib.DevTools
                             command.CommandText = "INSERT INTO report_dev_sqlb.db_objects (object_name, object_type, processed) VALUES (@object_name, @object_type, @processed)";
                             
                             command.Parameters.AddWithValue("@object_name", dbObject.ObjectName ?? (object)DBNull.Value);
-                            command.Parameters.AddWithValue("@object_type", dbObject.ObjectType ?? (object)DBNull.Value);
+                            command.Parameters.AddWithValue("@object_type", dbObject.ObjectType.HasValue ? dbObject.ObjectType.Value.ToDatabaseString() : (object)DBNull.Value);
                             command.Parameters.AddWithValue("@processed", dbObject.Processed);
                             command.ExecuteNonQuery();
                         }

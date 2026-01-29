@@ -264,7 +264,7 @@ namespace SqlBuilderLib.DevTools
                 {
                     ObjectName = ReportInfo.Name,
                     UsedObjectName = tbl,
-                    UsedObjectType = "table or view"
+                    UsedObjectType = DbObjectType.TableOrView
                 });
             }
 
@@ -274,7 +274,7 @@ namespace SqlBuilderLib.DevTools
                 {
                     ObjectName = ReportInfo.Name,
                     UsedObjectName = proc,
-                    UsedObjectType = "procedure"
+                    UsedObjectType = DbObjectType.Procedure
                 });
             }
             return list;

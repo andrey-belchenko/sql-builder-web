@@ -10,6 +10,6 @@ namespace SqlBuilderLib.DevTools
     {
         public string ObjectName;
         public string UsedObjectName;
-        public string UsedObjectType;
+        public DbObjectType? UsedObjectType;
     }
 }
