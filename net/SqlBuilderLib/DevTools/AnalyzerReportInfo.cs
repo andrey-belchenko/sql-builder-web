@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlBuilderLib.DevTools
 {
-    internal class AnalyzerReportInfo
+    public class AnalyzerReportInfo
     {
         public string Name;
         public string Title;

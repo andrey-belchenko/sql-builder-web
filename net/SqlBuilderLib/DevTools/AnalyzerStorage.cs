@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using Newtonsoft.Json;
 using Npgsql;
 
 namespace SqlBuilderLib.DevTools
 {
-    internal static class AnalyzerStorage
+    public static class AnalyzerStorage
     {
         private static string ConnectionString = "Host=asusejs-dev.infoenergo.loc;Port=5432;Database=asuse;Username=asuse;Password=kl0pik";
         
@@ -166,6 +169,100 @@ namespace SqlBuilderLib.DevTools
                     (r.Path == report.Path || (r.Path == null && report.Path == null)) &&
                     (r.NavId == report.NavId || (r.NavId == null && report.NavId == null)) &&
                     (r.NavInfo == report.NavInfo || (r.NavInfo == null && report.NavInfo == null)));
+            }
+        }
+
+        private static string GetDataFolderPath()
+        {
+            // Get the path to the Data folder relative to the project root
+            // Find project root by looking for SqlBuilder.slnx
+            string projectRoot = GetProjectRoot();
+            
+            if (string.IsNullOrEmpty(projectRoot))
+            {
+                // Fallback: use current directory if project root cannot be determined
+                projectRoot = Directory.GetCurrentDirectory();
+            }
+            
+            var dataFolder = Path.Combine(projectRoot, "Data");
+            
+            // Ensure the Data folder exists
+            if (!Directory.Exists(dataFolder))
+            {
+                Directory.CreateDirectory(dataFolder);
+            }
+            
+            return dataFolder;
+        }
+
+        private static string GetProjectRoot()
+        {
+            try
+            {
+                // Start from the assembly location
+                string assemblyLocation = Assembly.GetExecutingAssembly().Location;
+                if (string.IsNullOrEmpty(assemblyLocation))
+                {
+                    // Fallback to AppContext.BaseDirectory for .NET 8
+                    assemblyLocation = AppContext.BaseDirectory;
+                }
+
+                DirectoryInfo dir = new DirectoryInfo(Path.GetDirectoryName(assemblyLocation));
+
+                // Navigate up the directory tree to find SqlBuilder.slnx
+                while (dir != null)
+                {
+                    if (File.Exists(Path.Combine(dir.FullName, "SqlBuilder.slnx")))
+                    {
+                        return dir.FullName;
+                    }
+                    dir = dir.Parent;
+                }
+            }
+            catch
+            {
+                // Return empty string if we can't determine the root
+            }
+
+            return string.Empty;
+        }
+
+        public static void SaveDependenciesToFile(string fileName = "dependencies.json")
+        {
+            lock (_lockObject)
+            {
+                if (!_isInitialized)
+                    InitializeCache();
+
+                var dataFolder = GetDataFolderPath();
+                var filePath = Path.Combine(dataFolder, fileName);
+                
+                var json = JsonConvert.SerializeObject(_cachedDependencies, Formatting.Indented);
+                File.WriteAllText(filePath, json);
+            }
+        }
+
+        public static void SaveReportsToFile(string fileName = "reports.json")
+        {
+            lock (_lockObject)
+            {
+                if (!_isInitialized)
+                    InitializeCache();
+
+                var dataFolder = GetDataFolderPath();
+                var filePath = Path.Combine(dataFolder, fileName);
+                
+                var json = JsonConvert.SerializeObject(_cachedReports, Formatting.Indented);
+                File.WriteAllText(filePath, json);
+            }
+        }
+
+        public static void SaveAllCollectionsToFiles(string dependenciesFileName = "dependencies.json", string reportsFileName = "reports.json")
+        {
+            lock (_lockObject)
+            {
+                SaveDependenciesToFile(dependenciesFileName);
+                SaveReportsToFile(reportsFileName);
             }
         }
     }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlBuilderLib.DevTools
 {
-    internal class AnalyzerDependency
+    public class AnalyzerDependency
     {
         public string ObjectName;
         public string ObjectType;
