@@ -1840,11 +1840,6 @@
     "Processed": false
   },
   {
-    "ObjectName": "vv_day",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "hv_point",
     "ObjectType": "table or view",
     "Processed": false
@@ -2303,6 +2298,11 @@
     "ObjectName": "sqlb_rep_61759_1.fill_table",
     "ObjectType": "procedure",
     "Processed": true
+  },
+  {
+    "ObjectName": "vv_day",
+    "ObjectType": "mat view",
+    "Processed": false
   },
   {
     "ObjectName": "rr_rep_po",
