@@ -37,6 +37,14 @@ namespace SqlBuilderLib.DevTools
             }
         }
 
+        /// <summary>
+        /// Normalizes a string to lowercase, handling null values.
+        /// </summary>
+        private static string NormalizeToLower(string value)
+        {
+            return string.IsNullOrEmpty(value) ? value : value.ToLowerInvariant();
+        }
+
         private static void LoadDependencies()
         {
             _cachedDependencies.Clear();
@@ -51,8 +59,8 @@ namespace SqlBuilderLib.DevTools
                         {
                             _cachedDependencies.Add(new AnalyzerDependency
                             {
-                                ObjectName = reader.IsDBNull(0) ? null : reader.GetString(0),
-                                UsedObjectName = reader.IsDBNull(1) ? null : reader.GetString(1)
+                                ObjectName = reader.IsDBNull(0) ? null : NormalizeToLower(reader.GetString(0)),
+                                UsedObjectName = reader.IsDBNull(1) ? null : NormalizeToLower(reader.GetString(1))
                             });
                         }
                     }
@@ -100,7 +108,7 @@ namespace SqlBuilderLib.DevTools
                         {
                             _cachedDbObjects.Add(new AnalyzerDbObject
                             {
-                                ObjectName = reader.IsDBNull(0) ? null : reader.GetString(0),
+                                ObjectName = reader.IsDBNull(0) ? null : NormalizeToLower(reader.GetString(0)),
                                 ObjectType = reader.IsDBNull(1) ? null : DbObjectTypeExtensions.FromDatabaseString(reader.GetString(1)),
                                 Processed = reader.IsDBNull(2) ? false : reader.GetBoolean(2)
                             });
@@ -187,8 +195,12 @@ namespace SqlBuilderLib.DevTools
                     connection.Open();
                     foreach (var dep in dependencies)
                     {
+                        // Normalize object names to lowercase
+                        string normalizedObjectName = NormalizeToLower(dep.ObjectName);
+                        string normalizedUsedObjectName = NormalizeToLower(dep.UsedObjectName);
+                        
                         // Check if dependency already exists (case-insensitive)
-                        bool dependencyExists = DependencyExists(dep.ObjectName, dep.UsedObjectName, connection);
+                        bool dependencyExists = DependencyExists(normalizedObjectName, normalizedUsedObjectName, connection);
                         
                         if (dependencyExists)
                         {
@@ -197,9 +209,9 @@ namespace SqlBuilderLib.DevTools
                         }
                         
                         // Check if DbObject exists for used_object_name, create if not exists
-                        if (!string.IsNullOrEmpty(dep.UsedObjectName) && dep.UsedObjectType.HasValue)
+                        if (!string.IsNullOrEmpty(normalizedUsedObjectName) && dep.UsedObjectType.HasValue)
                         {
-                            bool dbObjectExists = DbObjectExists(dep.UsedObjectName, connection);
+                            bool dbObjectExists = DbObjectExists(normalizedUsedObjectName, connection);
                             
                             if (!dbObjectExists)
                             {
@@ -209,7 +221,7 @@ namespace SqlBuilderLib.DevTools
                                     dbObjectCommand.Connection = connection;
                                     dbObjectCommand.CommandText = "INSERT INTO report_dev_sqlb.db_objects (object_name, object_type, processed) VALUES (@object_name, @object_type, @processed)";
                                     
-                                    dbObjectCommand.Parameters.AddWithValue("@object_name", dep.UsedObjectName ?? (object)DBNull.Value);
+                                    dbObjectCommand.Parameters.AddWithValue("@object_name", normalizedUsedObjectName ?? (object)DBNull.Value);
                                     dbObjectCommand.Parameters.AddWithValue("@object_type", dep.UsedObjectType.Value.ToDatabaseString() ?? (object)DBNull.Value);
                                     dbObjectCommand.Parameters.AddWithValue("@processed", false);
                                     dbObjectCommand.ExecuteNonQuery();
@@ -218,16 +230,16 @@ namespace SqlBuilderLib.DevTools
                                 // Update cache
                                 _cachedDbObjects.Add(new AnalyzerDbObject
                                 {
-                                    ObjectName = dep.UsedObjectName,
+                                    ObjectName = normalizedUsedObjectName,
                                     ObjectType = dep.UsedObjectType,
                                     Processed = false
                                 });
                                 
-                                result.NewDbObjects.Add(dep.UsedObjectName);
+                                result.NewDbObjects.Add(normalizedUsedObjectName);
                             }
                             else
                             {
-                                result.ExistingDbObjects.Add(dep.UsedObjectName);
+                                result.ExistingDbObjects.Add(normalizedUsedObjectName);
                             }
                         }
                         
@@ -237,16 +249,16 @@ namespace SqlBuilderLib.DevTools
                             command.Connection = connection;
                             command.CommandText = "INSERT INTO report_dev_sqlb.dependencies (object_name, used_object_name) VALUES (@object_name, @used_object_name)";
                             
-                            command.Parameters.AddWithValue("@object_name", dep.ObjectName ?? (object)DBNull.Value);
-                            command.Parameters.AddWithValue("@used_object_name", dep.UsedObjectName ?? (object)DBNull.Value);
+                            command.Parameters.AddWithValue("@object_name", normalizedObjectName ?? (object)DBNull.Value);
+                            command.Parameters.AddWithValue("@used_object_name", normalizedUsedObjectName ?? (object)DBNull.Value);
                             command.ExecuteNonQuery();
                         }
                         
                         // Update cache
                         _cachedDependencies.Add(new AnalyzerDependency
                         {
-                            ObjectName = dep.ObjectName,
-                            UsedObjectName = dep.UsedObjectName
+                            ObjectName = normalizedObjectName,
+                            UsedObjectName = normalizedUsedObjectName
                         });
                         
                         result.NewDependencies.Add(dep);
@@ -302,12 +314,15 @@ namespace SqlBuilderLib.DevTools
                     connection.Open();
                     foreach (var dbObject in dbObjects)
                     {
+                        // Normalize object name to lowercase
+                        string normalizedObjectName = NormalizeToLower(dbObject.ObjectName);
+                        
                         using (var command = new NpgsqlCommand())
                         {
                             command.Connection = connection;
                             command.CommandText = "INSERT INTO report_dev_sqlb.db_objects (object_name, object_type, processed) VALUES (@object_name, @object_type, @processed)";
                             
-                            command.Parameters.AddWithValue("@object_name", dbObject.ObjectName ?? (object)DBNull.Value);
+                            command.Parameters.AddWithValue("@object_name", normalizedObjectName ?? (object)DBNull.Value);
                             command.Parameters.AddWithValue("@object_type", dbObject.ObjectType.HasValue ? dbObject.ObjectType.Value.ToDatabaseString() : (object)DBNull.Value);
                             command.Parameters.AddWithValue("@processed", dbObject.Processed);
                             command.ExecuteNonQuery();
@@ -316,7 +331,7 @@ namespace SqlBuilderLib.DevTools
                         // Update cache
                         _cachedDbObjects.Add(new AnalyzerDbObject
                         {
-                            ObjectName = dbObject.ObjectName,
+                            ObjectName = normalizedObjectName,
                             ObjectType = dbObject.ObjectType,
                             Processed = dbObject.Processed
                         });
@@ -485,7 +500,7 @@ namespace SqlBuilderLib.DevTools
                                 {
                                     result.Add(new AnalyzerDbObject
                                     {
-                                        ObjectName = reader.IsDBNull(0) ? null : reader.GetString(0),
+                                        ObjectName = reader.IsDBNull(0) ? null : NormalizeToLower(reader.GetString(0)),
                                         ObjectType = reader.IsDBNull(1) ? null : DbObjectTypeExtensions.FromDatabaseString(reader.GetString(1)),
                                         Processed = reader.IsDBNull(2) ? false : reader.GetBoolean(2)
                                     });
