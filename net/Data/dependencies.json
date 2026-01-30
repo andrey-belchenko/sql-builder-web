@@ -2415,11 +2415,6 @@
     "UsedObjectType": null
   },
   {
-    "ObjectName": "sg_rep_dz_kz.dz_on_date_per_sf",
-    "UsedObjectName": "asuse\".sg_rep_dz_kz.collapse_minus",
-    "UsedObjectType": null
-  },
-  {
     "ObjectName": "vg_mview.refresh",
     "UsedObjectName": "all_indexes",
     "UsedObjectType": null
@@ -2797,6 +2792,371 @@
   {
     "ObjectName": "kg_rep_dog.dog_obj_dat",
     "UsedObjectName": "vr_number_array",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_rep_dz_kz.dz_on_date_per_sf",
+    "UsedObjectName": "sg_rep_dz_kz.collapse_minus",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_org_pes",
+    "UsedObjectName": "kr_org",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_org_pes",
+    "UsedObjectName": "kr_payer",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_org_pes",
+    "UsedObjectName": "k_house",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_rec_info",
+    "UsedObjectName": "sr_recalc_sf",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_rec_info",
+    "UsedObjectName": "sr_facvip",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_rec_info",
+    "UsedObjectName": "sr_facras",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av",
+    "UsedObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_opl_norm_av",
+    "UsedObjectName": "vv_sr_opl_norm_av_v",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_dop",
+    "UsedObjectName": "vv_sr_facvip_dop_v",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_per_region_sost",
+    "UsedObjectName": "dual",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_per_region_sost",
+    "UsedObjectName": "hs_gtp",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_per_region_sost",
+    "UsedObjectName": "nv_account",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_per_region_sost",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_per_region_sost",
+    "UsedObjectName": "ks_vdog",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_per_region_sost",
+    "UsedObjectName": "kr_numobj",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_per_region_sost",
+    "UsedObjectName": "kr_object",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_per_region_sost",
+    "UsedObjectName": "sk_nachisl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_per_region_sost",
+    "UsedObjectName": "vr_number_array",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_per_region_sost",
+    "UsedObjectName": "nr_account",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_per_region_sost",
+    "UsedObjectName": "nv_account_sost_nal",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_per_region_sost",
+    "UsedObjectName": "sr_facras_text",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_per_region_sost",
+    "UsedObjectName": "sr_facras",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_per_region_sost",
+    "UsedObjectName": "sr_facvip",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_per_region_sost",
+    "UsedObjectName": "sr_facvip_text",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_per_region_sost",
+    "UsedObjectName": "hk_voltage",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_per_region_sost",
+    "UsedObjectName": "kr_payer",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_72589",
+    "UsedObjectName": "nr_ats_data",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_72589",
+    "UsedObjectName": "nk_ats_data",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_72589",
+    "UsedObjectName": "hs_gtp",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_72589",
+    "UsedObjectName": "kk_interval",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_72589",
+    "UsedObjectName": "adr_m",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_72589",
+    "UsedObjectName": "rr_rep_po",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_72589",
+    "UsedObjectName": "ng_rep_other.po_on_retail",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_day",
+    "UsedObjectName": "dual",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "orgstructure",
+    "UsedObjectName": "kr_org",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "orgstructure",
+    "UsedObjectName": "o",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "orgstructure",
+    "UsedObjectName": "kr_employee",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectName": "sr_facras",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectName": "sr_facvip",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectName": "vv_sr_facvip_dop",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectName": "vv_sr_facvip_rec_info_m",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectName": "sk_vid_real",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectName": "ur_hist_mat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectName": "ur_mat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectName": "ur_folders",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectName": "ur_dogplat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectName": "vv_all_deb_sf",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectName": "us_result",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectName": "ur_inkasso",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectName": "ur_dp_inkasso",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectName": "ur_kazn",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectName": "ur_dp_kazn",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectName": "ur_dp_isp",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_norm_av_v",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_opl_norm_av_v",
+    "UsedObjectName": "vv_sr_facvip_norm_av",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_opl_norm_av_v",
+    "UsedObjectName": "sr_facvip",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_opl_norm_av_v",
+    "UsedObjectName": "sk_vid_real",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_opl_norm_av_v",
+    "UsedObjectName": "sr_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_opl_norm_av_v",
+    "UsedObjectName": "vv_sr_facvip_dop",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_opl_norm_av_v",
+    "UsedObjectName": "vv_sr_facvip_rec_info_m",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_dop_v",
+    "UsedObjectName": "sr_facras",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_dop_v",
+    "UsedObjectName": "sr_facvip",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_dop_v",
+    "UsedObjectName": "sr_facras_text",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_dop_v",
+    "UsedObjectName": "sr_avans",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_on_retail",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_on_retail",
+    "UsedObjectName": "ks_vdog",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_on_retail",
+    "UsedObjectName": "kr_payer",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_on_retail",
+    "UsedObjectName": "sr_facvip",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_on_retail",
+    "UsedObjectName": "sr_facras",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_on_retail",
+    "UsedObjectName": "kr_numobj",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_on_retail",
+    "UsedObjectName": "sk_nachisl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ng_rep_other.po_on_retail",
+    "UsedObjectName": "sr_facras_nal",
     "UsedObjectType": null
   },
   {
