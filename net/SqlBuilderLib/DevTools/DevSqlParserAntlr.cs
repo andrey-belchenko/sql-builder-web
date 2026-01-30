@@ -16,6 +16,89 @@ namespace SqlBuilderLib.DevTools
     internal static class DevSqlParserAntlr
     {
         /// <summary>
+        /// Extracts the SELECT statement from CREATE MATERIALIZED VIEW DDL.
+        /// Returns null if the input is not a materialized view DDL.
+        /// </summary>
+        /// <param name="plsqlText">PL/SQL code string</param>
+        /// <returns>SELECT statement text, or null if not a materialized view</returns>
+        private static string ExtractSelectFromMatView(string plsqlText)
+        {
+            if (string.IsNullOrWhiteSpace(plsqlText))
+                return null;
+
+            string trimmed = plsqlText.Trim();
+            
+            // Check if it starts with CREATE MATERIALIZED VIEW (case-insensitive)
+            if (!trimmed.StartsWith("CREATE", StringComparison.OrdinalIgnoreCase))
+                return null;
+
+            // Find "MATERIALIZED VIEW" (case-insensitive)
+            int createPos = 0;
+            int materializedPos = trimmed.IndexOf("MATERIALIZED", createPos, StringComparison.OrdinalIgnoreCase);
+            if (materializedPos < 0)
+                return null;
+
+            int viewPos = trimmed.IndexOf("VIEW", materializedPos + "MATERIALIZED".Length, StringComparison.OrdinalIgnoreCase);
+            if (viewPos < 0)
+                return null;
+
+            // Find "AS" keyword after the VIEW keyword (case-insensitive)
+            // We need to find the AS that precedes the SELECT statement
+            // This is tricky because AS can appear in other contexts (e.g., column aliases)
+            // We'll look for "AS" followed by "SELECT" or "WITH"
+            int searchStart = viewPos + "VIEW".Length;
+            int asPos = -1;
+            
+            while (true)
+            {
+                asPos = trimmed.IndexOf("AS", searchStart, StringComparison.OrdinalIgnoreCase);
+                if (asPos < 0)
+                    return null;
+
+                // Check what comes after "AS" - skip whitespace and check for SELECT or WITH
+                int afterAs = asPos + "AS".Length;
+                int nextNonWhitespace = afterAs;
+                while (nextNonWhitespace < trimmed.Length && char.IsWhiteSpace(trimmed[nextNonWhitespace]))
+                {
+                    nextNonWhitespace++;
+                }
+
+                if (nextNonWhitespace >= trimmed.Length)
+                {
+                    searchStart = afterAs;
+                    continue;
+                }
+
+                // Check if next token is SELECT or WITH
+                string remaining = trimmed.Substring(nextNonWhitespace);
+                if (remaining.StartsWith("SELECT", StringComparison.OrdinalIgnoreCase) ||
+                    remaining.StartsWith("WITH", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Found the AS that precedes the SELECT statement
+                    break;
+                }
+
+                // This AS is not the one we want, continue searching
+                searchStart = afterAs;
+            }
+
+            if (asPos < 0)
+                return null;
+
+            // Extract everything after "AS" (the SELECT statement)
+            int selectStart = asPos + "AS".Length;
+            while (selectStart < trimmed.Length && char.IsWhiteSpace(trimmed[selectStart]))
+            {
+                selectStart++;
+            }
+
+            if (selectStart >= trimmed.Length)
+                return null;
+
+            return trimmed.Substring(selectStart).Trim();
+        }
+
+        /// <summary>
         /// Extracts all database table names from PL/SQL code using Antlr4 parser.
         /// </summary>
         /// <param name="plsqlText">PL/SQL code string (can include anonymous blocks, procedures, packages, etc.)</param>
@@ -28,6 +111,10 @@ namespace SqlBuilderLib.DevTools
 
             var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
+            // Check if this is a materialized view DDL and extract SELECT statement
+            // If it's a mat view, use the extracted SELECT; otherwise use original text
+            string textToParse = ExtractSelectFromMatView(plsqlText) ?? plsqlText;
+
             // Normalize procedure name for comparison (case-insensitive)
             string normalizedProcedureName = null;
             if (!string.IsNullOrWhiteSpace(procedureName))
@@ -36,7 +123,7 @@ namespace SqlBuilderLib.DevTools
             }
 
             // Create case-insensitive character stream (PL/SQL grammar is case-sensitive but SQL is case-insensitive)
-            var input = new AntlrInputStream(plsqlText);
+            var input = new AntlrInputStream(textToParse);
             var caseChangingStream = new CaseChangingCharStream(input, true); // Convert to uppercase
 
             // Create lexer and parser
@@ -45,12 +132,12 @@ namespace SqlBuilderLib.DevTools
             var parser = new PlSqlParser(tokens);
 
             // Check if input looks like a standalone SELECT statement (starts with SELECT, no CREATE/BEGIN/DECLARE)
-            string trimmedText = plsqlText.Trim();
+            string trimmedText = textToParse.Trim();
             bool looksLikeStandaloneSelect = trimmedText.StartsWith("SELECT", StringComparison.OrdinalIgnoreCase) ||
                                              trimmedText.StartsWith("WITH", StringComparison.OrdinalIgnoreCase);
             
             // Remove default error listeners and add a throwing error listener
-            var errorListener = new ThrowingErrorListener(plsqlText);
+            var errorListener = new ThrowingErrorListener(textToParse);
             lexer.RemoveErrorListeners();
             lexer.AddErrorListener(errorListener);
             parser.RemoveErrorListeners();
@@ -137,8 +224,12 @@ namespace SqlBuilderLib.DevTools
 
             var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
+            // Check if this is a materialized view DDL and extract SELECT statement
+            // If it's a mat view, use the extracted SELECT; otherwise use original text
+            string textToParse = ExtractSelectFromMatView(plsqlText) ?? plsqlText;
+
             // Create case-insensitive character stream (PL/SQL grammar is case-sensitive but SQL is case-insensitive)
-            var input = new AntlrInputStream(plsqlText);
+            var input = new AntlrInputStream(textToParse);
             var caseChangingStream = new CaseChangingCharStream(input, true); // Convert to uppercase
 
             // Create lexer and parser
@@ -147,7 +238,7 @@ namespace SqlBuilderLib.DevTools
             var parser = new PlSqlParser(tokens);
 
             // Remove default error listeners and add a throwing error listener
-            var errorListener = new ThrowingErrorListener(plsqlText);
+            var errorListener = new ThrowingErrorListener(textToParse);
             lexer.RemoveErrorListeners();
             lexer.AddErrorListener(errorListener);
             parser.RemoveErrorListeners();
