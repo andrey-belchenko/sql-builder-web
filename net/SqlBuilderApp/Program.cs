@@ -28,7 +28,7 @@ where
 		from
 			report_dev_sqlb.report_dependencies
 		where
-			nav_id = 'nav10'
+			nav_id = 'nav101'
 	)
 --and object_name='vv_day'
 

@@ -945,11 +945,6 @@
     "Processed": false
   },
   {
-    "ObjectName": "sv_fac_sumo",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "hk_vidpribor",
     "ObjectType": "table",
     "Processed": true
@@ -1110,6 +1105,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "sv_fac_sumo",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
     "ObjectName": "ss_vidopl",
     "ObjectType": "table",
     "Processed": true
@@ -1242,7 +1242,7 @@
   {
     "ObjectName": "sqlb_41925.fill_temp",
     "ObjectType": "procedure",
-    "Processed": false
+    "Processed": true
   },
   {
     "ObjectName": "kr_vist_day",

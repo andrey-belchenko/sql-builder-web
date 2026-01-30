@@ -4105,6 +4105,76 @@
     "UsedObjectType": null
   },
   {
+    "ObjectName": "sqlb_41925.fill_temp",
+    "UsedObjectName": "sr_facras",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_41925.fill_temp",
+    "UsedObjectName": "sr_facvip",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_41925.fill_temp",
+    "UsedObjectName": "vv_all_deb_sf",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_41925.fill_temp",
+    "UsedObjectName": "ur_dogplat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_41925.fill_temp",
+    "UsedObjectName": "ur_mat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_41925.fill_temp",
+    "UsedObjectName": "ur_folders",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_41925.fill_temp",
+    "UsedObjectName": "sr_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_41925.fill_temp",
+    "UsedObjectName": "ur_hist_mat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_41925.fill_temp",
+    "UsedObjectName": "us_result",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_41925.fill_temp",
+    "UsedObjectName": "ur_isp",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_41925.fill_temp",
+    "UsedObjectName": "sv_fac_sumo",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_41925.fill_temp",
+    "UsedObjectName": "sk_vid_real",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sv_fac_sumo",
+    "UsedObjectName": "sv_fac_sum",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sv_fac_sumo",
+    "UsedObjectName": "sr_opl",
+    "UsedObjectType": null
+  },
+  {
     "ObjectName": "43125.42865",
     "UsedObjectName": "rr_temp",
     "UsedObjectType": null
