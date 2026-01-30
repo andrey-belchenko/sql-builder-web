@@ -115,6 +115,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "vv_il_sf_ur_state",
+    "ObjectType": "mat view",
+    "Processed": true
+  },
+  {
     "ObjectName": "ov_e_hpoint_tar_dir",
     "ObjectType": "view",
     "Processed": true
@@ -270,11 +275,6 @@
     "Processed": true
   },
   {
-    "ObjectName": "vv_il_sf_ur_state",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "kr_payer_prim",
     "ObjectType": "table",
     "Processed": true
@@ -395,24 +395,9 @@
     "Processed": true
   },
   {
-    "ObjectName": "ks_konvert_doc",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "kk_tipdog",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "ak_pr_kind",
     "ObjectType": "table",
     "Processed": true
-  },
-  {
-    "ObjectName": "br_oto_order",
-    "ObjectType": "table or view",
-    "Processed": false
   },
   {
     "ObjectName": "sqlb_rep_65116_tbl",
@@ -425,11 +410,6 @@
     "Processed": true
   },
   {
-    "ObjectName": "us_doc",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "sqlb_rep_61880_12_tbl",
     "ObjectType": "temp table",
     "Processed": true
@@ -438,11 +418,6 @@
     "ObjectName": "hv_org_pes",
     "ObjectType": "view",
     "Processed": true
-  },
-  {
-    "ObjectName": "dr_dogval_limit_tree",
-    "ObjectType": "table or view",
-    "Processed": false
   },
   {
     "ObjectName": "nv_account_sost",
@@ -555,12 +530,22 @@
     "Processed": true
   },
   {
+    "ObjectName": "br_oto_order",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
     "ObjectName": "ks_zbd",
     "ObjectType": "table",
     "Processed": true
   },
   {
     "ObjectName": "hr_bu_org",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "dr_dogval_limit_tree",
     "ObjectType": "table",
     "Processed": true
   },
@@ -575,24 +560,19 @@
     "Processed": true
   },
   {
+    "ObjectName": "kk_tipdog",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
     "ObjectName": "uv_isp_other_prim",
     "ObjectType": "view",
     "Processed": true
   },
   {
-    "ObjectName": "sv_opl_bank_dep",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "ug_isp.fill_isp_deb_reduction",
     "ObjectType": "procedure",
     "Processed": true
-  },
-  {
-    "ObjectName": "sqlb_46239_bp_gr_persistant",
-    "ObjectType": "table or view",
-    "Processed": false
   },
   {
     "ObjectName": "vr_37989_calc_tbl",
@@ -610,6 +590,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "ks_konvert_doc",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
     "ObjectName": "us_sud",
     "ObjectType": "table",
     "Processed": true
@@ -620,8 +605,23 @@
     "Processed": true
   },
   {
+    "ObjectName": "sqlb_46239_bp_gr_persistant",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
     "ObjectName": "sqlb_rep_64526_tbl",
     "ObjectType": "temp table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sv_opl_bank_dep",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "us_doc",
+    "ObjectType": "table",
     "Processed": true
   },
   {
@@ -765,6 +765,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "kr_dogovor_el_inter_type",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
     "ObjectName": "vv_sr_facvip_norm_av",
     "ObjectType": "mat view",
     "Processed": true
@@ -782,6 +787,11 @@
   {
     "ObjectName": "hv_eobject_x",
     "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sr_avans_otch",
+    "ObjectType": "table",
     "Processed": true
   },
   {
@@ -880,12 +890,22 @@
     "Processed": true
   },
   {
+    "ObjectName": "sr_inkasso",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
     "ObjectName": "ur_pretenz_peni_period",
     "ObjectType": "table",
     "Processed": true
   },
   {
     "ObjectName": "us_category",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "vr_pret_dolg_sf",
     "ObjectType": "table",
     "Processed": true
   },
@@ -900,6 +920,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "vv_payer_sulst",
+    "ObjectType": "mat view",
+    "Processed": true
+  },
+  {
     "ObjectName": "sqlb_rep_65211_tbl",
     "ObjectType": "temp table",
     "Processed": true
@@ -908,41 +933,6 @@
     "ObjectName": "tsr_opl",
     "ObjectType": "table",
     "Processed": true
-  },
-  {
-    "ObjectName": "vv_payer_sulst",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "ds_otop_norm",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "vr_pret_dolg_sf",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "ka_operationdog",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sr_inkasso",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "kr_dogovor_el_inter_type",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sr_avans_otch",
-    "ObjectType": "table or view",
-    "Processed": false
   },
   {
     "ObjectName": "hk_vidpribor",
@@ -1111,6 +1101,16 @@
   },
   {
     "ObjectName": "ss_vidopl",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ds_otop_norm",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ka_operationdog",
     "ObjectType": "table",
     "Processed": true
   },
@@ -1335,6 +1335,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "ks_konvert",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
     "ObjectName": "hr_04",
     "ObjectType": "table",
     "Processed": true
@@ -1345,8 +1350,23 @@
     "Processed": true
   },
   {
+    "ObjectName": "ur_isp_list",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
     "ObjectName": "hr_pke",
     "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av_v",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "vv_sr_fv_ur_state_v",
+    "ObjectType": "view",
     "Processed": true
   },
   {
@@ -1575,53 +1595,8 @@
     "Processed": true
   },
   {
-    "ObjectName": "ur_pret",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "vv_sr_aotch_norm_av_no",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "us_state",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "br_oto_obj",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "us_graf_status",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_46239_groups_persistant",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "kk_sulst",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "raise_application_error",
     "ObjectType": "procedure",
-    "Processed": false
-  },
-  {
-    "ObjectName": "kk_report_sulst",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "kr_org_edo",
-    "ObjectType": "table or view",
     "Processed": false
   },
   {
@@ -1657,6 +1632,11 @@
   {
     "ObjectName": "kg_rep_dog.dog_moratoria_debt",
     "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "br_oto_obj",
+    "ObjectType": "table",
     "Processed": true
   },
   {
@@ -1740,6 +1720,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "kk_report_sulst",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
     "ObjectName": "hr_reglament_pp",
     "ObjectType": "table",
     "Processed": true
@@ -1775,6 +1760,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "kk_sulst",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
     "ObjectName": "kr_limit_doc",
     "ObjectType": "table",
     "Processed": true
@@ -1786,6 +1776,11 @@
   },
   {
     "ObjectName": "ur_cred_meeting",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "kr_org_edo",
     "ObjectType": "table",
     "Processed": true
   },
@@ -1805,8 +1800,33 @@
     "Processed": true
   },
   {
+    "ObjectName": "sqlb_46239_groups_persistant",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
     "ObjectName": "rr_fin_ur",
     "ObjectType": "temp table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ur_pret",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "us_graf_status",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "us_state",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av_no",
+    "ObjectType": "mat view",
     "Processed": true
   },
   {
@@ -1828,16 +1848,6 @@
     "ObjectName": "hv_point",
     "ObjectType": "view",
     "Processed": true
-  },
-  {
-    "ObjectName": "sqlb_55300_soveshanie_info",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "vv_sr_facvip_ret_inf",
-    "ObjectType": "table or view",
-    "Processed": false
   },
   {
     "ObjectName": "sg_rep_dz_kz.dz_kz_per_period_dog",
@@ -1865,11 +1875,6 @@
     "Processed": true
   },
   {
-    "ObjectName": "vv_sr_aotch_norm_av",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "kg_rep_dog.dog_short",
     "ObjectType": "procedure",
     "Processed": true
@@ -1878,16 +1883,6 @@
     "ObjectName": "ng_rep_other.payer_employee",
     "ObjectType": "procedure",
     "Processed": true
-  },
-  {
-    "ObjectName": "sr_pach",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "rr_usermenu",
-    "ObjectType": "table or view",
-    "Processed": false
   },
   {
     "ObjectName": "sk_nachisl",
@@ -1900,16 +1895,6 @@
     "Processed": true
   },
   {
-    "ObjectName": "ds_naznhouse",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "ds_period",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "sk_vid_sf",
     "ObjectType": "table",
     "Processed": true
@@ -1918,11 +1903,6 @@
     "ObjectName": "vv_day",
     "ObjectType": "mat view",
     "Processed": true
-  },
-  {
-    "ObjectName": "dr_ddatval",
-    "ObjectType": "table or view",
-    "Processed": false
   },
   {
     "ObjectName": "kr_dogovor_dop",
@@ -1940,29 +1920,9 @@
     "Processed": true
   },
   {
-    "ObjectName": "sqlb_55300_soveshanie",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "vv_sr_fv_ur_state",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "ks_vdog",
     "ObjectType": "table",
     "Processed": true
-  },
-  {
-    "ObjectName": "kr_pret",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "vr_pret_dolg_dog",
-    "ObjectType": "table or view",
-    "Processed": false
   },
   {
     "ObjectName": "ng_rep_other.po_per_region",
@@ -1983,11 +1943,6 @@
     "ObjectName": "hr_point_tar",
     "ObjectType": "table",
     "Processed": true
-  },
-  {
-    "ObjectName": "dr_dogval_limit",
-    "ObjectType": "table or view",
-    "Processed": false
   },
   {
     "ObjectName": "ts_object_type",
@@ -2020,11 +1975,6 @@
     "Processed": true
   },
   {
-    "ObjectName": "sr_nakopit_teplo",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "sr_opl_bank",
     "ObjectType": "table",
     "Processed": true
@@ -2035,42 +1985,7 @@
     "Processed": true
   },
   {
-    "ObjectName": "kv_calc_year_plus1",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "dr_point_rasx",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "ks_konvert_pak",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sk_vid_avans",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "kk_edo",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "br_oto_obj_arc",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "dual",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "br_oto_tu",
     "ObjectType": "table or view",
     "Processed": false
   },
@@ -2101,6 +2016,11 @@
   },
   {
     "ObjectName": "ur_dp_graf",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sr_nakopit_teplo",
     "ObjectType": "table",
     "Processed": true
   },
@@ -2200,6 +2120,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "dr_point_rasx",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
     "ObjectName": "kr_limit_sp",
     "ObjectType": "table",
     "Processed": true
@@ -2270,6 +2195,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "ds_naznhouse",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
     "ObjectName": "ss_dest_opl",
     "ObjectType": "table",
     "Processed": true
@@ -2290,6 +2220,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "sr_pach",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
     "ObjectName": "ur_gp_opl_info",
     "ObjectType": "table",
     "Processed": true
@@ -2305,6 +2240,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "ds_period",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
     "ObjectName": "ur_creditors_claim_total",
     "ObjectType": "table",
     "Processed": true
@@ -2315,9 +2255,84 @@
     "Processed": true
   },
   {
-    "ObjectName": "sr_komiss",
-    "ObjectType": "table or view",
-    "Processed": false
+    "ObjectName": "kk_edo",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "br_oto_obj_arc",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "vr_pret_dolg_dog",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "br_oto_tu",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "kr_pret",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "dr_ddatval",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "dr_dogval_limit",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ks_konvert_pak",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av",
+    "ObjectType": "mat view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "kv_calc_year_plus1",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "rr_usermenu",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "vv_sr_facvip_ret_inf",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sk_vid_avans",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_55300_soveshanie",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "vv_sr_fv_ur_state",
+    "ObjectType": "mat view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_55300_soveshanie_info",
+    "ObjectType": "table",
+    "Processed": true
   },
   {
     "ObjectName": "sqlb_signatory_view",
@@ -2416,6 +2431,11 @@
   },
   {
     "ObjectName": "ur_folders",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sr_komiss",
     "ObjectType": "table",
     "Processed": true
   },

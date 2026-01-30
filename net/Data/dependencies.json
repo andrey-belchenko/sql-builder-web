@@ -4175,6 +4175,236 @@
     "UsedObjectType": null
   },
   {
+    "ObjectName": "kv_calc_year_plus1",
+    "UsedObjectName": "kr_calc",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sv_opl_bank_dep",
+    "UsedObjectName": "kr_org",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sv_opl_bank_dep",
+    "UsedObjectName": "sr_opl_bank",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sv_opl_bank_dep",
+    "UsedObjectName": "sr_pach",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sv_opl_bank_dep",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sv_opl_bank_dep",
+    "UsedObjectName": "sr_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sv_opl_bank_dep",
+    "UsedObjectName": "tsr_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_il_sf_ur_state",
+    "UsedObjectName": "ur_isp_list",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_il_sf_ur_state",
+    "UsedObjectName": "ur_dogplat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_il_sf_ur_state",
+    "UsedObjectName": "vv_all_deb_sf",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_il_sf_ur_state",
+    "UsedObjectName": "vv_sr_fv_ur_state",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_payer_sulst",
+    "UsedObjectName": "kr_payer",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av",
+    "UsedObjectName": "vv_sr_aotch_norm_av_v",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av_no",
+    "UsedObjectName": "kr_calc",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av_no",
+    "UsedObjectName": "sr_avans_otch",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av_no",
+    "UsedObjectName": "sr_facvip",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av_no",
+    "UsedObjectName": "vv_sr_facvip_dop",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av_no",
+    "UsedObjectName": "vv_sr_facvip_rec_info_m",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av_no",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av_no",
+    "UsedObjectName": "sk_vid_real",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av_no",
+    "UsedObjectName": "kr_org",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_ret_inf",
+    "UsedObjectName": "sr_facvip",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_ret_inf",
+    "UsedObjectName": "sr_facvip_text",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_ret_inf",
+    "UsedObjectName": "ks_konvert_pak",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_ret_inf",
+    "UsedObjectName": "ks_konvert",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_facvip_ret_inf",
+    "UsedObjectName": "ks_konvert_doc",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_fv_ur_state",
+    "UsedObjectName": "vv_sr_fv_ur_state_v",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av_v",
+    "UsedObjectName": "sr_avans_otch",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av_v",
+    "UsedObjectName": "sr_facras",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av_v",
+    "UsedObjectName": "sr_facvip",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av_v",
+    "UsedObjectName": "vv_sr_facvip_dop",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av_v",
+    "UsedObjectName": "vv_sr_facvip_rec_info_m",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av_v",
+    "UsedObjectName": "sk_vid_real",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_aotch_norm_av_v",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_fv_ur_state_v",
+    "UsedObjectName": "ur_hist_mat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_fv_ur_state_v",
+    "UsedObjectName": "ur_mat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_fv_ur_state_v",
+    "UsedObjectName": "ur_folders",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_fv_ur_state_v",
+    "UsedObjectName": "ur_dogplat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_fv_ur_state_v",
+    "UsedObjectName": "vv_all_deb_sf",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_fv_ur_state_v",
+    "UsedObjectName": "sr_facvip",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_fv_ur_state_v",
+    "UsedObjectName": "us_result",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_fv_ur_state_v",
+    "UsedObjectName": "ur_inkasso",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_fv_ur_state_v",
+    "UsedObjectName": "ur_dp_inkasso",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_fv_ur_state_v",
+    "UsedObjectName": "ur_kazn",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_fv_ur_state_v",
+    "UsedObjectName": "ur_dp_kazn",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "vv_sr_fv_ur_state_v",
+    "UsedObjectName": "ur_dp_isp",
+    "UsedObjectType": null
+  },
+  {
     "ObjectName": "43125.42865",
     "UsedObjectName": "rr_temp",
     "UsedObjectType": null
