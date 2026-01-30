@@ -32,6 +32,8 @@ where
 	)
 --and object_name='sqlb_rep_61880_10.fill_table'
 
+and object_name not in ('RAISE_APPLICATION_ERROR')
+
 ";
 
             DbObjectDependencyLoader.LoadDependencies(query);
