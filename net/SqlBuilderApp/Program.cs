@@ -32,7 +32,7 @@ where
 	)
 --and object_name='vv_day'
 
-and object_name not in ('raise_application_error','a_pmax', 'edo','sumdog', 'sumobj','sumdog0','sumobj0','prop','prop0','prop1','t_row')
+and object_name not in ('raise_application_error','a_pmax', 'edo','sumdog', 'sumobj','sumdog0','sumobj0','prop','prop0','prop1','t_row','a','dual')
 
 ";
 
