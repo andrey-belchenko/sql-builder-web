@@ -168,7 +168,7 @@ namespace SqlBuilderLib.DevTools
                     SELECT owner, object_type, object_name 
                     FROM all_objects 
                     WHERE object_name = UPPER(:object_name) 
-                      AND owner = USER
+                      --AND owner = USER
                       AND object_type IN ('TABLE', 'VIEW')";
             }
 

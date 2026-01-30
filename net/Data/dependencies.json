@@ -3160,6 +3160,951 @@
     "UsedObjectType": null
   },
   {
+    "ObjectName": "sqlb_rep_64524.fill_table",
+    "UsedObjectName": "vr_number_array",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64524.fill_table",
+    "UsedObjectName": "dual",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64524.fill_table",
+    "UsedObjectName": "uv_isp_other_prim",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64524.fill_table",
+    "UsedObjectName": "ur_isp_other",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64524.fill_table",
+    "UsedObjectName": "ur_folders",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64524.fill_table",
+    "UsedObjectName": "ur_isp",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64524.fill_table",
+    "UsedObjectName": "us_category",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64524.fill_table",
+    "UsedObjectName": "ug_isp.fill_isp_deb_reduction",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "uv_isp_other_prim",
+    "UsedObjectName": "ur_isp_other_prim",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "uv_isp_other_prim",
+    "UsedObjectName": "ur_deb_reduction",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "uv_isp_other_prim",
+    "UsedObjectName": "sr_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ug_isp.fill_isp_deb_reduction",
+    "UsedObjectName": "ur_isp_other",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ug_isp.fill_isp_deb_reduction",
+    "UsedObjectName": "ur_dp_isp_other",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ug_isp.fill_isp_deb_reduction",
+    "UsedObjectName": "ur_dogplat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ug_isp.fill_isp_deb_reduction",
+    "UsedObjectName": "vv_all_deb_sf",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ug_isp.fill_isp_deb_reduction",
+    "UsedObjectName": "sr_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ug_isp.fill_isp_deb_reduction",
+    "UsedObjectName": "ur_deb_reduction",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_322",
+    "UsedObjectName": "hr_point",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_322",
+    "UsedObjectName": "kr_object",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_322",
+    "UsedObjectName": "kr_numobj",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_322",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_322",
+    "UsedObjectName": "kr_payer",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_322",
+    "UsedObjectName": "kr_org",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_322",
+    "UsedObjectName": "hr_point_tar",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_322",
+    "UsedObjectName": "ks_tarif",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_322",
+    "UsedObjectName": "hr_point_pu",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_322",
+    "UsedObjectName": "hr_point_en",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_221",
+    "UsedObjectName": "hv_prn_dog_pmax",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_30",
+    "UsedObjectName": "hv_prn_tu_tar",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "kg_rep_dog.dog_moratoria_debt",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "sr_facvip",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "sr_facras",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "sr_recalc_sf",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "sr_recalc",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "sk_vid_real",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "vr_number_array",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "sr_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "ss_vidopl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "sr_facopl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "sqlb_41925_tbl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "ks_istfin",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "kr_dogovor_dop",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "ks_group_cust",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "kr_vist_day",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "ss_zadol_day",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "kk_type_zadol",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "kr_predabon",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "ks_sved",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "rr_fin_ur",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "kr_dogovor_prim",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_podr_dolz_76399",
+    "UsedObjectName": "sqlb_41925.fill_table",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65210.fill_table",
+    "UsedObjectName": "vr_number_array",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65210.fill_table",
+    "UsedObjectName": "ur_deb_reduction",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65210.fill_table",
+    "UsedObjectName": "sr_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65210.fill_table",
+    "UsedObjectName": "ur_deb_reduct_bnk_vvod",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65210.fill_table",
+    "UsedObjectName": "dual",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65210.fill_table",
+    "UsedObjectName": "ur_dogplat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65210.fill_table",
+    "UsedObjectName": "vv_all_deb_sf",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65210.fill_table",
+    "UsedObjectName": "ur_mat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65210.fill_table",
+    "UsedObjectName": "ur_folders",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65210.fill_table",
+    "UsedObjectName": "sr_facras",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65210.fill_table",
+    "UsedObjectName": "ur_hist_mat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65210.fill_table",
+    "UsedObjectName": "us_osn_um_mor_dolg",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65210.fill_table",
+    "UsedObjectName": "us_category",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65210.fill_table",
+    "UsedObjectName": "ug_isp.fill_bnk_deb_reduction",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "vr_number_array",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "dual",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "ur_isp",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "ur_hist_mat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "ur_mat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "ur_folders",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "us_category",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "ur_dogplat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "us_result",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "sr_facras",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "sr_facvip",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "sr_penni",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "vr_peni_period",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "vv_all_deb_sf",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "vv_day",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "sr_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "sr_opl_bank",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64525.fill_table",
+    "UsedObjectName": "sk_vid_real",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_3",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_3",
+    "UsedObjectName": "kr_payer",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_3",
+    "UsedObjectName": "kr_org",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_3",
+    "UsedObjectName": "kr_numobj",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_3",
+    "UsedObjectName": "kr_object",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_3",
+    "UsedObjectName": "hr_point",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_3",
+    "UsedObjectName": "hr_point_tar",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "sr_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "sr_facvip",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "sr_facras",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "sqlb_rep_64629_tbl_sf",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "dual",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "ur_dogplat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "sr_debet",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "ur_mat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "vr_peni_period",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "ur_hist_mat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "us_result",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "ur_pretenz",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "us_post",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "ur_isp",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "ur_isp_other",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "ur_folders",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "uv_isp_other_prim",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "kr_payer",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64629.fill_table",
+    "UsedObjectName": "ug_isp.fill_isp_deb_reduction",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64526.fill_table",
+    "UsedObjectName": "vr_number_array",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64526.fill_table",
+    "UsedObjectName": "dual",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64526.fill_table",
+    "UsedObjectName": "ur_dogplat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64526.fill_table",
+    "UsedObjectName": "vv_all_deb_sf",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64526.fill_table",
+    "UsedObjectName": "sr_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64526.fill_table",
+    "UsedObjectName": "sr_facras",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64526.fill_table",
+    "UsedObjectName": "ur_isp",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64526.fill_table",
+    "UsedObjectName": "ur_hist_mat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64526.fill_table",
+    "UsedObjectName": "ur_folders",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64526.fill_table",
+    "UsedObjectName": "uv_isp_other_prim",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64526.fill_table",
+    "UsedObjectName": "ur_isp_other",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64526.fill_table",
+    "UsedObjectName": "us_category",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_64526.fill_table",
+    "UsedObjectName": "ug_isp.fill_isp_deb_reduction",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_2",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_2",
+    "UsedObjectName": "kr_payer",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_2",
+    "UsedObjectName": "kr_org",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_2",
+    "UsedObjectName": "kr_numobj",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_2",
+    "UsedObjectName": "kr_object",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_2",
+    "UsedObjectName": "hr_point",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_222",
+    "UsedObjectName": "hr_point",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_222",
+    "UsedObjectName": "kr_object",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_222",
+    "UsedObjectName": "kr_numobj",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_222",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_222",
+    "UsedObjectName": "kr_payer",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_20",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_20",
+    "UsedObjectName": "kr_payer",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_20",
+    "UsedObjectName": "kr_org",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_20",
+    "UsedObjectName": "kr_dogovor_dop",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_20",
+    "UsedObjectName": "ks_group_cust",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_20",
+    "UsedObjectName": "kr_numobj",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_20",
+    "UsedObjectName": "kr_object",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_20",
+    "UsedObjectName": "hr_point",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_321",
+    "UsedObjectName": "hv_prn_tu_pmax",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_21",
+    "UsedObjectName": "rr_refprop",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_21",
+    "UsedObjectName": "rs_refcode",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_21",
+    "UsedObjectName": "rs_refbook",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_21",
+    "UsedObjectName": "hv_prn_dog_20",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_31",
+    "UsedObjectName": "hv_prn_tu_tar",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65211.fill_table",
+    "UsedObjectName": "vr_number_array",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65211.fill_table",
+    "UsedObjectName": "ur_deb_reduction",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65211.fill_table",
+    "UsedObjectName": "sr_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65211.fill_table",
+    "UsedObjectName": "ur_deb_reduct_bnk_vvod",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65211.fill_table",
+    "UsedObjectName": "dual",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65211.fill_table",
+    "UsedObjectName": "us_osn_um_mor_dolg",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65211.fill_table",
+    "UsedObjectName": "ur_mat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65211.fill_table",
+    "UsedObjectName": "ur_folders",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65211.fill_table",
+    "UsedObjectName": "us_category",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_rep_65211.fill_table",
+    "UsedObjectName": "ug_isp.fill_bnk_deb_reduction",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_rep_opl.balance_sheet_acquiring_pay",
+    "UsedObjectName": "ss_dest_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_rep_opl.balance_sheet_acquiring_pay",
+    "UsedObjectName": "sv_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_rep_opl.balance_sheet_acquiring_pay",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_rep_opl.balance_sheet_acquiring_pay",
+    "UsedObjectName": "kr_org",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_rep_opl.balance_sheet_acquiring_pay",
+    "UsedObjectName": "sr_recalc_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_rep_opl.balance_sheet_acquiring_pay",
+    "UsedObjectName": "sr_recalc",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_rep_opl.balance_sheet_acquiring_pay",
+    "UsedObjectName": "sr_facvip",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_rep_opl.balance_sheet_acquiring_pay",
+    "UsedObjectName": "ss_vidopl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_pmax",
+    "UsedObjectName": "kr_numobj",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_pmax",
+    "UsedObjectName": "hv_prn_dog_20",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_dog_pmax",
+    "UsedObjectName": "kr_calc",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_pmax",
+    "UsedObjectName": "hv_prn_tu_tar",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_pmax",
+    "UsedObjectName": "kr_calc",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_tar",
+    "UsedObjectName": "ks_tarif",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_tar",
+    "UsedObjectName": "hv_prn_tu_3",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "hv_prn_tu_tar",
+    "UsedObjectName": "hr_point_tar",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_41925.fill_table",
+    "UsedObjectName": "rr_temp",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sv_opl",
+    "UsedObjectName": "sr_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sv_opl",
+    "UsedObjectName": "sr_opl_bank",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sv_opl",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sv_opl",
+    "UsedObjectName": "kr_payer",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ug_isp.fill_bnk_deb_reduction",
+    "UsedObjectName": "ur_folders",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ug_isp.fill_bnk_deb_reduction",
+    "UsedObjectName": "ur_mat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ug_isp.fill_bnk_deb_reduction",
+    "UsedObjectName": "ur_hist_mat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ug_isp.fill_bnk_deb_reduction",
+    "UsedObjectName": "ur_dogplat",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ug_isp.fill_bnk_deb_reduction",
+    "UsedObjectName": "vv_all_deb_sf",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ug_isp.fill_bnk_deb_reduction",
+    "UsedObjectName": "sr_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "ug_isp.fill_bnk_deb_reduction",
+    "UsedObjectName": "ur_deb_reduction",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sqlb_41925.fill_table",
+    "UsedObjectName": "sqlb_41925.fill_temp",
+    "UsedObjectType": null
+  },
+  {
     "ObjectName": "43125.42865",
     "UsedObjectName": "rr_temp",
     "UsedObjectType": null
