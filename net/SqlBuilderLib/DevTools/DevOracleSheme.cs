@@ -187,11 +187,39 @@ namespace SqlBuilderLib.DevTools
             string objectType = row.Field<string>("object_type");
             string actualObjectName = row.Field<string>("object_name"); // Get actual object name from DB
 
+            // Check if it's a temporary table
+            bool isTempTable = false;
+            if (objectType == "TABLE")
+            {
+                OracleParameter[] tempParams = new OracleParameter[]
+                {
+                    new OracleParameter("object_name", OracleDbType.VarChar, actualObjectName, ParameterDirection.Input),
+                    new OracleParameter("owner", OracleDbType.VarChar, owner, ParameterDirection.Input)
+                };
+                
+                string tempCheckSql = @"
+                    SELECT temporary 
+                    FROM all_tables 
+                    WHERE table_name = UPPER(:object_name) 
+                      AND owner = :owner";
+                
+                DataTable tempDt = DataHelper.SqlGetTable(tempCheckSql, tempParams, db.Connection, false);
+                if (tempDt != null && tempDt.Rows.Count > 0)
+                {
+                    string temporary = tempDt.Rows[0].Field<string>("temporary");
+                    isTempTable = temporary == "Y";
+                }
+            }
+
             // Determine type
             DbObjectType type;
             if (isMaterializedView)
             {
                 type = DbObjectType.MatView;
+            }
+            else if (isTempTable)
+            {
+                type = DbObjectType.TempTable;
             }
             else if (objectType == "VIEW")
             {

@@ -109,6 +109,12 @@ namespace SqlBuilderLib.DevTools
                 AnalyzerStorage.UpdateDbObjectProcessed(dbObject.ObjectName, true);
                 Console.WriteLine($"  Table - no dependencies to extract");
             }
+            else if (currentType == DbObjectType.TempTable)
+            {
+                // Temp tables have no dependencies to extract, just mark as processed
+                AnalyzerStorage.UpdateDbObjectProcessed(dbObject.ObjectName, true);
+                Console.WriteLine($"  Temp table - no dependencies to extract");
+            }
             else if (currentType.HasValue && (currentType.Value == DbObjectType.View || currentType.Value == DbObjectType.MatView))
             {
                 ProcessViewOrMatView(dbObject.ObjectName, currentType.Value);

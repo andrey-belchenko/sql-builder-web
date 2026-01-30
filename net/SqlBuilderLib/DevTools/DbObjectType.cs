@@ -14,7 +14,8 @@ namespace SqlBuilderLib.DevTools
         View,
         TableOrView,
         MatView,
-        Procedure
+        Procedure,
+        TempTable
     }
 
     /// <summary>
@@ -74,6 +75,8 @@ namespace SqlBuilderLib.DevTools
                     return "mat view";
                 case DbObjectType.Procedure:
                     return "procedure";
+                case DbObjectType.TempTable:
+                    return "temp table";
                 default:
                     throw new ArgumentException($"Unknown DbObjectType: {type}", nameof(type));
             }
@@ -101,6 +104,8 @@ namespace SqlBuilderLib.DevTools
                     return DbObjectType.MatView;
                 case "procedure":
                     return DbObjectType.Procedure;
+                case "temp table":
+                    return DbObjectType.TempTable;
                 default:
                     return null;
             }
