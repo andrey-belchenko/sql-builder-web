@@ -144,13 +144,29 @@ namespace SqlBuilderLib.DevTools
                 Console.WriteLine($"  Extracting dependencies from DDL...");
                 var dependencies = ExtractDependenciesFromSql(tableInfo.DDL, objectName, type);
                 
-                if (dependencies.Any())
+                if (System.Linq.Enumerable.Any(dependencies))
                 {
-                    AnalyzerStorage.SaveDependencies(dependencies);
-                    Console.WriteLine($"  Found {dependencies.Count()} dependencies:");
-                    foreach (var dep in dependencies.OrderBy(d => d.UsedObjectType?.ToString() ?? "").ThenBy(d => d.UsedObjectName))
+                    var result = AnalyzerStorage.SaveDependencies(dependencies);
+                    Console.WriteLine($"  Found {dependencies.Count()} dependencies ({result.NewDependencies.Count} new, {result.ExistingDependencies.Count} existing):");
+                    
+                    if (System.Linq.Enumerable.Any(result.NewDependencies))
                     {
-                        Console.WriteLine($"    - {dep.UsedObjectName} ({dep.UsedObjectType?.ToString() ?? "null"})");
+                        Console.WriteLine($"    New dependencies:");
+                        foreach (var dep in result.NewDependencies.OrderBy(d => d.UsedObjectType?.ToString() ?? "").ThenBy(d => d.UsedObjectName))
+                        {
+                            bool isNewDbObject = result.NewDbObjects.Contains(dep.UsedObjectName, StringComparer.OrdinalIgnoreCase);
+                            string dbObjectStatus = isNewDbObject ? " [NEW db_object]" : " [existing db_object]";
+                            Console.WriteLine($"      - {dep.UsedObjectName} ({dep.UsedObjectType?.ToString() ?? "null"}){dbObjectStatus}");
+                        }
+                    }
+                    
+                    if (System.Linq.Enumerable.Any(result.ExistingDependencies))
+                    {
+                        Console.WriteLine($"    Existing dependencies:");
+                        foreach (var dep in result.ExistingDependencies.OrderBy(d => d.UsedObjectType?.ToString() ?? "").ThenBy(d => d.UsedObjectName))
+                        {
+                            Console.WriteLine($"      - {dep.UsedObjectName} ({dep.UsedObjectType?.ToString() ?? "null"})");
+                        }
                     }
                 }
                 else
@@ -191,13 +207,29 @@ namespace SqlBuilderLib.DevTools
                         // Extract dependencies directly (no procedureName parameter needed)
                         var dependencies = ExtractDependenciesFromSql(procedureInfo.DDL, objectName, DbObjectType.Procedure);
                         
-                        if (dependencies.Any())
+                        if (System.Linq.Enumerable.Any(dependencies))
                         {
-                            AnalyzerStorage.SaveDependencies(dependencies);
-                            Console.WriteLine($"  Found {dependencies.Count()} dependencies:");
-                            foreach (var dep in dependencies.OrderBy(d => d.UsedObjectType?.ToString() ?? "").ThenBy(d => d.UsedObjectName))
+                            var result = AnalyzerStorage.SaveDependencies(dependencies);
+                            Console.WriteLine($"  Found {dependencies.Count()} dependencies ({result.NewDependencies.Count} new, {result.ExistingDependencies.Count} existing):");
+                            
+                            if (System.Linq.Enumerable.Any(result.NewDependencies))
                             {
-                                Console.WriteLine($"    - {dep.UsedObjectName} ({dep.UsedObjectType?.ToString() ?? "null"})");
+                                Console.WriteLine($"    New dependencies:");
+                                foreach (var dep in result.NewDependencies.OrderBy(d => d.UsedObjectType?.ToString() ?? "").ThenBy(d => d.UsedObjectName))
+                                {
+                                    bool isNewDbObject = result.NewDbObjects.Contains(dep.UsedObjectName, StringComparer.OrdinalIgnoreCase);
+                                    string dbObjectStatus = isNewDbObject ? " [NEW db_object]" : " [existing db_object]";
+                                    Console.WriteLine($"      - {dep.UsedObjectName} ({dep.UsedObjectType?.ToString() ?? "null"}){dbObjectStatus}");
+                                }
+                            }
+                            
+                            if (System.Linq.Enumerable.Any(result.ExistingDependencies))
+                            {
+                                Console.WriteLine($"    Existing dependencies:");
+                                foreach (var dep in result.ExistingDependencies.OrderBy(d => d.UsedObjectType?.ToString() ?? "").ThenBy(d => d.UsedObjectName))
+                                {
+                                    Console.WriteLine($"      - {dep.UsedObjectName} ({dep.UsedObjectType?.ToString() ?? "null"})");
+                                }
                             }
                         }
                         else
@@ -244,13 +276,29 @@ namespace SqlBuilderLib.DevTools
             var objectName = procedureName != null ? $"{packageName}.{procedureName}" : packageName;
             var dependencies = ExtractDependenciesFromSql(packageInfo.DDL, objectName, DbObjectType.Procedure, procedureName);
             
-            if (dependencies.Any())
+            if (System.Linq.Enumerable.Any(dependencies))
             {
-                AnalyzerStorage.SaveDependencies(dependencies);
-                Console.WriteLine($"  Found {dependencies.Count()} dependencies:");
-                foreach (var dep in dependencies.OrderBy(d => d.UsedObjectType?.ToString() ?? "").ThenBy(d => d.UsedObjectName))
+                var result = AnalyzerStorage.SaveDependencies(dependencies);
+                Console.WriteLine($"  Found {dependencies.Count()} dependencies ({result.NewDependencies.Count} new, {result.ExistingDependencies.Count} existing):");
+                
+                if (System.Linq.Enumerable.Any(result.NewDependencies))
                 {
-                    Console.WriteLine($"    - {dep.UsedObjectName} ({dep.UsedObjectType?.ToString() ?? "null"})");
+                    Console.WriteLine($"    New dependencies:");
+                    foreach (var dep in result.NewDependencies.OrderBy(d => d.UsedObjectType?.ToString() ?? "").ThenBy(d => d.UsedObjectName))
+                    {
+                        bool isNewDbObject = result.NewDbObjects.Contains(dep.UsedObjectName, StringComparer.OrdinalIgnoreCase);
+                        string dbObjectStatus = isNewDbObject ? " [NEW db_object]" : " [existing db_object]";
+                        Console.WriteLine($"      - {dep.UsedObjectName} ({dep.UsedObjectType?.ToString() ?? "null"}){dbObjectStatus}");
+                    }
+                }
+                
+                if (System.Linq.Enumerable.Any(result.ExistingDependencies))
+                {
+                    Console.WriteLine($"    Existing dependencies:");
+                    foreach (var dep in result.ExistingDependencies.OrderBy(d => d.UsedObjectType?.ToString() ?? "").ThenBy(d => d.UsedObjectName))
+                    {
+                        Console.WriteLine($"      - {dep.UsedObjectName} ({dep.UsedObjectType?.ToString() ?? "null"})");
+                    }
                 }
             }
             else

@@ -110,8 +110,73 @@ namespace SqlBuilderLib.DevTools
             }
         }
 
-        public static void SaveDependencies(IEnumerable<AnalyzerDependency> dependencies)
+        /// <summary>
+        /// Checks if a dependency already exists (case-insensitive comparison).
+        /// </summary>
+        private static bool DependencyExists(string objectName, string usedObjectName, NpgsqlConnection connection)
         {
+            // Check cache first (case-insensitive)
+            bool existsInCache = _cachedDependencies.Any(d => 
+                string.Equals(d.ObjectName, objectName, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(d.UsedObjectName, usedObjectName, StringComparison.OrdinalIgnoreCase));
+            
+            if (existsInCache)
+                return true;
+            
+            // Check database (case-insensitive)
+            using (var checkCommand = new NpgsqlCommand())
+            {
+                checkCommand.Connection = connection;
+                checkCommand.CommandText = "SELECT COUNT(*) FROM report_dev_sqlb.dependencies WHERE LOWER(object_name) = LOWER(@object_name) AND LOWER(used_object_name) = LOWER(@used_object_name)";
+                checkCommand.Parameters.AddWithValue("@object_name", objectName ?? (object)DBNull.Value);
+                checkCommand.Parameters.AddWithValue("@used_object_name", usedObjectName ?? (object)DBNull.Value);
+                var count = Convert.ToInt32(checkCommand.ExecuteScalar());
+                return count > 0;
+            }
+        }
+
+        /// <summary>
+        /// Checks if a DbObject exists (case-insensitive comparison).
+        /// </summary>
+        private static bool DbObjectExists(string objectName, NpgsqlConnection connection)
+        {
+            // Check cache first (case-insensitive)
+            bool existsInCache = _cachedDbObjects.Any(db => 
+                string.Equals(db.ObjectName, objectName, StringComparison.OrdinalIgnoreCase));
+            
+            if (existsInCache)
+                return true;
+            
+            // Check database (case-insensitive)
+            using (var checkCommand = new NpgsqlCommand())
+            {
+                checkCommand.Connection = connection;
+                checkCommand.CommandText = "SELECT COUNT(*) FROM report_dev_sqlb.db_objects WHERE LOWER(object_name) = LOWER(@object_name)";
+                checkCommand.Parameters.AddWithValue("@object_name", objectName ?? (object)DBNull.Value);
+                var count = Convert.ToInt32(checkCommand.ExecuteScalar());
+                return count > 0;
+            }
+        }
+
+        /// <summary>
+        /// Result of saving dependencies, including information about new vs existing db_objects.
+        /// </summary>
+        public class DependencySaveResult
+        {
+            public List<AnalyzerDependency> NewDependencies { get; set; } = new List<AnalyzerDependency>();
+            public List<AnalyzerDependency> ExistingDependencies { get; set; } = new List<AnalyzerDependency>();
+            public List<string> NewDbObjects { get; set; } = new List<string>();
+            public List<string> ExistingDbObjects { get; set; } = new List<string>();
+        }
+
+        /// <summary>
+        /// Saves dependencies and returns information about which ones are new vs existing, including db_objects.
+        /// </summary>
+        /// <returns>A DependencySaveResult containing lists of new/existing dependencies and db_objects</returns>
+        public static DependencySaveResult SaveDependencies(IEnumerable<AnalyzerDependency> dependencies)
+        {
+            var result = new DependencySaveResult();
+            
             lock (_lockObject)
             {
                 if (!_isInitialized)
@@ -122,45 +187,47 @@ namespace SqlBuilderLib.DevTools
                     connection.Open();
                     foreach (var dep in dependencies)
                     {
+                        // Check if dependency already exists (case-insensitive)
+                        bool dependencyExists = DependencyExists(dep.ObjectName, dep.UsedObjectName, connection);
+                        
+                        if (dependencyExists)
+                        {
+                            result.ExistingDependencies.Add(dep);
+                            continue; // Skip saving existing dependency
+                        }
+                        
                         // Check if DbObject exists for used_object_name, create if not exists
                         if (!string.IsNullOrEmpty(dep.UsedObjectName) && dep.UsedObjectType.HasValue)
                         {
-                            bool dbObjectExists = _cachedDbObjects.Any(db => db.ObjectName == dep.UsedObjectName);
+                            bool dbObjectExists = DbObjectExists(dep.UsedObjectName, connection);
                             
                             if (!dbObjectExists)
                             {
-                                // Check database if not in cache
-                                using (var checkCommand = new NpgsqlCommand())
+                                // Create new DbObject
+                                using (var dbObjectCommand = new NpgsqlCommand())
                                 {
-                                    checkCommand.Connection = connection;
-                                    checkCommand.CommandText = "SELECT COUNT(*) FROM report_dev_sqlb.db_objects WHERE object_name = @object_name";
-                                    checkCommand.Parameters.AddWithValue("@object_name", dep.UsedObjectName ?? (object)DBNull.Value);
-                                    var count = Convert.ToInt32(checkCommand.ExecuteScalar());
-                                    dbObjectExists = count > 0;
+                                    dbObjectCommand.Connection = connection;
+                                    dbObjectCommand.CommandText = "INSERT INTO report_dev_sqlb.db_objects (object_name, object_type, processed) VALUES (@object_name, @object_type, @processed)";
+                                    
+                                    dbObjectCommand.Parameters.AddWithValue("@object_name", dep.UsedObjectName ?? (object)DBNull.Value);
+                                    dbObjectCommand.Parameters.AddWithValue("@object_type", dep.UsedObjectType.Value.ToDatabaseString() ?? (object)DBNull.Value);
+                                    dbObjectCommand.Parameters.AddWithValue("@processed", false);
+                                    dbObjectCommand.ExecuteNonQuery();
                                 }
                                 
-                                if (!dbObjectExists)
+                                // Update cache
+                                _cachedDbObjects.Add(new AnalyzerDbObject
                                 {
-                                    // Create new DbObject
-                                    using (var dbObjectCommand = new NpgsqlCommand())
-                                    {
-                                        dbObjectCommand.Connection = connection;
-                                        dbObjectCommand.CommandText = "INSERT INTO report_dev_sqlb.db_objects (object_name, object_type, processed) VALUES (@object_name, @object_type, @processed)";
-                                        
-                                        dbObjectCommand.Parameters.AddWithValue("@object_name", dep.UsedObjectName ?? (object)DBNull.Value);
-                                        dbObjectCommand.Parameters.AddWithValue("@object_type", dep.UsedObjectType.Value.ToDatabaseString() ?? (object)DBNull.Value);
-                                        dbObjectCommand.Parameters.AddWithValue("@processed", false);
-                                        dbObjectCommand.ExecuteNonQuery();
-                                    }
-                                    
-                                    // Update cache
-                                    _cachedDbObjects.Add(new AnalyzerDbObject
-                                    {
-                                        ObjectName = dep.UsedObjectName,
-                                        ObjectType = dep.UsedObjectType,
-                                        Processed = false
-                                    });
-                                }
+                                    ObjectName = dep.UsedObjectName,
+                                    ObjectType = dep.UsedObjectType,
+                                    Processed = false
+                                });
+                                
+                                result.NewDbObjects.Add(dep.UsedObjectName);
+                            }
+                            else
+                            {
+                                result.ExistingDbObjects.Add(dep.UsedObjectName);
                             }
                         }
                         
@@ -181,9 +248,13 @@ namespace SqlBuilderLib.DevTools
                             ObjectName = dep.ObjectName,
                             UsedObjectName = dep.UsedObjectName
                         });
+                        
+                        result.NewDependencies.Add(dep);
                     }
                 }
             }
+            
+            return result;
         }
 
         public static void SaveReports(IEnumerable<AnalyzerReportInfo> reports)
@@ -440,15 +511,15 @@ namespace SqlBuilderLib.DevTools
                     using (var command = new NpgsqlCommand())
                     {
                         command.Connection = connection;
-                        command.CommandText = "UPDATE report_dev_sqlb.db_objects SET processed = @processed WHERE object_name = @object_name";
+                        command.CommandText = "UPDATE report_dev_sqlb.db_objects SET processed = @processed WHERE LOWER(object_name) = LOWER(@object_name)";
                         command.Parameters.AddWithValue("@processed", processed);
                         command.Parameters.AddWithValue("@object_name", objectName ?? (object)DBNull.Value);
                         command.ExecuteNonQuery();
                     }
                 }
 
-                // Update cache
-                var dbObject = _cachedDbObjects.FirstOrDefault(db => db.ObjectName == objectName);
+                // Update cache (case-insensitive)
+                var dbObject = _cachedDbObjects.FirstOrDefault(db => string.Equals(db.ObjectName, objectName, StringComparison.OrdinalIgnoreCase));
                 if (dbObject != null)
                 {
                     dbObject.Processed = processed;
@@ -469,15 +540,15 @@ namespace SqlBuilderLib.DevTools
                     using (var command = new NpgsqlCommand())
                     {
                         command.Connection = connection;
-                        command.CommandText = "UPDATE report_dev_sqlb.db_objects SET object_type = @object_type WHERE object_name = @object_name";
+                        command.CommandText = "UPDATE report_dev_sqlb.db_objects SET object_type = @object_type WHERE LOWER(object_name) = LOWER(@object_name)";
                         command.Parameters.AddWithValue("@object_type", newType.ToDatabaseString());
                         command.Parameters.AddWithValue("@object_name", objectName ?? (object)DBNull.Value);
                         command.ExecuteNonQuery();
                     }
                 }
 
-                // Update cache
-                var dbObject = _cachedDbObjects.FirstOrDefault(db => db.ObjectName == objectName);
+                // Update cache (case-insensitive)
+                var dbObject = _cachedDbObjects.FirstOrDefault(db => string.Equals(db.ObjectName, objectName, StringComparison.OrdinalIgnoreCase));
                 if (dbObject != null)
                 {
                     dbObject.ObjectType = newType;

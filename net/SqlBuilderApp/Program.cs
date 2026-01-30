@@ -15,14 +15,24 @@ namespace SqlBuilderApp
 
             DevAnalyzer.SetConnectionAndSourceFolder();
             string query = @"
-        SELECT object_name, object_type, processed
-        FROM report_dev_sqlb.db_objects
-        WHERE processed = false
-            AND object_name IN (
-                SELECT DISTINCT used_object_name
-                FROM report_dev_sqlb.report_dependencies
-                WHERE nav_id = 'nav310'
-            )";
+       select
+	*
+from
+	report_dev_sqlb.db_objects
+where
+	processed = false
+	and
+	object_name in (
+		select
+			distinct used_object_name
+		from
+			report_dev_sqlb.report_dependencies
+		where
+			nav_id = 'nav310'
+	)
+--and object_name='sqlb_rep_61880_10.fill_table'
+
+";
 
             DbObjectDependencyLoader.LoadDependencies(query);
         }
