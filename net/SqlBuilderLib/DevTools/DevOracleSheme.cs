@@ -50,6 +50,10 @@ namespace SqlBuilderLib.DevTools
 
             string cacheKey = objectName.ToUpper();
 
+            if (objectName=="vv_day"){
+
+            }
+
             // Check cache first
             lock (_lockObject)
             {
@@ -130,7 +134,7 @@ namespace SqlBuilderLib.DevTools
                 new OracleParameter("object_name", OracleDbType.VarChar, objectName, ParameterDirection.Input)
             };
 
-            // Check if it's a materialized view first (since mat views appear as both TABLE and VIEW in all_objects)
+            // Check if it's a materialized view first
             bool isMaterializedView = false;
             string mviewSql = @"
                 SELECT owner 
@@ -146,17 +150,17 @@ namespace SqlBuilderLib.DevTools
                 owner = mviewDt.Rows[0].Field<string>("owner");
             }
 
-            // Query all_objects to get object type and owner (for mat views, prefer VIEW entry)
+            // Query all_objects to get object type and owner
             string sql;
             if (isMaterializedView)
             {
-                // For mat views, we're interested in VIEW entry only
+                // For mat views, query MATERIALIZED VIEW object type
                 sql = @"
                     SELECT owner, object_type, object_name 
                     FROM all_objects 
                     WHERE object_name = UPPER(:object_name) 
                       AND owner = USER
-                      AND object_type = 'VIEW'";
+                      AND object_type = 'MATERIALIZED VIEW'";
             }
             else
             {
@@ -208,7 +212,8 @@ namespace SqlBuilderLib.DevTools
                     new OracleParameter("owner", OracleDbType.VarChar, owner, ParameterDirection.Input)
                 };
 
-                string ddlSql = "SELECT DBMS_METADATA.GET_DDL('VIEW', :object_name, :owner) FROM DUAL";
+                string ddlType = type == DbObjectType.MatView ? "MATERIALIZED_VIEW" : "VIEW";
+                string ddlSql = $"SELECT DBMS_METADATA.GET_DDL('{ddlType}', :object_name, :owner) FROM DUAL";
                 ddl = DataHelper.SqlGetString(ddlSql, ddlParameters, db.Connection, false);
             }
 

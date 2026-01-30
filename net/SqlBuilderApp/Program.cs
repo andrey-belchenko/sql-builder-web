@@ -9,9 +9,9 @@ namespace SqlBuilderApp
         static void Main(string[] args)
         {
             // sql.builder.Program.TestReportsAnalysis(args);
-            // sql.builder.Program.TestSqlParsing(args);
+            sql.builder.Program.TestSqlParsing(args);
             //sql.builder.Program.Main2(args);
-            AnalyzerStorage.SaveAllCollectionsToFiles();
+//             AnalyzerStorage.SaveAllCollectionsToFiles();
 
 //             DevAnalyzer.SetConnectionAndSourceFolder();
 //             string query = @"
@@ -30,9 +30,9 @@ namespace SqlBuilderApp
 // 		where
 // 			nav_id = 'nav310'
 // 	)
-// --and object_name='sqlb_rep_61880_10.fill_table'
+// and object_name='vv_day'
 
-// and object_name not in ('RAISE_APPLICATION_ERROR','A_PMAX')
+// and object_name not in ('raise_application_error','a_pmax', 'edo','sumdog', 'sumobj','sumdog0','sumobj0','prop','prop0','prop1','t_row')
 
 // ";
 
