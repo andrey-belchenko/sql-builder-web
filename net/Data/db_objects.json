@@ -1,26 +1,371 @@
 [
   {
+    "ObjectName": "hv_point_tr",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "hv_tiutrans",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "kr_numobj_gisflat",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "nr_gis_flat",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "kk_bal",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "hv_eosrc_x",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "hr_pu_u",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "KG_REP_DOG.dog_obj_short",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "hv_org_group_elmarket",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "sg_rep_dz_kz.dz_on_end_period_per_sf",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "k_fedo",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ov_e_account_with_regl",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ov_e_vidnachisl",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ov_e_vidreal",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ov_e_edizm",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ov_e_pmax_gr",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ov_e_rgl_gtp_o",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ov_e_rgl_gtp_r",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ov_dogovor",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ov_abonent",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ov_podr",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ov_numobj_e",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ov_numobj",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ov_e_account_tarif",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ov_e_vtgaccount",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ov_e_rgl_price_cat",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "jg_common.set_podrid",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "JG_COMMON.set_dateinterval",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sv_opl_kre_obj",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sv_opl_kre_stor_obj",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "hr_point_parent",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "hr_point_grparent",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "HR_POINT_RASX",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "HR_POINT_ASKUE",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "KG_REP_DOG.dog_bankruptcy",
+    "ObjectType": "procedure",
+    "Processed": false
+  },
+  {
     "ObjectName": "sqlb_rep_64524.fill_table",
     "ObjectType": "procedure",
     "Processed": false
   },
   {
-    "ObjectName": "sr_opl_nal",
+    "ObjectName": "sv_fac_sum",
     "ObjectType": "table or view",
     "Processed": false
   },
   {
-    "ObjectName": "sk_edizm",
+    "ObjectName": "A_PMAX",
     "ObjectType": "table or view",
     "Processed": false
+  },
+  {
+    "ObjectName": "jrr_podr",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "KR_DOGOVOR_PRIM",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "edo",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "KR_PAYER_PRIM",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "hr_osob",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "KR_DOGPODR",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "HR_POTRDAY",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "kv_tarif",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "hs_price_cat",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "sumdog",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "sumobj",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "sumdog0",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "sumobj0",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "prop",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "prop0",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "prop1",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "SG_REP_DZ_KZ.collapse_minus",
+    "ObjectType": "procedure",
+    "Processed": false
+  },
+  {
+    "ObjectName": "JG_COMMON.jrr_element_init",
+    "ObjectType": "procedure",
+    "Processed": false
+  },
+  {
+    "ObjectName": "sqlb_rep_61880_10.fill_table",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "kg_rep_dog.dog_adjustment",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ov_e_org_fsk_po_attp",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_rep_61880_17.fill_table_ryaz",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_rep_61880_20.fill_table",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_rep_65116.fill_table",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_rep_61880_19.fill_table",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ng_rep_other.get_rate_per_part_year",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_rep_65409.fill_table",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_rep_462359.fill_table",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "SG_REP_DZ_KZ.dz_kz_per_period_srf",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_rep_64879.fill_table",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "tv_point_link",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "hr_pmax_detail",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ks_okved_podrazdel_1",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "kr_org_group",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_rep_61880_9_tbl",
+    "ObjectType": "table",
+    "Processed": true
   },
   {
     "ObjectName": "ur_pretenz_peni_period",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "hr_eofider",
     "ObjectType": "table or view",
     "Processed": false
   },
@@ -40,63 +385,13 @@
     "Processed": false
   },
   {
-    "ObjectName": "kk_interval",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "hr_reglament_pp",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_signatory_view",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "kg_rep_dog.dog_adjustment",
-    "ObjectType": "procedure",
-    "Processed": false
-  },
-  {
-    "ObjectName": "hr_point_har",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "ov_e_org_fsk_po_attp",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_rep_61880_15_tbl",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "ss_zadol_day",
     "ObjectType": "table or view",
     "Processed": false
   },
   {
-    "ObjectName": "sr_akt_text",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_rep_61880_17.fill_table_ryaz",
-    "ObjectType": "procedure",
-    "Processed": false
-  },
-  {
     "ObjectName": "ks_ministry",
     "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_rep_61880_10.fill_table",
-    "ObjectType": "procedure",
     "Processed": false
   },
   {
@@ -115,16 +410,6 @@
     "Processed": false
   },
   {
-    "ObjectName": "sqlb_rep_61880_20.fill_table",
-    "ObjectType": "procedure",
-    "Processed": false
-  },
-  {
-    "ObjectName": "kr_employee",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "ds_otop_norm",
     "ObjectType": "table or view",
     "Processed": false
@@ -135,32 +420,7 @@
     "Processed": false
   },
   {
-    "ObjectName": "sqlb_rep_65116.fill_table",
-    "ObjectType": "procedure",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_rep_61880_19.fill_table",
-    "ObjectType": "procedure",
-    "Processed": false
-  },
-  {
-    "ObjectName": "ng_rep_other.get_rate_per_part_year",
-    "ObjectType": "procedure",
-    "Processed": false
-  },
-  {
     "ObjectName": "ka_operationdog",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_rep_65409.fill_table",
-    "ObjectType": "procedure",
-    "Processed": false
-  },
-  {
-    "ObjectName": "ur_dogplat",
     "ObjectType": "table or view",
     "Processed": false
   },
@@ -170,67 +430,7 @@
     "Processed": false
   },
   {
-    "ObjectName": "kr_numobj_el",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_rep_462359.fill_table",
-    "ObjectType": "procedure",
-    "Processed": false
-  },
-  {
-    "ObjectName": "SG_REP_DZ_KZ.dz_kz_per_period_srf",
-    "ObjectType": "procedure",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_rep_64879.fill_table",
-    "ObjectType": "procedure",
-    "Processed": false
-  },
-  {
-    "ObjectName": "tv_point_link",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "hr_pmax_detail",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "ks_okved_podrazdel_1",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "kr_org_group",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_rep_61880_9_tbl",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "ur_efrsb_info_publ",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_rep_61880_13_tbl",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "nv_account_sost",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_rep_64949_info_tbl",
     "ObjectType": "table or view",
     "Processed": false
   },
@@ -245,28 +445,8 @@
     "Processed": false
   },
   {
-    "ObjectName": "sr_recalc",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "nr_priem_obj",
     "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_rep_64883_tbl",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "rs_refcode",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "kg_rep_dog.dog_obj_short",
-    "ObjectType": "procedure",
     "Processed": false
   },
   {
@@ -280,33 +460,13 @@
     "Processed": false
   },
   {
-    "ObjectName": "nv_priem",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "kg_rep_dog.dog_moratoria_debt",
     "ObjectType": "procedure",
     "Processed": false
   },
   {
-    "ObjectName": "ks_otchet_sign",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "sr_recalc_sf",
     "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "hr_eosrc",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_rep_64949.fill_table_info",
-    "ObjectType": "procedure",
     "Processed": false
   },
   {
@@ -325,28 +485,13 @@
     "Processed": false
   },
   {
-    "ObjectName": "kr_payer",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "br_oto_obj",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sk_vid_pl",
     "ObjectType": "table or view",
     "Processed": false
   },
   {
     "ObjectName": "ur_kazn",
     "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "kg_rep_dog.dog_gr_customer",
-    "ObjectType": "procedure",
     "Processed": false
   },
   {
@@ -365,21 +510,6 @@
     "Processed": false
   },
   {
-    "ObjectName": "sr_opl",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_rep_61880_18_tbl",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_rep_76929",
-    "ObjectType": "procedure",
-    "Processed": false
-  },
-  {
     "ObjectName": "sqlb_rep_65210.fill_table",
     "ObjectType": "procedure",
     "Processed": false
@@ -390,27 +520,7 @@
     "Processed": false
   },
   {
-    "ObjectName": "KG_REP_DOG.dog_obj_short",
-    "ObjectType": "procedure",
-    "Processed": false
-  },
-  {
-    "ObjectName": "rr_refprop",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "ks_fs",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "hv_org_pwrcompany",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "kr_dogovor",
     "ObjectType": "table or view",
     "Processed": false
   },
@@ -420,32 +530,7 @@
     "Processed": false
   },
   {
-    "ObjectName": "sqlb_rep_61880_13.fill_table",
-    "ObjectType": "procedure",
-    "Processed": false
-  },
-  {
-    "ObjectName": "rr_temp",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_rep_64651.fill_table",
-    "ObjectType": "procedure",
-    "Processed": false
-  },
-  {
     "ObjectName": "sqlb_rep_64525_tbl",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "nr_priem",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "kv_group_cust",
     "ObjectType": "table or view",
     "Processed": false
   },
@@ -465,22 +550,7 @@
     "Processed": false
   },
   {
-    "ObjectName": "ss_nalog_tax",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sqlb_rep_64483_tbl",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "hv_prn_tu_3",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "nv_account",
     "ObjectType": "table or view",
     "Processed": false
   },
@@ -490,17 +560,7 @@
     "Processed": false
   },
   {
-    "ObjectName": "sqlb_rep_61880_11_new_tbl",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "kr_limit_doc",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "ks_tar_free_rate",
     "ObjectType": "table or view",
     "Processed": false
   },
@@ -643,6 +703,66 @@
     "ObjectName": "nv_account_sost_obj",
     "ObjectType": "table or view",
     "Processed": false
+  },
+  {
+    "ObjectName": "sr_opl_nal",
+    "ObjectType": "table",
+    "Processed": false
+  },
+  {
+    "ObjectName": "sk_edizm",
+    "ObjectType": "table",
+    "Processed": false
+  },
+  {
+    "ObjectName": "hr_eofider",
+    "ObjectType": "table",
+    "Processed": false
+  },
+  {
+    "ObjectName": "kk_interval",
+    "ObjectType": "table",
+    "Processed": false
+  },
+  {
+    "ObjectName": "hr_reglament_pp",
+    "ObjectType": "table",
+    "Processed": false
+  },
+  {
+    "ObjectName": "hr_point_har",
+    "ObjectType": "table",
+    "Processed": false
+  },
+  {
+    "ObjectName": "sqlb_rep_61880_15_tbl",
+    "ObjectType": "table",
+    "Processed": false
+  },
+  {
+    "ObjectName": "sr_akt_text",
+    "ObjectType": "table",
+    "Processed": false
+  },
+  {
+    "ObjectName": "kr_employee",
+    "ObjectType": "table",
+    "Processed": false
+  },
+  {
+    "ObjectName": "ur_dogplat",
+    "ObjectType": "table",
+    "Processed": false
+  },
+  {
+    "ObjectName": "kr_numobj_el",
+    "ObjectType": "table",
+    "Processed": false
+  },
+  {
+    "ObjectName": "sqlb_rep_61880_13.fill_table",
+    "ObjectType": "procedure",
+    "Processed": true
   },
   {
     "ObjectName": "sqlb_rep_63051_tbl",
@@ -813,6 +933,151 @@
     "ObjectName": "ur_sogl",
     "ObjectType": "table or view",
     "Processed": false
+  },
+  {
+    "ObjectName": "sqlb_rep_61880_13_tbl",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "nv_account_sost",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_rep_64949_info_tbl",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sr_recalc",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_rep_64883_tbl",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "rs_refcode",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_rep_64949.fill_table_info",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "nv_priem",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ks_otchet_sign",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "hr_eosrc",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "kg_rep_dog.dog_gr_customer",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "kr_payer",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sk_vid_pl",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_rep_76929",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sr_opl",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_rep_61880_18_tbl",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "kg_rep_dog.dog_obj_short",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "rr_refprop",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "hv_org_pwrcompany",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "kr_dogovor",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_rep_64651.fill_table",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "rr_temp",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "nr_priem",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "kv_group_cust",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ss_nalog_tax",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_rep_64483_tbl",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "nv_account",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sqlb_rep_61880_11_new_tbl",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "ks_tar_free_rate",
+    "ObjectType": "table",
+    "Processed": true
   },
   {
     "ObjectName": "hs_23",
@@ -1788,5 +2053,20 @@
     "ObjectName": "ks_kazn",
     "ObjectType": "table or view",
     "Processed": false
+  },
+  {
+    "ObjectName": "DUAL",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "orgstructure",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "sqlb_signatory_view",
+    "ObjectType": "view",
+    "Processed": true
   }
 ]
