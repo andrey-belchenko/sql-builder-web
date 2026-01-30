@@ -90,7 +90,7 @@ namespace SqlBuilderLib.DevTools
 
         /// <summary>
         /// Parses a CSV line with quoted fields
-        /// Format: "reports_name","user_name","started_at","finished_at"
+        /// Format: "user_name","reports_name","started_at","finished_at"
         /// </summary>
         private static string[] ParseCsvLine(string line)
         {
@@ -167,56 +167,68 @@ namespace SqlBuilderLib.DevTools
                     }
 
                     // Process each CSV file
+                    int totalRecordsProcessed = 0;
                     foreach (var csvFile in csvFiles)
                     {
                         string navId = ExtractNavIdFromFileName(csvFile);
                         if (string.IsNullOrEmpty(navId))
                         {
+                            Console.WriteLine($"Skipping file '{csvFile}' - nav_id could not be extracted from filename");
                             continue; // Skip files that don't match the pattern
                         }
 
+                        Console.WriteLine($"Processing file: {csvFile} (nav_id: {navId})");
                         var lines = File.ReadAllLines(csvFile);
+                        int fileRecordCount = 0;
                         
                         foreach (var line in lines)
                         {
                             if (string.IsNullOrWhiteSpace(line))
                                 continue;
 
-                            try
+                            var fields = ParseCsvLine(line);
+                            
+                            // Expected format: user_name, reports_name, started_at, finished_at
+                            if (fields.Length < 4)
                             {
-                                var fields = ParseCsvLine(line);
-                                
-                                // Expected format: reports_name, user_name, started_at, finished_at
-                                if (fields.Length < 4)
-                                    continue;
-
-                                string reportsName = fields[0].Trim('"');
-                                string userName = fields[1].Trim('"');
-                                DateTime? startedAt = ParseDateTime(fields[2]);
-                                DateTime? finishedAt = ParseDateTime(fields[3]);
-
-                                // Insert record
-                                using (var command = new NpgsqlCommand())
-                                {
-                                    command.Connection = connection;
-                                    command.CommandText = "INSERT INTO report_dev_sqlb.reports_exec (nav_id, reports_name, user_name, started_at, finished_at) VALUES (@nav_id, @reports_name, @user_name, @started_at, @finished_at)";
-                                    
-                                    command.Parameters.AddWithValue("@nav_id", navId ?? (object)DBNull.Value);
-                                    command.Parameters.AddWithValue("@reports_name", string.IsNullOrEmpty(reportsName) ? (object)DBNull.Value : reportsName);
-                                    command.Parameters.AddWithValue("@user_name", string.IsNullOrEmpty(userName) ? (object)DBNull.Value : userName);
-                                    command.Parameters.AddWithValue("@started_at", startedAt.HasValue ? (object)startedAt.Value : DBNull.Value);
-                                    command.Parameters.AddWithValue("@finished_at", finishedAt.HasValue ? (object)finishedAt.Value : DBNull.Value);
-                                    
-                                    command.ExecuteNonQuery();
-                                }
-                            }
-                            catch
-                            {
-                                // Skip invalid rows - minimal error handling as per AnalyzerStorage pattern
+                                Console.WriteLine($"Skipping line - insufficient fields (expected 4, got {fields.Length}): {line}");
                                 continue;
                             }
+
+                            string userName = fields[0].Trim('"');
+                            string reportsName = fields[1].Trim('"');
+                            DateTime? startedAt = ParseDateTime(fields[2]);
+                            DateTime? finishedAt = ParseDateTime(fields[3]);
+
+                            // Insert record
+                            using (var command = new NpgsqlCommand())
+                            {
+                                command.Connection = connection;
+                                command.CommandText = "INSERT INTO report_dev_sqlb.reports_exec (nav_id, reports_name, user_name, started_at, finished_at) VALUES (@nav_id, @reports_name, @user_name, @started_at, @finished_at)";
+                                
+                                command.Parameters.AddWithValue("@nav_id", navId ?? (object)DBNull.Value);
+                                command.Parameters.AddWithValue("@reports_name", string.IsNullOrEmpty(reportsName) ? (object)DBNull.Value : reportsName);
+                                command.Parameters.AddWithValue("@user_name", string.IsNullOrEmpty(userName) ? (object)DBNull.Value : userName);
+                                command.Parameters.AddWithValue("@started_at", startedAt.HasValue ? (object)startedAt.Value : DBNull.Value);
+                                command.Parameters.AddWithValue("@finished_at", finishedAt.HasValue ? (object)finishedAt.Value : DBNull.Value);
+                                
+                                command.ExecuteNonQuery();
+                            }
+
+                            totalRecordsProcessed++;
+                            fileRecordCount++;
+                            
+                            // Log progress every 100 records
+                            if (totalRecordsProcessed % 100 == 0)
+                            {
+                                Console.WriteLine($"Processed {totalRecordsProcessed} records...");
+                            }
                         }
+                        
+                        Console.WriteLine($"Completed file '{csvFile}': {fileRecordCount} records processed");
                     }
+                    
+                    Console.WriteLine($"Total records loaded: {totalRecordsProcessed}");
                 }
             }
         }
