@@ -53,8 +53,9 @@ namespace SqlBuilderLib.DevTools
             };
 
 
-        public static void SetConnectionAndSourceFolder()
+        public static void Initialize()
         {
+            DevUtilsProvider.Instance =  new DevUtilsProviderImpl();
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
             // var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
@@ -74,7 +75,7 @@ namespace SqlBuilderLib.DevTools
             DevAnalyzer.ErrorOnMissing = false;
             DevAnalyzer.ClearTempFolder();
 
-            SetConnectionAndSourceFolder();
+            Initialize();
 
 
             var navs = XmlReports.Environment.GetElements(TextConst.EName.Navigators).Cast<VNavigator>()

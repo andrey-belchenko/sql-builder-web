@@ -82,9 +82,10 @@ namespace SqlBuilderLib.DevTools
 
         public static void AnalyzeReport()
         {
+            DevUtilsProvider.Instance = new DevUtilsProviderImpl();
             DevAnalyzer.Enabled = true;
             DevAnalyzer.PrepareOnly = true;
-            DevAnalyzer.DoSave =  false;
+            DevAnalyzer.DoSave = false;
             DevAnalyzer.ClearTempFolder();
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
