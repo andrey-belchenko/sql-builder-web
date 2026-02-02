@@ -1832,7 +1832,7 @@
   {
     "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
     "ObjectType": "procedure",
-    "Processed": false
+    "Processed": true
   },
   {
     "ObjectName": "sqlb_rep_462361.fill_table",
@@ -2190,6 +2190,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "sr_money_export_teplo_rm",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
     "ObjectName": "sr_penni",
     "ObjectType": "table",
     "Processed": true
@@ -2325,6 +2330,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf_rm",
+    "ObjectType": "procedure",
+    "Processed": false
+  },
+  {
     "ObjectName": "sqlb_55300_soveshanie",
     "ObjectType": "table",
     "Processed": true
@@ -2338,6 +2348,71 @@
     "ObjectName": "sqlb_55300_soveshanie_info",
     "ObjectType": "table",
     "Processed": true
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.sr_nakopit_teplo_fill_ext",
+    "ObjectType": "procedure",
+    "Processed": false
+  },
+  {
+    "ObjectName": "kv_region",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "dr_dogval",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "drv_dogvalparor",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "dv_pril1_1",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "dv_pril1_1p",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "sv_facras",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "sv_facras_nal",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "sv_facopl",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "sv_vidopl",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "rr_rab_pr",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "sr_money_export_teplo",
+    "ObjectType": "table or view",
+    "Processed": false
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.sr_nakopit_teplo_fill_area",
+    "ObjectType": "procedure",
+    "Processed": false
   },
   {
     "ObjectName": "sqlb_signatory_view",

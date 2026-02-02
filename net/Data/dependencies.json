@@ -4415,6 +4415,191 @@
     "UsedObjectType": null
   },
   {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "kr_payer",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "kr_dogovor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "kv_region",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "ks_otrasl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "ks_ministry",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "ks_okved",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "ks_vdog",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "ks_istfin",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "ks_bank",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "kr_dogobj_emp",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "kr_employee",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "kr_dogovor_dop",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "ks_group_cust",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "kr_org",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "dr_ddatval",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "dr_dogval",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "drv_dogvalparor",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "dv_pril1_1",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "dv_pril1_1p",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "sv_facras",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "sv_facras_nal",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "sv_facopl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "sv_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "sv_vidopl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "sr_opl",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "sr_opl_nal",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "rr_rab_pr",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "sr_facvip",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "sr_facras",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "sk_vid_sf",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "sr_facras_nal",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "sr_money_export_teplo",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "sr_money_export_teplo_rm",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "vg_mview.refresh",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf_rm",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "sg_kaz_nakopit_teplo.sr_nakopit_teplo_fill_ext",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectName": "sg_kaz_nakopit_teplo.sr_nakopit_teplo_fill_area",
+    "UsedObjectType": null
+  },
+  {
     "ObjectName": "43125.42865",
     "UsedObjectName": "rr_temp",
     "UsedObjectType": null
