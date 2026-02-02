@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>7.0</LangVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SqlBuilder\SqlBuilder.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Devart.Data.Oracle" Version="11.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
+    <PackageReference Include="Npgsql" Version="9.0.2" />
+  </ItemGroup>
+
+  <!-- Use direct DLL reference instead of ProjectReference to prevent automatic builds -->
+  <!-- IMPORTANT: Build Antlr.Oracle.Generated manually first: dotnet build Antlr.Oracle.Generated/Antlr.Oracle.Generated.csproj -->
+  <ItemGroup>
+    <Reference Include="Antlr.Oracle.Generated">
+      <HintPath>..\Antlr.Oracle.Generated\bin\$(Configuration)\net8.0\Antlr.Oracle.Generated.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  
+  <!-- Error if DLL doesn't exist - user must build manually -->
+  <Target Name="CheckGeneratedDllExists" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="!Exists('..\Antlr.Oracle.Generated\bin\$(Configuration)\net8.0\Antlr.Oracle.Generated.dll')" 
+           Text="Antlr.Oracle.Generated.dll not found. Build it manually with: dotnet build Antlr.Oracle.Generated/Antlr.Oracle.Generated.csproj" />
+  </Target>
+
+</Project>

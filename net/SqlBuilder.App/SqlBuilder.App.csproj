@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SqlBuilder\SqlBuilder.csproj" />
+    <ProjectReference Include="..\SqlBuilder\SqlBuilder.DevTools.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
