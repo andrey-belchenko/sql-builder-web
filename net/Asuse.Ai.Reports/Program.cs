@@ -3,12 +3,18 @@ using Microsoft.Extensions.Configuration;
 using Asuse.Ai.Reports.Services;
 using Asuse.Ai.Reports.Settings;
 using System.Runtime;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<ReportingSettings>(builder.Configuration.GetSection("Reporting"));
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
 builder.Services.AddFastReport();
 builder.Services.AddTransient<ReportingService>();
 var app = builder.Build();
@@ -24,6 +30,10 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+// Map API controllers (attribute-based routing)
+app.MapControllers();
+
+// Map MVC controllers (convention-based routing)
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
