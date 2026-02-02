@@ -227,7 +227,7 @@ namespace sql.builder.XmlHelpers
                     new OracleParameter("return"  , OracleDbType.NVarChar) { Direction = ParameterDirection.ReturnValue}
                 };
                 cmd.Parameters.AddRange(parameters);
-                DevAnalyzer.AnalyzeExecSql(cmd.CommandText);
+                DevUtilsProvider.Instance.AnalyzeExecSql(cmd.CommandText);
                 cmd.ExecuteNonQuery();
 
                 var result = parameters[3].Value;
@@ -258,7 +258,7 @@ namespace sql.builder.XmlHelpers
                     new OracleParameter("nkod_dog", OracleDbType.Number)   { Value = 0M },
                 };
                 cmd.Parameters.AddRange(parameters);
-                DevAnalyzer.AnalyzeExecSql(cmd.CommandText);
+                DevUtilsProvider.Instance.AnalyzeExecSql(cmd.CommandText);
                 cmd.ExecuteNonQuery();
 
                 AddLog(rep_table, "Блокировка снята", "");

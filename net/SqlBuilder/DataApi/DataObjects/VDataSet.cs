@@ -567,7 +567,7 @@ namespace sql.builder.DataApi
 #endif
                     // DevAnalyzer.AnalyzePrepSql(procCmd.CommandText);
 
-                    if (!DevAnalyzer.PrepareOnly)
+                    if (!DevUtilsProvider.Instance.IsPrepareOnly())
                     {
                         procCmd.ExecuteNonQuery();
                     }
@@ -686,7 +686,7 @@ namespace sql.builder.DataApi
                         {
                             // DevAnalyzer.AnalyzePrepSql(cmd.CommandText);
                             // DevAnalyzer.AnalyzeSuppressedSql(cmd.CommandText);
-                            if (!DevAnalyzer.PrepareOnly)
+                            if (!DevUtilsProvider.Instance.IsPrepareOnly())
                             {
                                 XmlReports.executeNonQuery(cmd.CommandText, (OracleConnection)GetConnection(), parsList);
                             }

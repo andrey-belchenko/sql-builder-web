@@ -345,7 +345,7 @@ namespace sql.builder.DataApi
                         }
                         else if (dbPar.DbType == DbType.Decimal)
                         {
-                            if (DevAnalyzer.Enabled)
+                            if (DevUtilsProvider.Instance.IsAnalyzerEnabled())
                             {
                                 if (factParam.Value.GetType() == typeof(string))
                                 {
@@ -522,7 +522,7 @@ namespace sql.builder.DataApi
                     }
                 }
             }
-            DevAnalyzer.AnalyzeReport(compiled);
+            // DevAnalyzer.AnalyzeReport(compiled);
             return compiled;
         }
         public VDataSet Result(int useRepository, bool useCash)
@@ -775,7 +775,7 @@ namespace sql.builder.DataApi
                     dataSet.MatQueriesNames = compiled.Elements(EName.query)
                         .Where(e => e.AttrOrEmpty(AName_.materialize) == TextConst.AVBool.True && e.AttrOrEmpty(TextConst.AName.IsDone) != TextConst.AVBool.True)
                         .Select(e1 => e1.Attribute(AName_.name).Value).ToList();
-                    if (!(this.Pivot && noPivot && DevAnalyzer.Enabled))
+                    if (!(this.Pivot && noPivot && DevUtilsProvider.Instance.IsAnalyzerEnabled()))
                     {
                         dataSet.ProcedureText = XmlReports.getProcedureSqlOld(XmlReports.XElementToXmlNode(compiled).OwnerDocument);
                     }
@@ -822,7 +822,7 @@ namespace sql.builder.DataApi
                             {
                                 compiledQuery = compiled.Elements(EName.query).First(e => e.Attribute(AName_.name).Value == table.QueryName);
                             }
-                            if (!(this.Pivot && noPivot && DevAnalyzer.Enabled))
+                            if (!(this.Pivot && noPivot && DevUtilsProvider.Instance.IsAnalyzerEnabled()))
                             {
                                 table.DataAdapter.SelectCommand.CommandText = getQuerySelectText(compiledQuery, dataSet.UseTempTable);
                             }

@@ -288,7 +288,7 @@ namespace sql.builder.WinForms
                 //        this.gcRepositories.Visible = true;
                 //    }
                 //}
-                if (!DevAnalyzer.PrepareOnly)
+                if (!DevUtilsProvider.Instance.IsPrepareOnly())
                 {
                     this._uIForm.RefreshData();
                 }
@@ -481,7 +481,7 @@ namespace sql.builder.WinForms
             {
 
                 VDataSet ds = this.RefreshData();
-                if (!DevAnalyzer.PrepareOnly)
+                if (!DevUtilsProvider.Instance.IsPrepareOnly())
                 {
                     path = this.TryCustomPrint(ds);
                     if (path == null)

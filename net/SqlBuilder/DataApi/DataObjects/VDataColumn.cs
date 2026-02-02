@@ -157,7 +157,7 @@ namespace sql.builder.DataApi
                 table.SuppressChangeEvent();
 
                 // костыль для web (анализ отчетов)
-                if (DevAnalyzer.Enabled)
+                if (DevUtilsProvider.Instance.IsAnalyzerEnabled())
                 {
                     if (value.GetType() != this.DataType)
                     {

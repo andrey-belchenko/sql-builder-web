@@ -309,7 +309,7 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
                 try
                 {
                     if (analyze){
-                        DevAnalyzer.AnalyzeExecSql(sql);
+                        DevUtilsProvider.Instance.AnalyzeExecSql(sql);
                     }
                    
                     reader = cmd.ExecuteReader();
@@ -333,7 +333,7 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = sql;
-                DevAnalyzer.AnalyzeExecSql(sql);
+                DevUtilsProvider.Instance.AnalyzeExecSql(sql);
                 var reader = cmd.ExecuteReader();
                 dt.Load(reader);
             }
@@ -363,7 +363,7 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
                     
                 }
                 
-                DevAnalyzer.AnalyzeExecSql(sql);
+                DevUtilsProvider.Instance.AnalyzeExecSql(sql);
                 var reader = cmd.ExecuteReader();
                 dt.Load(reader);
             }
@@ -384,7 +384,7 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = sql;
-                DevAnalyzer.AnalyzeExecSql(sql);
+                DevUtilsProvider.Instance.AnalyzeExecSql(sql);
                return cmd.ExecuteNonQuery();
              
             }

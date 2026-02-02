@@ -351,7 +351,7 @@ namespace sql.builder
                     }
                     if (!done) {
                         vdt.cmd.FetchSize = 10;
-                        DevAnalyzer.AnalyzeExecSql(vdt.cmd.CommandText);
+                        DevUtilsProvider.Instance.AnalyzeExecSql(vdt.cmd.CommandText);
                         reader = vdt.cmd.ExecuteReader();
                     }
                     //bufferTable = new DataTable();

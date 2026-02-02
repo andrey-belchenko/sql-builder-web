@@ -98,7 +98,7 @@ namespace sql.builder.DataApi
             var par = new OracleParameter(TextConst.DBParams.FileId, fileId);
             par.OracleDbType = OracleDbType.Number;
             cmd.Parameters.Add(par);
-            DevAnalyzer.AnalyzeExecSql(s);
+            DevUtilsProvider.Instance.AnalyzeExecSql(s);
             byte[] _buf = (byte[])cmd.ExecuteScalar();
             if (_buf == null)
             {
@@ -160,7 +160,7 @@ namespace sql.builder.DataApi
                 par.OracleDbType = OracleDbType.VarChar;
                 cmd.Parameters.Add(par);
 
-                DevAnalyzer.AnalyzeExecSql(s);
+                DevUtilsProvider.Instance.AnalyzeExecSql(s);
                 cmd.ExecuteNonQuery();
 
                 fileId = cmd.Parameters[TextConst.DBParams.FileId].Value;
@@ -185,7 +185,7 @@ namespace sql.builder.DataApi
 
                 par = cmd.Parameters.Add(TextConst.DBParams.FileData, OracleDbType.Blob);
                 par.Value = _buf;
-                DevAnalyzer.AnalyzeExecSql(s);
+                DevUtilsProvider.Instance.AnalyzeExecSql(s);
                 cmd.ExecuteNonQuery();
                 if (row.RowState != DataRowState.Deleted)
                 {

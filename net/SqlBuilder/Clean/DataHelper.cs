@@ -36,7 +36,7 @@ namespace infoenergo.core.Data
                 {
                     if (analyze)
                     {
-                        DevAnalyzer.AnalyzeExecSql(sql);
+                        DevUtilsProvider.Instance.AnalyzeExecSql(sql);
                     }
                     result = ((DbCommand)(object)oracleCommand).ExecuteScalar();
                 }
@@ -107,12 +107,12 @@ namespace infoenergo.core.Data
             return (obj != null) ? obj.ToString() : string.Empty;
         }
 
-        public static string SqlGetString(string sql, OracleConnection connection, OracleParameter parameter, bool analyze= true)
+        public static string SqlGetString(string sql, OracleConnection connection, OracleParameter parameter, bool analyze = true)
         {
             return SqlGetString(sql, new OracleParameter[1] { parameter }, connection, analyze);
         }
 
-        public static string SqlGetString(string sql, OracleConnection connection,  bool analyze= true)
+        public static string SqlGetString(string sql, OracleConnection connection, bool analyze = true)
         {
             return SqlGetString(sql, new OracleParameter[0], connection, analyze);
         }
@@ -130,7 +130,7 @@ namespace infoenergo.core.Data
 
                 try
                 {
-                    DevAnalyzer.AnalyzeExecSql(sql);
+                    DevUtilsProvider.Instance.AnalyzeExecSql(sql);
                     using (OracleDataReader oracleDataReader = oracleCommand.ExecuteReader())
                     {
                         if (((DbDataReader)(object)oracleDataReader).Read())
@@ -228,7 +228,7 @@ namespace infoenergo.core.Data
 
                 try
                 {
-                    DevAnalyzer.AnalyzeExecSql(sql);
+                    DevUtilsProvider.Instance.AnalyzeExecSql(sql);
                     OracleDataReader oracleDataReader = oracleCommand.ExecuteReader();
                     if (((DbDataReader)(object)oracleDataReader).Read())
                     {
@@ -268,7 +268,7 @@ namespace infoenergo.core.Data
                 {
                     if (analyze)
                     {
-                        DevAnalyzer.AnalyzeExecSql(sql);
+                        DevUtilsProvider.Instance.AnalyzeExecSql(sql);
                     }
 
                     using (OracleDataReader oracleDataReader = oracleCommand.ExecuteReader())
@@ -339,7 +339,7 @@ namespace infoenergo.core.Data
 
                 try
                 {
-                    DevAnalyzer.AnalyzeExecSql(sql);
+                    DevUtilsProvider.Instance.AnalyzeExecSql(sql);
                     using (OracleDataReader oracleDataReader = oracleCommand.ExecuteReader())
                     {
                         if (dataTable.Columns.Count == 0)
@@ -394,7 +394,7 @@ namespace infoenergo.core.Data
             return dataTable;
         }
 
-        public static DataTable SqlGetTable(string sql, OracleConnection connection, bool analyze= true)
+        public static DataTable SqlGetTable(string sql, OracleConnection connection, bool analyze = true)
         {
             OracleParameter[] array = new OracleParameter[0];
             return SqlGetTable(sql, null, connection, analyze);
@@ -416,7 +416,7 @@ namespace infoenergo.core.Data
                 {
                     if (analyze)
                     {
-                        DevAnalyzer.AnalyzeExecSql(sqlCommand);
+                        DevUtilsProvider.Instance.AnalyzeExecSql(sqlCommand);
                     }
 
                     ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
@@ -453,7 +453,7 @@ namespace infoenergo.core.Data
 
                 try
                 {
-                    DevAnalyzer.AnalyzeExecSql(sqlCommand);
+                    DevUtilsProvider.Instance.AnalyzeExecSql(sqlCommand);
                     ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                     result = true;
                 }
@@ -505,7 +505,7 @@ namespace infoenergo.core.Data
 
                 try
                 {
-                    DevAnalyzer.AnalyzeExecSql(sqlCommand);
+                    DevUtilsProvider.Instance.AnalyzeExecSql(sqlCommand);
                     ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                     result = true;
                 }
@@ -541,7 +541,7 @@ namespace infoenergo.core.Data
 
                 try
                 {
-                    DevAnalyzer.AnalyzeExecSql(sqlCommand);
+                    DevUtilsProvider.Instance.AnalyzeExecSql(sqlCommand);
                     ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                     result = true;
                 }
@@ -578,7 +578,7 @@ namespace infoenergo.core.Data
 
                 try
                 {
-                    DevAnalyzer.AnalyzeExecSql(sqlCommand);
+                    DevUtilsProvider.Instance.AnalyzeExecSql(sqlCommand);
                     ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                     result = true;
                 }
@@ -629,7 +629,7 @@ namespace infoenergo.core.Data
             OracleCommand oracleCommand = new VOracleCommand(sqlCommand, connection);
             try
             {
-                DevAnalyzer.AnalyzeExecSql(sqlCommand);
+                DevUtilsProvider.Instance.AnalyzeExecSql(sqlCommand);
                 ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                 result = true;
             }
@@ -812,7 +812,7 @@ namespace infoenergo.core.Data
             OracleCommand oracleCommand = new VOracleCommand(commandText, connection);
             try
             {
-                DevAnalyzer.AnalyzeExecSql(commandText);
+                DevUtilsProvider.Instance.AnalyzeExecSql(commandText);
                 using (OracleDataReader oracleDataReader = oracleCommand.ExecuteReader())
                 {
                     if (((DbDataReader)(object)oracleDataReader).Read())
@@ -933,7 +933,7 @@ namespace infoenergo.core.Data
                         newPassword = setPasswordCharCase(newPassword);
                         string commandText = "ALTER USER " + user + " IDENTIFIED BY \"" + newPassword + "\"";
                         OracleCommand oracleCommand = new VOracleCommand(commandText, connection);
-                        DevAnalyzer.AnalyzeExecSql(commandText);
+                        DevUtilsProvider.Instance.AnalyzeExecSql(commandText);
                         ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                         result = true;
                         ((Component)(object)oracleCommand).Dispose();
@@ -1350,7 +1350,7 @@ namespace infoenergo.core.Data
 
                 return d;
             }
-            public set
+            set
             {
                 d = value;
             }
@@ -1544,7 +1544,7 @@ namespace infoenergo.core.Data
             {
                 return i;
             }
-            public set
+             set
             {
                 i = value;
             }

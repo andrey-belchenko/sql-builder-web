@@ -78,7 +78,7 @@ namespace sql.builder.Clean
         /// </summary>
         protected virtual void OnCommandTextChanged(string oldValue, string newValue)
         {
-            DevAnalyzer.AnalyzeCmdSql(newValue);
+            DevUtilsProvider.Instance.AnalyzeCmdSql(newValue);
             CommandTextChanged?.Invoke(this, new CommandTextChangedEventArgs(oldValue, newValue));
         }
     }

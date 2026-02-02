@@ -8,6 +8,8 @@ namespace SqlBuilderLib.DevTools
         bool IsPrepareOnly();
         void AnalyzeExecSql(string sql);
 
+         void AnalyzeCmdSql(string sql);
+
     }
 
     public class DevUtilsProvider : IDevUtilsProvider
@@ -23,6 +25,11 @@ namespace SqlBuilderLib.DevTools
         public void AnalyzeExecSql(string sql)
         {
 
+        }
+
+        public void AnalyzeCmdSql(string sql)
+        {
+           
         }
 
         public static IDevUtilsProvider Instance =  new DevUtilsProvider(); 

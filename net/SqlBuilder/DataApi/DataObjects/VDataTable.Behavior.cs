@@ -15,7 +15,7 @@ namespace sql.builder.DataApi
         private bool _allowMerge = false;
         public bool Merged = false;
 
-        public Dictionary<string,string> ExtensionKeys = null; 
+        public Dictionary<string, string> ExtensionKeys = null;
 
         public bool AllowMerge
         {
@@ -33,7 +33,7 @@ namespace sql.builder.DataApi
             }
         }
 
-        private SortedList<string,HashSet<string>> _notMergedCashRows = null;
+        private SortedList<string, HashSet<string>> _notMergedCashRows = null;
         private SortedList<string, HashSet<string>> _notMergedCashReadyGroups = null;
 
         private void clearNotMergedCash()
@@ -55,7 +55,7 @@ namespace sql.builder.DataApi
                 _notMergedCashRows.Add(col.ColumnName, new HashSet<string>());
                 _notMergedCashReadyGroups.Add(col.ColumnName, new HashSet<string>());
             }
-          
+
             var mergeKeyValue = GetMergeKeyValue(col, row);
             if (!_notMergedCashReadyGroups[col.ColumnName].Contains(mergeKeyValue))
             {
@@ -69,19 +69,19 @@ namespace sql.builder.DataApi
 
         public bool IsNotMerged(VDataColumn col, DataRow row)
         {
-                if (string.IsNullOrEmpty(col.MergeKey))
+            if (string.IsNullOrEmpty(col.MergeKey))
+            {
+                return true;
+            }
+            var rid = GetRowId(row);
+            if (_notMergedCashRows.ContainsKey(col.ColumnName))
+            {
+                if (_notMergedCashRows[col.ColumnName].Contains(rid))
                 {
                     return true;
                 }
-              var rid = GetRowId(row);
-              if (_notMergedCashRows.ContainsKey(col.ColumnName))
-              {
-                  if (_notMergedCashRows[col.ColumnName].Contains(rid))
-                  {
-                      return true;
-                  }
-              }
-              return false;
+            }
+            return false;
         }
 
         private SortedList<string, SortedList<string, string>> mergeKeysValues = null;
@@ -92,20 +92,20 @@ namespace sql.builder.DataApi
             if (_mergeKeyColumnsNames == null)
             {
                 _mergeKeyColumnsNames = new HashSet<string>();
-                
+
                 foreach (VDataColumn col in Columns)
                 {
                     //if (col.MergeKey != null)
                     //{
-                        var ss = col.MergeKey.Split(',');
+                    var ss = col.MergeKey.Split(',');
 
-                        foreach (var s in ss)
+                    foreach (var s in ss)
+                    {
+                        if (!_mergeKeyColumnsNames.Contains(s))
                         {
-                            if (!_mergeKeyColumnsNames.Contains(s))
-                            {
-                                _mergeKeyColumnsNames.Add(s);
-                            }
+                            _mergeKeyColumnsNames.Add(s);
                         }
+                    }
                     //}
                 }
             }
@@ -114,7 +114,7 @@ namespace sql.builder.DataApi
 
         public string GetMergeKeyValue(VDataColumn col, DataRow row)
         {
-            
+
             if (!mergeKeysValues.ContainsKey(col.MergeKey))
             {
                 mergeKeysValues[col.MergeKey] = new SortedList<string, string>();
@@ -168,7 +168,7 @@ namespace sql.builder.DataApi
             {
                 if (GetMergeKeyColumnsNames().Contains(col.ColumnName))
                 {
-                    if (Cmn.Nvl(prevVal, null) != null) 
+                    if (Cmn.Nvl(prevVal, null) != null)
                     {
                         var rid = GetRowId(prevRow);
                         if (!dontDeleteRows.Contains(rid))
@@ -182,15 +182,15 @@ namespace sql.builder.DataApi
 
         private void PrepareMerge()
         {
-          //  return;
+            //  return;
             if (!AllowMerge) return;
             clearNotMergedCash();
             Merged = false;
-           // return;
+            // return;
 
             SuppressChangeEvent();
             var dontDeleteRows = new HashSet<string>();
-            
+
             foreach (VDataColumn col in Columns)
             {
                 if (col.MergeKey != null)
@@ -207,14 +207,14 @@ namespace sql.builder.DataApi
                     {
                         var val = col.GetValue(row);
                         bool isMerged = false;
-                        
+
                         if (prevRow != null)
                         {
-                            isMerged=col.IsMerged(prevRow, row);
+                            isMerged = col.IsMerged(prevRow, row);
                             if (isMerged)
                             {
                                 Merged = true;
-                                
+
                             }
                             else
                             {
@@ -254,23 +254,24 @@ namespace sql.builder.DataApi
 
                         prevVal = val;
 
-                        
+
                     }
 
                     processMergeArea(col, mergedRows, mergedVal, prevRow, prevVal, dontDeleteRows);
                 }
-                
 
-              
 
-                
+
+
+
             }
 
             if (Merged)
             {
                 var rowsToDelete = new List<DataRow>();
                 bool changes = false;
-                foreach (DataRow row in this.Rows.ToArray()) {
+                foreach (DataRow row in this.Rows.ToArray())
+                {
                     var rid = GetRowId(row);
                     var del = false;
                     if (!dontDeleteRows.Contains(rid))
@@ -291,7 +292,7 @@ namespace sql.builder.DataApi
                             del = true;
                         }
 
-                     
+
                     }
                     if (!del)
                     {
@@ -316,7 +317,7 @@ namespace sql.builder.DataApi
                 {
                     AcceptChanges();
                 }
-               
+
             }
             if (Grid != null)
             {
@@ -336,7 +337,7 @@ namespace sql.builder.DataApi
         public string ClientBackColorSource = null;
         public string ClientCanBeCheckedSource = null;
 
-        public string GetBackColor(DataRow row,VDataColumn col)
+        public string GetBackColor(DataRow row, VDataColumn col)
         {
             object val = null;
 
@@ -345,11 +346,11 @@ namespace sql.builder.DataApi
                 val = col.GetBackColor(row);
             }
 
-            if (val==null && ClientBackColorSource != null)
+            if (val == null && ClientBackColorSource != null)
             {
-                val = GetDataSet().GetVariableValue(ClientBackColorSource,row);
+                val = GetDataSet().GetVariableValue(ClientBackColorSource, row);
             }
-            
+
             return (string)Cmn.Nvle(val, null);
 
         }
@@ -359,14 +360,14 @@ namespace sql.builder.DataApi
         {
             object val = null;
 
-            
 
-            if ( ClientCanBeCheckedSource != null)
+
+            if (ClientCanBeCheckedSource != null)
             {
                 val = GetDataSet().GetVariableValue(ClientCanBeCheckedSource, row);
             }
 
-            return Cmn.Nvle(val, null)==null;
+            return Cmn.Nvle(val, null) == null;
 
         }
         private List<object> _selectedKeys = null;
@@ -394,8 +395,8 @@ namespace sql.builder.DataApi
         }
         private void recollectSelection()
         {
-      
-            var selRows=new List<DataRow>();
+
+            var selRows = new List<DataRow>();
             if (_selectedKeys != null)
             {
                 foreach (var v in _selectedKeys)
@@ -407,7 +408,7 @@ namespace sql.builder.DataApi
                     }
 
                 }
-                 _selectedRows = selRows;
+                _selectedRows = selRows;
                 RaiseDataSourceSelectionChanged();
             }
             else
@@ -418,11 +419,11 @@ namespace sql.builder.DataApi
                     RaiseDataSourceSelectionChanged();
                 }
             }
-            
-           
+
+
         }
-       
-        
+
+
         public List<DataRow> SelectedRows
         {
             get
@@ -445,7 +446,7 @@ namespace sql.builder.DataApi
                         RaiseCurrentRowChanged();
                     }
                 }
-                
+
             }
         }
 
@@ -484,9 +485,9 @@ namespace sql.builder.DataApi
         {
             if (!string.IsNullOrEmpty(MultiselectSource()) || !string.IsNullOrEmpty(MultiselectTargetName))
             {
-               return true;
+                return true;
             }
-            else 
+            else
             {
                 return false;
             }
@@ -496,13 +497,13 @@ namespace sql.builder.DataApi
             var src = GetDataSet().GetTable(MultiselectSource());
             SyncSelection(src.TableName, src.PrimaryKey[0].ColumnName, ArrayEditValueRefColumn);
         }
-        private  void SyncSelection(string sourceName,string sourceColumnName,string columnName)
+        private void SyncSelection(string sourceName, string sourceColumnName, string columnName)
         {
-            
+
             if (this._checkingRows) return;
             var src = GetDataSet().GetTable(sourceName);
             if (src._checkingRows) return;
-            var allRows = new SortedList<string,DataRow>();
+            var allRows = new SortedList<string, DataRow>();
             var rowsToSelect = new List<DataRow>();
             foreach (DataRow r in ExistingRows())
             {
@@ -549,8 +550,8 @@ namespace sql.builder.DataApi
                 //SyncChecks();
             }
 
-            
-            if (trg!=null && trg._refreshed && src._refreshed)
+
+            if (trg != null && trg._refreshed && src._refreshed)
             {
                 src.SyncChecks();
             }
@@ -558,8 +559,8 @@ namespace sql.builder.DataApi
 
         private void SyncChecks()
         {
-           
-            var tbl= GetDataSet().GetTable(MultiselectTargetName);
+
+            var tbl = GetDataSet().GetTable(MultiselectTargetName);
             //var rows = new List<DataRow>();
             SuppressChangeEvent();
             SendBeginUpdateToUI();
@@ -574,7 +575,7 @@ namespace sql.builder.DataApi
             }
             foreach (DataRow r in tbl.ExistingRows())
             {
-              
+
                 var row = this.Rows.Find(r[tbl.ArrayEditValueRefColumn]);
                 if (row != null)
                 {
@@ -587,13 +588,13 @@ namespace sql.builder.DataApi
                     }
 
                 }
-                
-                
+
+
             }
             ResumeChangeEvent();
             SendEndUpdateToUI();
-           // SetRowsChecked(rows.ToArray());
-            
+            // SetRowsChecked(rows.ToArray());
+
         }
 
 
@@ -601,8 +602,8 @@ namespace sql.builder.DataApi
         public bool AutoRefresh = false;
         public bool OnlyForceRefresh = false;
         public bool OnlyVisibleRefresh = false;
-        private SortedList<string,SortedList<string,string>> InvalidFields = null;
-        private SortedList<string,DataRow> InvalidRows = null;
+        private SortedList<string, SortedList<string, string>> InvalidFields = null;
+        private SortedList<string, DataRow> InvalidRows = null;
         private HashSet<string> ValidatedRows = null;
         private HashSet<string> CheckedRows = null;
 
@@ -614,7 +615,7 @@ namespace sql.builder.DataApi
             _isVisibleInLayout = val;
             return val;
         }
-        private bool _isVisibleInLayout=false;
+        private bool _isVisibleInLayout = false;
         public void SetVisibleInLayout(bool value)
         {
             var oldvis = _isVisibleInLayout;
@@ -630,7 +631,7 @@ namespace sql.builder.DataApi
                 _refreshWhenVisible = false;
                 Refresh();
             }
-          
+
         }
         public void UpdateValidation(DataRow row)
         {
@@ -667,24 +668,24 @@ namespace sql.builder.DataApi
                 //if (columnName == "data_for_report")
                 //{
                 //}
-                    RemoveInvalidFieldColumn(row, columnName);
-                
+                RemoveInvalidFieldColumn(row, columnName);
+
                 //if (!string.IsNullOrEmpty(GetCellError(row, columnName)))
                 //{
-                   
+
                 //    var id = new Tuple<string, string>(rowid, columnName);
                 //    CellErrors.Remove(id);
                 //}
-                
-                
+
+
             }
             else
             {
                 //if (columnName == "data_for_report")
                 //{
                 //}
-                
-             //   var id = new Tuple<string, string>(rowid, columnName);
+
+                //   var id = new Tuple<string, string>(rowid, columnName);
                 AddInvalidFieldColumn(row, columnName, message);
                 //if (CellErrors == null)
                 //{
@@ -712,11 +713,11 @@ namespace sql.builder.DataApi
 
         public string GetCellErrorForText(DataRow row, string columnName)
         {
-            
-            return GetCellError(row, GetNameForText( columnName));
+
+            return GetCellError(row, GetNameForText(columnName));
         }
-        
-        public string GetCellError(DataRow row,string columnName)
+
+        public string GetCellError(DataRow row, string columnName)
         {
             if (columnName == null)
             {
@@ -751,24 +752,24 @@ namespace sql.builder.DataApi
             }
 
 
-            
 
-            if (!InvalidRows.ContainsKey (rowid))
+
+            if (!InvalidRows.ContainsKey(rowid))
             {
                 return "";
             }
 
-            
-           
+
+
 
             if (!InvalidFields[rowid].ContainsKey(columnName))
             {
                 return "";
-               
+
             }
-           // var id = new Tuple<string, string>(rowid, columnName);
-            return  VDataTable.ClearValidationMessage( InvalidFields[rowid][columnName]);
-           // return GetColumn(InvalidFields[rowid][0]).GetValidation(row);
+            // var id = new Tuple<string, string>(rowid, columnName);
+            return VDataTable.ClearValidationMessage(InvalidFields[rowid][columnName]);
+            // return GetColumn(InvalidFields[rowid][0]).GetValidation(row);
 
         }
 
@@ -779,13 +780,13 @@ namespace sql.builder.DataApi
             {
                 return result;
             }
-            var rowid = GetRowId(row); 
-            if (!InvalidRows.ContainsKey (rowid))
+            var rowid = GetRowId(row);
+            if (!InvalidRows.ContainsKey(rowid))
             {
                 return result;
             }
 
-            if (row.RowState == DataRowState.Unchanged && (GetDataSet().ParamsTable!=this || GetDataSet().TopTable!=null))
+            if (row.RowState == DataRowState.Unchanged && (GetDataSet().ParamsTable != this || GetDataSet().TopTable != null))
             {
                 return result;
             }
@@ -802,9 +803,9 @@ namespace sql.builder.DataApi
                 {
                     result.Warning.Add(ClearValidationMessage(a.Value));
                 }
-               
+
             }
-          //  var id = new Tuple<string, string>(rowid, InvalidFields[rowid].First().Key);
+            //  var id = new Tuple<string, string>(rowid, InvalidFields[rowid].First().Key);
             return result;
         }
 
@@ -813,7 +814,7 @@ namespace sql.builder.DataApi
             var pref = "";
             if (msg.Length > 4)
             {
-                 pref = msg.Substring(0, 5);
+                pref = msg.Substring(0, 5);
             }
             return pref;
         }
@@ -857,42 +858,42 @@ namespace sql.builder.DataApi
         public string GetRowId(DataRow row)
         {
 
-          //// при удалении индекс изменяется, наверное нужно переделать;
-          // var id= Rows.IndexOf(row).ToString();
-          // if (id == "-1")
-          // {
-          //     throw new IndexOutOfRangeException();
-          // }
+            //// при удалении индекс изменяется, наверное нужно переделать;
+            // var id= Rows.IndexOf(row).ToString();
+            // if (id == "-1")
+            // {
+            //     throw new IndexOutOfRangeException();
+            // }
 
             var id = row.GetHashCode().ToString();// может так сойдет
-           return id;
+            return id;
         }
-        public void AddInvalidFieldColumn(DataRow row, string columnName,string message)
+        public void AddInvalidFieldColumn(DataRow row, string columnName, string message)
         {
-           var  rowid = GetRowId(row);
-           
+            var rowid = GetRowId(row);
+
             //if (rowid == "")
             //{
             //    return;
             //}
-            
+
             if (InvalidFields == null)
             {
-                InvalidFields = new  SortedList<string, SortedList<string,string>>();
+                InvalidFields = new SortedList<string, SortedList<string, string>>();
                 InvalidRows = new SortedList<string, DataRow>();
             }
-          
+
 
             //if (PrimaryKey.Any())
             //{
-               
+
             //}
             if (!InvalidFields.ContainsKey(rowid))
             {
-                InvalidFields.Add(rowid,new SortedList<string,string>());
-                InvalidRows.Add(rowid,row);
+                InvalidFields.Add(rowid, new SortedList<string, string>());
+                InvalidRows.Add(rowid, row);
             }
-            InvalidFields[rowid][columnName]=message;
+            InvalidFields[rowid][columnName] = message;
             if (IsValid)
             {
                 IsValid = false;
@@ -913,7 +914,7 @@ namespace sql.builder.DataApi
             }
         }
 
-        public void RemoveInvalidFieldColumn(DataRow row,string name)
+        public void RemoveInvalidFieldColumn(DataRow row, string name)
         {
 
             if (InvalidFields == null)
@@ -935,12 +936,12 @@ namespace sql.builder.DataApi
                     InvalidRows.Remove(rowid);
                 }
             }
-            
+
             if (!InvalidFields.Any())
             {
                 ResetValidation();
             }
-            
+
         }
 
         public void AcceptSelection()
@@ -957,7 +958,7 @@ namespace sql.builder.DataApi
                 behaviorEventAttached = true;
             }
         }
-      
+
 
         //public string NameFieldName = null;
         //public string KeyFieldName = null;
@@ -966,10 +967,10 @@ namespace sql.builder.DataApi
         //public event DataColumnChangeEventHandler ColumnEditableChanged;
         //public event DataColumnChangeEventHandler ColumnValidChanged;
         public event DataColumnChangeEventHandler ColumnVisibleChanged; // оставлено дл грида
-        //public event DataColumnChangeEventHandler ColumnSelListChanged;
-        //public event DataColumnChangeEventHandler ColumnTextChanged;
-        //public event DataColumnChangeEventHandler ColumnFontColorChanged;
-        
+                                                                        //public event DataColumnChangeEventHandler ColumnSelListChanged;
+                                                                        //public event DataColumnChangeEventHandler ColumnTextChanged;
+                                                                        //public event DataColumnChangeEventHandler ColumnFontColorChanged;
+
         public event DataColumnChangeEventHandler UserChangedData;
         private string _multiselectSource = null;
         public string MultiselectSource()
@@ -992,9 +993,11 @@ namespace sql.builder.DataApi
         private IList<DataRow> ExistingRows()
         {
             List<DataRow> rows = new List<DataRow>();
-            for (int index = 0; index < this.Rows.Count; index++) {
+            for (int index = 0; index < this.Rows.Count; index++)
+            {
                 DataRow row = this.Rows[index];
-                if (row.RowState != DataRowState.Deleted && row.RowState != DataRowState.Detached) {
+                if (row.RowState != DataRowState.Deleted && row.RowState != DataRowState.Detached)
+                {
                     rows.Add(row);
                 }
             }
@@ -1002,7 +1005,7 @@ namespace sql.builder.DataApi
         }
         private bool _checkingRows = false;
 
-        public void SendFocusedCellToUI(string columnName,DataRow row)
+        public void SendFocusedCellToUI(string columnName, DataRow row)
         {
             if (Grid != null)
             {
@@ -1015,7 +1018,7 @@ namespace sql.builder.DataApi
             if (Grid != null)
             {
                 Grid.BeginUpdate();
-               
+
             }
         }
         private void SendEndUpdateToUI() // вроде ничего не дает, но оставлю
@@ -1025,7 +1028,7 @@ namespace sql.builder.DataApi
                 Grid.EndUpdate();
             }
         }
-        public void SetRowsChecked(DataRow[] rows, bool useAll=false)
+        public void SetRowsChecked(DataRow[] rows, bool useAll = false)
         {
             //_checkingRows = true;
             SetRowsChecking(true);
@@ -1049,8 +1052,8 @@ namespace sql.builder.DataApi
                     {
                         row.AcceptChanges();
                     }
-                
-                  
+
+
                     use = true;
                 }
                 if (use)
@@ -1075,7 +1078,7 @@ namespace sql.builder.DataApi
         public void SetRowsUnCheckedOnTarget(DataRow[] rows, bool useAll = false)
         {
             var src = GetDataSet().GetTable(MultiselectSource());
-         
+
 
             var srcRows = new List<DataRow>();
             foreach (var row in rows)
@@ -1093,9 +1096,9 @@ namespace sql.builder.DataApi
             }
 
             src.SetRowsUnChecked(srcRows.ToArray(), useAll);
-           
-              
-               
+
+
+
         }
 
         public void SetRowsUnChecked(DataRow[] rows, bool useAll = false)
@@ -1176,8 +1179,8 @@ namespace sql.builder.DataApi
         {
             if (_checkingRows) return;
             var tbl = GetDataSet().GetTable(MultiselectTargetName);
-         
-            
+
+
             if (row[MultiselectColumnName].ToString() == "1")
             {
                 if (!IsRowChecked(row))
@@ -1200,18 +1203,18 @@ namespace sql.builder.DataApi
             {
                 RemoveCheckedRow(row);
                 SetRowsUnChecked(new DataRow[] { row }, true);
-                
+
             }
         }
 
         public void RaiseUserChangedData(object sender, DataColumnChangeEventArgs args)
         {
-          
+
             if (args != null)
             {
                 var vcol = args.Column as VDataColumn;
                 var id = GetRowId(args.Row);
-                if (MultiselectColumnName == vcol.ColumnName )
+                if (MultiselectColumnName == vcol.ColumnName)
                 {
                     if (!IsRowChanged(id))
                     {
@@ -1229,7 +1232,7 @@ namespace sql.builder.DataApi
 
                 if (!vcol.IsUpdateable)
                 {
-                    if (!IsRowChanged(id) && GetDataSet()!=null/*не редактор схемы*/)
+                    if (!IsRowChanged(id) && GetDataSet() != null/*не редактор схемы*/)
                     {
                         args.Row.AcceptChanges();
                     }
@@ -1242,7 +1245,7 @@ namespace sql.builder.DataApi
                 //    && vcol.ColumnEditableSource!=TextConst.AVBool.True // не универсально
                 //    ) return;
 
-               
+
             }
 
 
@@ -1267,14 +1270,14 @@ namespace sql.builder.DataApi
         private void onColumnChangedForBehavior(object sender, DataColumnChangeEventArgs args)
         {
 
-           // if (SuppressChangedEvent) return;
+            // if (SuppressChangedEvent) return;
             var column = args.Column as VDataColumn;
             if (column == null) return;
-            ProcessBehaviorChanges(column, args.Row,true);
+            ProcessBehaviorChanges(column, args.Row, true);
             GetDataSet().PrcessRefreshQueue();
         }
 
-        public void ProcessBehaviorChanges(VDataColumn column, DataRow row,bool isDataChanged) // Перенести все сюда из onColumnChangedForBehavior
+        public void ProcessBehaviorChanges(VDataColumn column, DataRow row, bool isDataChanged) // Перенести все сюда из onColumnChangedForBehavior
         {
 
             if (IsNonDb)
@@ -1292,7 +1295,7 @@ namespace sql.builder.DataApi
                 {
                     var depColumn = col;//(column.Table.Columns[name] as VDataColumn);
                     var row1 = col.GetInOrCurrentRow(row);
-                    
+
                     foreach (var ctrl in depColumn.BoundControls)
                     {
                         ctrl.ColumnVisibleChanged(row1);
@@ -1305,9 +1308,9 @@ namespace sql.builder.DataApi
                         depColumn.GetTable().ColumnVisibleChanged(this, args1);
                     }
 
-                    
-                       depColumn.ApplyDefaultValue(row1);
-                    
+
+                    depColumn.ApplyDefaultValue(row1);
+
 
 
                     //
@@ -1385,7 +1388,7 @@ namespace sql.builder.DataApi
 
             if (/*ColumnValidChanged != null && */column.DependantsMandatory != null)
             {
-                
+
                 foreach (VDataColumn depColumn in column.DependantsMandatory)
                 {
 
@@ -1440,8 +1443,8 @@ namespace sql.builder.DataApi
                         depColumn.GetTable().ColumnVisibleChanged(this, args1);
                     }
                     //args.Row.SetColumnError(name,depColumn.GetVisibleation(args.Row));
-                   // var args1 = new DataColumnChangeEventArgs(row, depColumn, null);
-                   //depColumn.GetTable().ColumnVisibleChanged(this, args1);
+                    // var args1 = new DataColumnChangeEventArgs(row, depColumn, null);
+                    //depColumn.GetTable().ColumnVisibleChanged(this, args1);
                 }
             }
 
@@ -1453,9 +1456,9 @@ namespace sql.builder.DataApi
                     if (column.VariableName != null)
                     {
                         column.GetTable().GetDataSet().OnVariableValueChanged(column.VariableName);
-                       
+
                         vdc.DataSourceVariableChanged(column.VariableName);
-                        
+
                         //if ((column.Table.DataSet as VDataSet).VariableChanged != null)
                         //{
                         //    // !!! при смене current row тоже нужно вызывать
@@ -1473,27 +1476,27 @@ namespace sql.builder.DataApi
                 //    // здесь любую колонку считаем переменной
                 //}
             }
-            
+
             //if (column.ColumnName == "kr_dogovor_kod_dog")
             //{
-               
+
             //}
             if (column.DependantsNewVal != null)
             {
                 foreach (VDataColumn col in column.DependantsNewVal)
                 {
-                    if (isDataChanged || col.Table==GetDataSet().ParamsTable)
+                    if (isDataChanged || col.Table == GetDataSet().ParamsTable)
                     {
-                      
+
                         var depColumn = col;
                         var row1 = depColumn.GetInOrCurrentRow(row);
                         depColumn.ApplyNewValue(row1);
-                       
+
                     }
-                   
+
                 }
             }
-           
+
         }
 
         public void DeleteRows(DataRow[] rows)
@@ -1515,13 +1518,13 @@ namespace sql.builder.DataApi
             foreach (var row in source)
             {
                 var newRow = Rows.Add();
-                ProcessNewRow(newRow,false);
-                UpdateRowValues(newRow, row,false);
+                ProcessNewRow(newRow, false);
+                UpdateRowValues(newRow, row, false);
                 AddRowToUpdateTemp(GetRowId(newRow));
-              //  UpdateTempRow(newRow);
+                //  UpdateTempRow(newRow);
                 newRows.Add(newRow);
             }
-           
+
             //foreach (var row in source)
             //{
             //    var newRow = Rows.Add();
@@ -1533,20 +1536,20 @@ namespace sql.builder.DataApi
             ResumeChangeEvent();
 
             //CancelTempUpdate = ctu;
-            var newRowsA=newRows.ToArray();
+            var newRowsA = newRows.ToArray();
             foreach (var r in newRowsA)
             {
                 RaiseRowStateChanged(r);
-              
+
             }
 
 
             //if (!IsNonDb)
             //{
-                EnqueueBackgroundRefresh(newRowsA/*,null,null,d*/);
+            EnqueueBackgroundRefresh(newRowsA/*,null,null,d*/);
             //}
-          
-           
+
+
             return newRowsA;
         }
 
@@ -1571,13 +1574,15 @@ namespace sql.builder.DataApi
         //    }
         //    EnqueueBackgroundRefresh(rows.ToArray());
         //}
-        public void ProcessNewRow(DataRow row, bool doRefreshCalulatedValues=true)
+        public void ProcessNewRow(DataRow row, bool doRefreshCalulatedValues = true)
         {
             //if (SuppressChangedEvent) return;
-            if (!this.HasPrimaryKey()) {
+            if (!this.HasPrimaryKey())
+            {
                 return;
             }
-            if (row[row.Table.PrimaryKey[0]] == DBNull.Value) {
+            if (row[row.Table.PrimaryKey[0]] == DBNull.Value)
+            {
                 var ctu = CancelTempUpdate;
                 CancelTempUpdate = true;
                 var drd = DontRefreshDependats;
@@ -1587,7 +1592,8 @@ namespace sql.builder.DataApi
                 row[TextConst.AVColumn.IsNew] = 1;
                 row[TextConst.AVColumn.IsNotNew] = 0;
                 ResumeChangeEvent();
-                if (MyRowAdded != null) {
+                if (MyRowAdded != null)
+                {
                     var a = new DataRowChangeEventArgs(row, DataRowAction.Add);
                     MyRowAdded(this, a);
                 }
@@ -1597,7 +1603,7 @@ namespace sql.builder.DataApi
                 ApplyDefaultValues(row);
                 CancelTempUpdate = ctu;
                 DontRefreshDependats = drd;
-              //  UpdateTempRow(row);
+                //  UpdateTempRow(row);
 
                 if (!this.IsArrayEditValue)
                 {
@@ -1611,8 +1617,8 @@ namespace sql.builder.DataApi
                 {
                     UpdateTempRow(row);
                 }
-              
-               // UpdateValidation(row);
+
+                // UpdateValidation(row);
 
 
             }
@@ -1640,28 +1646,28 @@ namespace sql.builder.DataApi
             return null;
         }
 
-        
+
         public VDataTable GetParentTable()
         {
-            if (this.ParentRelations != null && ParentRelations.Count!=0)
-             {
+            if (this.ParentRelations != null && ParentRelations.Count != 0)
+            {
 
-                 return (ParentRelations[0].ParentColumns[0].Table as VDataTable);
-             }
+                return (ParentRelations[0].ParentColumns[0].Table as VDataTable);
+            }
             return null;
         }
 
-        public void RefreshRowWithParents(DataRow[] rows,bool allowAsyncRefresh=true)
+        public void RefreshRowWithParents(DataRow[] rows, bool allowAsyncRefresh = true)
         {
-            EnqueueBackgroundRefresh(rows,allowAsyncRefresh:allowAsyncRefresh);
+            EnqueueBackgroundRefresh(rows, allowAsyncRefresh: allowAsyncRefresh);
             RefreshParents();
-         
+
         }
 
         public void RefreshParents()
         {
             var parentTable = GetParentTable();
-            
+
             if (parentTable != null)
             {
 
@@ -1682,15 +1688,15 @@ namespace sql.builder.DataApi
             if (UIEvent != null)
             {
                 return UIEvent(this, new UIEventArgs(name, null, this, row, col));
-                
+
             }
             return false;
-            
+
         }
 
         public void RefreshCalulatedValues(DataRow row)
         {
-           
+
             if (row == null) return;
 
             EnqueueBackgroundRefreshRow(row);// !!! тест
@@ -1728,7 +1734,7 @@ namespace sql.builder.DataApi
             }
         }
 
-        public bool   IsRowAdded(DataRow row)
+        public bool IsRowAdded(DataRow row)
         {
             if (addedRows == null)
             {
@@ -1741,16 +1747,19 @@ namespace sql.builder.DataApi
         public DataRow[] AddExistingRow(object[] keys)
         {
             SuppressChangeEvent();
-           // this.BeginLoadData();
+            // this.BeginLoadData();
             List<DataRow> rows = new List<DataRow>();
-            foreach (object key in keys) {
+            foreach (object key in keys)
+            {
                 var row = this.Rows.Add();
                 row[PrimaryKey[0]] = key;
                 SetForeignKey(row);
-                if (this.GetColumn(TextConst.AVColumn.IsNew) != null) {
+                if (this.GetColumn(TextConst.AVColumn.IsNew) != null)
+                {
                     row[TextConst.AVColumn.IsNew] = Cmn.DECIMAL_ZERO;
                 }
-                if (this.GetColumn(TextConst.AVColumn.IsNotNew) != null) {
+                if (this.GetColumn(TextConst.AVColumn.IsNotNew) != null)
+                {
                     row[TextConst.AVColumn.IsNotNew] = Cmn.DECIMAL_ONE;
                 }
                 row.AcceptChanges();
@@ -1759,21 +1768,21 @@ namespace sql.builder.DataApi
             }
 
             ResumeChangeEvent();
-         //   System.Windows.Forms.MessageBox.Show("1");
+            //   System.Windows.Forms.MessageBox.Show("1");
             RefreshRowWithParents(rows.ToArray());
-           
+
             return rows.ToArray();
-           // RaiseCurrentRowChanged();
+            // RaiseCurrentRowChanged();
         }
 
         //private static DataTable ExecuteCmd(VDBSelectCommand cmd, OracleConnection connection, List<OracleParameter> pars)
         //{
         //    return cmd.ExecuteDataTable(pars.ToArray(), connection);
         //}
-        private static Semaphore semaphore1 = new Semaphore(1,1);
+        private static Semaphore semaphore1 = new Semaphore(1, 1);
 
         private static Queue<RefreshInfo> refreshQueue = new Queue<RefreshInfo>();
-        private static bool completingWork  = false;
+        private static bool completingWork = false;
         private static RefreshInfo _refreshInWork;
         private static RefreshInfo refreshInWork
         {
@@ -1798,18 +1807,18 @@ namespace sql.builder.DataApi
             public VDBSelectCommand Command;
             public VDataColumn ChangingColumn;
             public Queue<RefreshInfo> Childs = new Queue<RefreshInfo>();
-            public RefreshInfo Parent=null;
+            public RefreshInfo Parent = null;
             public SimpleDelegate OnComplete;
             public bool CanDoAsync = true;
         }
 
-       
-        public void EnqueueBackgroundRefreshRow(DataRow row, VDBSelectCommand cmd = null, VDataColumn changingColumn = null, SimpleDelegate onComplete=null)
+
+        public void EnqueueBackgroundRefreshRow(DataRow row, VDBSelectCommand cmd = null, VDataColumn changingColumn = null, SimpleDelegate onComplete = null)
         {
             var rows = new DataRow[] { row };
 
-            EnqueueBackgroundRefresh(rows, cmd, changingColumn,onComplete);
-            
+            EnqueueBackgroundRefresh(rows, cmd, changingColumn, onComplete);
+
         }
 
 
@@ -1830,7 +1839,7 @@ namespace sql.builder.DataApi
         }
         public bool IsArrayEditValue = false;
         public string ArrayEditValueRefColumn = null;
-        public void EnqueueBackgroundRefresh(DataRow[] rows, VDBSelectCommand cmd = null, VDataColumn changingColumn = null, SimpleDelegate onComplete = null, bool allowAsyncRefresh=true)
+        public void EnqueueBackgroundRefresh(DataRow[] rows, VDBSelectCommand cmd = null, VDataColumn changingColumn = null, SimpleDelegate onComplete = null, bool allowAsyncRefresh = true)
         {
             //if (this.IsArrayEditValue)
             //{
@@ -1843,11 +1852,11 @@ namespace sql.builder.DataApi
             }
             var info = new RefreshInfo
             {
-                Table=this,
-                Rows=rows,
-                Command=cmd,
-                ChangingColumn=changingColumn,
-                OnComplete=onComplete,
+                Table = this,
+                Rows = rows,
+                Command = cmd,
+                ChangingColumn = changingColumn,
+                OnComplete = onComplete,
                 CanDoAsync = async
             };
             if (completingWork)
@@ -1859,7 +1868,7 @@ namespace sql.builder.DataApi
             {
                 if (refreshQueue.Any() && !async)
                 {
-                    BackgroundRefresh(info,false);
+                    BackgroundRefresh(info, false);
                 }
                 else
                 {
@@ -1867,29 +1876,29 @@ namespace sql.builder.DataApi
                     refreshQueue.Enqueue(info);
                     if (refreshQueue.Count == 1)
                     {
-                        BackgroundRefresh(refreshQueue.Peek(),true);
+                        BackgroundRefresh(refreshQueue.Peek(), true);
                     }
                 }
             }
-            
+
         }
-       
+
         private void BackgroundRefresh(RefreshInfo info, bool withQueue)
         {
-             refreshInWork = info;
-             info.Table.GetDataSet().AddChangingColumn(info.ChangingColumn);
-             if (info.Rows != null)
-             {
-                 foreach (DataRow row in info.Rows)
-                 {
-                     if (row.RowState != DataRowState.Unchanged)
-                     {
-                         info.Table.UpdateTempRow(row);
-                     }
-                 }
-             }
-             info.Table.RefreshRows(info.Rows, info.Command, info.ChangingColumn, info.CanDoAsync, withQueue);
-            
+            refreshInWork = info;
+            info.Table.GetDataSet().AddChangingColumn(info.ChangingColumn);
+            if (info.Rows != null)
+            {
+                foreach (DataRow row in info.Rows)
+                {
+                    if (row.RowState != DataRowState.Unchanged)
+                    {
+                        info.Table.UpdateTempRow(row);
+                    }
+                }
+            }
+            info.Table.RefreshRows(info.Rows, info.Command, info.ChangingColumn, info.CanDoAsync, withQueue);
+
         }
 
         public bool IsBackgroundRefreshProcessing()
@@ -1902,7 +1911,7 @@ namespace sql.builder.DataApi
         }
         public void BackgroundRefreshNext()
         {
-            
+
             var queue = refreshInWork.Childs;
             var ds = refreshInWork.Table.GetDataSet();
             RefreshInfo completed = null;
@@ -1927,18 +1936,18 @@ namespace sql.builder.DataApi
                     }
                 }
                 refreshInWork = parent;
-                 
-               
+
+
             }
             if (queue.Any())
             {
-                BackgroundRefresh(queue.Peek(),true);
+                BackgroundRefresh(queue.Peek(), true);
             }
             else
             {
                 ds.ClearChangingColumns();
                 ds.RaiseChangeCompleted();
-               // this.EndLoadData();
+                // this.EndLoadData();
             }
             if (completed != null)
             {
@@ -1948,21 +1957,23 @@ namespace sql.builder.DataApi
                     completed.OnComplete = null;
                 }
             }
-            
+
 
         }
-       
-        public  void RefreshRows(DataRow[] rows ,VDBSelectCommand cmd=null,VDataColumn changingColumn=null,bool canDoAsync=true,bool withQueue=true) //!!! Реализовать передачу массивов без изменения текста запроса.
+
+        public void RefreshRows(DataRow[] rows, VDBSelectCommand cmd = null, VDataColumn changingColumn = null, bool canDoAsync = true, bool withQueue = true) //!!! Реализовать передачу массивов без изменения текста запроса.
         {
             //if (SuppressChangedEvent)/// !!! может быть нужно
             //{
             //    BackgroundRefreshNext();
             //    return;
             //}
-            if (rows == null) {
+            if (rows == null)
+            {
                 rows = this.Rows.ToArray();
             }
-            if (IsNonDb) {
+            if (IsNonDb)
+            {
                 if (CustomRowRefresh != null)
                 {
                     foreach (var row in rows)
@@ -1972,10 +1983,13 @@ namespace sql.builder.DataApi
                 }
                 return;
             }
-            if (rows.Length == 0) {
+            if (rows.Length == 0)
+            {
                 BackgroundRefreshNext();
                 return;
-            } else if (rows.Length == 1) {
+            }
+            else if (rows.Length == 1)
+            {
                 RefreshRow(rows[0], cmd, changingColumn, canDoAsync, withQueue);
                 return;
             }
@@ -1984,8 +1998,8 @@ namespace sql.builder.DataApi
                 DontRefreshDependats = true;
                 cmd = SingleRowRefreshCommand;
             }
-            
-            
+
+
             List<OracleParameter> pars;
             var tbl = this;
             var ds = tbl.GetDataSet();
@@ -2026,16 +2040,16 @@ namespace sql.builder.DataApi
             if (UIStatic.IsAsync && canDoAsync)
             {
                 BackgroundWorker bw = new BackgroundWorker();
-                bw.DoWork += delegate(object o, DoWorkEventArgs args)
+                bw.DoWork += delegate (object o, DoWorkEventArgs args)
                 {
                     WaitSemaphore();
-                 
+
                     args.Result = RefreshRows_DoWork(cmd, pars, rows);
 
                 };
 
 
-                bw.RunWorkerCompleted += delegate(object o, RunWorkerCompletedEventArgs args)
+                bw.RunWorkerCompleted += delegate (object o, RunWorkerCompletedEventArgs args)
                 {
                     RefreshRows_Complete(args.Result, changingColumn);
                     ReleaseSemaphore();
@@ -2045,7 +2059,7 @@ namespace sql.builder.DataApi
             else
             {
                 var res = RefreshRows_DoWork(cmd, pars, rows);
-                RefreshRows_Complete(res, changingColumn,withQueue);
+                RefreshRows_Complete(res, changingColumn, withQueue);
             }
 
 
@@ -2053,30 +2067,30 @@ namespace sql.builder.DataApi
 
         private object RefreshRows_DoWork(VDBSelectCommand cmd, List<OracleParameter> pars, DataRow[] rows)
         {
-            return new  Tuple<DataRow[], DataTable>(
+            return new Tuple<DataRow[], DataTable>(
                     rows,
                     cmd.ExecuteDataTable(pars.ToArray(), (OracleConnection)GetDataSet().GetConnection())
                     );
         }
 
-        private void RefreshRows_Complete(object result, VDataColumn changingColumn = null,bool withQueue=true)
+        private void RefreshRows_Complete(object result, VDataColumn changingColumn = null, bool withQueue = true)
         {
             completingWork = true;
             var tbl = this;
             var res = (Tuple<DataRow[], DataTable>)result;
             var rows2 = res.Item1;
             var valTbl = (DataTable)res.Item2;
-          
+
             tbl.SuppressChangeEvent();
-           
+
             tbl.GetDataSet().ChangesNotCompleted = true;
             foreach (DataRow row1 in valTbl.Rows)
             {
-               
+
                 var row2 = Rows.Find(row1[PrimaryKey[0].ColumnName]);
 
                 tbl.UpdateRowValues(row2, row1);
-              
+
 
 
             }
@@ -2085,7 +2099,7 @@ namespace sql.builder.DataApi
             //if (!VDataSet.HasWorkingProcesses())
             //{
             //    tbl.GetDataSet().ClearChangingColumns();
-                
+
             //}
             //else
             //{
@@ -2098,7 +2112,7 @@ namespace sql.builder.DataApi
             completingWork = false;
         }
 
-        public void RefreshRow(DataRow row, VDBSelectCommand cmd = null, VDataColumn changingColumn = null, bool canDoAsync = true, bool withQueue=true)
+        public void RefreshRow(DataRow row, VDBSelectCommand cmd = null, VDataColumn changingColumn = null, bool canDoAsync = true, bool withQueue = true)
         {
             //if (SuppressChangedEvent)   // !!! может быть нужно?
             //{
@@ -2121,9 +2135,9 @@ namespace sql.builder.DataApi
             if (cmd == null)
             {
                 return;
-                
+
             }
-          
+
             List<OracleParameter> pars;
             var tbl = this;
             var ds = tbl.GetDataSet();
@@ -2137,7 +2151,7 @@ namespace sql.builder.DataApi
                 pars = new List<OracleParameter>();
 
 
-                
+
             }
 
 
@@ -2159,15 +2173,15 @@ namespace sql.builder.DataApi
                     pars.Add(ds.GetParamAsOracleParametr(needParName));
                 }
             }
-           
 
-           
+
+
             //int procId = VDataSet.GetBackgroundProcessId();
             //VDataSet.AddWorkingProcess(procId);
             if (UIStatic.IsAsync && canDoAsync)
             {
                 BackgroundWorker bw = new BackgroundWorker();
-                bw.DoWork += delegate(object o, DoWorkEventArgs args)
+                bw.DoWork += delegate (object o, DoWorkEventArgs args)
                 {
                     WaitSemaphore();
                     args.Result = RefreshRow_DoWork(cmd, pars, row);
@@ -2175,7 +2189,7 @@ namespace sql.builder.DataApi
                 };
 
 
-                bw.RunWorkerCompleted += delegate(object o, RunWorkerCompletedEventArgs args)
+                bw.RunWorkerCompleted += delegate (object o, RunWorkerCompletedEventArgs args)
                 {
                     RefreshRow_Complete(args.Result, changingColumn);
                     ReleaseSemaphore();
@@ -2185,34 +2199,34 @@ namespace sql.builder.DataApi
             else
             {
                 var res = RefreshRow_DoWork(cmd, pars, row);
-                RefreshRow_Complete(res,  changingColumn,withQueue);
+                RefreshRow_Complete(res, changingColumn, withQueue);
             }
 
 
 
         }
 
-        
 
-        private  object RefreshRow_DoWork( VDBSelectCommand cmd, List<OracleParameter> pars, DataRow row)
+
+        private object RefreshRow_DoWork(VDBSelectCommand cmd, List<OracleParameter> pars, DataRow row)
         {
             if (IsNonDb)
             {
                 return null;
             }
-            return  new Tuple<DataRow, DataTable>(
+            return new Tuple<DataRow, DataTable>(
                     row,
-                    cmd.ExecuteDataTable(pars.ToArray(),(OracleConnection) GetDataSet().GetConnection())
+                    cmd.ExecuteDataTable(pars.ToArray(), (OracleConnection)GetDataSet().GetConnection())
                     );
         }
-        private void RefreshRow_Complete(object result, VDataColumn changingColumn = null, bool withQueue=true)
+        private void RefreshRow_Complete(object result, VDataColumn changingColumn = null, bool withQueue = true)
         {
             if (IsNonDb && result == null) return;
             completingWork = true;
             var tbl = this;
             var res = (Tuple<DataRow, DataTable>)result;
             var row2 = res.Item1;
-            
+
             var valTbl = (DataTable)res.Item2;
             List<VDataColumn> changedColumns = new List<VDataColumn>();
             tbl.GetDataSet().ChangesNotCompleted = true;
@@ -2229,7 +2243,7 @@ namespace sql.builder.DataApi
 
                 }
             }
-            
+
             //VDataSet.RemoveWorkingProcess(procId);
             //if (!VDataSet.HasWorkingProcesses())
             //{
@@ -2257,12 +2271,12 @@ namespace sql.builder.DataApi
         }
         public void UpdateRowValues(DataRow targetRow, DataRow sourceRow)
         {
-             var sourceArray = RowToArray(sourceRow);
-             UpdateRowValues(targetRow, sourceArray);
+            var sourceArray = RowToArray(sourceRow);
+            UpdateRowValues(targetRow, sourceArray);
         }
-        public void UpdateRowValues(DataRow targetRow , SortedList<string,object> sourceRow,bool raiseEvents=true)
+        public void UpdateRowValues(DataRow targetRow, SortedList<string, object> sourceRow, bool raiseEvents = true)
         {
-            if (targetRow==null) return; // происходит если включена асинхронность
+            if (targetRow == null) return; // происходит если включена асинхронность
             SuppressChangeEvent();
             var rst = targetRow.RowState;
             //var sourceTbl = sourceRow.Table;
@@ -2273,21 +2287,22 @@ namespace sql.builder.DataApi
                 {
                     //!!! заплатка . почему то приходит is_new= 0 для новой строки при первом рефреше
                     var targetColumn = (VDataColumn)Columns[col];
-					//тут происходит слияние рядов обновленного и оригинального.
-					if (targetColumn.SetValue(targetRow, sourceRow[col]))
-					{
-						changedColumns.Add(targetColumn);
-					}
+                    //тут происходит слияние рядов обновленного и оригинального.
+                    if (targetColumn.SetValue(targetRow, sourceRow[col]))
+                    {
+                        changedColumns.Add(targetColumn);
+                    }
                 }
 
 
-               
+
             }
 
             ResumeChangeEvent();
             if (raiseEvents)
             {
-                if (changedColumns.Count != 0) {
+                if (changedColumns.Count != 0)
+                {
                     //UpdateTempRow(targetRow);
                     CancelTempUpdate = true;
                     foreach (var col in changedColumns)
@@ -2295,7 +2310,8 @@ namespace sql.builder.DataApi
                         var drd = DontRefreshDependats;
                         var ctu = CancelTempUpdate;
                         var nv = false;
-                        if (col.DependantsNewVal != null && col.DependantsNewVal.Count != 0) {
+                        if (col.DependantsNewVal != null && col.DependantsNewVal.Count != 0)
+                        {
                             UnsuppressChangeEvent();
                             CancelTempUpdate = false;
                             DontRefreshDependats = false;
@@ -2324,7 +2340,7 @@ namespace sql.builder.DataApi
                 targetRow.AcceptChanges();
             }
         }
-        
+
         public void SetForeignKey(DataRow row)
         {
             if (ParentRelations.Count > 0)
@@ -2338,29 +2354,29 @@ namespace sql.builder.DataApi
             }
         }
 
-		public bool IsForeignKeyAvailable()
-		{
-			if (ParentRelations.Count > 0)
-			{
-
-				var parentCol = ParentRelations[0].ParentColumns[0];
-				var a = (parentCol.Table as VDataTable);
-				
-				return (!(a.CurrentRow == null) && ((a.CurrentRow.RowState == DataRowState.Modified) || (a.CurrentRow.RowState == DataRowState.Unchanged))) ;
-			}
-			else
-			{
-				return true;
-			}
-		}
-        public bool CancelTempUpdate=false;
-
-
-       public static  int delStateVal=3;
-       public static int addStateVal = 1;
-        public void SetUpdateTempRowParams(DataRow row, bool deleted=false)
+        public bool IsForeignKeyAvailable()
         {
-           
+            if (ParentRelations.Count > 0)
+            {
+
+                var parentCol = ParentRelations[0].ParentColumns[0];
+                var a = (parentCol.Table as VDataTable);
+
+                return (!(a.CurrentRow == null) && ((a.CurrentRow.RowState == DataRowState.Modified) || (a.CurrentRow.RowState == DataRowState.Unchanged)));
+            }
+            else
+            {
+                return true;
+            }
+        }
+        public bool CancelTempUpdate = false;
+
+
+        public static int delStateVal = 3;
+        public static int addStateVal = 1;
+        public void SetUpdateTempRowParams(DataRow row, bool deleted = false)
+        {
+
 
             var rowSatate = 0;
 
@@ -2389,7 +2405,7 @@ namespace sql.builder.DataApi
             ApplyRowValuesToParams(row, UpdateTempCommand.Parameters.Cast<OracleParameter>().Where(p => p.SourceColumn != "").ToList(), false);
             UpdateTempCommand.Parameters[TextConst.DBParams.FormId].Value = GetDataSet().GetFormId();
             UpdateTempCommand.Parameters[TextConst.DBParams.RowStateId].Value = rowSatate;
-        
+
 
             // var s = VDBSelectCommand.GetCmdParametrizedText(UpdateTempCommand);
 
@@ -2407,7 +2423,7 @@ namespace sql.builder.DataApi
             {
                 ModifiedRows = new List<DataRow>();
             }
-            
+
             if (!ModifiedRows.Contains(r))
             {
                 ModifiedRows.Add(r);
@@ -2416,7 +2432,7 @@ namespace sql.builder.DataApi
         private void WaitSemaphore()
         {
             semaphore1.WaitOne();
-            
+
         }
         private void ReleaseSemaphore()
         {
@@ -2461,7 +2477,7 @@ namespace sql.builder.DataApi
             }
 
             return rowsToUpdateTemp.Contains(id);
-            
+
         }
 
 
@@ -2550,7 +2566,7 @@ namespace sql.builder.DataApi
         }
 
 
-       
+
 
         //public void UpdateArrayTempTable(DataColumn col)
         //{
@@ -2567,28 +2583,28 @@ namespace sql.builder.DataApi
             }
         }
 
-        public void UpdateTempRow(DataRow row,bool deleted=false)
+        public void UpdateTempRow(DataRow row, bool deleted = false)
         {
 
             if (CancelTempUpdate) return;
             if (row.RowState == DataRowState.Detached) return;
             var rid = GetRowId(row);
-            if (!IsRowToUpdateTemp(rid)) return ;
+            if (!IsRowToUpdateTemp(rid)) return;
             RemoveRowToUpdateTemp(rid);
-           // WaitSemaphore();
-            SetUpdateTempRowParams(row,deleted);
+            // WaitSemaphore();
+            SetUpdateTempRowParams(row, deleted);
 
             if (!IsNonDb)
             {
                 hasTemp = true;
-                DevAnalyzer.AnalyzeExecSql(UpdateTempCommand.CommandText);
+                DevUtilsProvider.Instance.AnalyzeExecSql(UpdateTempCommand.CommandText);
                 UpdateTempCommand.ExecuteNonQuery();
 
             }
 
-           // ReleaseSemaphore();
+            // ReleaseSemaphore();
             AddModifiedRow(row);
-           // var s = VDBSelectCommand.GetCmdParametrizedText(UpdateTempCommand);
+            // var s = VDBSelectCommand.GetCmdParametrizedText(UpdateTempCommand);
         }
 
         public void CrearTemp()
@@ -2597,7 +2613,7 @@ namespace sql.builder.DataApi
             {
                 ClearTempCommand.Connection = (OracleConnection)GetConnection();
                 ClearTempCommand.Parameters[TextConst.DBParams.FormId].Value = GetDataSet().GetFormId();
-                DevAnalyzer.AnalyzeExecSql(ClearTempCommand.CommandText);
+                DevUtilsProvider.Instance.AnalyzeExecSql(ClearTempCommand.CommandText);
                 ClearTempCommand.ExecuteNonQuery();
                 hasTemp = false;
             }
@@ -2645,7 +2661,7 @@ namespace sql.builder.DataApi
             //return false;
         }
 
-       
+
 
 
     }
