@@ -1593,7 +1593,7 @@ namespace sql.builder
                 //cmd.ExecuteNonQuery();
                 if (analyze)
                 {
-                    DevAnalyzer.AnalyzeExecSql(sql1);
+                    DevUtilsProvider.Instance.AnalyzeExecSql(sql1);
                 }
 
                 command.ExecuteNonQuery();
