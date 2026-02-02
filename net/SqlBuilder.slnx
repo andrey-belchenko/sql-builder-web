@@ -1,6 +1,6 @@
 <Solution>
-  <Project Path="SqlBuilderApp/SqlBuilderApp.csproj" />
-  <!-- SqlBuilderLib.Generated excluded from automatic builds - build manually when needed -->
-  <!-- <Project Path="SqlBuilderLib.Generated/SqlBuilderLib.Generated.csproj" /> -->
-  <Project Path="SqlBuilderLib/SqlBuilderLib.csproj" />
+  <Project Path="Sql.Builder.App/Sql.Builder.App.csproj" />
+  <!-- Antlr.Oracle.Generated excluded from automatic builds - build manually when needed -->
+  <!-- <Project Path="Antlr.Oracle.Generated/Antlr.Oracle.Generated.csproj" /> -->
+  <Project Path="Sql.Builder/Sql.Builder.csproj" />
 </Solution>

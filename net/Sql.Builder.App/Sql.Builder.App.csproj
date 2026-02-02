@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\SqlBuilderLib\SqlBuilderLib.csproj" />
+    <ProjectReference Include="..\Sql.Builder\Sql.Builder.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

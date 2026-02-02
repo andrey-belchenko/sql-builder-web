@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 # Paths
-NEW_PROJECT_ROOT = Path(r"C:\Repos\github\sql-builder-web\net\SqlBuilderLib")
+NEW_PROJECT_ROOT = Path(r"C:\Repos\github\sql-builder-web\net\Sql.Builder")
 OLD_PROJECT_ROOT = Path(r"C:\Repos\ai-tfs\root\main\all\sql.builder")
 
 def decode_windows1251_to_utf8(text):

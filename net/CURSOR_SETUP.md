@@ -17,14 +17,14 @@ Cursor IDE cannot use Microsoft's official C# debugger (`coreclr`) due to licens
 ### Step 2: Verify Installation
 
 After installing the extension:
-- Open any `.cs` file (e.g., `SqlBuilderApp/Program.cs`)
+- Open any `.cs` file (e.g., `Sql.Builder.App/Program.cs`)
 - You should see IntelliSense working (autocomplete, hover info)
 - Code navigation (F12, Shift+F12) should work
 - The debugger should now work with the `coreclr` type
 
 ### Step 3: Test Debugging
 
-1. Open `SqlBuilderApp/Program.cs`
+1. Open `Sql.Builder.App/Program.cs`
 2. Set a breakpoint (click left of line number)
 3. Press `F5` or go to Run and Debug
 4. Select ".NET Core Launch (console)"

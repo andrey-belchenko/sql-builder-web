@@ -7,7 +7,7 @@
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/SqlBuilderApp/SqlBuilderApp.csproj",
+        "${workspaceFolder}/Sql.Builder.App/Sql.Builder.App.csproj",
         "/property:GenerateFullPaths=true",
         "/property:BuildInParallel=false",
         "/property:SkipCopyBuildProduct=false",
@@ -37,7 +37,7 @@
         "watch",
         "run",
         "--project",
-        "${workspaceFolder}/SqlBuilderApp"
+        "${workspaceFolder}/Sql.Builder.App"
       ],
       "problemMatcher": "$msCompile"
     },
@@ -47,7 +47,7 @@
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/SqlBuilderLib.Generated/SqlBuilderLib.Generated.csproj",
+        "${workspaceFolder}/Antlr.Oracle.Generated/Antlr.Oracle.Generated.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
