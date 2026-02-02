@@ -41,6 +41,25 @@
         "ASPNETCORE_URLS": "http://localhost:5195"
       },
       "console": "internalConsole"
+    },
+    {
+      "name": ".NET Debug (web) - Asuse.Ai.Reports",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-asuse-reports",
+      "program": "${workspaceFolder}/Asuse.Ai.Reports/bin/Debug/net8.0/Asuse.Ai.Reports.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/Asuse.Ai.Reports",
+      "stopAtEntry": false,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+        "uriFormat": "%s/Report/Example"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost:5195"
+      }
     }
   ]
 }
