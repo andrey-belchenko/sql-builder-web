@@ -4,4 +4,5 @@
   <!-- <Project Path="Antlr.Oracle.Generated/Antlr.Oracle.Generated.csproj" /> -->
   <Project Path="SqlBuilder/SqlBuilder.csproj" />
   <Project Path="SqlBuilder.DevTools/SqlBuilder.DevTools.csproj" />
+  <Project Path="Asuse.Ai.Reports/Asuse.Ai.Reports.csproj" />
 </Solution>

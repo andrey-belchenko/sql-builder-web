@@ -1,0 +1,11 @@
+services:
+  web:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5195:80"
+    environment:
+      - Reporting__MongoConnectionString=mongodb://root:TS6Q4KsA4NpnhAfY@asuse-ai-dev.infoenergo.loc:27017
+      - Reporting__MongoTempDb=reports_tmp
+      - Reporting__PgConnectionString=Host=asuse-ai-dev.infoenergo.loc;Username=asuse;Password=kl0pik;Database=asuse
