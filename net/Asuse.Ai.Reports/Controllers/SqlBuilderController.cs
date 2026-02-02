@@ -19,15 +19,14 @@ namespace Asuse.Ai.Reports.Controllers
         public IActionResult GetForm(string id)
         {
             XElement xform = CleanSqlBuilder.GetFormConfig(id);
-            var dummyXml = $@"<?xml version=""1.0"" encoding=""UTF-8""?>
-<form name=""{id}"">
-    <fields>
-        <field name=""field1"" type=""text"" label=""Field 1"" />
-        <field name=""field2"" type=""number"" label=""Field 2"" />
-    </fields>
-</form>";
+            
+            if (xform == null)
+            {
+                return NotFound($"Form configuration not found for id: {id}");
+            }
 
-            return Content(dummyXml, "application/xml");
+            var xmlString = xform.ToString();
+            return Content(xmlString, "application/xml");
         }
 
     }
