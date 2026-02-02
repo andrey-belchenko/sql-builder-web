@@ -2190,11 +2190,6 @@
     "Processed": true
   },
   {
-    "ObjectName": "sr_money_export_teplo_rm",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
     "ObjectName": "sr_penni",
     "ObjectType": "table",
     "Processed": true
@@ -2330,9 +2325,9 @@
     "Processed": true
   },
   {
-    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf_rm",
+    "ObjectName": "sg_kaz_nakopit_teplo.sr_nakopit_teplo_fill_ext",
     "ObjectType": "procedure",
-    "Processed": false
+    "Processed": true
   },
   {
     "ObjectName": "sqlb_55300_soveshanie",
@@ -2350,69 +2345,74 @@
     "Processed": true
   },
   {
-    "ObjectName": "sg_kaz_nakopit_teplo.sr_nakopit_teplo_fill_ext",
-    "ObjectType": "procedure",
-    "Processed": false
-  },
-  {
-    "ObjectName": "kv_region",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "dr_dogval",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "drv_dogvalparor",
-    "ObjectType": "table or view",
-    "Processed": false
+    "ObjectName": "sr_money_export_teplo_rm",
+    "ObjectType": "temp table",
+    "Processed": true
   },
   {
     "ObjectName": "dv_pril1_1",
-    "ObjectType": "table or view",
-    "Processed": false
+    "ObjectType": "view",
+    "Processed": true
   },
   {
-    "ObjectName": "dv_pril1_1p",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sv_facras",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sv_facras_nal",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sv_facopl",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "sv_vidopl",
-    "ObjectType": "table or view",
-    "Processed": false
-  },
-  {
-    "ObjectName": "rr_rab_pr",
-    "ObjectType": "table or view",
-    "Processed": false
+    "ObjectName": "dr_dogval",
+    "ObjectType": "table",
+    "Processed": true
   },
   {
     "ObjectName": "sr_money_export_teplo",
-    "ObjectType": "table or view",
-    "Processed": false
+    "ObjectType": "temp table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "drv_dogvalparor",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "rr_rab_pr",
+    "ObjectType": "temp table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "dv_pril1_1p",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf_rm",
+    "ObjectType": "procedure",
+    "Processed": true
+  },
+  {
+    "ObjectName": "kv_region",
+    "ObjectType": "mat view",
+    "Processed": true
   },
   {
     "ObjectName": "sg_kaz_nakopit_teplo.sr_nakopit_teplo_fill_area",
     "ObjectType": "procedure",
-    "Processed": false
+    "Processed": true
+  },
+  {
+    "ObjectName": "sv_facras_nal",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sv_facopl",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sv_facras",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
+    "ObjectName": "sv_vidopl",
+    "ObjectType": "view",
+    "Processed": true
   },
   {
     "ObjectName": "sqlb_signatory_view",
@@ -2565,6 +2565,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "dr_dogvalpar",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
     "ObjectName": "sqlb_rep_462359_tbl",
     "ObjectType": "temp table",
     "Processed": true
@@ -2572,6 +2577,11 @@
   {
     "ObjectName": "sqlb_rep_64809_tbl",
     "ObjectType": "temp table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "dr_point",
+    "ObjectType": "table",
     "Processed": true
   },
   {
@@ -2590,6 +2600,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "drv_dogvalgr",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
     "ObjectName": "rr_rep_dz_kz_dog",
     "ObjectType": "temp table",
     "Processed": true
@@ -2602,6 +2617,11 @@
   {
     "ObjectName": "ks_bank",
     "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "drv_dogvalgrpar",
+    "ObjectType": "view",
     "Processed": true
   },
   {
@@ -2620,6 +2640,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "drv_dogvalpar",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
     "ObjectName": "hr_point",
     "ObjectType": "table",
     "Processed": true
@@ -2632,6 +2657,11 @@
   {
     "ObjectName": "k_house",
     "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "dv_pril1_aw",
+    "ObjectType": "view",
     "Processed": true
   },
   {
@@ -2650,6 +2680,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "dv_pril1_awp",
+    "ObjectType": "view",
+    "Processed": true
+  },
+  {
     "ObjectName": "vr_number_array",
     "ObjectType": "temp table",
     "Processed": true
@@ -2657,6 +2692,31 @@
   {
     "ObjectName": "sqlb_rep_61880_14_tbl",
     "ObjectType": "temp table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "dr_awval",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "dr_awvalpar",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "dr_dogvalgr",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "dr_dogvalgrpar",
+    "ObjectType": "table",
+    "Processed": true
+  },
+  {
+    "ObjectName": "dr_dogvalparor",
+    "ObjectType": "table",
     "Processed": true
   }
 ]
