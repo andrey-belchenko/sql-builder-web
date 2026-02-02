@@ -8,9 +8,9 @@ namespace SqlBuilderApp
     {
         static void Main(string[] args)
         {
-            // sql.builder.Program.TestReportsAnalysis(args);
-            // sql.builder.Program.TestSqlParsing(args);
-            //sql.builder.Program.Main2(args);
+            // DevUtils.TestReportsAnalysis(args);
+            DevUtils.TestSqlParsing(args);
+            // sql.builder.Program.Main2(args);
             //             AnalyzerStorage.SaveAllCollectionsToFiles();
 
             //             DevAnalyzer.SetConnectionAndSourceFolder();
@@ -39,7 +39,7 @@ namespace SqlBuilderApp
             //             DbObjectDependencyLoader.LoadDependencies(query);
 
 
-            LogsLoader.LoadLogsFromCsvFiles();
+            // LogsLoader.LoadLogsFromCsvFiles();
         }
     }
 }
