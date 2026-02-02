@@ -52,6 +52,22 @@
         "/consoleloggerparameters:NoSummary"
       ],
       "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build-asuse-reports",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/Asuse.Ai.Reports/Asuse.Ai.Reports.csproj",
+        "/property:GenerateFullPaths=true",
+        "/property:BuildInParallel=false",
+        "/property:SkipCopyBuildProduct=false",
+        "/property:DisableFastUpToDateCheck=false",
+        "/property:SkipGetTargetFrameworkProperties=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile"
     }
   ]
 }

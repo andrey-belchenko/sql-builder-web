@@ -22,6 +22,20 @@
       "cwd": "${workspaceFolder}/SqlBuilder.App",
       "console": "externalTerminal",
       "stopAtEntry": false
+    },
+    {
+      "name": ".NET Launch (web) - Asuse.Ai.Reports",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-asuse-reports",
+      "program": "${workspaceFolder}/Asuse.Ai.Reports/bin/Debug/net8.0/Asuse.Ai.Reports.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/Asuse.Ai.Reports",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost:5195"
+      }
     }
   ]
 }
