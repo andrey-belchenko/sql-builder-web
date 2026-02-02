@@ -34,7 +34,7 @@ namespace sql.builder.Clean
         public static void ChangeConnection(OracleConnection con, string source_folder = null)
         {
             db.Connection = con;
-            Global.Connection =  con;
+            Global.Connection = con;
             XmlReports.Init(source_folder: source_folder);
         }
 
@@ -43,6 +43,11 @@ namespace sql.builder.Clean
             var connection = new OracleConnection(connectionString);
             connection.Open();
             ChangeConnection(connection);
+        }
+
+        public static void GetFormConfig(string reportName)
+        {
+
         }
     }
 

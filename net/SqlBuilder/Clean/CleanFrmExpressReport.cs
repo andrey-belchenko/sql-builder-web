@@ -174,23 +174,43 @@ namespace sql.builder.WinForms
                 return null;
             }
         }
+
+        private static Tuple<string, string> GetProjectFromReportName(string report_name)
+        {
+            string project;
+            int n_pos = report_name.IndexOf('.');
+            if (n_pos >= 0)
+            {
+                project = report_name.Substring(0, n_pos);
+                report_name = report_name.Substring(n_pos + 1);
+            }
+            else
+            {
+                project = GetProjectNameFromNavigator(report_name);
+            }
+            return new Tuple<string, string>(project, report_name);
+        }
+
+        public static XElement GetFormConfig(string report_name)
+        {
+            var projRep = GetProjectFromReportName(report_name);
+            string project = projRep.Item1;
+            report_name = projRep.Item2;
+            var report = XmlReports.Environment.GetPrecompiledReport(report_name, project);
+            var xform = XmlReports.GetForm(report.P_Form, report_name);
+            return xform;
+        }
+
         public bool Initialize(string report_name)
         {
             try
             {
 
+                var projRep = GetProjectFromReportName(report_name);
                 //  report_name
-                string project;
-                int n_pos = report_name.IndexOf('.');
-                if (n_pos >= 0)
-                {
-                    project = report_name.Substring(0, n_pos);
-                    report_name = report_name.Substring(n_pos + 1);
-                }
-                else
-                {
-                    project = GetProjectNameFromNavigator(report_name);
-                }
+                string project = projRep.Item1;
+                report_name = projRep.Item2;
+
                 this._report = XmlReports.Environment.GetPrecompiledReport(report_name, project);
                 //    
                 this._dt_print_forms = new DataTable();
@@ -205,11 +225,11 @@ namespace sql.builder.WinForms
                 foreach (XmlNode printFormNode in xmlreport.FirstChild.SelectNodes("print-templates//template"))
                 {
 
-                   //TODO: в основном решении ошибки при дублях нет, тут была
+                    //TODO: в основном решении ошибки при дублях нет, тут была
                     var name = printFormNode.Attributes["name"].Value;
                     if (names.Contains(name)) continue;
                     names.Add(name);
-                 
+
 
                     DataRow row = this._dt_print_forms.NewRow();
                     row[col_name] = printFormNode.Attributes["name"].Value;
@@ -292,7 +312,7 @@ namespace sql.builder.WinForms
                 {
                     this._uIForm.RefreshData();
                 }
-                
+
                 //_no_params_mode = (!_uIForm.controls.Any() && (_dt_repository_info == null || _dt_repository_info.Rows.Count == 0));
                 //this.FillWorkFolder();
             }

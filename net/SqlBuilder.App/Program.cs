@@ -11,8 +11,8 @@ namespace SqlBuilderApp
             // DevUtils.TestReportsAnalysis();
             // DevTasks.AnalyzeReport();
             // DevUtils.TestSqlParsing();
-            // sql.builder.Program.Main2(args);
-                        AnalyzerStorage.SaveAllCollectionsToFiles();
+            sql.builder.Program.Main(args);
+                        // AnalyzerStorage.SaveAllCollectionsToFiles();
 
             //             DevAnalyzer.Initialize();
             //             string query = @"
