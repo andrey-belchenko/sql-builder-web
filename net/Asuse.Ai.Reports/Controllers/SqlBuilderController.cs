@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Asuse.Ai.Reports.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/sql-builder")]
     public class SqlBuilderController : ControllerBase
     {
         private readonly ILogger<SqlBuilderController> _logger;
@@ -13,14 +13,13 @@ namespace Asuse.Ai.Reports.Controllers
             _logger = logger;
         }
 
-        /// <summary>
-        /// GET endpoint returning simple data
-        /// </summary>
         [HttpGet]
-        public IActionResult Get()
+        [Route("form")]
+        public IActionResult GetForm()
         {
             return Ok(new { message = "Hello from SqlBuilderController", timestamp = DateTime.UtcNow });
         }
+
     }
 
 }
