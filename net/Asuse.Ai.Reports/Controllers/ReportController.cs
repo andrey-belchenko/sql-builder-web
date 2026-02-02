@@ -6,10 +6,10 @@ namespace Asuse.Ai.Reports.Controllers
 {
     public class ReportController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<ReportController> _logger;
         private IWebHostEnvironment _env;
         private ReportingService _reportingService;
-        public ReportController(ILogger<HomeController> logger, IWebHostEnvironment env, ReportingService reportingService)
+        public ReportController(ILogger<ReportController> logger, IWebHostEnvironment env, ReportingService reportingService)
         {
             _logger = logger;
             _env = env;
