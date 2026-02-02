@@ -18,7 +18,7 @@ namespace Asuse.Ai.Reports.Controllers
         [Route("form-config/{id}")]
         public IActionResult GetForm(string id)
         {
-            // XElement xform = CleanSqlBuilder 
+            XElement xform = CleanSqlBuilder.GetFormConfig(id);
             var dummyXml = $@"<?xml version=""1.0"" encoding=""UTF-8""?>
 <form name=""{id}"">
     <fields>
