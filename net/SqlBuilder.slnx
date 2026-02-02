@@ -1,6 +1,6 @@
 <Solution>
-  <Project Path="Sql.Builder.App/Sql.Builder.App.csproj" />
+  <Project Path="SqlBuilder.App/SqlBuilder.App.csproj" />
   <!-- Antlr.Oracle.Generated excluded from automatic builds - build manually when needed -->
   <!-- <Project Path="Antlr.Oracle.Generated/Antlr.Oracle.Generated.csproj" /> -->
-  <Project Path="Sql.Builder/Sql.Builder.csproj" />
+  <Project Path="SqlBuilder/SqlBuilder.csproj" />
 </Solution>

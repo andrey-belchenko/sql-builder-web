@@ -34,7 +34,7 @@ namespace sql.builder.XmlHelpers
 
             var sb = new StringBuilder();
 
-            sb.AppendLine("--- Скрипт сгенерирован автоматически с помощью Sql.Builder ---");
+            sb.AppendLine("--- Скрипт сгенерирован автоматически с помощью SqlBuilder ---");
             if (with_temp_table) GenerateTempTable(qname_safe, record_fields, sb);
             GeneratePackageSpecification(qname_safe, xquery, pars, record_fields, sb, with_temp_table);
             GeneratePackageBody(qname_safe, selectText,procText, pars, columns, sb, with_temp_table);

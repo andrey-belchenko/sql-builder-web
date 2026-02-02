@@ -13,13 +13,13 @@ namespace sql.builder.Print.Xlsx
             XElement root = this.XmlChanged.Root;            
             XElement xCreator = root.Element(ns.DC.creator);
             if (xCreator != null) {
-                xCreator.Value = "Sql.Builder";
+                xCreator.Value = "SqlBuilder";
             }
             XElement xlastModified = root.Element(ns.CP.lastModifiedBy);
             if (xlastModified != null) {
-                xlastModified.Value = "Sql.Builder";
+                xlastModified.Value = "SqlBuilder";
             }
-            // 14.06.2017 - Емцов - пишем в примечание версии бд и exe 
+            // 14.06.2017 - пїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ exe 
             XElement xDescription = root.Element(ns.DC.description);
             if (xDescription == null) {
                 xDescription = new XElement(ns.DC.description);

@@ -6,9 +6,9 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/Sql.Builder.App/bin/Debug/net8.0/Sql.Builder.App.dll",
+      "program": "${workspaceFolder}/SqlBuilder.App/bin/Debug/net8.0/SqlBuilder.App.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/Sql.Builder.App",
+      "cwd": "${workspaceFolder}/SqlBuilder.App",
       "console": "externalTerminal",
       "stopAtEntry": false
     },
@@ -17,9 +17,9 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build-generated",
-      "program": "${workspaceFolder}/Sql.Builder.App/bin/Debug/net8.0/Sql.Builder.App.dll",
+      "program": "${workspaceFolder}/SqlBuilder.App/bin/Debug/net8.0/SqlBuilder.App.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/Sql.Builder.App",
+      "cwd": "${workspaceFolder}/SqlBuilder.App",
       "console": "externalTerminal",
       "stopAtEntry": false
     }

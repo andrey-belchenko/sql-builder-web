@@ -115,7 +115,7 @@ namespace sql.builder.XmlHelpers
 
             if (!isAnonimusBlock)
             {
-                sb.AppendLine("--- Скрипт сгенерирован автоматически с помощью Sql.Builder");
+                sb.AppendLine("--- Скрипт сгенерирован автоматически с помощью SqlBuilder");
                 sb.AppendLine("drop package " + pfname);
                 sb.AppendLine("/");
                 //sb.AppendLine("drop package body " + pfname);
@@ -539,7 +539,7 @@ namespace sql.builder.XmlHelpers
         {
             sb.AppendLine(string.Format("CREATE OR REPLACE PACKAGE sqlb_{0}", repname));
             sb.AppendLine("IS");
-            sb.AppendLine("---Пакет сгенерирован автоматически с помощью Sql.Builder");
+            sb.AppendLine("---Пакет сгенерирован автоматически с помощью SqlBuilder");
             sb.AppendLine();
             if (pars.Length != 0)
             {
@@ -619,7 +619,7 @@ namespace sql.builder.XmlHelpers
         {
             sb.AppendLine(string.Format("CREATE OR REPLACE PACKAGE BODY sqlb_{0}", repname));
             sb.AppendLine("IS");
-            sb.AppendLine("---Пакет сгенерирован автоматически с помощью Sql.Builder");
+            sb.AppendLine("---Пакет сгенерирован автоматически с помощью SqlBuilder");
             sb.AppendLine();
             
 

@@ -7,7 +7,7 @@
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/Sql.Builder.App/Sql.Builder.App.csproj",
+        "${workspaceFolder}/SqlBuilder.App/SqlBuilder.App.csproj",
         "/property:GenerateFullPaths=true",
         "/property:BuildInParallel=false",
         "/property:SkipCopyBuildProduct=false",
@@ -37,7 +37,7 @@
         "watch",
         "run",
         "--project",
-        "${workspaceFolder}/Sql.Builder.App"
+        "${workspaceFolder}/SqlBuilder.App"
       ],
       "problemMatcher": "$msCompile"
     },
