@@ -18,7 +18,7 @@ namespace Asuse.Ai.Reports.Controllers
         [Route("form-config/{id}")]
         public IActionResult GetForm(string id)
         {
-            return NotFound($"Form configuration not found for id: {id}");
+            CleanSqlBuilder.Init();
             XElement xform = CleanSqlBuilder.GetFormConfig(id);
             
             if (xform == null)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using System.Xml.Linq;
 using Devart.Data.Oracle;
 using infoenergo.sys;
@@ -46,6 +47,13 @@ namespace sql.builder.Clean
             ChangeConnection(connection);
         }
 
+        public static void Init(){
+            XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
+            var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
+            ChangeConnectionString(conStr);
+            Console.WriteLine(conStr);
+            XmlReports.SetGlobalParValue("dep", 3580m);
+        }
         public static XElement GetFormConfig(string reportName)
         {
             var projRep =  CleanFrmExpressReport.GetProjectFromReportName(reportName);
