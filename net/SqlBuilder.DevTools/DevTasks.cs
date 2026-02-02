@@ -12,9 +12,9 @@ using sql.builder.Clean;
 
 namespace SqlBuilderLib.DevTools
 {
-    public static class DevUtils
+    public static class DevTasks
     {
-                public static void TestSqlParsing(string[] args)
+        public static void AnalyzeSql()
         {
             Console.OutputEncoding = Encoding.UTF8;
 
@@ -80,10 +80,11 @@ namespace SqlBuilderLib.DevTools
             // Console.WriteLine("done");
         }
 
-        public static void TestReportAnalysis(string[] args)
+        public static void AnalyzeReport()
         {
             DevAnalyzer.Enabled = true;
             DevAnalyzer.PrepareOnly = true;
+            DevAnalyzer.DoSave =  false;
             DevAnalyzer.ClearTempFolder();
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
@@ -121,7 +122,7 @@ namespace SqlBuilderLib.DevTools
 
         }
 
-        public static void TestReportsAnalysis(string[] args)
+        public static void AnalyzeReports()
         {
             DevAnalyzer.AnalyzeReports();
 

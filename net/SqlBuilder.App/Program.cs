@@ -8,8 +8,9 @@ namespace SqlBuilderApp
     {
         static void Main(string[] args)
         {
-            // DevUtils.TestReportsAnalysis(args);
-            DevUtils.TestSqlParsing(args);
+            // DevUtils.TestReportsAnalysis();
+            DevTasks.AnalyzeReport();
+            // DevUtils.TestSqlParsing();
             // sql.builder.Program.Main2(args);
             //             AnalyzerStorage.SaveAllCollectionsToFiles();
 
