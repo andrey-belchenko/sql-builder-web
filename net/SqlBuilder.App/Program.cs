@@ -9,12 +9,12 @@ namespace SqlBuilderApp
         static void Main(string[] args)
         {
             // DevUtils.TestReportsAnalysis();
-            DevTasks.AnalyzeReport();
+            // DevTasks.AnalyzeReport();
             // DevUtils.TestSqlParsing();
             // sql.builder.Program.Main2(args);
-            //             AnalyzerStorage.SaveAllCollectionsToFiles();
+                        AnalyzerStorage.SaveAllCollectionsToFiles();
 
-            //             DevAnalyzer.SetConnectionAndSourceFolder();
+            //             DevAnalyzer.Initialize();
             //             string query = @"
             //        select
             // 	*

@@ -1830,6 +1830,11 @@
     "Processed": true
   },
   {
+    "ObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "ObjectType": "procedure",
+    "Processed": false
+  },
+  {
     "ObjectName": "sqlb_rep_462361.fill_table",
     "ObjectType": "procedure",
     "Processed": true

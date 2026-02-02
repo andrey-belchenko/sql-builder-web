@@ -4405,6 +4405,16 @@
     "UsedObjectType": null
   },
   {
+    "ObjectName": "asuse2.20498",
+    "UsedObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectType": null
+  },
+  {
+    "ObjectName": "asuse2.20498_itog",
+    "UsedObjectName": "sg_kaz_nakopit_teplo.dbf_proc_sbros_teplo_dbf",
+    "UsedObjectType": null
+  },
+  {
     "ObjectName": "43125.42865",
     "UsedObjectName": "rr_temp",
     "UsedObjectType": null
