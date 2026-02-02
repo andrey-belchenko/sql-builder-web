@@ -175,7 +175,7 @@ namespace sql.builder.WinForms
             }
         }
 
-        private static Tuple<string, string> GetProjectFromReportName(string report_name)
+        public static Tuple<string, string> GetProjectFromReportName(string report_name)
         {
             string project;
             int n_pos = report_name.IndexOf('.');
@@ -189,16 +189,6 @@ namespace sql.builder.WinForms
                 project = GetProjectNameFromNavigator(report_name);
             }
             return new Tuple<string, string>(project, report_name);
-        }
-
-        public static XElement GetFormConfig(string report_name)
-        {
-            var projRep = GetProjectFromReportName(report_name);
-            string project = projRep.Item1;
-            report_name = projRep.Item2;
-            var report = XmlReports.Environment.GetPrecompiledReport(report_name, project);
-            var xform = XmlReports.GetForm(report.P_Form, report_name);
-            return xform;
         }
 
         public bool Initialize(string report_name)

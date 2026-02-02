@@ -1,5 +1,6 @@
+using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc;
-
+using sql.builder.Clean;
 namespace Asuse.Ai.Reports.Controllers
 {
     [ApiController]
@@ -17,6 +18,7 @@ namespace Asuse.Ai.Reports.Controllers
         [Route("form-config/{id}")]
         public IActionResult GetForm(string id)
         {
+            // XElement xform = CleanSqlBuilder 
             var dummyXml = $@"<?xml version=""1.0"" encoding=""UTF-8""?>
 <form name=""{id}"">
     <fields>

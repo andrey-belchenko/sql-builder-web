@@ -6,6 +6,7 @@ using Devart.Data.Oracle;
 using infoenergo.sys;
 using sql.builder.DataApi;
 using sql.builder.UI;
+using sql.builder.WinForms;
 using SqlBuilderLib.DevTools;
 
 namespace sql.builder.Clean
@@ -45,9 +46,14 @@ namespace sql.builder.Clean
             ChangeConnection(connection);
         }
 
-        public static void GetFormConfig(string reportName)
+        public static XElement GetFormConfig(string reportName)
         {
-
+            var projRep =  CleanFrmExpressReport.GetProjectFromReportName(reportName);
+            string project = projRep.Item1;
+            reportName = projRep.Item2;
+            var report = XmlReports.Environment.GetPrecompiledReport(reportName, project);
+            var xform = XmlReports.GetForm(report.P_Form, reportName);
+            return xform;
         }
     }
 
