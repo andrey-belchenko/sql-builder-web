@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VActions : VSXElement, IVParent
+    public sealed class VActions : VSXElement, IVParent
     {
-        internal VActions()
+        public VActions()
             : base(EName.actions)
         {
         }

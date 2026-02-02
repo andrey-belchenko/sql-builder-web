@@ -3,18 +3,18 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal class VXElement: XElement
+    public class VXElement: XElement
     {
         private object tag;
-        internal VXElement(XName name)
+        public VXElement(XName name)
             : base(name)
         {
         }
-        internal VXElement(XElement other)
+        public VXElement(XElement other)
             : base(other)
         {
         }
-        internal object Tag {
+        public object Tag {
             get {
                 return this.tag;
             }
@@ -22,11 +22,11 @@ namespace sql.builder.DataApi
                 this.tag = value;
             }
         }
-        internal string GetAttrValue(string name)
+        public string GetAttrValue(string name)
         {
             return this.AttrOrEmpty(name);
         }
-        //internal VEnvironment GetEnvironment()
+        //public VEnvironment GetEnvironment()
         //{
             //if (this.environment == null)
             //{

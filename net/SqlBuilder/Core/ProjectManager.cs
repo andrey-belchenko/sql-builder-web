@@ -11,17 +11,17 @@ using sql.builder.XmlHelpers;
 
 namespace sql.builder.Core
 {
-    internal class ProjectManager
+    public class ProjectManager
     {
         // метаданные всех проектов (в том числе незагруженных)
         private Dictionary<string, Project> _projects;
         private VSXElement _schemeOld;
         private ProjectsController _controller;
-        internal ProjectManager()
+        public ProjectManager()
         {
             this.ReloadProjects();
         }
-        internal void ReloadProjects()
+        public void ReloadProjects()
         {
             this._projects = new Dictionary<string, Project>();
             // чтобы подтянуть изменения напрямую из файлов
@@ -38,7 +38,7 @@ namespace sql.builder.Core
                 _controller.ReloadProjects();
             }
         }
-        internal void LoadProjectIfNeed(string name)
+        public void LoadProjectIfNeed(string name)
         {
             Project proj = this._projects[name];
             if (proj.Hidden) {
@@ -50,7 +50,7 @@ namespace sql.builder.Core
                 this.LoadProjectsIfNeed(proj.ReferencesNames);
             }
         }
-        internal void LoadProjectsIfNeed(IList<string> names)
+        public void LoadProjectsIfNeed(IList<string> names)
         {
             for (int index = 0; index < names.Count; index++) {
                 this.LoadProjectIfNeed(names[index]);
@@ -61,11 +61,11 @@ namespace sql.builder.Core
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        internal void HideProject(string name)
+        public void HideProject(string name)
         {
             this._projects[name].Hide();
         }
-        internal void SetProjectScheme(string name, VSXElement scheme, VSXElement native_scheme)
+        public void SetProjectScheme(string name, VSXElement scheme, VSXElement native_scheme)
         {
             Project project;
             if (!this._projects.TryGetValue(name, out project)) {
@@ -74,7 +74,7 @@ namespace sql.builder.Core
             }
             project.SetProjectScheme(scheme, native_scheme);
         }
-        /*internal void SetProjectScheme(string name, VSXElement scheme)
+        /*public void SetProjectScheme(string name, VSXElement scheme)
         {
             Project project;
             if (!_projects.TryGetValue(name, out project)) {
@@ -83,7 +83,7 @@ namespace sql.builder.Core
             }
             project.SetProjectScheme(scheme);
         }
-        internal void SetProjectNativeScheme(string name, VSXElement schemeNative)
+        public void SetProjectNativeScheme(string name, VSXElement schemeNative)
         {
             Project project;
             if (!_projects.TryGetValue(name, out project)) {
@@ -92,36 +92,36 @@ namespace sql.builder.Core
             }
             project.SetProjectNativeScheme(schemeNative);
         }*/
-        internal IEnumerable<Project> GetVisibleProjects()
+        public IEnumerable<Project> GetVisibleProjects()
         {
             return this._projects.Values.Where(Project.IsVisible);
         }
-        /*internal IEnumerable<Project> GetHiddenProjects()
+        /*public IEnumerable<Project> GetHiddenProjects()
         {
             return _projects.Values.Where(p => p.Loaded && p.Hidden);
         }*/
-        internal IEnumerable<Project> GetLoadedProjects()
+        public IEnumerable<Project> GetLoadedProjects()
         {
             return this._projects.Values.Where(Project.IsLoaded);
         }
-        internal IEnumerable<Project> GetAllProjects()
+        public IEnumerable<Project> GetAllProjects()
         {
             return this._projects.Values;
         }
-        internal Project GetProject(string project_name)
+        public Project GetProject(string project_name)
         {
             return this._projects[project_name];
         }
         private Stack< bool> _oldOnly = new Stack<bool>();
-        internal void PushOldOnly(bool value)
+        public void PushOldOnly(bool value)
         {
             this._oldOnly.Push(value);
         }
-        internal void PopOldOnly()
+        public void PopOldOnly()
         {
             this._oldOnly.Pop();
         }
-        internal bool IsOldOnly()
+        public bool IsOldOnly()
         {
             if (this._oldOnly.Count == 0) {
                 return false;
@@ -129,7 +129,7 @@ namespace sql.builder.Core
                 return this._oldOnly.Peek();
             }
         }
-        internal IList<VSXElement> GetScheme()
+        public IList<VSXElement> GetScheme()
         {
             if (this.IsOldOnly()) {
                 return this.GetOldScheme();
@@ -146,7 +146,7 @@ namespace sql.builder.Core
                 return list;
             }
         }
-        internal IList<VSXElement> GetOldScheme()
+        public IList<VSXElement> GetOldScheme()
         {
             if (this._schemeOld != null) {
                 return new VSXElement[1] { this._schemeOld };
@@ -174,7 +174,7 @@ namespace sql.builder.Core
                 return arr;
             }
         }
-        internal IList<VSXElement> GetNativeScheme()
+        public IList<VSXElement> GetNativeScheme()
         {
             var list = new List<VSXElement>();
             foreach (Project project in this._projects.Values) {
@@ -187,7 +187,7 @@ namespace sql.builder.Core
             }
             return list;
         }
-        internal ProjectsController GetController()
+        public ProjectsController GetController()
         {
             if (this._controller == null) {
                 this._controller = new ProjectsController();
@@ -196,14 +196,14 @@ namespace sql.builder.Core
             return this._controller;
         }
     }
-    internal class Project
+    public class Project
     {
         #region static
-        internal static bool IsVisible(Project p)
+        public static bool IsVisible(Project p)
         {
             return !p.hidden;
         }
-        internal static bool IsLoaded(Project p)
+        public static bool IsLoaded(Project p)
         {
             return p.loaded;
         }
@@ -222,33 +222,33 @@ namespace sql.builder.Core
         /// <summary>
         /// Имя проекта
         /// </summary>
-        internal string Name { get { return this.name; } }
+        public string Name { get { return this.name; } }
         /// <summary>
         /// Путь до папки проекта: \sql.builder\projects\&lt;имя проекта&gt;\
         /// </summary>
-        internal string ProjectPath { get { return this.project_path; } }
+        public string ProjectPath { get { return this.project_path; } }
         /// <summary>
         /// Схема из файла проекта \sql.builder\projects\&lt;имя проекта&gt;\&lt;имя проекта&gt;.xml
         /// </summary>
-        internal VSXElement Scheme { get { return this.scheme; } }
+        public VSXElement Scheme { get { return this.scheme; } }
         /// <summary>
         /// Схема из native-файла проекта \sql.builder\projects\&lt;имя проекта&gt;\&lt;имя проекта&gt;.native.xml
         /// </summary>
-        internal VSXElement SchemeNative { get { return this.scheme_native; } }
+        public VSXElement SchemeNative { get { return this.scheme_native; } }
         /// <summary>
         /// Имена проектов, зависимых от этого
         /// </summary>
-        internal IList<string> MastersNames { get { return this.masters_names; } }
+        public IList<string> MastersNames { get { return this.masters_names; } }
         /// <summary>
         /// Имена проектов, от которых зависит этот
         /// </summary>
-        internal IList<string> ReferencesNames { get { return this.references_names; } }
-        internal bool Loaded { get { return this.loaded; } }
-        internal bool Hidden { get { return this.hidden; } }
+        public IList<string> ReferencesNames { get { return this.references_names; } }
+        public bool Loaded { get { return this.loaded; } }
+        public bool Hidden { get { return this.hidden; } }
         /// <summary>
         /// Имя native-файла проекта \sql.builder\projects\&lt;имя проекта&gt;\&lt;имя проекта&gt;.native.xml
         /// </summary>
-        internal string FileNativePath {
+        public string FileNativePath {
             get {
                 return Path.Combine(this.project_path, this.name + ".native.xml");
             }
@@ -256,17 +256,17 @@ namespace sql.builder.Core
         /// <summary>
         /// Имя файла проекта \sql.builder\projects\&lt;имя проекта&gt;\&lt;имя проекта&gt;.xml
         /// </summary>
-        internal string FileCompiledPath
+        public string FileCompiledPath
         {
             get {
                 return Path.Combine(this.project_path, this.name + ".xml");
             }
         }
-        internal Project(string name)
+        public Project(string name)
         {
             this.name = name;
         }
-        internal Project(XElement xproject)
+        public Project(XElement xproject)
         {
             Contract.Assume(xproject != null);
             Contract.Assume(xproject.Name == EName.project);
@@ -298,7 +298,7 @@ namespace sql.builder.Core
                 this.runtime_path = Path.Combine(XmlReports.GetRuntimePath(), attr.Value);
             }
         }
-        internal void LoadIfNeed()
+        public void LoadIfNeed()
         {
             if (!this.loaded) {
                 string rootPath = XmlReports.UseProjectSourceFolder ? this.project_path : this.runtime_path;
@@ -317,7 +317,7 @@ namespace sql.builder.Core
                 VCashUtils.ClearCash();
             }
         }
-        internal void SetProjectScheme(VSXElement scheme, VSXElement native_scheme)
+        public void SetProjectScheme(VSXElement scheme, VSXElement native_scheme)
         {
             Contract.Assume(scheme != null);
             Contract.Assume(native_scheme != null);
@@ -325,17 +325,17 @@ namespace sql.builder.Core
             this.scheme_native = native_scheme;
             this.loaded = true;
         }
-        /*internal void SetProjectScheme(VSXElement scheme)
+        /*public void SetProjectScheme(VSXElement scheme)
         {
             this.scheme = scheme;
             this.loaded = true;
         }
-        internal void SetProjectNativeScheme(VSXElement schemeNative)
+        public void SetProjectNativeScheme(VSXElement schemeNative)
         {
             this.scheme_native = schemeNative;
             this.loaded = true;
         }*/
-        internal void Unload()
+        public void Unload()
         {
             if (this.loaded) {
                 this.scheme = null;
@@ -343,11 +343,11 @@ namespace sql.builder.Core
                 this.loaded = false;
             }
         }
-        internal void Hide()
+        public void Hide()
         {
             this.hidden = true;
         }
-        internal void Show()
+        public void Show()
         {
             this.hidden = false;
         }
@@ -355,16 +355,16 @@ namespace sql.builder.Core
     /// <summary>
     /// Для работы с UI
     /// </summary>
-    internal class ProjectsController
+    public class ProjectsController
     {
-        internal Dictionary<string, ProjectRecord> Projects { get; private set; }
+        public Dictionary<string, ProjectRecord> Projects { get; private set; }
 
-        internal ProjectsController()
+        public ProjectsController()
         {
             ReloadProjects();          
         }
 
-        internal void UncheckAll()
+        public void UncheckAll()
         {
             foreach (ProjectRecord projectRecord in Projects.Values) {
                 if (projectRecord.Name != "common" && projectRecord.Checked) {
@@ -374,7 +374,7 @@ namespace sql.builder.Core
                 }
             }
         }
-        /*internal void CheckList(object[] list)
+        /*public void CheckList(object[] list)
         {
             foreach (ProjectRecord projectRecord in list)
             {
@@ -383,7 +383,7 @@ namespace sql.builder.Core
                // projectRecord.StatusChanging += RecordOnStatusChanging;
             }
         }*/
-        internal void ReloadProjects()
+        public void ReloadProjects()
         {
             Projects = new Dictionary<string, ProjectRecord>();
             var projects = XmlReports.Environment.Manager.GetAllProjects();
@@ -397,12 +397,12 @@ namespace sql.builder.Core
             }
         }
 
-        internal void UpdateStatus()
+        public void UpdateStatus()
         {
             foreach (var p in Projects.Values) p.UpdateStatus();
         }
 
-        internal void AcceptChanges()
+        public void AcceptChanges()
         {
             var projects_to_load = Projects.Values.Where(p => p.Status == ProjectStatus.ReadyToLoad).ToList();
             var projects_to_unload = Projects.Values.Where(p => p.Status == ProjectStatus.ReadyToUnload).ToList();
@@ -419,7 +419,7 @@ namespace sql.builder.Core
             ProjectsStateChanged(this, args);
         }
 
-        internal void SaveState()
+        public void SaveState()
         {
             var xprojects = new XElement(EName.projects);
             foreach (ProjectRecord record in Projects.Values) {
@@ -431,7 +431,7 @@ namespace sql.builder.Core
             SettingsHelper.ProjectsState = xprojects.ToString();
         }
 
-        internal void LoadState()
+        public void LoadState()
         {
             string state = SettingsHelper.ProjectsState;
             if (state == null) return;
@@ -504,17 +504,17 @@ namespace sql.builder.Core
             //}
         }
 
-        internal event EventHandler<ProjectsStateChangedArgs> ProjectsStateChanged = delegate { };
-        internal event EventHandler<HasMessageArgs> HasMessage = delegate { };
+        public event EventHandler<ProjectsStateChangedArgs> ProjectsStateChanged = delegate { };
+        public event EventHandler<HasMessageArgs> HasMessage = delegate { };
     }
     // Используется в \root\main\all\sql.builder\Controls\ucProjects.cs
     // Свойства должны быть public, иначе Data Binding не сможет их прочитать
-    internal class ProjectRecord
+    public class ProjectRecord
     {
         private Project project;
         private bool default_loaded;
         private ProjectStatus _status;
-        internal Project Project { get { return this.project; } }
+        public Project Project { get { return this.project; } }
         public bool Checked {
             get {
                 return this._status == ProjectStatus.ReadyToLoad || this._status == ProjectStatus.Loaded;
@@ -551,56 +551,56 @@ namespace sql.builder.Core
                 }
             }
         }
-        internal ProjectRecord(Project project)
+        public ProjectRecord(Project project)
         {
             this.project = project;
             this.UpdateStatus();
         }
-        internal void UpdateStatus()
+        public void UpdateStatus()
         {
             this._status = (this.project.Loaded) ? ProjectStatus.Loaded : ProjectStatus.NotLoaded;
         }
-        internal event EventHandler<StatusChangingArgs> StatusChanging;
-        internal event EventHandler<StatusChangedArgs> StatusChanged;
-        internal static string GetName(ProjectRecord pr)
+        public event EventHandler<StatusChangingArgs> StatusChanging;
+        public event EventHandler<StatusChangedArgs> StatusChanged;
+        public static string GetName(ProjectRecord pr)
         {
             return pr.Name;
         }
     }
-    internal enum ProjectStatus
+    public enum ProjectStatus
     {
         NotLoaded = 0,
         ReadyToLoad = 1,
         Loaded = 2,
         ReadyToUnload = 3
     }
-    internal class StatusChangingArgs : EventArgs
+    public class StatusChangingArgs : EventArgs
     {
         private ProjectStatus old_value, new_value;
         private bool cancel;
-        internal ProjectStatus OldValue { get { return this.old_value; } }
-        internal ProjectStatus NewValue { get { return this.new_value; } }
-        internal bool Cancel { get { return this.cancel; } set { this.cancel = value; } }
-        internal StatusChangingArgs(ProjectStatus oldValue, ProjectStatus newValue)
+        public ProjectStatus OldValue { get { return this.old_value; } }
+        public ProjectStatus NewValue { get { return this.new_value; } }
+        public bool Cancel { get { return this.cancel; } set { this.cancel = value; } }
+        public StatusChangingArgs(ProjectStatus oldValue, ProjectStatus newValue)
         {
             this.old_value = oldValue;
             this.new_value = newValue;
             this.cancel = false;
         }
     }
-    internal class StatusChangedArgs : EventArgs
+    public class StatusChangedArgs : EventArgs
     {
         private ProjectStatus status;
-        internal ProjectStatus Status { get { return this.status; } }
-        internal StatusChangedArgs(ProjectStatus status)
+        public ProjectStatus Status { get { return this.status; } }
+        public StatusChangedArgs(ProjectStatus status)
         {
             this.status = status;
         }
     }
-    internal class ProjectsStateChangedArgs : EventArgs
+    public class ProjectsStateChangedArgs : EventArgs
     {
-        internal string[] LoadedProjects { get; private set; }
-        internal string[] UnloadedProjects { get; private set; }
+        public string[] LoadedProjects { get; private set; }
+        public string[] UnloadedProjects { get; private set; }
 
         public ProjectsStateChangedArgs(string[] projects_to_load, string[] projects_to_unload)
         {
@@ -609,9 +609,9 @@ namespace sql.builder.Core
         }
     }
 
-    internal class HasMessageArgs : EventArgs
+    public class HasMessageArgs : EventArgs
     {
-        internal string Message {get; private set;}
+        public string Message {get; private set;}
 
         public HasMessageArgs(string message)
         {

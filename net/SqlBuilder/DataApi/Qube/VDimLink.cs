@@ -6,9 +6,9 @@ using System.Reflection;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VDimLink : VQueryCall
+    public sealed class VDimLink : VQueryCall
     {
-        internal VDimLink()
+        public VDimLink()
             : base(EName.dimlink)
         {
         }

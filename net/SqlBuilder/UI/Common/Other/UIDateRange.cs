@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace sql.builder.UI
 {
-    internal partial class UIDateRange : UIBase, IRange
+    public partial class UIDateRange : UIBase, IRange
     {
         public UIDateRange()
         {

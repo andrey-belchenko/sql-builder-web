@@ -2,7 +2,7 @@
 
 namespace sql.builder.XmlHelpers
 {
-    internal static class SqlSprav
+    public static class SqlSprav
     {
         const int _null_replacement = 0;
 
@@ -148,7 +148,7 @@ namespace sql.builder.XmlHelpers
             return null;
         }
 
-        internal class StructInfo
+        public class StructInfo
         {
             public string TreeTableName;
             public string TreeKeyName;
@@ -159,7 +159,7 @@ namespace sql.builder.XmlHelpers
             public SpravInfo[] Spravs;
         }
 
-        internal class SpravInfo
+        public class SpravInfo
         {
             public string SpravTableName;
             public string SpravKeyName;

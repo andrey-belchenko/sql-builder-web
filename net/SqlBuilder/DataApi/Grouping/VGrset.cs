@@ -5,9 +5,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VGrset : VSXElement, IVParent
+    public sealed class VGrset : VSXElement, IVParent
     {
-        internal VGrset()
+        public VGrset()
             : base(EName.grset)
         {
         }

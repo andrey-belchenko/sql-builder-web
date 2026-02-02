@@ -10,11 +10,11 @@ using System.Collections.Generic;
 
 namespace sql.builder.XmlHelpers
 {
-    internal static class SqlReportPkg
+    public static class SqlReportPkg
     {
         private static string keyPfx = "p_key_";
 
-        internal class ReportInfo
+        public class ReportInfo
         {
             public VReport Report;
             public VDataSet DataSet;
@@ -23,7 +23,7 @@ namespace sql.builder.XmlHelpers
             public bool TempUsing = true;
         }
 
-        internal static ReportInfo PrepareReportInfo(string name, bool isAnonimusBlock)
+        public static ReportInfo PrepareReportInfo(string name, bool isAnonimusBlock)
         {
             var rep = XmlReports.Environment.GetPrecompiledReport(name);
             return PrepareReportInfo(rep, isAnonimusBlock);
@@ -31,7 +31,7 @@ namespace sql.builder.XmlHelpers
 
         
 
-        internal static ReportInfo PrepareReportInfo(XElement report, bool isAnonimusBlock)
+        public static ReportInfo PrepareReportInfo(XElement report, bool isAnonimusBlock)
         {
             report = VReport.getReportOrQuery(report);
             var rep = VSXElement.Get<VReport>(report);
@@ -70,7 +70,7 @@ namespace sql.builder.XmlHelpers
         }
 
 
-        internal static string Generate(string name, bool isAnonimusBlock, bool hasReturn, bool allowMerge,
+        public static string Generate(string name, bool isAnonimusBlock, bool hasReturn, bool allowMerge,
             bool isDelete = false)
         {
             
@@ -78,14 +78,14 @@ namespace sql.builder.XmlHelpers
         }
 
 
-        internal static string GenerateInsertStatementForProc(XElement query,string keyVarName)
+        public static string GenerateInsertStatementForProc(XElement query,string keyVarName)
         {
      
             var s= DoGenerate(null, query, true,false, false, false, false,false,keyVarName);
             return s;
         }
 
-        internal static string GenerateUpdateStatementForProc(XElement query)
+        public static string GenerateUpdateStatementForProc(XElement query)
         {
 
             var s = DoGenerate(null, query, true, false, false, false, false, true,null);
@@ -625,7 +625,7 @@ namespace sql.builder.XmlHelpers
 
         }
 
-        internal static void GenerateTempTable(string qname_safe, string[] record_fields, StringBuilder sb)
+        public static void GenerateTempTable(string qname_safe, string[] record_fields, StringBuilder sb)
         {
            
           

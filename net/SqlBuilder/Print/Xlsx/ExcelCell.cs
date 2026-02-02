@@ -4,9 +4,9 @@ using sql.builder.DataApi;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal class ExcelCell : ExcelBaseItem
+    public class ExcelCell : ExcelBaseItem
     {
-        internal static bool IsHeadMarker(ExcelCell cell)
+        public static bool IsHeadMarker(ExcelCell cell)
         {
             return cell.text == TextConst.ExcelMarks.HeadMarker;
         }        
@@ -20,7 +20,7 @@ namespace sql.builder.Print.Xlsx
         private bool has_shared_formula;
         private ExcelFormula formula;
         private ExcelRefToken formula_ref;
-        internal ExcelCell(XElement xml, ExcelPrintEnv env, ExcelRow row)
+        public ExcelCell(XElement xml, ExcelPrintEnv env, ExcelRow row)
             : base(xml, env)
         {
             XElement xv = xml.Element(ns.Main.v);
@@ -60,17 +60,17 @@ namespace sql.builder.Print.Xlsx
                 }
             }
         }
-        internal ExcelRow Row { get { return this.row; } }
-        internal ExcelCellInfo CellInfo { get { return this.cell_info; } }
-        internal string Value { get { return this.value; } }
-        internal string Text { get { return this.text; } }
-        internal string StyleID { get { return this.style_id; } }
-        internal bool HasSharedString { get { return this.has_shared_string; } }
-        internal bool HasFormula { get { return this.has_formula; } }
-        //internal bool HasRefFormula { get { return this.formula_ref != null; } }
-        internal ExcelRefToken FormulaRef { get { return this.formula_ref; } }
-        internal ExcelFormula Formula { get { return this.formula; } }
-        internal ExcelCell Copy(ExcelRow row, string column_name)
+        public ExcelRow Row { get { return this.row; } }
+        public ExcelCellInfo CellInfo { get { return this.cell_info; } }
+        public string Value { get { return this.value; } }
+        public string Text { get { return this.text; } }
+        public string StyleID { get { return this.style_id; } }
+        public bool HasSharedString { get { return this.has_shared_string; } }
+        public bool HasFormula { get { return this.has_formula; } }
+        //public bool HasRefFormula { get { return this.formula_ref != null; } }
+        public ExcelRefToken FormulaRef { get { return this.formula_ref; } }
+        public ExcelFormula Formula { get { return this.formula; } }
+        public ExcelCell Copy(ExcelRow row, string column_name)
         {
             XElement xml = new XElement(this.Xml);
             // пока формулы будут теряться - не придумал как сделать по-нормальному
@@ -82,7 +82,7 @@ namespace sql.builder.Print.Xlsx
             cell.ChangeColumnName(column_name);
             return cell;
         }
-        internal void ChangeColumnName(string colNameNew)
+        public void ChangeColumnName(string colNameNew)
         {
             // теперь не нужно
             //if (HasFormula)
@@ -106,7 +106,7 @@ namespace sql.builder.Print.Xlsx
         //    FormulaRef = cellSource.FormulaRef;
         //    if (FormulaRef.Changed) Xml.Element(ns.main + "f").SetAttributeValue("ref", FormulaRef.GetText());
         //}
-        internal void SetFormula(string formula)
+        public void SetFormula(string formula)
         {
             XElement xf = this.Xml.Element(ns.Main.f);
             if (xf == null) {
@@ -123,7 +123,7 @@ namespace sql.builder.Print.Xlsx
             // чтобы значения пересчитались при открытии
             this.Xml.RemoveElement(ns.Main.v);
         }
-        internal void CopyValue(ExcelCell cellSource)
+        public void CopyValue(ExcelCell cellSource)
         {
             XElement xv = this.Xml.Element(ns.Main.v);
             XElement xv2 = cellSource.Xml.Element(ns.Main.v);
@@ -137,7 +137,7 @@ namespace sql.builder.Print.Xlsx
             this.Xml.SetAttributeValue(ns.None.t, cellSource.Xml.AttrOrDefault(ns.None.t, null));
             this.has_shared_string = cellSource.has_shared_string;
         }
-        internal void SetValue(string value)
+        public void SetValue(string value)
         {
             this.text = value;
             if (this.has_shared_string) {
@@ -150,7 +150,7 @@ namespace sql.builder.Print.Xlsx
                 this.value = value;
             }
         }
-        internal void DeleteFormulaRef()
+        public void DeleteFormulaRef()
         {
             if (this.formula_ref != null) {
                 XElement xf = this.Xml.Element(ns.Main.f);

@@ -5,9 +5,9 @@ using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder
 {
-    /*internal static class StringBuilderExt
+    /*public static class StringBuilderExt
     {
-        internal static int IndexOf(this StringBuilder sb, char value)
+        public static int IndexOf(this StringBuilder sb, char value)
         {
             Contract.Assert(sb != null);
             int index = 0;
@@ -20,7 +20,7 @@ namespace sql.builder
             }
             return -1;
         }
-        internal static int IndexOf(this StringBuilder sb, char value, int startIndex)
+        public static int IndexOf(this StringBuilder sb, char value, int startIndex)
         {
             Contract.Assert(sb != null);
             Contract.Assert(startIndex >= 0 && startIndex < sb.Length);
@@ -35,7 +35,7 @@ namespace sql.builder
             return -1;
         }
     }*/
-    internal static partial class StringExt
+    public static partial class StringExt
     {
         /// <summary>
         /// Ищет в строке <paramref name="str"/> первый пробельный символ, начиная с позиции <paramref name="startIndex"/> и
@@ -44,7 +44,7 @@ namespace sql.builder
         /// <param name="str">Строка для поиска</param>
         /// <param name="startIndex">Начальная позиция</param>
         /// <returns>Позиция первого встреченого пробельного символа или -1, если он не найден</returns>
-        internal static int IndexOfWhiteSpace(this string str, int startIndex)
+        public static int IndexOfWhiteSpace(this string str, int startIndex)
         {
             Contract.Assert(str != null);
             Contract.Assert(startIndex >= 0 && startIndex < str.Length);
@@ -67,7 +67,7 @@ namespace sql.builder
         /// <param name="str">строка</param>
         /// <param name="ch">символ-раделитель</param>
         /// <returns>подстрока до первого вхождения символа <paramref name="ch"/>.</returns>
-        internal static string SubstringBefore(this string str, char ch)
+        public static string SubstringBefore(this string str, char ch)
         {
             Contract.Assert(str != null);
             int pos = str.IndexOf(ch);
@@ -86,7 +86,7 @@ namespace sql.builder
         /// <param name="str">строка</param>
         /// <param name="ch">символ-раделитель</param>
         /// <returns>подстрока после последнего вхождения символа <paramref name="ch"/>.</returns>
-        internal static string SubstringAfter(this string str, char ch)
+        public static string SubstringAfter(this string str, char ch)
         {
             Contract.Assert(str != null);
             int pos = str.LastIndexOf(ch);

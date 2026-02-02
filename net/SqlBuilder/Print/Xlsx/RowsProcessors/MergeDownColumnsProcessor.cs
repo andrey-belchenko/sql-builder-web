@@ -10,10 +10,10 @@ namespace sql.builder.Print.Xlsx.RowsProcessors
     /// <summary>
     /// Позволяет проводить merge_down на основе MergeDownColumns конкретного листа
     /// </summary>
-    internal class MergeDownColumnsProcessor
+    public class MergeDownColumnsProcessor
     {
         MergeDownColumns _mergeDownColumns;
-        internal MergeDownColumnProcessor[] Processors { get; private set; }
+        public MergeDownColumnProcessor[] Processors { get; private set; }
         public MergeDownColumnsProcessor(MergeDownColumns mdc)
         {
             _mergeDownColumns = mdc;
@@ -46,7 +46,7 @@ namespace sql.builder.Print.Xlsx.RowsProcessors
             Processors = list.ToArray();
         }
 
-        internal void ProcessRow(ExcelRow originalRow, XElement xrow)
+        public void ProcessRow(ExcelRow originalRow, XElement xrow)
         {
             if (Processors.Length == 0 || originalRow.RowID < _mergeDownColumns.BeginMergeRowsId)
             {
@@ -142,7 +142,7 @@ namespace sql.builder.Print.Xlsx.RowsProcessors
                 if (_mergeColumnIdCurrent == Processors.Length) break;
             }
         }
-        internal IEnumerable<Tuple<ExcelCellInfo, ExcelCellInfo>> GetMerges()
+        public IEnumerable<Tuple<ExcelCellInfo, ExcelCellInfo>> GetMerges()
         {
             return Processors.SelectMany(p => p.GetMerges());
         }

@@ -9,13 +9,13 @@ namespace sql.builder.DataApi
     /// &lt;use-color color="" /&gt;
     /// </summary>
     /// <seealso cref="VColor"/>
-    internal sealed class VUseColor : VSXElement
+    public sealed class VUseColor : VSXElement
     {
-        internal VUseColor()
+        public VUseColor()
             : base(EName.use_color)
         {
         }
-        //internal VColor Color()
+        //public VColor Color()
         //{
         //    return XmlReports.Environment.GetColor(this.P_Color);
         //}

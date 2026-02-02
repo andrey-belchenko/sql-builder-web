@@ -11,7 +11,7 @@ namespace sql.builder.DataApi
     /// </summary>
     /// <seealso cref="VColorPackage"/>
     /// <seealso cref="VUseColor"/>
-    internal sealed class VColor : VSXElement
+    public sealed class VColor : VSXElement
     {
         /// <summary>
         /// Разбирает строку <paramref name="rgb"/> в экземпляр класса <see cref="System.Drawing.Color"/>
@@ -19,7 +19,7 @@ namespace sql.builder.DataApi
         /// <param name="rgb">строка в формате "r,g,b", где r, g и b - целые числа от 0 до 255.</param>
         /// <param name="color">цвет</param>
         /// <returns>true, если разбор прошёл успешно</returns>
-        internal static bool ParseRGB(string rgb, out Color color)
+        public static bool ParseRGB(string rgb, out Color color)
         {
             color = Color.Empty;
             if (string.IsNullOrEmpty(rgb)) {
@@ -39,7 +39,7 @@ namespace sql.builder.DataApi
             color = Color.FromArgb(red, green, blue);
             return true;
         }
-        internal VColor()
+        public VColor()
             : base (EName.color)
         {
         }

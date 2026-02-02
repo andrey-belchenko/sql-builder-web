@@ -17,7 +17,7 @@ using sql.builder.Exceptions;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VQubeUtils
+    public partial class VQubeUtils
     {
 
         public static string unName = "un";
@@ -3791,7 +3791,7 @@ namespace sql.builder.DataApi
 
         }
 
-        internal class DimensionCollection
+        public class DimensionCollection
         {
             public List<string> Dimensions = new List<string>();
             public SortedList<string, VFact.FactDependantceInfo> Facts = new SortedList<string, VFact.FactDependantceInfo>();

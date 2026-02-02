@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace sql.builder.Core
 {
-    internal static class XmlSpecialFiles
+    public static class XmlSpecialFiles
     {
         private static string[] Files  
         {
@@ -75,7 +75,7 @@ namespace sql.builder.Core
             }
         }
 
-        internal static IEnumerable<XElement> GetActualXml()
+        public static IEnumerable<XElement> GetActualXml()
         {
             ReloadIfNeed();
 
@@ -84,9 +84,9 @@ namespace sql.builder.Core
 
         private class XmlSpecialFile
         {
-            internal string Path { get; set; }
-            internal XElement Xml { get; set; }
-            internal DateTime LastChangedTime { get; set; }
+            public string Path { get; set; }
+            public XElement Xml { get; set; }
+            public DateTime LastChangedTime { get; set; }
         }
     }
 }

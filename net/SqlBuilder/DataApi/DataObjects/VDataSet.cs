@@ -24,12 +24,12 @@ using sql.builder.Clean;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VDataSet : DataSet
+    public partial class VDataSet : DataSet
     {
         private bool _refreshed;
         private XElement _scheme;
         private List<VDataTable> _top_tables;
-        internal XElement Scheme
+        public XElement Scheme
         {
             get
             {
@@ -40,20 +40,20 @@ namespace sql.builder.DataApi
                 this._scheme = value;
             }
         }
-        internal VReport Report;
-        internal bool UseTempTable;
-        internal bool UpdateTempTable;
-        internal string ProcedureText;
-        internal VDataTable ParamsTable;
-        internal List<string> MatQueriesNames;
-        internal IList<VDataTable> TopTable { get { return this._top_tables; } }
-        internal VDataTable ParentDataTable;
-        internal VDataSet ParentDataSet;
+        public VReport Report;
+        public bool UseTempTable;
+        public bool UpdateTempTable;
+        public string ProcedureText;
+        public VDataTable ParamsTable;
+        public List<string> MatQueriesNames;
+        public IList<VDataTable> TopTable { get { return this._top_tables; } }
+        public VDataTable ParentDataTable;
+        public VDataSet ParentDataSet;
         // для web отчетов
-        internal VDataSet ParamsDataSet = null;
-        internal string ParentColumnName;
-        internal UIFormC Form;
-        internal bool IsVisibleInLayout()
+        public VDataSet ParamsDataSet = null;
+        public string ParentColumnName;
+        public UIFormC Form;
+        public bool IsVisibleInLayout()
         {
             if (this.Form == null)
             {
@@ -66,17 +66,17 @@ namespace sql.builder.DataApi
         }
         //private SortedList<string, VDataColumn> columns;
         private SortedList<string, XElement> formInfoFieldsTextNodes;  // инициализируется в методе GetParamsAsXml()
-        internal XmlDocument CompiledReport;
-        internal VDataColumn OwnerColumn;
-        internal Dictionary<string, OracleParameter> InputParams;
-        internal SortedList<string, object> InputParamsValues;
-        internal string KeyParamName;
-        internal SortedList<int, string> InputParamsNames;
-        internal bool IsRefreshed { get { return this._refreshed; } }
+        public XmlDocument CompiledReport;
+        public VDataColumn OwnerColumn;
+        public Dictionary<string, OracleParameter> InputParams;
+        public SortedList<string, object> InputParamsValues;
+        public string KeyParamName;
+        public SortedList<int, string> InputParamsNames;
+        public bool IsRefreshed { get { return this._refreshed; } }
         //    private OracleTransaction transaction;
         static readonly char _num_separator = CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator[0];
-        internal VXElement schemePreset;
-        internal VXElement SchemePreset
+        public VXElement schemePreset;
+        public VXElement SchemePreset
         {
             get
             {
@@ -91,15 +91,15 @@ namespace sql.builder.DataApi
                 this.schemePreset = value;
             }
         }
-        internal FCustomRefresh CustomRefresh;
-        internal bool IsVertica { get; set; }
-        internal OracleConnection Connection = null;
-        internal event EventHandler Changed;
-        internal event EventHandler SchemeChanged; // вызывается вручную , для обновления списка с изменением состава колонок см. VConst
-        internal event EventHandler TopTableRefreshed;
-        internal event EventHandler TopTableCommited;
-        internal event EventHandler NeedSelection;
-        internal void AddTopTable(VDataTable table)
+        public FCustomRefresh CustomRefresh;
+        public bool IsVertica { get; set; }
+        public OracleConnection Connection = null;
+        public event EventHandler Changed;
+        public event EventHandler SchemeChanged; // вызывается вручную , для обновления списка с изменением состава колонок см. VConst
+        public event EventHandler TopTableRefreshed;
+        public event EventHandler TopTableCommited;
+        public event EventHandler NeedSelection;
+        public void AddTopTable(VDataTable table)
         {
             if (this._top_tables == null)
             {
@@ -107,7 +107,7 @@ namespace sql.builder.DataApi
             }
             this._top_tables.Add(table);
         }
-        internal void RefreshTopTableIfClear()
+        public void RefreshTopTableIfClear()
         {
             if (this.isClear)
             {
@@ -115,11 +115,11 @@ namespace sql.builder.DataApi
             }
         }
         private bool _refreshing;
-        internal bool IsRefreshing()
+        public bool IsRefreshing()
         {
             return this._refreshing;
         }
-        internal void RefreshTopTable(bool isCreation)
+        public void RefreshTopTable(bool isCreation)
         {
             this._refreshing = true;
             if (!isCreation)
@@ -177,7 +177,7 @@ namespace sql.builder.DataApi
             }
             this._refreshing = false;
         }
-        internal IList<VDataTable> MultiselectSourceTables()
+        public IList<VDataTable> MultiselectSourceTables()
         {
             var list = new List<VDataTable>();
             for (int index = 0; index < this.Tables.Count; index++)
@@ -190,7 +190,7 @@ namespace sql.builder.DataApi
             }
             return list;
         }
-        internal IList<VDataTable> MultiselectTargetTables()
+        public IList<VDataTable> MultiselectTargetTables()
         {
             var list = new List<VDataTable>();
             for (int index = 0; index < this.Tables.Count; index++)
@@ -204,7 +204,7 @@ namespace sql.builder.DataApi
             return list;
         }
         private bool isClear = true;
-        internal void ClearData()
+        public void ClearData()
         {
             if (this._top_tables != null)
             {
@@ -295,10 +295,10 @@ namespace sql.builder.DataApi
         //{
         //    return mainThresdId == System.Threading.Thread.CurrentThread.ManagedThreadId;
         //}
-        internal VDataSet()
+        public VDataSet()
         {
         }
-        /*internal VDataColumn GetColumnByName(string name)
+        /*public VDataColumn GetColumnByName(string name)
         {
             if (columns == null) {
                 columns = new SortedList<string, VDataColumn>();
@@ -314,7 +314,7 @@ namespace sql.builder.DataApi
             }
             return columns[name];
         }*/
-        internal VDataTable GetTable(string tablename)
+        public VDataTable GetTable(string tablename)
         {
             if (string.IsNullOrEmpty(tablename))
             {
@@ -355,7 +355,7 @@ namespace sql.builder.DataApi
         {
             Refresh(null, useRepository);
         }
-        internal OracleConnection GetConnection()
+        public OracleConnection GetConnection()
         {
             if (this.Connection == null)
             {
@@ -367,7 +367,7 @@ namespace sql.builder.DataApi
                 return this.Connection;
             }
         }
-        internal static XElement ParsObjectArrayToXelement(object[] pars, XElement xformalParams)
+        public static XElement ParsObjectArrayToXelement(object[] pars, XElement xformalParams)
         {
             //пока только для числовых параметров;
             if (xformalParams == null)
@@ -411,17 +411,17 @@ namespace sql.builder.DataApi
             }
             return xpars;
         }
-        internal void Refresh(object[] pars)
+        public void Refresh(object[] pars)
         {
             XElement xpars = ParsObjectArrayToXelement(pars, this.Report.Element(EName.@params));
             this.Refresh(xpars);
         }
-        internal void ClearInputParams()
+        public void ClearInputParams()
         {
             this.InputParams = null;
             this.InputParamsNames = null;
         }
-        internal void AddInputParam(string name, OracleParameter dbPar, object value)
+        public void AddInputParam(string name, OracleParameter dbPar, object value)
         {
             if (this.InputParams == null)
             {
@@ -438,7 +438,7 @@ namespace sql.builder.DataApi
             string name = this.InputParamsNames[index];
             return this.InputParams[name];
         }
-        internal void SetParamsValues(IList<object> values)
+        public void SetParamsValues(IList<object> values)
         {
             if (values == null)
             {
@@ -588,12 +588,12 @@ namespace sql.builder.DataApi
             }
         }
         //IEnumerable<string> ProcParamNames = null;
-        internal void Refresh(XElement pars, int useRepository = 2, bool onlyProc = false)
+        public void Refresh(XElement pars, int useRepository = 2, bool onlyProc = false)
         {
             string s = string.Empty;
             Refresh(pars, ref s, useRepository, onlyProc);
         }
-        internal void Refresh(XElement pars, ref string retSql, int useRepository = 2, bool onlyProc = false, bool onlyGetSql = false)
+        public void Refresh(XElement pars, ref string retSql, int useRepository = 2, bool onlyProc = false, bool onlyGetSql = false)
         {
             // Значительная часть алгоритма ниже заявязана на Report , который равен null для DataSet полученного не из Report
             // Пока закрыто заглушками и проверками 
@@ -761,7 +761,7 @@ namespace sql.builder.DataApi
                 this.Scheme.SetAttrValue(AName.timestamp, DateTime.Now);
             }
         }
-        internal void addBandsForTransposedPre()
+        public void addBandsForTransposedPre()
         {
             foreach (XElement col in this.Scheme.Descendants(EName.table).Elements(EName.viewcolumns).Descendants(EName.column).Where(e => e.AttrOrEmpty(AName.pivot) == "1").ToList())
             { // Множественные колонки меняем на бенды
@@ -960,7 +960,7 @@ namespace sql.builder.DataApi
             }
             return tgBand;
         }
-        internal List<string> GetParNames()
+        public List<string> GetParNames()
         {
             var ss = new List<string>();
             if (InputParams != null)
@@ -969,7 +969,7 @@ namespace sql.builder.DataApi
             }
             return ss;
         }
-        internal void SetParamInfo(string paramName, string value)
+        public void SetParamInfo(string paramName, string value)
         {
             VDataTable tbl = this.GetTable("params_info");
             DataColumn col_name, col_text;
@@ -1016,7 +1016,7 @@ namespace sql.builder.DataApi
             }
             return list;
         }
-        internal VDataTable ArrayValueTable(string name)
+        public VDataTable ArrayValueTable(string name)
         {
             VDataTable dt = (VDataTable)this.Tables[name];
             if (dt != null && dt.StructureType == StructureType.Array)
@@ -1029,7 +1029,7 @@ namespace sql.builder.DataApi
             }
         }
         /// <seealso cref="Compiler.addFormInfoQueries"/>
-        internal VXElement GetParamsAsXml(ICollection<string> fieldNames, string formName, bool onlyForSelectedValues)
+        public VXElement GetParamsAsXml(ICollection<string> fieldNames, string formName, bool onlyForSelectedValues)
         {
             Contract.Assert(fieldNames != null);
             int index;
@@ -1237,7 +1237,7 @@ namespace sql.builder.DataApi
             }
             return call;
         }
-        internal static object[] ArrayParamXElementContentToObjectArray(XElement factParamContent)
+        public static object[] ArrayParamXElementContentToObjectArray(XElement factParamContent)
         {
             bool isStringArray = factParamContent.AttrOrEmpty(AName.function) == "sarray";
             string s = string.Empty;
@@ -1311,7 +1311,7 @@ namespace sql.builder.DataApi
                 return this.GetVariableColumn(paramName);
             }
         }
-        internal object GetParamValueByName(string paramName, DataRow row)
+        public object GetParamValueByName(string paramName, DataRow row)
         {
             if (this.InputParams != null)
             {
@@ -1380,7 +1380,7 @@ namespace sql.builder.DataApi
             }
             return null;
         }
-        internal OracleParameter GetParamAsOracleParametr(string paramName)
+        public OracleParameter GetParamAsOracleParametr(string paramName)
         {
             OracleParameter dbPar;
             if (!VDBSelectCommand.TryGetGlobalDbParam(paramName, out dbPar))
@@ -1447,7 +1447,7 @@ namespace sql.builder.DataApi
             }
             return dbPar;
         }
-        internal static VDataSet FromXml(XElement xParams, VDataSet dataSet = null, bool clean_ds = true)
+        public static VDataSet FromXml(XElement xParams, VDataSet dataSet = null, bool clean_ds = true)
         {
             VDataSet dsReport = dataSet;
             if (dsReport == null)
@@ -1484,7 +1484,7 @@ namespace sql.builder.DataApi
             }
             return dsReport;
         }
-        internal static XElement ToXml(VDataSet ds, XName root_name)
+        public static XElement ToXml(VDataSet ds, XName root_name)
         {
             if (ds.Scheme == null || !ds.Scheme.HasElements)
             {
@@ -1876,15 +1876,15 @@ namespace sql.builder.DataApi
         }
     }
 
-    internal class SaveResult
+    public class SaveResult
     {
         Dictionary<DataRow, OracleException> _rowsExceptions = new Dictionary<DataRow, OracleException>();
         bool _success = true;
 
-        internal Dictionary<DataRow, OracleException> RowsExceptions { get { return _rowsExceptions; } }
-        internal bool Success { get { return _success; } }
+        public Dictionary<DataRow, OracleException> RowsExceptions { get { return _rowsExceptions; } }
+        public bool Success { get { return _success; } }
 
-        internal void AppendResult(SaveResult result)
+        public void AppendResult(SaveResult result)
         {
             if (!result.RowsExceptions.Any()) return;
 
@@ -1893,7 +1893,7 @@ namespace sql.builder.DataApi
             if (!result.Success) _success = false;
         }
 
-        internal void AddRowException(DataRow row, OracleException ex)
+        public void AddRowException(DataRow row, OracleException ex)
         {
             _rowsExceptions.Add(row, ex);
             _success = false;

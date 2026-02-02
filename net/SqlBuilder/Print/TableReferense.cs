@@ -13,13 +13,13 @@ namespace sql.builder
     // Этот интерфейс нужен только для того,
     // чтобы TableReference мог взаимодействовать
     // и с sql.builder.Print.Xlsx.ExcelPrintElement, и с sql.builder.Print.XML.ExcelPrintGroup
-    internal interface IExcelPrintEl
+    public interface IExcelPrintEl
     {
         bool DontRemove { get; }
         bool HasParent { get; }
         TableReference GetParentTableReference();
     }
-    internal class TableReference
+    public class TableReference
     {
         private readonly IExcelPrintEl element;
         private readonly string fulltablename, maintablename, subtablename;
@@ -32,12 +32,12 @@ namespace sql.builder
         private string ParentRelatedColumnName;
         private bool currentRowExists;
         private IList<DataRow> subRows;
-        internal string FullTableName { get { return this.fulltablename; } }
-        internal string MainTableName { get { return this.maintablename; } }
-        internal string SubTableName { get { return this.subtablename; } }
-        internal DataTable Table { get { return this.table; } }
+        public string FullTableName { get { return this.fulltablename; } }
+        public string MainTableName { get { return this.maintablename; } }
+        public string SubTableName { get { return this.subtablename; } }
+        public DataTable Table { get { return this.table; } }
         //private ExcelPrintElement Element { get { return this.element; } }
-        internal TableReference(IExcelPrintEl element, string table_name)
+        public TableReference(IExcelPrintEl element, string table_name)
         {
             this.element = element;
             this.fulltablename = table_name;
@@ -50,11 +50,11 @@ namespace sql.builder
             }
             this.currentRowValues = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
         }
-        internal bool IsCurrentRowValueExists(string columnName)
+        public bool IsCurrentRowValueExists(string columnName)
         {
             return this.currentRowValues.ContainsKey(columnName);
         }
-        internal XElement GetColumnFormula(string columnName)
+        public XElement GetColumnFormula(string columnName)
         {
             VDataTable vtbl = (this.table as VDataTable);
             if (vtbl == null) return null;
@@ -62,7 +62,7 @@ namespace sql.builder
             if (column == null) return null;
             return column.GetExcelFormula();
         }
-        internal object GetCurrentRowValue(DataColumn column)
+        public object GetCurrentRowValue(DataColumn column)
         {
             if (this.currentRow != null) {
                 // Емцов - отладка печати excel
@@ -72,7 +72,7 @@ namespace sql.builder
                 return this.currentRowValues[column.ColumnName];
             }
         }
-        internal object GetCurrentRowValue(string columnName)
+        public object GetCurrentRowValue(string columnName)
         {
             if (this.currentRow != null) {
                 // Емцов - отладка печати excel
@@ -82,7 +82,7 @@ namespace sql.builder
                 return this.currentRowValues[columnName];
             }
         }
-        internal object GetPrevRowValue(string columnName)
+        public object GetPrevRowValue(string columnName)
         {
             if (this.prevRowValues != null) {
                 return this.prevRowValues[columnName];
@@ -90,11 +90,11 @@ namespace sql.builder
                 return DBNull.Value;
             }
         }
-        internal bool IsPrevRowExists()
+        public bool IsPrevRowExists()
         {
             return this.prevRowValues != null;
         }
-        internal void NewRow()
+        public void NewRow()
         {
             if (this.currentRowValues.Count > 0) {
                 this.prevRowValues = this.currentRowValues;
@@ -103,28 +103,28 @@ namespace sql.builder
             }
             this.currentRowValues = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
         }
-        internal void SetCurrentRowValue(string columnName, object value)
+        public void SetCurrentRowValue(string columnName, object value)
         {
             this.currentRowValues[columnName] = value;
         }
-        internal void SetCurrentRowExists(bool value)
+        public void SetCurrentRowExists(bool value)
         {
             this.currentRowExists = value;
         }
-        internal bool IsCurrentRowExists()
+        public bool IsCurrentRowExists()
         {
             return this.currentRowExists;
         }
-        internal void SetCurrentRow(DataRow row)
+        public void SetCurrentRow(DataRow row)
         {
             this.SetCurrentRowExists(row != null);
             this.currentRow = row;
         }
-        internal DataRow GetCurrentRow()
+        public DataRow GetCurrentRow()
         {
             return this.currentRow;
         }
-        /*internal int GetRowsCount(DataSet dataSet)
+        /*public int GetRowsCount(DataSet dataSet)
         {
             int rowsCount = 0;
             if (String.IsNullOrEmpty(this.SubTableName)) {
@@ -134,7 +134,7 @@ namespace sql.builder
             }
             return rowsCount;
         }*/
-        /*internal int CalculateRowsCount(DataSet dataSet)
+        /*public int CalculateRowsCount(DataSet dataSet)
         {
             int rowsCount = 0;
 
@@ -178,7 +178,7 @@ namespace sql.builder
             }
             return rowsCount;
         }*/
-        internal void ClearData()
+        public void ClearData()
         {
             this.sortedRows = null;
             this.subRows = null;
@@ -282,7 +282,7 @@ namespace sql.builder
         private string parentId=null;
         private bool isNew = true;
         private bool isImputedRow=true;
-        internal void OpenRows(DataSet dataSet, DataRow imputedRow = null, bool print_big_data = false, DataTable outputTable = null)
+        public void OpenRows(DataSet dataSet, DataRow imputedRow = null, bool print_big_data = false, DataTable outputTable = null)
         {
             this.isNew = true;
             this.table = dataSet.Tables[this.MainTableName];
@@ -381,7 +381,7 @@ namespace sql.builder
             }
             parentId = GetParentId();
         }
-        internal void CloseRows(DataSet dataSet, bool print_big_data = false)
+        public void CloseRows(DataSet dataSet, bool print_big_data = false)
         {
             if (print_big_data) {
                 if (this.reader != null) {
@@ -540,7 +540,7 @@ namespace sql.builder
                 return true;
             }
         }
-         internal TableReference GetParentTableReference() // заплатка для вычислений на клиенте, если иерархия в шаблоне не будет соответсвовать иерархии grsets, работать не будет
+         public TableReference GetParentTableReference() // заплатка для вычислений на клиенте, если иерархия в шаблоне не будет соответсвовать иерархии grsets, работать не будет
          {
              if (!this.element.HasParent) {
                  return null;

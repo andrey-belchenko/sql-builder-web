@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal class ExcelFormula
+    public class ExcelFormula
     {
         string _text;
 
@@ -56,7 +56,7 @@ namespace sql.builder.Print.Xlsx
 
             //UpdateHash();
         }
-        internal string GetText()
+        public string GetText()
         {
             if (_changed) {
                 _text = string.Join(string.Empty, _tokens.SelectAsArray(t => t.GetText()));
@@ -65,16 +65,16 @@ namespace sql.builder.Print.Xlsx
             return _text;
         }
 
-        //internal bool ContainsCell(string cellName)
+        //public bool ContainsCell(string cellName)
         //{
         //    return _cellNames.Contains(cellName);
         //}
 
-        //internal bool ContainsColumn(string colName)
+        //public bool ContainsColumn(string colName)
         //{
         //    return _colNames.Contains(colName);
         //}
-        internal void CopyColumns(string[] cols_to_copy)
+        public void CopyColumns(string[] cols_to_copy)
         {
             int cols_bord1 = ExcelUtils.GetColumnNumber(cols_to_copy[0]);
             int cols_bord2 = ExcelUtils.GetColumnNumber(cols_to_copy[cols_to_copy.Length - 1]);
@@ -100,7 +100,7 @@ namespace sql.builder.Print.Xlsx
                 }
             }
         }
-        internal void DeleteColumns(IEnumerable<string> cols_to_delete)
+        public void DeleteColumns(IEnumerable<string> cols_to_delete)
         {
             int cols_bord1 = ExcelUtils.GetColumnNumber(cols_to_delete.First());
             int cols_bord2 = ExcelUtils.GetColumnNumber(cols_to_delete.Last());
@@ -132,14 +132,14 @@ namespace sql.builder.Print.Xlsx
             }
         }
 
-        internal void Move(int col_delta)
+        public void Move(int col_delta)
         {
             foreach (var r in _refs) r.Move(col_delta);
             _changed = true;
         }
     }
 
-    internal interface IToken
+    public interface IToken
     {
         string GetText();
     }

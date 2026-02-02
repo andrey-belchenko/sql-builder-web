@@ -4,13 +4,13 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    /*internal sealed class VEntityTypeField : VSXElement
+    /*public sealed class VEntityTypeField : VSXElement
     {
-        internal VEntityTypeField(XName name)
+        public VEntityTypeField(XName name)
             : base(name)
         {
         }
-        internal static VEntityTypeField GetOrCreate(XElement element)
+        public static VEntityTypeField GetOrCreate(XElement element)
         {
             //VEntityTypeField item = new VEntityTypeField("item");
             //if (element.GetType() != item.GetType()) {
@@ -28,7 +28,7 @@ namespace sql.builder.DataApi
                  return this.AttrOrDefault(AName_.As, string.Empty);
              }
         }
-        internal string Title {
+        public string Title {
              get {
                  return this.AttrOrDefault(AName_.title, string.Empty);
              }

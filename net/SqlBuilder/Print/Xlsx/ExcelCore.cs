@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal class ExcelCore : ExcelBaseFile
+    public class ExcelCore : ExcelBaseFile
     {
         public ExcelCore(string file_path)
             : base(file_path)

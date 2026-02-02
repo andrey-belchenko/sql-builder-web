@@ -8,13 +8,13 @@ namespace sql.builder.DataApi
     /// <summary>
     /// &lt;format-package name="" &gt;
     /// </summary>
-    internal sealed class VFormatPackage : VSXElement, IVParent
+    public sealed class VFormatPackage : VSXElement, IVParent
     {
-        internal VFormatPackage()
+        public VFormatPackage()
             : base(EName.format_package)
         {
         }
-        internal VFormat GetFormat(string name)
+        public VFormat GetFormat(string name)
         {
             IList<VSXElement> formats = this.GetElementsP();
             for (int index = 0; index < formats.Count; index++) {

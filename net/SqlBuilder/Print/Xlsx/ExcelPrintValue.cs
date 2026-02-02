@@ -11,10 +11,10 @@ using sql.builder.DataApi;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal static class ExcelPrintValue
+    public static class ExcelPrintValue
     {
-        internal const string rowIndStr = "[ind]";
-        internal static IExcelPrintValue Create(ExcelCell cell, ExcelPrintRow parent)
+        public const string rowIndStr = "[ind]";
+        public static IExcelPrintValue Create(ExcelCell cell, ExcelPrintRow parent)
         {
             string text = cell.Text;
             int len = text.Length;
@@ -30,13 +30,13 @@ namespace sql.builder.Print.Xlsx
         }
         /*
         #region поля
-        internal SortedList<string, List<string>> TableColumns;
+        public SortedList<string, List<string>> TableColumns;
         private bool SingleValue;
         private ExcelPrintRow parent;
         private ExcelCell cell;
         private string _formula;
         #endregion
-        internal ExcelPrintValue(ExcelCell cell, ExcelPrintRow parent)
+        public ExcelPrintValue(ExcelCell cell, ExcelPrintRow parent)
         {
             this.cell = cell;
             this.parent = parent;
@@ -62,9 +62,9 @@ namespace sql.builder.Print.Xlsx
                 }
             }
         }
-        internal ExcelCell Cell { get { return this.cell; } }
+        public ExcelCell Cell { get { return this.cell; } }
         // 15.05.17 постарался оптимизировать ф-ю
-        internal object GetValue(WorksheetPrint pi, ref string hyperlinkTarget)
+        public object GetValue(WorksheetPrint pi, ref string hyperlinkTarget)
         {
             string text = cell.Text;
             TableReference tr = null;
@@ -157,7 +157,7 @@ namespace sql.builder.Print.Xlsx
                 return text;
             }
         }*/
-        internal static void GetFormula(TableReference tr, string column_name, ExcelPrintRow row, out string formula)
+        public static void GetFormula(TableReference tr, string column_name, ExcelPrintRow row, out string formula)
         {
              XElement xformula = tr.GetColumnFormula(column_name);
              if (xformula == null) {
@@ -173,30 +173,30 @@ namespace sql.builder.Print.Xlsx
              formula = xformula.Value;
         }
     }
-    internal interface IExcelPrintValue
+    public interface IExcelPrintValue
     {
         object GetValue(WorksheetPrint pi, out string hyperlinkTarget);
     }
     /// <summary>
     /// Ячейка отчёта, текст которой полностью заменяется на значение из БД
     /// </summary>
-    internal class SingleExcelPrintValue : IExcelPrintValue
+    public class SingleExcelPrintValue : IExcelPrintValue
     {
         private string table_name;
         private string column_name;
         private string formula;
         private ExcelPrintRow parent;
         private ExcelCell cell;
-        internal static string HyperlinkSlashPlaceholder = "66bce492";
-        internal SingleExcelPrintValue(ExcelCell cell, ExcelPrintRow parent, string table_name, string column_name)
+        public static string HyperlinkSlashPlaceholder = "66bce492";
+        public SingleExcelPrintValue(ExcelCell cell, ExcelPrintRow parent, string table_name, string column_name)
         {
             this.cell = cell;
             this.parent = parent;
             this.table_name = table_name;
             this.column_name = column_name;
         }
-        internal string ColumnName { get { return this.column_name; } }
-        internal string ExcelColumnName { get { return this.cell.CellInfo.ColumnName; } }
+        public string ColumnName { get { return this.column_name; } }
+        public string ExcelColumnName { get { return this.cell.CellInfo.ColumnName; } }
         public object GetValue(WorksheetPrint pi, out string hyperlinkTarget)
         {
             hyperlinkTarget = null;
@@ -272,7 +272,7 @@ namespace sql.builder.Print.Xlsx
             }
         }
     }
-    internal class ComplexExcelPrintValue : IExcelPrintValue
+    public class ComplexExcelPrintValue : IExcelPrintValue
     {
         [ThreadStatic]
         private static StringBuilder buffer;
@@ -280,7 +280,7 @@ namespace sql.builder.Print.Xlsx
         private string formula;
         private ExcelPrintRow parent;
         private ExcelCell cell;
-        internal ComplexExcelPrintValue(ExcelCell cell, ExcelPrintRow parent)
+        public ComplexExcelPrintValue(ExcelCell cell, ExcelPrintRow parent)
         {
             this.cell = cell;
             this.parent = parent;
@@ -351,8 +351,8 @@ namespace sql.builder.Print.Xlsx
             return text;
         }
     }
-    internal class ExcelPrintFormula
+    public class ExcelPrintFormula
     {
-        internal string Formula;
+        public string Formula;
     }
 }

@@ -10,7 +10,7 @@ using SqlBuilderLib.DevTools;
 
 namespace sql.builder.XmlHelpers
 {
-    internal static class RepositoriesHelper
+    public static class RepositoriesHelper
     {
         private static DataTable _dt_repositories;
         private static List<string> _excepted_queries;

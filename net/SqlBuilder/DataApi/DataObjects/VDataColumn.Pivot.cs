@@ -10,7 +10,7 @@ using System.Linq;
 using System.IO;
 namespace sql.builder.DataApi
 {
-    internal partial class VDataColumn
+    public partial class VDataColumn
     {
         
         public string OriginalNameForPivotColumn=null;

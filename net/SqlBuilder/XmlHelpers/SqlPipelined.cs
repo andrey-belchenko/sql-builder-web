@@ -6,9 +6,9 @@ using sql.builder.DataApi;
 
 namespace sql.builder.XmlHelpers
 {
-    internal static class SqlPipelined
+    public static class SqlPipelined
     {
-        internal static string Generate(string qname, bool with_temp_table = false)
+        public static string Generate(string qname, bool with_temp_table = false)
         {
             var xquery = new XElement(XmlReports.Environment.GetPrecompiledQuery(qname));
             xquery.Attributes(TextConst.AName.Name).Remove();
@@ -45,7 +45,7 @@ namespace sql.builder.XmlHelpers
             return sb.ToString();
         }
 
-        internal static void GenerateTempTable(string qname_safe, string[] record_fields, StringBuilder sb)
+        public static void GenerateTempTable(string qname_safe, string[] record_fields, StringBuilder sb)
         {
             sb.AppendLine(string.Format("TRUNCATE TABLE sqlb_{0}_tbl;", qname_safe));
             sb.AppendLine(string.Format("DROP TABLE sqlb_{0}_tbl;", qname_safe));

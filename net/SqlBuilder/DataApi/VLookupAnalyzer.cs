@@ -2,7 +2,7 @@
 
 namespace sql.builder.DataApi
 {
-    internal class VLookupAnalyzer 
+    public class VLookupAnalyzer 
     {
         public VLookupAnalyzer()
         {
@@ -60,7 +60,7 @@ namespace sql.builder.DataApi
         //}
     }
 
-    internal delegate bool AnalyzerCheckDelegate(VSXElement element);
+    public delegate bool AnalyzerCheckDelegate(VSXElement element);
 
-    internal delegate List<VSXElement>   AnalyzerReturnDelegate(VSXElement element);
+    public delegate List<VSXElement>   AnalyzerReturnDelegate(VSXElement element);
 }

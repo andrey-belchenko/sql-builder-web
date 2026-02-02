@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VScrollArea : VFieldGroup
+    public sealed class VScrollArea : VFieldGroup
     {
-        internal VScrollArea()
+        public VScrollArea()
             : base(EName.scrollarea)
         {
         }

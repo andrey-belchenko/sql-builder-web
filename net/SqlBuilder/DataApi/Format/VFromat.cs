@@ -5,9 +5,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VFormat : VSXElement
+    public sealed class VFormat : VSXElement
     {
-        internal VFormat()
+        public VFormat()
             : base(EName.format)
         {
         }

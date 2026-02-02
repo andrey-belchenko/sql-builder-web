@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VGridColumns : VOutputElement, IVParent
+    public sealed class VGridColumns : VOutputElement, IVParent
     {
-        internal VGridColumns()
+        public VGridColumns()
             : base(EName.columns)
         {
         }

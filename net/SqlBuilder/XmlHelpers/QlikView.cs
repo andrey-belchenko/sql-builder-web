@@ -8,7 +8,7 @@ using sql.builder.DataApi;
 
 namespace sql.builder.XmlHelpers
 {
-    internal static class QlikView
+    public static class QlikView
     {
         #region Закрытые переменные
         // занятые заголовки

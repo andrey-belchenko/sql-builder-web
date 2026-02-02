@@ -9,27 +9,27 @@ using Point = System.Drawing.Point;
 
 namespace sql.builder
 {
-    internal static class Wait 
+    public static class Wait 
     {
         private class WaitUIInfo
         {
-            internal string Caption;
-            internal bool IsCursor;
-            internal bool Overlap;
-            internal bool Overlaped;
-            internal string Description;
-            internal DateTime Start;
-            internal bool Delayed;
+            public string Caption;
+            public bool IsCursor;
+            public bool Overlap;
+            public bool Overlaped;
+            public string Description;
+            public DateTime Start;
+            public bool Delayed;
         }
         private static SortedDictionary<int, WaitUIInfo> _stack = new SortedDictionary<int, WaitUIInfo>();
         private static object _lock = new object();
         private static int _idCounter; // должно пригодиться для многопоточности
         private static WaitUIInfo _current;
-        internal static bool Waiting()
+        public static bool Waiting()
         {
             return _current != null;
         }
-        internal static void Check()
+        public static void Check()
         {
             lock (_lock) {
                 if (_current != null) {
@@ -44,7 +44,7 @@ namespace sql.builder
                 }
             }
         }
-        internal static int ShowPanel(string capition, bool overlap, int delayMilliseconds, string description = null)
+        public static int ShowPanel(string capition, bool overlap, int delayMilliseconds, string description = null)
         {
             lock (_lock) {
                 if (description == null) {
@@ -62,7 +62,7 @@ namespace sql.builder
                 return _idCounter;
             }
         }
-        /*internal static int ShowCursor(bool overlap)
+        /*public static int ShowCursor(bool overlap)
         {
             lock (_lock) {
                 var info = new WaitUIInfo();
@@ -73,7 +73,7 @@ namespace sql.builder
                 return _idCounter;
             }
         }*/
-        internal static void Hide(int id)
+        public static void Hide(int id)
         {
             lock (_lock) {
                 _stack.Remove(id);

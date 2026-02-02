@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VToolbar : VSXElement, IVParent
+    public sealed class VToolbar : VSXElement, IVParent
     {
-        internal VToolbar()
+        public VToolbar()
             : base(EName.toolbar)
         {
         }

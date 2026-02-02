@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VLinks : VSXElement, IVParent
+    public sealed class VLinks : VSXElement, IVParent
     {
-        internal VLinks()
+        public VLinks()
             : base(EName.links)
         {
         }

@@ -30,7 +30,7 @@ namespace sql.builder.UI
                 }
             }
         }
-        internal void ActivateTab(string name)
+        public void ActivateTab(string name)
         {
             var tab = namedTabs[name];
             while (tab != null)
@@ -39,13 +39,13 @@ namespace sql.builder.UI
                 tab = tab.ContainerItem.ParentTab;
             }
         }
-        internal class TabContainerItem
+        public class TabContainerItem
         {
             public TabItem ParentTab;
             //public TabbedGroup TabContainer;
             public List<TabItem> TabItems = new List<TabItem>();
         }
-        internal class TabItem
+        public class TabItem
         {
             //public LayoutGroup Tab;
             public TabContainerItem ContainerItem;

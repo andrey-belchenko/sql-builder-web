@@ -16,9 +16,9 @@ using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VFact : VColumn, IVParent
+    public sealed class VFact : VColumn, IVParent
     {
-        internal VFact()
+        public VFact()
             : base(EName.fact)
         {
         }
@@ -27,7 +27,7 @@ namespace sql.builder.DataApi
         {
             return child_nodes;
         }
-        internal VSXElement GetFactSource()
+        public VSXElement GetFactSource()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as VSXElement);
@@ -44,7 +44,7 @@ namespace sql.builder.DataApi
             AddCashValue(el, MethodBase.GetCurrentMethod().ToString(), null);
             return el;
         }
-        internal VSXElement GetConditionSource()
+        public VSXElement GetConditionSource()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as VSXElement);
@@ -89,7 +89,7 @@ namespace sql.builder.DataApi
             AddCashValue(source, MethodBase.GetCurrentMethod().ToString(), null);
             return sources;
         }
-        /*internal List<string> GetDimensionsNames()
+        /*public List<string> GetDimensionsNames()
         {
             var names = new List<string>();
             VSXElement source = GetFactSource();
@@ -107,7 +107,7 @@ namespace sql.builder.DataApi
 
             return names;
         }*/
-        internal string GetFactId()
+        public string GetFactId()
         {
             if (this.GetElementsP(EName.withparams).Count != 0) {
                 return this.GetUniqueKey().ToString(); // заменить на анализ значений параметров
@@ -216,7 +216,7 @@ namespace sql.builder.DataApi
             }
             return null;
         }*/
-        /*internal string CumulateAgg()
+        /*public string CumulateAgg()
         {
             var scope = Scope();
             var s = "";
@@ -231,7 +231,7 @@ namespace sql.builder.DataApi
             }
             return s;
         }*/
-        /*internal string CumulateInfo()
+        /*public string CumulateInfo()
         {
             var cumulate = Cumulate();
             var name = "";
@@ -241,7 +241,7 @@ namespace sql.builder.DataApi
             }
             return name;
         }*/
-        /*internal VDimSet GetDimset()
+        /*public VDimSet GetDimset()
         {
 
             if (P_Table != "")
@@ -254,7 +254,7 @@ namespace sql.builder.DataApi
             }
             return null;
         }*/
-        internal XElement BuildFullExpression(XElement factPars, SortedList<string, FactDependantceInfo> infoList, List<string> conditions, List<string> outputDimensions, List<string> nonOutputDimensions /*не используется - можно убрать*/, SortedList<string, int> names)
+        public XElement BuildFullExpression(XElement factPars, SortedList<string, FactDependantceInfo> infoList, List<string> conditions, List<string> outputDimensions, List<string> nonOutputDimensions /*не используется - можно убрать*/, SortedList<string, int> names)
         {
             VSXElement source = this.GetFactSource();
             if (source == null) {
@@ -273,7 +273,7 @@ namespace sql.builder.DataApi
             expr = this.ApplySpecAggregation(expr);
             return expr;
         }
-        internal void GetCondInfo(List<string> conditions)
+        public void GetCondInfo(List<string> conditions)
         {
             string condition = this.P_Condition;
             if (!string.IsNullOrEmpty(condition)) {
@@ -284,7 +284,7 @@ namespace sql.builder.DataApi
                 }
             }
         }
-        internal XElement BuildExpression(VSXElement srcCol, SortedList<string, VFact.FactDependantceInfo> infoList, List<string> conditions, List<string> outputDimensions, List<string> nonOutputDimensions, SortedList<string, int> names)
+        public XElement BuildExpression(VSXElement srcCol, SortedList<string, VFact.FactDependantceInfo> infoList, List<string> conditions, List<string> outputDimensions, List<string> nonOutputDimensions, SortedList<string, int> names)
         {
             var info = new FactDependantceInfo(this.P_Column);
             info.Conditions = conditions.ToList();
@@ -324,7 +324,7 @@ namespace sql.builder.DataApi
             }
         }
         #endregion
-        /*internal List<string> GetCumulateDimensionsNames()
+        /*public List<string> GetCumulateDimensionsNames()
         {
             var names = new List<string>();
             VSXElement source = GetFactSource();

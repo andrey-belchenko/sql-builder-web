@@ -5,16 +5,16 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VReport
+    public partial class VReport
     {
-        internal VDBSelectCommand GetRepInsertCommand()
+        public VDBSelectCommand GetRepInsertCommand()
         {
             string procText = sql.builder.XmlHelpers.SqlReportPkg.Generate(this.P_IdName, true,true,false);
             var cmd = new VDBSelectCommand(procText, this);
             cmd.CreateRetParam();
             return cmd;
         }
-        internal List<VQueryCall> Queries()
+        public List<VQueryCall> Queries()
         {
             return this.Element(EName.queries).Descendants(EName.query).ToList().SelectAsArray(VSXElement.Get<VQueryCall>).ToList();
         }
@@ -22,7 +22,7 @@ namespace sql.builder.DataApi
         {
             return this.Queries();
         }
-        internal VQueryCall GetQuery(string name)
+        public VQueryCall GetQuery(string name)
         {
             IList<VQueryCall> queries = this.Queries();
             for (int index = 0; index < queries.Count; index++) {
@@ -33,11 +33,11 @@ namespace sql.builder.DataApi
             }
             return null;
         }
-        internal List<VPrintTemplate> PrintTemplates()
+        public List<VPrintTemplate> PrintTemplates()
         {
             return this.Descendants(EName.print_templates).Descendants(EName.template).ToList().SelectAsArray(VSXElement.Get<VPrintTemplate>).ToList();
         }
-        internal VReportProc GetReportProc()
+        public VReportProc GetReportProc()
         {
             IList<VSXElement> list = this.GetElementsP(EName.procedure);
             if (list.Count == 0) {

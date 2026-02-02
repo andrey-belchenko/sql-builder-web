@@ -27,28 +27,28 @@ using SqlBuilderLib.DevTools;
 
 namespace sql.builder
 {
-    internal static partial class XmlReports
+    public static partial class XmlReports
     {
-        internal static readonly Type numberType = typeof(Decimal);
-        internal static readonly char num_sep = CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator[0];
-        internal static readonly string key_name = "sid";
-        internal static readonly string parent_key_name = "sparentid";
+        public static readonly Type numberType = typeof(Decimal);
+        public static readonly char num_sep = CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator[0];
+        public static readonly string key_name = "sid";
+        public static readonly string parent_key_name = "sparentid";
         //public static readonly decimal kod_menu_default = 121001M;
         private static string pathXsltSys = (SourceFolder ?? CleanUtils.GetRootPath()) + "\\" + NativeProductName + "\\xslt\\";
         //public static string pathXsltSys = @"C:\infoenergo_root\root\main\all\sql.builder\sql.builder\xslt\";
         //private static ProgressBarControl progressBar = null;
-        internal static string schemeName = null;
-        internal static string customerId = null;
+        public static string schemeName = null;
+        public static string customerId = null;
         //private static int compilerVersion = 2;
-        internal static readonly string SourceFolderName = "projects";
-        internal static readonly string FormsCacheFolderName = "FormsCache";
-        internal static readonly string QubesCacheFolderName = "QubesCache";
-        internal static readonly string QueriesCacheFolderName = "QueriesCache";
-        internal static XElement TestFile;
-        internal static string TestName;
-        internal static bool? TestCompare;
+        public static readonly string SourceFolderName = "projects";
+        public static readonly string FormsCacheFolderName = "FormsCache";
+        public static readonly string QubesCacheFolderName = "QubesCache";
+        public static readonly string QueriesCacheFolderName = "QueriesCache";
+        public static XElement TestFile;
+        public static string TestName;
+        public static bool? TestCompare;
         private static VEnvironment _environment;
-        internal static VEnvironment Environment
+        public static VEnvironment Environment
         {
             set
             {
@@ -63,7 +63,7 @@ namespace sql.builder
                 return _environment;
             }
         }
-        internal static bool Init(bool force_reload = false, string source_folder = null)
+        public static bool Init(bool force_reload = false, string source_folder = null)
         {
 #if DEBUG
             Stopwatch sw;
@@ -108,7 +108,7 @@ namespace sql.builder
 #endif
             return true;
         }
-        internal static bool IsDeveloperMode()
+        public static bool IsDeveloperMode()
         {
 #if DEBUG
             // return false;
@@ -118,7 +118,7 @@ namespace sql.builder
 #endif
         }
 #if DEBUG
-        internal static bool UseProjectSourceFolder
+        public static bool UseProjectSourceFolder
         {
             get
             {
@@ -126,13 +126,13 @@ namespace sql.builder
             }
         }
 #else
-        internal const bool UseProjectSourceFolder = false;
+        public const bool UseProjectSourceFolder = false;
 #endif
-        internal static bool IsInfoenergo
+        public static bool IsInfoenergo
         {
             get { return false; }
         }
-        internal static bool IsNative
+        public static bool IsNative
         {
             get
             {
@@ -268,11 +268,11 @@ namespace sql.builder
 
             Environment = null;
         }*/
-        internal static Dictionary<string, string> GetReportInfo(string repname)
+        public static Dictionary<string, string> GetReportInfo(string repname)
         {
             return GetReportInfo(GetReport(repname));
         }
-        internal static Dictionary<string, string> GetReportInfo(XElement xreport)
+        public static Dictionary<string, string> GetReportInfo(XElement xreport)
         {
             var dict = new Dictionary<string, string>();
             string name = xreport.AttrOrEmpty(AName.name);
@@ -306,7 +306,7 @@ namespace sql.builder
             }
             return dict;
         }
-        internal static XElement GetReport(string name)
+        public static XElement GetReport(string name)
         {
             //if (WebReportsAdapter.IsWebItem(name))
             //{
@@ -324,7 +324,7 @@ namespace sql.builder
             }
             return xreport;
         }
-        internal static bool IsFormWithBehavior(string name, string repname)
+        public static bool IsFormWithBehavior(string name, string repname)
         {
             if (XmlReports.Environment.Manager.IsOldOnly())
             {
@@ -348,7 +348,7 @@ namespace sql.builder
                 return element.AttrOrDefault(AName.with_behavior, true);
             }
         }
-        internal static XElement GetForm(string name, string repname)
+        public static XElement GetForm(string name, string repname)
         {
             XElement xform;
 
@@ -545,7 +545,7 @@ namespace sql.builder
 
             return transformXml(inputDocument, xsltTemplate);
         }
-        internal static XmlDocument getItemProcessedXml(string itemType, string itemName, bool noMat, XmlDocument xmldoc, XmlDocument xmldoc_old)
+        public static XmlDocument getItemProcessedXml(string itemType, string itemName, bool noMat, XmlDocument xmldoc, XmlDocument xmldoc_old)
         {
             XmlDocument source = null;
             IList<VSXElement> scheme;
@@ -601,7 +601,7 @@ namespace sql.builder
             outputDocument = finalProcessing(outputDocument);
             return outputDocument;
         }
-        internal static XElement getItemProcessedXml2(string itemType, string itemName, bool noMat)
+        public static XElement getItemProcessedXml2(string itemType, string itemName, bool noMat)
         {
             bool is_new_scheme = Environment.Manager.GetScheme().Elements(EName.queries).Elements(EName.query).SearchByAttribute(AName.name, itemName) != null;
             IList<VSXElement> scheme = is_new_scheme ? Environment.Manager.GetScheme() : Environment.Manager.GetOldScheme();
@@ -620,14 +620,14 @@ namespace sql.builder
             outputDocument = transformXml(outputDocument, "step7");
             return outputDocument;
         }
-        internal static XElement finalProcessing(XElement outputDocument)
+        public static XElement finalProcessing(XElement outputDocument)
         {
             Compiler.SimplifySubquery(outputDocument);
             Compiler.Step6(outputDocument);
             Compiler.Step7(outputDocument);
             return outputDocument;
         }
-        internal static string getQuerySql(XmlNode query)
+        public static string getQuerySql(XmlNode query)
         {
             //if (Compiler.old_compile)
             //{
@@ -646,7 +646,7 @@ namespace sql.builder
         //    XmlNode queryXml = getItemProcessedXml("query", queryName, false);
         //    return getQuerySql(queryXml);
         //}
-        internal static string getProcedureSqlOld(XmlDocument report)
+        public static string getProcedureSqlOld(XmlDocument report)
         {
             string procedureSql = "begin";
             foreach (XmlNode query in report.SelectNodes("root/query[@materialize=1 and not(@is-done)]"))
@@ -701,7 +701,7 @@ namespace sql.builder
         //{
         //    return executeReportOld(reportName, true, null);
         //}
-        internal static XmlDocument executeReportOld(string reportName, bool schemeOnly, XmlDocument report)
+        public static XmlDocument executeReportOld(string reportName, bool schemeOnly, XmlDocument report)
         {
             var xmldoc = new XmlDocument();
             var xroot1 = new XElement(EName.root);
@@ -1569,7 +1569,7 @@ namespace sql.builder
                 col.SetAttrValue(TextConst.AName.Visible, TextConst.AVBool.False);
             }
         }
-        internal static void executeNonQuery(string sql, OracleConnection connection, OracleParameter[] pars = null, bool analyze = true)
+        public static void executeNonQuery(string sql, OracleConnection connection, OracleParameter[] pars = null, bool analyze = true)
         {
             string sql1 = Cmn.ClearUndefined(sql);
             // для пск
@@ -1754,11 +1754,11 @@ namespace sql.builder
             setProgress(98);
             return dataTable;
         }*/
-        /*internal static XmlNode dataTableToXml(DataTable dataTable, XmlNode parentNode)
+        /*public static XmlNode dataTableToXml(DataTable dataTable, XmlNode parentNode)
         {
             return dataTableToXml(dataTable, parentNode, 0, dataTable.Rows.Count - 1);
         }*/
-        /*internal static XmlNode dataTableToXml(DataTable dataTable, XmlNode parentNode, int startIndex, int endIndex)
+        /*public static XmlNode dataTableToXml(DataTable dataTable, XmlNode parentNode, int startIndex, int endIndex)
         {
             XmlNode nodeTable = addChildNode(parentNode, "table");
             XmlNode nodeData = addChildNode(nodeTable, "data");
@@ -1774,7 +1774,7 @@ namespace sql.builder
             }
             return nodeTable;
         }*/
-        internal static XmlNode addChildNode(XmlNode nodeParent, string name)
+        public static XmlNode addChildNode(XmlNode nodeParent, string name)
         {
             XmlNode nodeChild = nodeParent.OwnerDocument.CreateElement(name);
             nodeParent.AppendChild(nodeChild);
@@ -1823,13 +1823,13 @@ namespace sql.builder
                 }
             }
         }
-        internal static XmlNode XElementToXmlNode(XElement element)
+        public static XmlNode XElementToXmlNode(XElement element)
         {
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(element.ToString());
             return doc.FirstChild;
         }
-        internal static string[] GetInputFolderNames()
+        public static string[] GetInputFolderNames()
         {
             string[] folder_names = { };
             if (InputParams != null)
@@ -1843,7 +1843,7 @@ namespace sql.builder
             }
             return folder_names;
         }
-        internal static string GetInputReportName()
+        public static string GetInputReportName()
         {
             string report_name = string.Empty;
             if (InputParams != null)
@@ -1857,8 +1857,8 @@ namespace sql.builder
             }
             return report_name;
         }
-        internal static string DepTitle = string.Empty;
-        internal static string GetMainTitle()
+        public static string DepTitle = string.Empty;
+        public static string GetMainTitle()
         {
             string title = null;
             if (InputParams != null)
@@ -1884,7 +1884,7 @@ namespace sql.builder
             }
             return title;
         }
-        internal static XElement GetCurrentNavigator(bool compiled = true)
+        public static XElement GetCurrentNavigator(bool compiled = true)
         {
             IList<VSXElement> scheme = (compiled) ? Environment.Manager.GetScheme() : Environment.Manager.GetNativeScheme();
             XElement xcustomer = scheme.Elements(EName.customers).Elements(EName.customer).First(c => c.Attribute(AName.id).Value == customerId);
@@ -1892,13 +1892,13 @@ namespace sql.builder
             XElement xnavigator = scheme.Elements(EName.navigators).Elements(EName.navigator).First(n => n.Attribute(AName.name).Value == navigator_name);
             return xnavigator;
         }
-        internal static XElement GetNavigator(string navName, bool compiled = true)
+        public static XElement GetNavigator(string navName, bool compiled = true)
         {
             IList<VSXElement> scheme = (compiled) ? Environment.Manager.GetScheme() : Environment.Manager.GetNativeScheme();
             XElement xnavigator = scheme.Elements(EName.navigators).Elements(EName.navigator).First(n => n.Attribute(AName.name).Value == navName);
             return xnavigator;
         }
-        internal static XElement GetUseReport(string report_name)
+        public static XElement GetUseReport(string report_name)
         {
             return GetCurrentNavigator().Descendants(EName.usereport).SearchByAttribute(AName.report, report_name);
         }

@@ -5,9 +5,9 @@ using System.Data;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VUseParam : VSXElement
+    public sealed class VUseParam : VSXElement
     {
-        internal VUseParam()
+        public VUseParam()
             : base(EName.useparam)
         {
         }

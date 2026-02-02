@@ -5,7 +5,7 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-	internal partial class VField : VSXElement
+	public partial class VField : VSXElement
 	{
 		protected override List<ElementUse> searchUses()
 		{

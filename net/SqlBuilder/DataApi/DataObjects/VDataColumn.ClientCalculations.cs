@@ -11,7 +11,7 @@ using System.IO;
 using sql.builder.Print.Xlsx;
 namespace sql.builder.DataApi
 {
-    internal partial class VDataColumn
+    public partial class VDataColumn
     {
 
 

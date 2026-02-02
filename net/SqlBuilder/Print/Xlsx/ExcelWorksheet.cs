@@ -11,7 +11,7 @@ using sql.builder.Print.Xlsx.RowsProcessors;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal class ExcelWorksheet : ExcelBaseFile
+    public class ExcelWorksheet : ExcelBaseFile
     {
         private string native_sheet_rid;
         private string native_sheet_name;
@@ -20,18 +20,18 @@ namespace sql.builder.Print.Xlsx
         private ExcelWorksheetCols cols;
         private ExcelWorksheetMerges merges;
         private MergeDownColumns mergedowncols;
-        //internal string NativeSheetID { get; private set; }
-        internal string NativeSheetRID { get { return this.native_sheet_rid; } }
-        internal string NativeSheetName { get { return this.native_sheet_name; } }
-        internal string NativeSheetFileName { get { return this.native_sheet_filename; } }
-        internal ExcelWorksheetMerges Merges { get { return this.merges; } }
-        internal ExcelWorksheetCols Cols { get { return this.cols; } }
-        internal MergeDownColumns MergeDownCols { get { return this.mergedowncols; } }
-        internal IList<ExcelRow> Rows
+        //public string NativeSheetID { get; private set; }
+        public string NativeSheetRID { get { return this.native_sheet_rid; } }
+        public string NativeSheetName { get { return this.native_sheet_name; } }
+        public string NativeSheetFileName { get { return this.native_sheet_filename; } }
+        public ExcelWorksheetMerges Merges { get { return this.merges; } }
+        public ExcelWorksheetCols Cols { get { return this.cols; } }
+        public MergeDownColumns MergeDownCols { get { return this.mergedowncols; } }
+        public IList<ExcelRow> Rows
         {
             get { return this._rows; }
         }
-        internal ExcelWorksheet(string file_path, ExcelPrintEnv env)
+        public ExcelWorksheet(string file_path, ExcelPrintEnv env)
             : base(file_path)
         {
             this._rows = new List<ExcelRow>();
@@ -70,7 +70,7 @@ namespace sql.builder.Print.Xlsx
             root.Elements(ns.Main.dimension).Remove();
             this.mergedowncols = new MergeDownColumns(this._rows);
         }
-        internal override void Save()
+        public override void Save()
         {
             //if (_worksheetRels != null)
             //{
@@ -209,14 +209,14 @@ namespace sql.builder.Print.Xlsx
 
             return cols_info;
         }
-        //internal void RemoveColumn(string column_name)
+        //public void RemoveColumn(string column_name)
         //{
         //    DeleteColumns(new SortedDictionary<int, string>()
         //    {
         //        {ExcelUtils.GetColumnNumber(column_name), column_name}
         //    });
         //}
-        internal void DeleteUnusedColumns(string[] used_variables)
+        public void DeleteUnusedColumns(string[] used_variables)
         {
             IList<string> cols_to_delete = new List<string>();
             foreach (IGrouping<string, ExcelCell> col_info in this.GetColumns()) {
@@ -233,7 +233,7 @@ namespace sql.builder.Print.Xlsx
             }
         }
         // Избавляемся от свёрнутых формул (одна на несколько ячеек идущих подряд), т.к. дико неудобно это обрабатывать при печати
-        internal void ExpandRefFormulas()
+        public void ExpandRefFormulas()
         {
             // все ячейки, которые хранят формулы для диапазона
             var cells_with_ref = this._rows.SelectMany(r => r.Cells).Where(c => c.FormulaRef != null);
@@ -257,7 +257,7 @@ namespace sql.builder.Print.Xlsx
                 cell_with_ref.DeleteFormulaRef();
             }
         }
-        internal void ProcessPivotColumns(DataSet data, string width_column_name)
+        public void ProcessPivotColumns(DataSet data, string width_column_name)
         {
             string cbegin_name = null;
             List<IGrouping<string, ExcelCell>> columns_list = new List<IGrouping<string, ExcelCell>>();
@@ -469,10 +469,10 @@ namespace sql.builder.Print.Xlsx
         }
         private class MergeArea
         {
-            internal int LeftColumn;
-            internal int RightColumn;
-            internal int TopRow;
-            internal int BottomRow;
+            public int LeftColumn;
+            public int RightColumn;
+            public int TopRow;
+            public int BottomRow;
             public MergeArea(int row, int column)
             {
                 this.RightColumn = column;

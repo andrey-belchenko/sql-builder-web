@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    /*internal class VPrintColumn:VSXElement
+    /*public class VPrintColumn:VSXElement
     {
         public VPrintColumn(XElement element)
             : base(element)

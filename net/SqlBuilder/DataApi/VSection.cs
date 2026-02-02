@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VSection : VSXElement, IVParent
+    public sealed class VSection : VSXElement, IVParent
     {
-        internal VSection()
+        public VSection()
             : base(EName.section)
         {
         }

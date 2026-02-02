@@ -3,15 +3,15 @@ using System.Xml.Linq;
 
 namespace sql.builder.ExcelApi
 {
-    internal sealed class VExcelRow : VExcelObject
+    public sealed class VExcelRow : VExcelObject
     {
-        internal readonly VExcelSheet Sheet;
-        internal VExcelRow(XElement element, VExcelSheet sheet)
+        public readonly VExcelSheet Sheet;
+        public VExcelRow(XElement element, VExcelSheet sheet)
             : base (element)
         {
             this.Sheet = sheet;
         }
-        internal int Index {
+        public int Index {
             get {
                 return VExcelCommon.GetIndex(this.Element);
             }

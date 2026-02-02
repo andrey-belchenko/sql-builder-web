@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VBand : VOutputElement, IVParent
+    public sealed class VBand : VOutputElement, IVParent
     {
-        internal VBand()
+        public VBand()
             : base(EName.band)
         {
         }

@@ -8,13 +8,13 @@ namespace sql.builder.DataApi
     /// <summary>
     /// &lt;dimension-package name="" &gt;
     /// </summary>
-    internal sealed class VDimensionPackage : VOutputElement, IVParent
+    public sealed class VDimensionPackage : VOutputElement, IVParent
     {
-        internal VDimensionPackage()
+        public VDimensionPackage()
             : base(EName.dimension_package)
         {
         }
-        /*internal VDimension GetDimension(string name)
+        /*public VDimension GetDimension(string name)
         {
             IList<VSXElement> dimensions = this.GetElementsP();
             for (int index = 0; index < dimensions.Count; index++) {
@@ -25,7 +25,7 @@ namespace sql.builder.DataApi
             }
             return null;
         }*/
-        /*internal VDimension GetDimensionByQueryName(string name)
+        /*public VDimension GetDimensionByQueryName(string name)
         {
             IList<VSXElement> dimensions = this.GetElementsP();
             for (int index = 0; index < dimensions.Count; index++) {
@@ -36,7 +36,7 @@ namespace sql.builder.DataApi
             }
             return null;
         }*/
-        internal IList<VDimension> GetDimensions()
+        public IList<VDimension> GetDimensions()
         {
             IList<VSXElement> dimensions = this.GetElementsP();
             VDimension[] arr = new VDimension[dimensions.Count];

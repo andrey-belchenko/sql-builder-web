@@ -4,9 +4,9 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VUsePart : VSXElement
+    public sealed class VUsePart : VSXElement
     {
-        internal VUsePart()
+        public VUsePart()
             : base(EName.usepart)
         {
         }

@@ -15,7 +15,7 @@ namespace sql.builder.Print.XML
     /// Cтрока шаблона Excel в формате xml
     /// </summary>
     /// <seealso cref="sql.builder.Print.Xlsx.ExcelPrintRow"/>
-    internal class ExcelPrintRow : IExcelPrintElement
+    public class ExcelPrintRow : IExcelPrintElement
     {
         #region поля
         private readonly IList<IExcelPrintValue> values;
@@ -27,7 +27,7 @@ namespace sql.builder.Print.XML
         private readonly IExcelPrintGroup parent;
         private readonly ExcelPrintSheet sheet;
         #endregion
-        internal ExcelPrintRow(ExcelPrintSheet sheet, int row_index, XElement row, IExcelPrintGroup parent)
+        public ExcelPrintRow(ExcelPrintSheet sheet, int row_index, XElement row, IExcelPrintGroup parent)
         {
             Contract.Assert(row.Name == VExcelNS.SpreadSheet.Row);
             this.sheet = sheet;

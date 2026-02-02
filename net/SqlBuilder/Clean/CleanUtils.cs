@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace sql.builder.Clean
 {
-    internal class CleanUtils
+    public class CleanUtils
     {
         public static string GetRootPath()
         {

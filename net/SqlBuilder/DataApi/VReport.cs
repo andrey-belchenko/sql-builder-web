@@ -16,16 +16,16 @@ using SqlBuilderLib.DevTools;
 
 namespace sql.builder.DataApi
 {
-    internal sealed partial class VReport : VSourcedElement, IVParent
+    public sealed partial class VReport : VSourcedElement, IVParent
     {
-        internal VReport()
+        public VReport()
             : base(EName.report)
         {
         }
-        internal bool Complicated = false;
-        internal bool Pivot = false;
+        public bool Complicated = false;
+        public bool Pivot = false;
         private XElement scheme = null;
-        internal VXElement GetSchemeWithColumnsPreset()
+        public VXElement GetSchemeWithColumnsPreset()
         {
             VXElement sch = new VSXElement(this.Scheme);
             foreach (XElement cps in this.Descendants(EName.columnspreset))
@@ -46,7 +46,7 @@ namespace sql.builder.DataApi
             }
             return sch;
         }
-        internal XElement Scheme
+        public XElement Scheme
         {
             get
             {
@@ -64,7 +64,7 @@ namespace sql.builder.DataApi
         private VDataSet nonParamResultCash;
         //private bool Autobands;
         private bool IsOld = false;
-        internal VReport(VEnvironment enviroment, string name)
+        public VReport(VEnvironment enviroment, string name)
             : base(EName.report)
         {
             XElement report = getReportOrQuery(name, enviroment.Manager.GetScheme());
@@ -87,7 +87,7 @@ namespace sql.builder.DataApi
             //this.Mode = this.AttrOrEmpty(AName_.mode);
             alnalizeParams();
         }
-        internal VReport(VEnvironment enviroment, XElement element)
+        public VReport(VEnvironment enviroment, XElement element)
             : base(EName.report)
         {
             XElement report = getReportOrQuery(element);
@@ -177,7 +177,7 @@ namespace sql.builder.DataApi
             report.Add(query.Elements(EName.procedure));
             return report;
         }
-        internal bool IsSimpleParams = false;
+        public bool IsSimpleParams = false;
         private static string[] simpleParamsTypes = new string[] { TextConst.AVDataType.Number, TextConst.AVDataType.Date, TextConst.AVDataType.String, TextConst.AVDataType.Array };
         private void alnalizeParams()
         {
@@ -194,7 +194,7 @@ namespace sql.builder.DataApi
                 PreprocessSimpleParams(this);
             }
         }
-        internal static void PreprocessSimpleParams(XElement element)
+        public static void PreprocessSimpleParams(XElement element)
         {
             foreach (XElement param in element.Elements(EName.@params).Elements(EName.param).ToList())
             {
@@ -202,7 +202,7 @@ namespace sql.builder.DataApi
                 param.Add(Factory.NewConst(":" + param.Attribute(AName_.name).Value + " "));
             }
         }
-        internal static XElement getReportOrQuery(string name, IEnumerable<VSXElement> scheme)
+        public static XElement getReportOrQuery(string name, IEnumerable<VSXElement> scheme)
         {
 
 
@@ -227,7 +227,7 @@ namespace sql.builder.DataApi
             }
             return report;
         }
-        internal static XElement getReportOrQuery(XElement element)
+        public static XElement getReportOrQuery(XElement element)
         {
             if (element.Name == EName.report)
             {
@@ -298,7 +298,7 @@ namespace sql.builder.DataApi
                 }
             }
         }
-        internal static void ApplySimpleParams(XElement pars, VDataSet dataSet, XElement formalParams)
+        public static void ApplySimpleParams(XElement pars, VDataSet dataSet, XElement formalParams)
         {
             if (formalParams == null)
             {
@@ -525,7 +525,7 @@ namespace sql.builder.DataApi
             DevAnalyzer.AnalyzeReport(compiled);
             return compiled;
         }
-        internal VDataSet Result(int useRepository, bool useCash)
+        public VDataSet Result(int useRepository, bool useCash)
         {
             if (nonParamResultCash == null || useCash == false)
             {
@@ -533,7 +533,7 @@ namespace sql.builder.DataApi
             }
             return nonParamResultCash;
         }
-        internal VDataSet Result(XElement pars, int useRepository, VDataSet dataSet = null, bool noPivot = true, VXElement schemePreset = null)
+        public VDataSet Result(XElement pars, int useRepository, VDataSet dataSet = null, bool noPivot = true, VXElement schemePreset = null)
         {
             applyPreset(schemePreset);
             //            var parsText = @"<params>
@@ -835,7 +835,7 @@ namespace sql.builder.DataApi
             }
             return dataSet;
         }
-        internal static string GetStringType(OracleDbType type)
+        public static string GetStringType(OracleDbType type)
         {
             switch (type)
             {
@@ -910,7 +910,7 @@ namespace sql.builder.DataApi
               */
             return text;
         }
-        /*internal static string[] ExtractParamsFromSqlText(string sqlExpr)
+        /*public static string[] ExtractParamsFromSqlText(string sqlExpr)
         {
             //Доделать, не будет работать при наличии ':' в строковых константах
             var pars = new List<string>();

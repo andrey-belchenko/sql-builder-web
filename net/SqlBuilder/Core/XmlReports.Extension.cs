@@ -21,7 +21,7 @@ using sql.builder.Clean.Extensions;
 
 namespace sql.builder
 {
-    internal partial class XmlReports
+    public partial class XmlReports
     {
 
         //private static SortedDictionary<string, object> globalParsValues = new SortedDictionary<string, object>();
@@ -96,7 +96,7 @@ namespace sql.builder
                 _inputParams = value;
             }
         }
-        internal const string NativeProductName = "sql.builder";
+        public const string NativeProductName = "sql.builder";
         public static void SetInputParameter(string param_name, string value)
         {
             if (InputParams == null) InputParams = Cmn.GetFakeGlobalParams();
@@ -348,7 +348,7 @@ namespace sql.builder
         /// Папка, в которой лежат все проекты (all)
         /// </summary>
         /// <returns></returns>
-        internal static string GetRootPath()
+        public static string GetRootPath()
         {
             if (_rootPath == null)
             {
@@ -357,27 +357,27 @@ namespace sql.builder
             }
             return _rootPath;
         }
-        internal static string GetDefaultSourceFolder()
+        public static string GetDefaultSourceFolder()
         {
             return Path.Combine(GetDefaultContentFolder(), SourceFolderName);
         }
-        internal static string GetRuntimeSourceFolder()
+        public static string GetRuntimeSourceFolder()
         {
             return Path.Combine(GetRuntimeContentFolder(), SourceFolderName);
         }
-        internal static string GetCurrentSourceFolder()
+        public static string GetCurrentSourceFolder()
         {
             return Path.Combine(GetCurrentContentFolder(), SourceFolderName);
         }
-        internal static string GetDefaultContentFolder()
+        public static string GetDefaultContentFolder()
         {
             return Path.Combine(GetRootPath(), "sql.builder.templates", "sql.builder");
         }
-        internal static string GetRuntimeContentFolder()
+        public static string GetRuntimeContentFolder()
         {
             return Path.Combine(GetRuntimePath(), "sql.builder");
         }
-        internal static string GetCurrentContentFolder()
+        public static string GetCurrentContentFolder()
         {
             return UseProjectSourceFolder ? GetDefaultContentFolder() : GetRuntimeContentFolder();
         }
@@ -387,7 +387,7 @@ namespace sql.builder
             return new[] { "common" };
             //return new[] { "common", schemeName };
         }
-        internal static IList<XElement> GetSortedProjects()
+        public static IList<XElement> GetSortedProjects()
         {
             // Сортируем проекты так, чтобы референсы были первыми 
             // Это важно при прекомпиляции
@@ -432,12 +432,12 @@ namespace sql.builder
             private XElement xml;
             private bool processed;
             private int priority;
-            internal XElement Xml {
+            public XElement Xml {
                 get {
                     return this.xml;
                 }
             }
-            internal bool Processed {
+            public bool Processed {
                 get {
                     return this.processed;
                 }
@@ -445,7 +445,7 @@ namespace sql.builder
                     this.processed = value;
                 }
             }
-            internal int Priority {
+            public int Priority {
                 get {
                     return this.priority;
                 }
@@ -453,7 +453,7 @@ namespace sql.builder
                     this.priority = value;
                 }
             }
-            internal Project(XElement xml)
+            public Project(XElement xml)
             {
                 this.xml = xml;
                 this.processed = false;
@@ -748,7 +748,7 @@ namespace sql.builder
             }
         }
         #region Обработка Xml
-        internal static string GetXElementTitle(XElement xElement)
+        public static string GetXElementTitle(XElement xElement)
         {
             string title = xElement.AttrOrDefault(AName.title, null);
             if (!string.IsNullOrEmpty(title)) {
@@ -760,7 +760,7 @@ namespace sql.builder
             //    ? GetXAttributeValue(xElement, "title")
             //    : GetXElementName(xElement);
         }
-        internal static string GetXElementName(XElement xElement)
+        public static string GetXElementName(XElement xElement)
         {
             string alias = xElement.AttrOrDefault(AName.@as, null);
             if (!string.IsNullOrEmpty(alias)) {
@@ -779,7 +779,7 @@ namespace sql.builder
             //            : GetXAttributeValue(xElement, "column");
         }
         //[Obsolete("Используйте XElementExtensions.SetAttrValue() или XElement.SetAttributeValue()")]
-        internal static void SetXElementAttribute(XElement xElement, string atr_name, string atr_value)
+        public static void SetXElementAttribute(XElement xElement, string atr_name, string atr_value)
         {
             xElement.SetAttrValue(atr_name, atr_value);
             //xElement.SetAttributeValue(atr_name, atr_value);
@@ -791,7 +791,7 @@ namespace sql.builder
             //}
         }
         //[Obsolete("Используйте XElementExtensions.AttrOrDefault()")]
-        internal static string GetXAttributeValue(XElement xElement, string atr_name)
+        public static string GetXAttributeValue(XElement xElement, string atr_name)
         {
             return xElement.AttrOrDefault(atr_name, string.Empty);
             //return xElement.Attribute(atr_name) != null
@@ -800,7 +800,7 @@ namespace sql.builder
         }
         // Поиск дочернего узла по имени и набору значений атрибутов
         // Если узел не найден - создается новый с таким именем и атрибутами
-        /*internal static XElement GetOrCreateXElement(this XElement xParent, string child_name, Tuple<string, string>[] child_attributes = null)
+        /*public static XElement GetOrCreateXElement(this XElement xParent, string child_name, Tuple<string, string>[] child_attributes = null)
         {
             XElement xChild = child_attributes == null
                             ? xParent.Element(child_name)
@@ -815,7 +815,7 @@ namespace sql.builder
             }
             return xChild;
         }*/
-        internal static XElement GetOrCreateXElement(this XElement parent, XName child_name)
+        public static XElement GetOrCreateXElement(this XElement parent, XName child_name)
         {
             XElement child = parent.Element(child_name);
             if (child == null) {
@@ -889,7 +889,7 @@ namespace sql.builder
             }
         }
         #endregion
-        internal class XmlProject
+        public class XmlProject
         {
             private string name;
             private XElement xml;

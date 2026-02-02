@@ -19,19 +19,19 @@ using sql.builder.Clean.Extensions;
 
 namespace sql.builder
 {
-    internal static partial class Compiler
+    public static partial class Compiler
     {
         //public static List<VSXElement> SchemeRoot = new List<VSXElement>();
         //public static List<VSXElement> schemeRootOld = new List<VSXElement>();
 
-        //internal static XElement compileQuery(string name, IEnumerable<VSXElement> scheme)
+        //public static XElement compileQuery(string name, IEnumerable<VSXElement> scheme)
         //{
         //    XElement query = XmlReports.Environment.Manager.GetScheme()
         //        .Elements("queries").Elements("query").FirstOrDefault(q => q.Attribute("name").Value == name);
 
         //    return compileQuery(query, true, null, scheme);
         //}
-        internal static bool isProcessingPivots = false;
+        public static bool isProcessingPivots = false;
         private static bool isProcessingMatDummies = false;
         private static bool doMatrializeByHint = true;
         private static int icounter = 0;
@@ -41,7 +41,7 @@ namespace sql.builder
             return icounter;
         }
 
-        internal static XElement compileQuery(XElement query, bool clearMatSet, XElement rep)
+        public static XElement compileQuery(XElement query, bool clearMatSet, XElement rep)
         {
             Reset();
 
@@ -102,7 +102,7 @@ namespace sql.builder
             return ret;
         }
 
-        internal static string[] AdditionalAttributes = new string[] { TextConst.AName.Colset, TextConst.AName.ParName, TextConst.AName.Color, TextConst.AName.FontColor, TextConst.AName.ClientCalulation, TextConst.AName.ExcelCalulation, TextConst.AName.HAlign, TextConst.AName.MergeKey, TextConst.AName.IsFactUse };
+        public static string[] AdditionalAttributes = new string[] { TextConst.AName.Colset, TextConst.AName.ParName, TextConst.AName.Color, TextConst.AName.FontColor, TextConst.AName.ClientCalulation, TextConst.AName.ExcelCalulation, TextConst.AName.HAlign, TextConst.AName.MergeKey, TextConst.AName.IsFactUse };
         private static IEnumerable<XElement> getColumnsWithAdditionalAttr(XElement qry)
         {
             return qry.Elements(EName.select).Elements().Where(e => e.Attributes().Any(APredicate.IsAdditionalAttribute));
@@ -602,7 +602,7 @@ namespace sql.builder
             }
             return newCol;
         }
-        internal static void AddQueryLevel(XElement query, string qalias, string[] fieldsToMoveUp = null)
+        public static void AddQueryLevel(XElement query, string qalias, string[] fieldsToMoveUp = null)
         {
             var newQuery = CopyAndAddQueryLevel(query, qalias, fieldsToMoveUp);
 
@@ -740,7 +740,7 @@ namespace sql.builder
         }
 
 
-        internal static void processingMaterializedByHint(XElement query)
+        public static void processingMaterializedByHint(XElement query)
         {
             // return;
             // List<string> names = new List<string>();
@@ -895,7 +895,7 @@ namespace sql.builder
         }
 
 
-        internal static XElement compileQuery(string name, IEnumerable<VSXElement> scheme)
+        public static XElement compileQuery(string name, IEnumerable<VSXElement> scheme)
         {
             // чтобы скопировать
             //var buf = SchemeRoot.ToList();
@@ -915,7 +915,7 @@ namespace sql.builder
         }*/
         private static bool useRepositories = false;
         private static bool dontUseRepositories = false;
-        internal static XElement compileReport(XElement element, int useRepository, bool noPivot = false, XElement pars = null)
+        public static XElement compileReport(XElement element, int useRepository, bool noPivot = false, XElement pars = null)
         {
             if (element.GetAttributeValue(TextConst.AName.Name)== "54148")
             {
@@ -999,7 +999,7 @@ namespace sql.builder
         
 
 
-        internal static void ResetAfterError()
+        public static void ResetAfterError()
         {
               readyPivots = new SortedList<string, VDataSet>();
               pivotMatQueriesNames = null;
@@ -1013,10 +1013,10 @@ namespace sql.builder
 
         private class ProcessingCollections
         {
-            internal SortedList<string, XElement> matQueries = new SortedList<string, XElement>();
-            internal SortedList<string, XElement> matQueriesDummies = new SortedList<string, XElement>();
-            internal SortedList<string, XElement> storedQueries = new SortedList<string, XElement>();
-            internal XElement matOrderForNames = new XElement("root");
+            public SortedList<string, XElement> matQueries = new SortedList<string, XElement>();
+            public SortedList<string, XElement> matQueriesDummies = new SortedList<string, XElement>();
+            public SortedList<string, XElement> storedQueries = new SortedList<string, XElement>();
+            public XElement matOrderForNames = new XElement("root");
         }
 
         private static ProcessingCollections _processingCollections = new ProcessingCollections();
@@ -1612,7 +1612,7 @@ namespace sql.builder
             return col;
         }
 
-        internal static XElement copyThisColumns(XElement element, bool virtOnly = false)
+        public static XElement copyThisColumns(XElement element, bool virtOnly = false)
         {
             IEnumerable<XElement> thisCols = element.DescendantsAndSelf(EName.column).Where(e => e.AttrOrDefault(AName.table, string.Empty) == TextConst.AVTable.Ths).ToArray();
             //   thisCols = thisCols.Where(e1 => !e1.Ancestors("withparams").Any()).ToArray();
@@ -2075,7 +2075,7 @@ namespace sql.builder
 
         }
 
-        internal static void MarkUnused(XElement element)
+        public static void MarkUnused(XElement element)
         {
             foreach (XElement el in element.DescendantsAndSelf(EName.select).Elements()) {
                 if (el.Attribute("used") == null) {
@@ -2266,7 +2266,7 @@ namespace sql.builder
             }
             return query;
         }
-        internal static void setQueryUsed(XElement query, XElement rep, XElement compiled)
+        public static void setQueryUsed(XElement query, XElement rep, XElement compiled)
         {
             if (query == null) {
                 return;
@@ -2413,7 +2413,7 @@ namespace sql.builder
                 setQueryUsed(query1, rep, compiled);
             }
         }
-        internal static XElement DeleteUnused(XElement element)
+        public static XElement DeleteUnused(XElement element)
                {
             //var qq = element.DescendantsAndSelf().Elements("from").Elements().Where(e => getAttrValue(e, "used") == ("0") && getAttrValue(e, "as") == "kod_dogplat_a_d").ToList();
             //if (qq.Any())
@@ -2701,7 +2701,7 @@ namespace sql.builder
             }
         }
         private static string badTypePref = " ";
-        internal static string getTyprPr(string data_type)
+        public static string getTyprPr(string data_type)
         {
             switch (data_type) {
                 case TextConst.AVDataType.Number:
@@ -2741,7 +2741,7 @@ namespace sql.builder
             return ret;
         }
 
-        internal static IEnumerable<XNode> applyParams(XElement element, XElement inPars, bool isPart)
+        public static IEnumerable<XNode> applyParams(XElement element, XElement inPars, bool isPart)
         {
             XElement formalParams = element.Element("params");
             XElement ret = new XElement("ret");
@@ -2925,7 +2925,7 @@ namespace sql.builder
             return ret.Elements();
         }
         private static bool preColmpiling = false;
-        internal static IEnumerable<XNode> expression(XElement element, XElement parentColumns, string env = null)
+        public static IEnumerable<XNode> expression(XElement element, XElement parentColumns, string env = null)
         {
 
             XElement ret = new XElement("ret");
@@ -3207,7 +3207,7 @@ namespace sql.builder
             eFunction(element, call, env);
             return call;
         }
-        internal static void eFunction(XElement element, XElement ret, string env = null)
+        public static void eFunction(XElement element, XElement ret, string env = null)
         {
             //string functionName;
             //#if DEBUG
@@ -3435,7 +3435,7 @@ namespace sql.builder
             return ret;
         }
         #region copyAttributes(), copyAttribute()
-        internal static void copyAttributes(XElement src, XElement tag)
+        public static void copyAttributes(XElement src, XElement tag)
         {
             Contract.Assert(src != null);
             Contract.Assert(tag != null);
@@ -3448,7 +3448,7 @@ namespace sql.builder
                 }
             }
         }
-        internal static void copyAttributes(XElement src, XElement tag, string[] attrNames)
+        public static void copyAttributes(XElement src, XElement tag, string[] attrNames)
         {
             Contract.Assert(src != null);
             Contract.Assert(tag != null);
@@ -3479,7 +3479,7 @@ namespace sql.builder
                 }
             }
         }
-        internal static XAttribute copyAttribute(XElement src, string name)
+        public static XAttribute copyAttribute(XElement src, string name)
         {
             XAttribute attr = src.Attribute(name);
             if (attr != null) {
@@ -3489,7 +3489,7 @@ namespace sql.builder
             }
         }
         #endregion
-        internal static void copyContent(XElement src, XElement tag)
+        public static void copyContent(XElement src, XElement tag)
         {
             Contract.Assert(src != null);
             Contract.Assert(tag != null);
@@ -4330,7 +4330,7 @@ namespace sql.builder
                 len = new_len;
             };
         }
-        internal static string normalizeWhitespace(string s)
+        public static string normalizeWhitespace(string s)
         {
             StringBuilder sb = new StringBuilder(s);
             loopReplace(sb, "  ", " ");
@@ -4351,7 +4351,7 @@ namespace sql.builder
             }
             return attr.Value;
         }
-        internal static string getAttrValue(XElement el, string attrName)
+        public static string getAttrValue(XElement el, string attrName)
         {
             if (el == null) {
                 return string.Empty;
@@ -5714,20 +5714,20 @@ namespace sql.builder
         
             
          }*/
-        internal static IEnumerable<XElement> getQueryColumns(XElement query)
+        public static IEnumerable<XElement> getQueryColumns(XElement query)
         {
             IEnumerable<XElement> selColumns = query.Elements().Where(EPredicate.IsSelectOrWhereHavingOrStartOrConnectOrDimensionOrMeasures)
                                                     .Descendants().Where(e1 => EPredicate.IsColumnOrFact(e1) && !e1.Ancestors(EName.query).First().IsAfter(query));
             return selColumns;
         }
-        internal static IEnumerable<XElement> getQueryColumnsWithGr(XElement query) // добавил колонки из group в копию ф-ции на всякий случай
+        public static IEnumerable<XElement> getQueryColumnsWithGr(XElement query) // добавил колонки из group в копию ф-ции на всякий случай
         {
             IEnumerable<XElement> selColumns = query
                .Elements().Where(e => EPredicate.IsSelectOrWhereHavingOrStartOrConnectOrDimensionOrMeasures(e) || (e.Name == EName.group))
                .Descendants().Where(e1 => EPredicate.IsColumnOrFact(e1) && !e1.Ancestors(EName.query).First().IsAfter(query));
             return selColumns;
         }
-        internal static IEnumerable<XElement> getQueryEditableCalls(XElement query)
+        public static IEnumerable<XElement> getQueryEditableCalls(XElement query)
         {
             IEnumerable<XElement> selColumns = query.Elements().Where(EPredicate.IsSelectOrWhereHavingOrStartOrConnectOrDimensionOrMeasures)
                .Descendants(EName.call).Where(e1 => e1.Attributes(AName.column_editable) != null && !e1.Ancestors(EName.query).First().IsAfter(query));
@@ -5745,7 +5745,7 @@ namespace sql.builder
               .Elements();
             return selColumns;
         }
-        internal static IEnumerable<XElement> getQueryColumnsSel(XElement query)
+        public static IEnumerable<XElement> getQueryColumnsSel(XElement query)
         {
             IEnumerable<XElement> selColumns = query.Elements(EName.select).Descendants(EName.column).Where(e => !e.Ancestors(EName.query).First().IsAfter(query));
             return selColumns;
@@ -5760,7 +5760,7 @@ namespace sql.builder
             IEnumerable<XElement> selColumns = query.Elements(EName.start).Descendants(EName.column).Where(e => !e.Ancestors(EName.query).First().IsAfter(query));
             return selColumns;
         }
-        internal static IEnumerable<XElement> getQueryJoinColumns(XElement query)
+        public static IEnumerable<XElement> getQueryJoinColumns(XElement query)
         {
             IEnumerable<XElement> selColumns = query.Elements(EName.from).Elements(EName.query).Elements(EName.call).Descendants(EName.column).Where(e => !e.Ancestors(EName.query).First().Ancestors(EName.query).First().IsAfter(query));
             return selColumns;
@@ -6237,7 +6237,7 @@ namespace sql.builder
             
         }
 
-        internal static SortedList<string, XElement> pivotQueries = null;
+        public static SortedList<string, XElement> pivotQueries = null;
         private static void resetPivotQueriesList()
         {
             pivotQueries = new SortedList<string, XElement>();
@@ -7016,7 +7016,7 @@ namespace sql.builder
                 }
             }
         }
-        internal static void addMatrializeId(XElement query, string name = null)
+        public static void addMatrializeId(XElement query, string name = null)
         {
 
 
@@ -7074,7 +7074,7 @@ namespace sql.builder
                 }
             }
         }
-        internal static void addColumnsAlias(XElement query, bool isOld, bool isSingle)
+        public static void addColumnsAlias(XElement query, bool isOld, bool isSingle)
         {
             foreach (XElement col in query.Descendants().Where(e => (new string[] { "select", "dimension", "measures", "pivot" }).Contains(e.Name.LocalName)).Elements(EName.column)) {
                 if (col.Attribute(AName.@as) == null) {
@@ -7188,8 +7188,8 @@ namespace sql.builder
         }*/
 
 
-        internal static bool DontPrecompile = false;
-        internal static void PreCompile(bool isOld, VSXElement compiling)
+        public static bool DontPrecompile = false;
+        public static void PreCompile(bool isOld, VSXElement compiling)
         {
             Contract.Assert(compiling != null);
             #if DEBUG
@@ -7316,7 +7316,7 @@ namespace sql.builder
             Debug.WriteLine("Compiler.PreCompile(): " + sw.ElapsedMilliseconds.ToString() + " мс");
             #endif
         }
-        internal static XElement PreCompileOther(XElement element, bool selfOnly)
+        public static XElement PreCompileOther(XElement element, bool selfOnly)
         {
             Contract.Assert(element != null);
             Contract.Assert(element.Name != EName.query);
@@ -7337,7 +7337,7 @@ namespace sql.builder
             #endif
             return element;
         }
-        internal static XElement PreCompileQuery(XElement query, bool selfOnly)
+        public static XElement PreCompileQuery(XElement query, bool selfOnly)
         {
             Contract.Assert(query != null);
             Contract.Assert(query.Name == EName.query);
@@ -8366,7 +8366,7 @@ namespace sql.builder
                 el.SetAttributeValue("table", el.Ancestors("query").First().Attribute("as").Value);
             }
         }
-        internal static void forCustomersProcessing(IEnumerable<VSXElement> element, string customer)
+        public static void forCustomersProcessing(IEnumerable<VSXElement> element, string customer)
         {
             element.Descendants().Where(e => e.Attribute("forcustomers") != null && !e.Attribute("forcustomers").Value.Split(',').Contains(customer.ToString())).Remove();
             element.Descendants().Where(e => e.Attribute("notforcustomers") != null && e.Attribute("notforcustomers").Value.Split(',').Contains(customer.ToString())).Remove();
@@ -8531,7 +8531,7 @@ namespace sql.builder
         /// к виду &lt;call function="array"&gt;&lt;const&gt;1&lt;/const&gt;&lt;const&gt;2&lt;/const&gt;&lt;const&gt;3&lt;/const&gt;&lt;/call&gt;
         /// </summary>
         /// <param name="root">Элемент, в котором нужно преобразовать массивы</param>
-        internal static void processingArrays(XElement root)
+        public static void processingArrays(XElement root)
         {
             Contract.Assert(root != null);
             IList<XElement> arrays = root.Descendants(EName.array).ToList(); 
@@ -10762,7 +10762,7 @@ namespace sql.builder
 
 
 
-        internal static void prepareSelfGrsets(XElement element, XElement inQueryCall)
+        public static void prepareSelfGrsets(XElement element, XElement inQueryCall)
         {
             if (element.Element(TextConst.EName.Grouping) != null)
             {
@@ -11270,7 +11270,7 @@ namespace sql.builder
             //}
         }
         private static List<string> pivotMatQueriesNames = null;
-        internal static void processingPivots(XElement element, XElement pars)
+        public static void processingPivots(XElement element, XElement pars)
         {
             bool hasPivots = false;
             readyPivots.Clear();
@@ -11919,7 +11919,7 @@ namespace sql.builder
 
             return query;
         }
-        /*internal static void addMultiKeyColumns(XElement element)
+        /*public static void addMultiKeyColumns(XElement element)
         {
             foreach (XElement querySelect in element.Descendants("query").Elements("select").Where(e => e.Elements().Count(e1 => getAttrValue(e1, "key") == "1") > 1))
             {
@@ -11952,7 +11952,7 @@ namespace sql.builder
             }
             return xand;
         }
-        internal static XElement extendWhereByAnd(XElement whereElement, XElement newCondition)
+        public static XElement extendWhereByAnd(XElement whereElement, XElement newCondition)
         {
             if (whereElement == null) {
                 whereElement = new XElement(EName.where);
@@ -12502,10 +12502,10 @@ namespace sql.builder
         }
         //
         private static string[] grFuncsNamesNative = new string[] { "sum", "min", "max", "count", "avg" };
-        internal static string[] grFuncsNames = new string[] { "sum", "min", "max", "count", "count_dist", "avg", "sumnvl", "stragg", "stragg_dist" };
+        public static string[] grFuncsNames = new string[] { "sum", "min", "max", "count", "count_dist", "avg", "sumnvl", "stragg", "stragg_dist" };
         // lj
-        internal static string[] aggFuncsNames = new string[] { "sum", "min", "max", "count", "count_dist", "avg", "sumnvl", "stragg", "stragg_dist", "inherit", TextConst.AVGroup.Inner, TextConst.AVGroup.List, TextConst.AVGroup.Outer, "no"/*добавил , но может нельзя*/, "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14" };
-        //internal static string[] aggFuncsNamesNum = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14" };
+        public static string[] aggFuncsNames = new string[] { "sum", "min", "max", "count", "count_dist", "avg", "sumnvl", "stragg", "stragg_dist", "inherit", TextConst.AVGroup.Inner, TextConst.AVGroup.List, TextConst.AVGroup.Outer, "no"/*добавил , но может нельзя*/, "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14" };
+        //public static string[] aggFuncsNamesNum = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14" };
         //
         private static void preProcessingIGroup(XElement root)
         {

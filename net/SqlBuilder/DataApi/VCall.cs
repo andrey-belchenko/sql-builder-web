@@ -8,14 +8,14 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal class VCall : VSXElement, IVParent
+    public class VCall : VSXElement, IVParent
     {
-        internal VCall()
+        public VCall()
             : base(EName.call)
         {
         }
         protected override bool ChildDependant { get { return true; } }
-        internal VFunction Function()
+        public VFunction Function()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as VFunction);

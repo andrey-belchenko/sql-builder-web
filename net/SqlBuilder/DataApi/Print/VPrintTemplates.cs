@@ -7,9 +7,9 @@ namespace sql.builder.DataApi
     /// <summary>
     /// &lt;print-templates /&gt;
     /// </summary>
-    internal sealed class VPrintTemplates : VSXElement, IVParent
+    public sealed class VPrintTemplates : VSXElement, IVParent
     {
-        internal VPrintTemplates()
+        public VPrintTemplates()
             : base(EName.print_templates)
         {
         }
@@ -23,9 +23,9 @@ namespace sql.builder.DataApi
             return false;
         }
     }
-    internal sealed class VExcel : VSXElement, IVParent
+    public sealed class VExcel : VSXElement, IVParent
     {
-        internal VExcel()
+        public VExcel()
             : base(EName.excel)
         {
         }
@@ -39,9 +39,9 @@ namespace sql.builder.DataApi
             return false;
         }
     }
-    internal sealed class VWord : VSXElement, IVParent
+    public sealed class VWord : VSXElement, IVParent
     {
-        internal VWord()
+        public VWord()
             : base(EName.word)
         {
         }

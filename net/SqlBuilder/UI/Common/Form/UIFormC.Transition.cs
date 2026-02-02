@@ -36,7 +36,7 @@ namespace sql.builder.UI
             //    ctrl.TmpGetBarManager().ForceInitialize();
             //}
         }
-        //internal BarManager TmpGetBarManager()
+        //public BarManager TmpGetBarManager()
         //{
         //    var ctrl = TmpGetControlAsWinFormCtrl();
         //    if (ctrl == null)
@@ -45,7 +45,7 @@ namespace sql.builder.UI
         //    }
         //    return ctrl.TmpGetBarManager();
         //}
-        internal IVBar GetToolBar()
+        public IVBar GetToolBar()
         {
             //var ctrl = TmpGetControlAsWinFormCtrl();
             //if (ctrl == null)
@@ -55,11 +55,11 @@ namespace sql.builder.UI
             //return GetControl().GetToolBar();
             return null;
         }
-        //internal sql.builder.UI.WinForms.UIFormControl TmpGetControlAsWinFormCtrl()
+        //public sql.builder.UI.WinForms.UIFormControl TmpGetControlAsWinFormCtrl()
         //{
         //    return GetControl() as sql.builder.UI.WinForms.UIFormControl;
         //}
-        //internal BarButtonItem TmpGetBarButton(string btn)
+        //public BarButtonItem TmpGetBarButton(string btn)
         //{
         //    return TmpGetControlAsWinFormCtrl().TmpGetBarButton(btn);
         //}

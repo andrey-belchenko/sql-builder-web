@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VReportProc : VSXElement
+    public sealed class VReportProc : VSXElement
     {
-        internal VReportProc()
+        public VReportProc()
             : base(EName.procedure)
         {
         }

@@ -11,10 +11,10 @@ using sql.builder.DataApi;
 
 namespace sql.builder.Print.XML
 {
-    internal static class ExcelPrintValue
+    public static class ExcelPrintValue
     {
-        internal static DateTime MIN_EXCEL_DATE = new DateTime(1901, 1, 1);
-        internal static IExcelPrintValue Create(XElement element, ExcelPrintRow parent)
+        public static DateTime MIN_EXCEL_DATE = new DateTime(1901, 1, 1);
+        public static IExcelPrintValue Create(XElement element, ExcelPrintRow parent)
         {
             Contract.Assert(parent != null);
             Contract.Assert(element != null);
@@ -35,7 +35,7 @@ namespace sql.builder.Print.XML
         }
         [ThreadStatic]
         private static StringBuilder buffer;
-        internal static StringBuilder Buffer {
+        public static StringBuilder Buffer {
             get {
                 if (buffer == null) {
                     buffer = new StringBuilder(256);
@@ -43,7 +43,7 @@ namespace sql.builder.Print.XML
                 return buffer;
             }
         }
-        internal static void RefineExcelText(StringBuilder sb)
+        public static void RefineExcelText(StringBuilder sb)
         {
             Contract.Assert(sb != null);
             sb.Replace("\n\r", "\n");
@@ -59,7 +59,7 @@ namespace sql.builder.Print.XML
             }
         }
     }
-    internal interface IExcelPrintValue
+    public interface IExcelPrintValue
     {
         /// <summary>
         /// Замещает текст ячейки значениями из БД
@@ -73,7 +73,7 @@ namespace sql.builder.Print.XML
     /// <summary>
     /// Ячейка отчёта, текст которой полностью заменяется на значение из БД
     /// </summary>
-    internal class SingleExcelPrintValue : IExcelPrintValue
+    public class SingleExcelPrintValue : IExcelPrintValue
     {
         private ExcelPrintRow parent;
         //private XElement element;
@@ -81,7 +81,7 @@ namespace sql.builder.Print.XML
         private XElement data;
         private string table_name;
         private string column_name;
-        internal SingleExcelPrintValue(XElement element, ExcelPrintRow parent, string table_name, string column_name)
+        public SingleExcelPrintValue(XElement element, ExcelPrintRow parent, string table_name, string column_name)
         {
             Contract.Assert(parent != null);
             Contract.Assert(element != null);
@@ -199,13 +199,13 @@ namespace sql.builder.Print.XML
             this.cell.RemoveNodes();
         }
     }
-    internal class ComplexExcelPrintValue : IExcelPrintValue
+    public class ComplexExcelPrintValue : IExcelPrintValue
     {
         private ExcelPrintRow parent;
         private XElement element;
         private string text;
-        internal IDictionary<string, List<string>> table_columns;
-        internal ComplexExcelPrintValue(XElement element, ExcelPrintRow parent)
+        public IDictionary<string, List<string>> table_columns;
+        public ComplexExcelPrintValue(XElement element, ExcelPrintRow parent)
         {
             Contract.Assert(parent != null);
             Contract.Assert(element != null);

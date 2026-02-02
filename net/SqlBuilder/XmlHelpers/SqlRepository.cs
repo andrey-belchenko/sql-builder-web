@@ -6,7 +6,7 @@ using sql.builder.DataApi;
 using sql.builder.UI;
 namespace sql.builder.XmlHelpers
 {
-    internal static class SqlRepository
+    public static class SqlRepository
     {
         // пока сделаю для одного хранилища - VR_IPR, 
         // но дальше, возможно, понадобится генерировать для всех

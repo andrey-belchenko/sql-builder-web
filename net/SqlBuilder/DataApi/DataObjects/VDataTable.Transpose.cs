@@ -7,7 +7,7 @@ using sql.builder;
 using System.Data;
 namespace sql.builder.DataApi
 {
-    internal partial class VDataTable : DataTable
+    public partial class VDataTable : DataTable
     {
         private XElement _groupingInfo = null;
         public XElement GetGroupingInfo()
@@ -102,7 +102,7 @@ namespace sql.builder.DataApi
         public ITransposeDataStructure TransposeStructure = null;
     }
 
-    internal interface ITransposeDataStructure
+    public interface ITransposeDataStructure
     {
         string GetColumnNameForForDimValue(string originalName, string dimensionValue);
     }

@@ -10,9 +10,9 @@ namespace sql.builder.DataApi
     /// <summary>
     /// &lt;usereport project="" report="" title="" /&gt;
     /// </summary>
-    internal sealed class VUseReport : VSXElement
+    public sealed class VUseReport : VSXElement
     {
-        internal VUseReport()
+        public VUseReport()
             : base(EName.usereport)
         {
         }

@@ -11,9 +11,9 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal sealed partial class VQuery : VSourcedElement, IVParent
+    public sealed partial class VQuery : VSourcedElement, IVParent
     {
-        internal VQuery()
+        public VQuery()
              : base(EName.query)
         {
             this.ParentName = TextConst.EName.Queries;
@@ -72,7 +72,7 @@ namespace sql.builder.DataApi
 			}
 			return list;
 		}*/
-        internal string GetSql(bool useTitlesAsHeads = false)
+        public string GetSql(bool useTitlesAsHeads = false)
         {
             XElement qry = new XElement(this.GetMainE());
             if (!qry.Elements().Any(e => e.Name != EName.@const)) {
@@ -149,7 +149,7 @@ namespace sql.builder.DataApi
         {
             this.Elements("from").Remove();
         }*/
-        internal static VQuery GetOrCreate(VEnvironment enviroment, string name)
+        public static VQuery GetOrCreate(VEnvironment enviroment, string name)
         {
             XElement element = enviroment.Manager.GetScheme().Elements("queries").Elements("query").FirstOrDefault(e => e.Attribute("name").Value == name);
             return GetOrCreate(element);
@@ -306,7 +306,7 @@ namespace sql.builder.DataApi
              }
            
          }
-         internal VSXElement KeyColumn()
+         public VSXElement KeyColumn()
          {
              IList<VSXElement> cols = this.Columns();
              IList<VSXElement> marked = cols.Where(e => e.P_Key == TextConst.AVBool.True).ToList();
@@ -416,7 +416,7 @@ namespace sql.builder.DataApi
              return col;
 
          }
-         internal List<VSXElement> NameColumns()
+         public List<VSXElement> NameColumns()
          {
              var cols = Columns().Where(e => e.P_IsNameColumn == TextConst.AVBool.True).ToList();
              if (cols.Count == 0) {

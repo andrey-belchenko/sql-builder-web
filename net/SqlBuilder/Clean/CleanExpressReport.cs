@@ -9,7 +9,7 @@ namespace sql.builder
     /// <summary>
     ///    - 
     /// </summary>
-    internal class CleanExpressReport : IDisposable
+    public class CleanExpressReport : IDisposable
     {
         private CleanFrmExpressReport _frm;
 

@@ -10,7 +10,7 @@ namespace sql.builder.Print.Xlsx
     /// Группа строк шаблона Excel в формате xlsx
     /// </summary>
     /// <seealso cref="sql.builder.Print.XML.ExcelPrintGroup"/>
-    internal class ExcelPrintGroup : IExcelPrintGroup, IExcelPrintEl
+    public class ExcelPrintGroup : IExcelPrintGroup, IExcelPrintEl
     {
         #region поля
         private readonly ExcelPrintGroup parent;
@@ -20,7 +20,7 @@ namespace sql.builder.Print.Xlsx
         private readonly IList<IExcelPrintElement> сhilds;
         private readonly bool dont_remove;
         #endregion
-        internal ExcelPrintGroup(ExcelPrintSheet sheet, List<ExcelRow> rows, bool dontRemove, ExcelPrintGroup parent = null, string tableName = "", ExcelCell beginCell = null)
+        public ExcelPrintGroup(ExcelPrintSheet sheet, List<ExcelRow> rows, bool dontRemove, ExcelPrintGroup parent = null, string tableName = "", ExcelCell beginCell = null)
         {
             //this.sheet = sheet;
             this.parent = parent;
@@ -97,7 +97,7 @@ namespace sql.builder.Print.Xlsx
             }
         }
         #endregion
-        internal TableReference GetTableReference()
+        public TableReference GetTableReference()
         {
             return this.main_table_reference;
         }
@@ -114,7 +114,7 @@ namespace sql.builder.Print.Xlsx
             }
             return tr;
         }
-        /*internal int GetRowsCount(DataSet dataSet)
+        /*public int GetRowsCount(DataSet dataSet)
         {
             int rowsCount = 0;
             for (int index = 0; index < this.table_references.Length; index++) {
@@ -125,7 +125,7 @@ namespace sql.builder.Print.Xlsx
             }
             return rowsCount;
         }*/
-        /*internal int CalculateRowsCount(DataSet dataSet)
+        /*public int CalculateRowsCount(DataSet dataSet)
         {
             int rowsCount = 0;
             for (int index = 0; index < this.table_references.Length; index++) {
@@ -136,7 +136,7 @@ namespace sql.builder.Print.Xlsx
             }
             return rowsCount;
         }*/
-        internal List<DataRow> GetRowsByParent(DataSet dataSet, bool print_big_data)
+        public List<DataRow> GetRowsByParent(DataSet dataSet, bool print_big_data)
         {
             List<DataRow> res = new List<DataRow>();
             TableReference tr = this.GetTableReference();

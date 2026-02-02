@@ -15,19 +15,19 @@ namespace sql.builder.XmlHelpers
 {
     // WCF functionality commented out - not needed for cross-platform
     /*
-    internal static class WCFHelper
+    public static class WCFHelper
     {
         public static bool IsServer { get; private set; }
         public static bool IsClient { get; private set; }
 
         static int _port = 8080;
         static ServiceHost _host;
-        internal static IServerData ServerData { get; private set; }
-        internal static IWCFServer Server { get; private set; }
+        public static IServerData ServerData { get; private set; }
+        public static IWCFServer Server { get; private set; }
 
-        internal static string ServiceName { get; private set; }
+        public static string ServiceName { get; private set; }
 
-        internal static void StartServer(IWCFServer server)
+        public static void StartServer(IWCFServer server)
         {
             if (_host != null) return;
 
@@ -76,7 +76,7 @@ namespace sql.builder.XmlHelpers
         }
     }
 
-    internal interface IWCFServer
+    public interface IWCFServer
     {
         void SendMessage(string text);
         XElement GetReportParams();
@@ -89,7 +89,7 @@ namespace sql.builder.XmlHelpers
     }
 
     [ServiceContract]
-    internal interface IServerData
+    public interface IServerData
     {
         [OperationContract]
         string GetEncryptedConnectionString();
@@ -119,7 +119,7 @@ namespace sql.builder.XmlHelpers
         ServerCommand GetCommand();
     }
 
-    internal class ServerData : IServerData
+    public class ServerData : IServerData
     {
         public string GetEncryptedConnectionString()
         {
@@ -168,7 +168,7 @@ namespace sql.builder.XmlHelpers
         }
     }
 
-    internal enum ServerCommand
+    public enum ServerCommand
     {
         Wait,
         ExecuteReport,
@@ -176,7 +176,7 @@ namespace sql.builder.XmlHelpers
         CloseApplication
     }
 
-    internal enum ClientState
+    public enum ClientState
     {
         Unknown,
         Ready,
@@ -187,21 +187,21 @@ namespace sql.builder.XmlHelpers
     */
     
     // Placeholder to prevent compilation errors where WCFHelper is referenced
-    internal static class WCFHelper
+    public static class WCFHelper
     {
         public static bool IsServer { get; private set; }
         public static bool IsClient { get; private set; }
         
-        internal static object Server { get; private set; }
+        public static object Server { get; private set; }
         
-        internal static void StartServer(object server) { }
+        public static void StartServer(object server) { }
         public static void ShutdownServer() { }
         public static void StartClient(string service_name) { }
     }
     
     // Placeholder interfaces and classes for WCF
-    internal interface IWCFServer { }
-    internal class ServerData { }
-    internal enum ServerCommand { Wait, ExecuteReport, PrintExcel, CloseApplication }
-    internal enum ClientState { Unknown, Ready, ExecutingReport, PrintingExcel, Fault }
+    public interface IWCFServer { }
+    public class ServerData { }
+    public enum ServerCommand { Wait, ExecuteReport, PrintExcel, CloseApplication }
+    public enum ClientState { Unknown, Ready, ExecutingReport, PrintingExcel, Fault }
 }

@@ -10,7 +10,7 @@ using sql.builder.Clean.Extensions;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VQuery
+    public partial class VQuery
     {
 
         private static SortedList<string, SortedList<string, string>> ColumnsTempNames = new SortedList<string, SortedList<string, string>>();
@@ -74,7 +74,7 @@ namespace sql.builder.DataApi
 
             return s;
         }
-        internal static XElement CreateFilteredQuery(XElement xquery, int rows_limit)
+        public static XElement CreateFilteredQuery(XElement xquery, int rows_limit)
         {
 
             //if (WebReportsAdapter.IsWebQuery(xquery))

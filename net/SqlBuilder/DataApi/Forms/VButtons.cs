@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VButtons : VSXElement, IVParent
+    public sealed class VButtons : VSXElement, IVParent
     {
-        internal VButtons()
+        public VButtons()
             : base(EName.buttons)
         {
         }

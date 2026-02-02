@@ -8,15 +8,15 @@ using sql.builder.DataApi;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal class ExcelWorksheetCols
+    public class ExcelWorksheetCols
     {
         // храним индексы в виде чисел, иначе бьет по производительности
         private List<ExcelWorksheetCol> _cols;
-        internal ExcelWorksheetCols()
+        public ExcelWorksheetCols()
         {
             this._cols = new List<ExcelWorksheetCol>();
         }
-        internal ExcelWorksheetCols(XElement xitem)
+        public ExcelWorksheetCols(XElement xitem)
         {
             Contract.Assert(xitem != null);
             Contract.Assert(xitem.Name == ns.Main.cols);
@@ -39,7 +39,7 @@ namespace sql.builder.Print.Xlsx
                 ind_last = ind2;
             }
         }
-        internal void DeleteColumns(IEnumerable<string> col_names)
+        public void DeleteColumns(IEnumerable<string> col_names)
         {
             var indexes = col_names.Select(ExcelUtils.GetColumnNumber);
             foreach (var col in _cols.ToArray()) {
@@ -54,7 +54,7 @@ namespace sql.builder.Print.Xlsx
                 }
             }
         }
-        internal void CopyColumns(IEnumerable<string> col_names)
+        public void CopyColumns(IEnumerable<string> col_names)
         {
             var indexes = col_names.Select(ExcelUtils.GetColumnNumber).ToArray();
             var list = new List<ExcelWorksheetCol>();
@@ -76,7 +76,7 @@ namespace sql.builder.Print.Xlsx
                 }
             }
         }
-        internal void SetColumnWidth(string column_name, decimal width)
+        public void SetColumnWidth(string column_name, decimal width)
         {
             int num = ExcelUtils.GetColumnNumber(column_name);
             var col = this._cols.FirstOrDefault(c => c.ColMin == num);
@@ -93,7 +93,7 @@ namespace sql.builder.Print.Xlsx
                 xcol.SetAttributeValue(ns.None.customWidth, "1");
             }
         }
-        internal XElement GetXml()
+        public XElement GetXml()
         {
             XElement xcols = new XElement(ns.Main.cols);
             if (this._cols.Count > 0) {
@@ -139,12 +139,12 @@ namespace sql.builder.Print.Xlsx
                     && (xcol1.AttrOrDefault(ns.None.hidden, null) == xcol2.AttrOrDefault(ns.None.hidden, null)));
         }
     }
-    internal class ExcelWorksheetCol
+    public class ExcelWorksheetCol
     {
-        internal XElement XCol;
-        internal int ColMin;
-        internal int ColMax;
-        internal ExcelWorksheetCol(int col_min, int col_max, XElement xcol)
+        public XElement XCol;
+        public int ColMin;
+        public int ColMax;
+        public ExcelWorksheetCol(int col_min, int col_max, XElement xcol)
         {
             this.ColMin = col_min;
             this.ColMax = col_max;

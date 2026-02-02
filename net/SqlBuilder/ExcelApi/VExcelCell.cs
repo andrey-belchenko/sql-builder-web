@@ -5,30 +5,30 @@ using sql.builder.DataApi;
 
 namespace sql.builder.ExcelApi
 {
-    internal sealed class VExcelCell : VExcelObject
+    public sealed class VExcelCell : VExcelObject
     {
-        internal readonly VExcelRow Row;
-        internal VExcelCell(XElement element, VExcelRow row)
+        public readonly VExcelRow Row;
+        public VExcelCell(XElement element, VExcelRow row)
             : base(element)
         {
             this.Row = row;
         }
-        internal VExcelSheet Sheet {
+        public VExcelSheet Sheet {
             get {
                 return this.Row.Sheet;
             }
         }
-        internal int RowIndex {
+        public int RowIndex {
             get {
                 return this.Row.Index;
             }
         }
-        internal int Index {
+        public int Index {
             get {
                 return VExcelCommon.GetIndex(this.Element);
             }
         }
-        internal string Value
+        public string Value
         {
             get {
                 XElement e = this.Element.Element(VExcelNS.SpreadSheet.Data);
@@ -65,7 +65,7 @@ namespace sql.builder.ExcelApi
                 }
             }*/
         }
-        internal void SetValue(string text)
+        public void SetValue(string text)
         {
             if (text == null) {
                 this.Element.Elements().Remove();
@@ -80,7 +80,7 @@ namespace sql.builder.ExcelApi
             }
             data.Value = text;
         }
-        internal void SetValue(VExcelCell cell)
+        public void SetValue(VExcelCell cell)
         {
             if (cell == null) {
                 this.Element.Elements().Remove();

@@ -2,16 +2,16 @@ using System.Xml.Linq;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal class ExcelBaseFile
+    public class ExcelBaseFile
     {
-        #region Поля
+        #region пїЅпїЅпїЅпїЅ
         protected readonly string file_path;
         protected XDocument xml;
         private XDocument _xmlChanged;
         #endregion
-        #region Свойства
-        internal string FilePath { get { return this.file_path; } }
-        internal XDocument XmlChanged {
+        #region пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        public string FilePath { get { return this.file_path; } }
+        public XDocument XmlChanged {
             get {
                 if (this._xmlChanged == null) {
                     this._xmlChanged = new XDocument(this.xml);
@@ -20,12 +20,12 @@ namespace sql.builder.Print.Xlsx
             }
         }
         #endregion
-        internal ExcelBaseFile(string file_path)
+        public ExcelBaseFile(string file_path)
         {
             this.file_path = file_path;
             this.xml = XDocument.Load(file_path);
         }
-        internal virtual void Save()
+        public virtual void Save()
         {
             if (this._xmlChanged != null) {
                 this._xmlChanged.Save(this.file_path);

@@ -9,7 +9,7 @@ using sql.builder.DataApi;
 
 namespace sql.builder.UI
 {
-    internal partial class UICheck : UIBase
+    public partial class UICheck : UIBase
     {
         public UICheck()
             : base()
@@ -51,7 +51,7 @@ namespace sql.builder.UI
         }
 
 
-        internal void UpdateRepItemValue()
+        public void UpdateRepItemValue()
         {
             //BarEditItem item = ((Control)this.GetRootControl()).Tag as BarEditItem; // временно
             //object val1 = item.EditValue;

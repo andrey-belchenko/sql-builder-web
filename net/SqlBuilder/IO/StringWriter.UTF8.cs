@@ -10,7 +10,7 @@ namespace sql.builder
     /// кодировку utf-8 вместо utf-16, как у базового класса.
     /// Необходимо для того, чтобы сформировать правильный заголовок &lt;?xml version="1.0" encoding="utf-8"?&gt;
     /// </summary>
-    internal class StringWriterUTF8 : StringWriter
+    public class StringWriterUTF8 : StringWriter
     {
         public StringWriterUTF8() : base() { }
         public StringWriterUTF8(IFormatProvider formatProvider) : base(formatProvider) { }

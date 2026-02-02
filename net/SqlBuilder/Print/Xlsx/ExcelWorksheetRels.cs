@@ -6,11 +6,11 @@ using System.Xml.Linq;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal class ExcelWorksheetRels : ExcelBaseFile
+    public class ExcelWorksheetRels : ExcelBaseFile
     {
         private List<ExcelRel> _rels;
         private int last_id;
-        internal ExcelWorksheetRels(string file_path)
+        public ExcelWorksheetRels(string file_path)
             : base(file_path)
         {
             this._rels = new List<ExcelRel>();
@@ -27,7 +27,7 @@ namespace sql.builder.Print.Xlsx
             }
         }
         //  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="start_CryptoApi.ini" TargetMode="External"/>
-        internal string CreateHyperlinkRel(string target)
+        public string CreateHyperlinkRel(string target)
         {
             string type = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink";
             this.last_id++;

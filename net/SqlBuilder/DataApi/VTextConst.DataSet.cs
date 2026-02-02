@@ -1,9 +1,9 @@
 ﻿namespace sql.builder.DataApi
 {
 
-    internal static partial class TextConst
+    public static partial class TextConst
     {
-        internal static class DsAName
+        public static class DsAName
         {
             public const string SourceTable = "source-table";
             public const string TextSourceFor = "text-source-for";
@@ -37,7 +37,7 @@
         
         }
 
-        internal static class DsEName
+        public static class DsEName
         {
             public const string DataSet = "dataset";
             public const string SelListPars = "sel-list-pars";
@@ -62,7 +62,7 @@
 
         }
 
-        internal static class DsANameArray
+        public static class DsANameArray
         {
             public static string[] AllBehProps = {
             DsAName.Editable,

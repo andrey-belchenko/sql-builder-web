@@ -11,7 +11,7 @@ namespace sql.builder
     /// <summary>
     /// Набор методов расширения для <see cref="XmlWriter"/>
     /// </summary>
-    internal static class XmlWriterExtensions
+    public static class XmlWriterExtensions
     {
         /// <summary>
         /// Записывает имя элемента <paramref name="name"/> во <paramref name="writer"/>.

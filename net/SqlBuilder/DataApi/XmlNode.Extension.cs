@@ -9,7 +9,7 @@ namespace sql.builder.DataApi
     /// <summary>
     /// Набор методов расширения для <see cref="XmlNode"/>
     /// </summary>
-    internal static class XmlNodeExtensions
+    public static class XmlNodeExtensions
     {
         /// <summary>
         /// Возвращает значение аттрибута с именем <paramref name="attr_name"/>.

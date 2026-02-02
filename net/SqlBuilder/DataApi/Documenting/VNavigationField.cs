@@ -2,7 +2,7 @@
 
 namespace sql.builder.DataApi
 {
-    /*internal class VNavigationField:VColumn
+    /*public class VNavigationField:VColumn
     {
         public VNavigationField(XElement element)
             : base(element)

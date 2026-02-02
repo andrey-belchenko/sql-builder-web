@@ -18,7 +18,7 @@ using System.Diagnostics;
 
 namespace sql.builder.DataApi
 {
-    internal static class  VCashUtils
+    public static class  VCashUtils
     {
 
         public static bool CashEnabled 
@@ -112,7 +112,7 @@ namespace sql.builder.DataApi
     }
 
 
-    internal partial class VSXElement : VXElement
+    public partial class VSXElement : VXElement
     {
 
 
@@ -160,7 +160,7 @@ namespace sql.builder.DataApi
     }
 
 
-    internal partial class VEntityType
+    public partial class VEntityType
     {
         private Dictionary<string, object> cash = new Dictionary<string, object>();
         private void AddCashValue(object val, string methodName, string parmsInfo)
@@ -178,7 +178,7 @@ namespace sql.builder.DataApi
     }
 
 
-    internal partial class VEnvironment
+    public partial class VEnvironment
     {
 
 

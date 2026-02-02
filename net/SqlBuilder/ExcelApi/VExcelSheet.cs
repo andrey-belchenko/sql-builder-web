@@ -6,14 +6,14 @@ using sql.builder.DataApi;
 
 namespace sql.builder.ExcelApi
 {
-    internal sealed class VExcelSheet : VExcelObject
+    public sealed class VExcelSheet : VExcelObject
     {
-        internal VExcelSheet(XElement element)
+        public VExcelSheet(XElement element)
             : base(element)
         {
             this.reSpanColumns();
         }
-        internal string GetName()
+        public string GetName()
         {
             return this.Element.Attribute(VExcelNS.SpreadSheet.Name).Value;
         }
@@ -32,7 +32,7 @@ namespace sql.builder.ExcelApi
                 }
             }
         }
-        internal VExcelRow Row(int index)
+        public VExcelRow Row(int index)
         {
             XElement lastBefore=null;
             XElement xrow = VExcelCommon.GetElementByIndex(this.Element, VExcelNS.SpreadSheet.Row, index, ref lastBefore);
@@ -52,7 +52,7 @@ namespace sql.builder.ExcelApi
             VExcelRow row = new VExcelRow(xrow, this);
             return row;
         }
-        internal VExcelColumn Column(int index)
+        public VExcelColumn Column(int index)
         {
             XElement lastBefore = null;
             XElement xcolumn = VExcelCommon.GetElementByIndex(this.Element, VExcelNS.SpreadSheet.Column, index, ref lastBefore);
@@ -73,7 +73,7 @@ namespace sql.builder.ExcelApi
             VExcelColumn column = new VExcelColumn(xcolumn, this);
             return column;
         }
-        internal VExcelCell FindCell(string value, int startColIndex = 0)
+        public VExcelCell FindCell(string value, int startColIndex = 0)
         {
             IList<XElement> xcells = this.Element.Descendants(VExcelNS.SpreadSheet.Cell).Where(e => e.Value.Contains(value)).ToList();
             int colIndex = 0;
@@ -93,7 +93,7 @@ namespace sql.builder.ExcelApi
             return cell;
         }
         private XElement ret;
-        internal List<VExcelCell> FindCells(string value)
+        public List<VExcelCell> FindCells(string value)
         {
             List<VExcelCell> cells = new List<VExcelCell>();
             foreach (XElement xcell in this.Element.Descendants(VExcelNS.SpreadSheet.Cell).Where(e => e.Value.Contains(value))) {
@@ -103,7 +103,7 @@ namespace sql.builder.ExcelApi
             }
             return cells;
         }
-        internal void Replace(string value, string newValue)
+        public void Replace(string value, string newValue)
         {
             List<VExcelCell> cells = this.FindCells(value);
             foreach (VExcelCell cell in cells) {
@@ -122,7 +122,7 @@ namespace sql.builder.ExcelApi
             attr.Value = (i + 1).ToString();
             return column1;
         }
-        internal VExcelColumn InsertColumn(int index, VExcelColumn column)
+        public VExcelColumn InsertColumn(int index, VExcelColumn column)
         {
             VExcelColumn column1 = insertColumn(index);
             Cmn.CopyAttribute(column.Element, column1.Element, VExcelNS.SpreadSheet.AutoFitWidth);

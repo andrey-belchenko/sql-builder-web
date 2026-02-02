@@ -50,36 +50,36 @@ using Rectangle = System.Drawing.Rectangle;
 //using sql.builder.Properties;
 namespace sql.builder
 {
-    internal static partial class Cmn
+    public static partial class Cmn
     {
         #region object-константы (во избежания лишнего боксинга)
-        internal static readonly object DECIMAL_MINUS_ONE = (object)decimal.MinusOne;
-        internal static readonly object DECIMAL_ZERO = (object)decimal.Zero;
-        internal static readonly object DECIMAL_ONE = (object)decimal.One;
-        internal static readonly object DECIMAL_TWO = (object)2M;
-        internal static readonly object DECIMAL_THREE = (object)3M;
-        internal static readonly object DECIMAL_FOUR = (object)4M;
-        internal static readonly object INT32_MINUS_ONE = (object)-1;
-        internal static readonly object INT32_ZERO = (object)0;
-        internal static readonly object INT32_ONE = (object)1;
-        internal static readonly object INT32_TWO = (object)2;
-        internal static readonly object INT32_THREE = (object)3;
-        internal static readonly object BOOLEAN_FALSE = (object)false;
-        internal static readonly object BOOLEAN_TRUE = (object)true;
+        public static readonly object DECIMAL_MINUS_ONE = (object)decimal.MinusOne;
+        public static readonly object DECIMAL_ZERO = (object)decimal.Zero;
+        public static readonly object DECIMAL_ONE = (object)decimal.One;
+        public static readonly object DECIMAL_TWO = (object)2M;
+        public static readonly object DECIMAL_THREE = (object)3M;
+        public static readonly object DECIMAL_FOUR = (object)4M;
+        public static readonly object INT32_MINUS_ONE = (object)-1;
+        public static readonly object INT32_ZERO = (object)0;
+        public static readonly object INT32_ONE = (object)1;
+        public static readonly object INT32_TWO = (object)2;
+        public static readonly object INT32_THREE = (object)3;
+        public static readonly object BOOLEAN_FALSE = (object)false;
+        public static readonly object BOOLEAN_TRUE = (object)true;
         #endregion
-        internal static string[] SplitString(string s)
+        public static string[] SplitString(string s)
         {
             var splitChars = new string[] {" ", ","};
             var ss = s.Split(splitChars,StringSplitOptions.None).Where(s1=>!string.IsNullOrEmpty(s1)).ToArray();
             return ss;
         }
-        internal static string OpenText(string filename)
+        public static string OpenText(string filename)
         {
             using (var reader = new StreamReader(filename)) {
                 return reader.ReadToEnd();
             }
         }
-        internal static void CreateFolder(string name)
+        public static void CreateFolder(string name)
         {
             string[] ss = name.Split('\\');
             var name1 = "";
@@ -91,11 +91,11 @@ namespace sql.builder
                 }
             }
         }
-        internal static void SaveTextWithCheckOut(string text, string filename)
+        public static void SaveTextWithCheckOut(string text, string filename)
         {
         }
      
-        internal static void SaveText(string text, string filename, Encoding encoding)
+        public static void SaveText(string text, string filename, Encoding encoding)
         {
             //try {
             //    using (var sw = new StreamWriter(new FileStream(filename, FileMode.Create), encoding)) {
@@ -106,7 +106,7 @@ namespace sql.builder
             //    XtraMessageBox.Show("Не удалось сохранить изменения.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             //}
         }
-        internal static string GetAttrValue(XAttribute attr)
+        public static string GetAttrValue(XAttribute attr)
         {
             string ret = "";
             if (attr != null)
@@ -116,7 +116,7 @@ namespace sql.builder
             return ret;
         }
 
-        internal static bool IsGreater(object obj1, object obj2)
+        public static bool IsGreater(object obj1, object obj2)
         {
             if (IsNullOrDBNull(obj1)) {
                 return false;
@@ -132,7 +132,7 @@ namespace sql.builder
                 return (obj1.ToString().CompareTo(obj2.ToString()) > 0);
             }
         }
-        internal static bool IsLess(object obj1, object obj2)
+        public static bool IsLess(object obj1, object obj2)
         {
             if (IsNullOrDBNull(obj1)) {
                 return false;
@@ -148,7 +148,7 @@ namespace sql.builder
                 return obj1.ToString().CompareTo(obj2.ToString()) < 0;
             }
         }
-        /*internal static void SetAttrNotEmpty(XElement el, string attributeName, string value)
+        /*public static void SetAttrNotEmpty(XElement el, string attributeName, string value)
         {
             if (string.IsNullOrEmpty(value)) {
                 el.RemoveAttribute(attributeName);
@@ -156,11 +156,11 @@ namespace sql.builder
                 el.SetAttributeValue(attributeName, value);
             }
         }*/
-        internal static string GetAttrValue(XElement el, string attrName)
+        public static string GetAttrValue(XElement el, string attrName)
         {
             return el.AttrOrEmpty(attrName);
         }
-        internal static string GetAttrValueNvl(XElement el, string attrName1, string attrName2)
+        public static string GetAttrValueNvl(XElement el, string attrName1, string attrName2)
         {
             string ret = "";
             XAttribute attr = el.Attribute(attrName1);
@@ -175,7 +175,7 @@ namespace sql.builder
             return ret;
         }
 
-        internal static void CopyAttributeNotEmpty(XElement src, XElement tag, XName name)
+        public static void CopyAttributeNotEmpty(XElement src, XElement tag, XName name)
         {
             if (src.Attribute(name) != null)
             {
@@ -191,7 +191,7 @@ namespace sql.builder
 
         }
         // = XmlReports.copyAttribute()
-        internal static void CopyAttribute(XElement src, XElement dest, XName name)
+        public static void CopyAttribute(XElement src, XElement dest, XName name)
         {
             Contract.Assert(src != null);
             XAttribute attr = src.Attribute(name);
@@ -200,19 +200,19 @@ namespace sql.builder
             }
         }
         // = XmlReports.copyAttributeNoReplace()
-        internal static void CopyAttributeNoReplace(XElement src, XElement tag, XName name)
+        public static void CopyAttributeNoReplace(XElement src, XElement tag, XName name)
         {
             XAttribute attr = src.Attribute(name);
             if (attr != null && tag.Attribute(name) == null) {
                 tag.Add(new XAttribute(name, attr.Value));
             }
         }
-        internal static void copyAttributes(XElement src, XElement tag)
+        public static void copyAttributes(XElement src, XElement tag)
         {
             if (src == null) return;
             tag.Add(src.Attributes().Select(at => new XAttribute(at.Name.LocalName, at.Value)));
         }
-        internal static void CopyAttributesNoReplace(XElement src, XElement tag)
+        public static void CopyAttributesNoReplace(XElement src, XElement tag)
         {
             foreach (XAttribute attr in src.Attributes()) {
                 if (tag.Attribute(attr.Name) == null) {
@@ -220,7 +220,7 @@ namespace sql.builder
                 }
             }
         }
-        internal static decimal ToDecimal(object val)
+        public static decimal ToDecimal(object val)
         {
             if (IsNullOrDBNull(val)) {
                 return decimal.Zero;
@@ -237,7 +237,7 @@ namespace sql.builder
             return (decimal)ToDecimal(val.ToString());
         }
 
-        internal static decimal NumToDecimal(object val)
+        public static decimal NumToDecimal(object val)
         {
             if (val is decimal)
             {
@@ -253,12 +253,12 @@ namespace sql.builder
 
         }
 
-        internal enum CheckResultTFU
+        public enum CheckResultTFU
         {
             True, False, Uncknown
         }
 
-        internal static CheckResultTFU IsDecimal(string str)
+        public static CheckResultTFU IsDecimal(string str)
         {
             var a = XmlReports.numberType;
             if (str == "null")
@@ -300,7 +300,7 @@ namespace sql.builder
             }
         }
 
-        internal static object ToDecimal(string str)
+        public static object ToDecimal(string str)
         {
             var a = XmlReports.numberType;
             if (str == "null")
@@ -326,7 +326,7 @@ namespace sql.builder
             return Convert.ToDecimal(str, ci);
         }
 
-        internal static object ToObject(string value)
+        public static object ToObject(string value)
         {
             value = value.Trim('\'');
 
@@ -340,15 +340,15 @@ namespace sql.builder
             }
         }
 
-        internal static bool IsNumeric(object s)
+        public static bool IsNumeric(object s)
         {
             float output;
             return Single.TryParse(s.ToString(), out output);
         }
 
-        internal class VStringParamName// чтобы отличать строку от имени рараметра и не заключать его в кавычки
+        public class VStringParamName// чтобы отличать строку от имени рараметра и не заключать его в кавычки
         {
-            internal VStringParamName(string value)
+            public VStringParamName(string value)
             {
                 _value = value;
             }
@@ -358,7 +358,7 @@ namespace sql.builder
                 return _value;
             }
         }
-        internal static string ToOracleString(object val)
+        public static string ToOracleString(object val)
         {
             if (IsNullOrDBNull(val)) {
                 return "null";
@@ -384,7 +384,7 @@ namespace sql.builder
             //}
             return sval;
         }        
-        internal static object EvaluateOracleConst(string val)
+        public static object EvaluateOracleConst(string val)
         {
             if (val.Contains("to_date"))
             {
@@ -403,7 +403,7 @@ namespace sql.builder
             return ToDecimal(val);
         }
 
-        internal static object ExtractDateFromOracleToDateString(string val)
+        public static object ExtractDateFromOracleToDateString(string val)
         {
 
             CultureInfo provider = CultureInfo.InvariantCulture;
@@ -417,7 +417,7 @@ namespace sql.builder
             return d;
         }
 
-        internal static object ExtractStringFromOracleString(string val)
+        public static object ExtractStringFromOracleString(string val)
         {
 
             if (val == "null")
@@ -432,7 +432,7 @@ namespace sql.builder
             return val;
         }
 
-        internal static string CutString(string caption, int max_size = 30)
+        public static string CutString(string caption, int max_size = 30)
         {
             return (caption.Length <= max_size)
                 ? caption
@@ -440,7 +440,7 @@ namespace sql.builder
                     caption.Substring(0, max_size / 2 - 2),
                     caption.Substring(caption.Length - (max_size / 2 - 2), max_size / 2 - 2));
         }
-        internal static void setParams(XElement formalParams, XElement factParams, bool useDefaults)
+        public static void setParams(XElement formalParams, XElement factParams, bool useDefaults)
         {
             if (formalParams == null) return;
             if (factParams == null) {
@@ -468,7 +468,7 @@ namespace sql.builder
 
 
 
-        internal static object ImageWarning14
+        public static object ImageWarning14
         {
             get
             {
@@ -480,7 +480,7 @@ namespace sql.builder
             }
         }
 
-        internal static object ImageEdit12
+        public static object ImageEdit12
         {
             get
             {
@@ -506,7 +506,7 @@ namespace sql.builder
             }
         }
         private static Image _imageCommitAndClose24 = null;
-        internal static Image ImageCommitAndClose24
+        public static Image ImageCommitAndClose24
         {
             get
             {
@@ -523,7 +523,7 @@ namespace sql.builder
         // Cross-platform: Bitmap/Graphics/ImageAttributes are Windows-only (System.Drawing.Common)
         // This method is not used (only called in commented code)
         /*
-        internal static Bitmap ResizeImage(Image image, int width, int height)
+        public static Bitmap ResizeImage(Image image, int width, int height)
         {
             var destRect = new Rectangle(0, 0, width, height);
             var destImage = new Bitmap(width, height);
@@ -549,9 +549,9 @@ namespace sql.builder
         }
         */
 
-        internal const string undefinedString = "$undefined$";
+        public const string undefinedString = "$undefined$";
         private static string undefNvluConst = "/*nvlu*/ $undefined$";
-        internal static string ClearUndefined(string s, out bool undefined_without_brace)
+        public static string ClearUndefined(string s, out bool undefined_without_brace)
         {
             undefined_without_brace = false;
             s = s.Replace(undefNvluConst, "null");
@@ -574,7 +574,7 @@ namespace sql.builder
             s = s.Replace('\r', ' ');
             return s;
         }
-        internal static string ClearUndefined(string s)
+        public static string ClearUndefined(string s)
         {
             s = s.Replace(undefNvluConst, "null");
             //Протестировать производительность, оптимизировать
@@ -595,14 +595,14 @@ namespace sql.builder
             s = s.Replace('\r', ' ');
             return s;
         }
-        internal static string ClearSql(string sql)
+        public static string ClearSql(string sql)
         {
             if (sql == null) {
                 return null;
             }
             return sql.Replace('\r', ' ');
         }
-        internal static void HtmlOutput(string content, string filename)
+        public static void HtmlOutput(string content, string filename)
         {
 
             string fullName = Printing.GetFreeName(Path.GetTempPath(), filename, "html");
@@ -612,13 +612,13 @@ namespace sql.builder
 
             Process.Start(fullName);
         }
-        /*internal static void XmlOutput(XElement content, string filename)
+        /*public static void XmlOutput(XElement content, string filename)
         {
             string fullName = Printing.GetFreeName(Path.GetTempPath(), filename, "xml");
             File.WriteAllText(fullName, content.ToString());
             Process.Start(fullName);
         }*/
-        internal static void TxtOutput(string content, string filename)
+        public static void TxtOutput(string content, string filename)
         {
 
             string fullName = Printing.GetFreeName(Path.GetTempPath(), filename, "txt");
@@ -629,17 +629,17 @@ namespace sql.builder
             Process.Start(fullName);
         }
 
-        internal static void SqlOutput(string content)
+        public static void SqlOutput(string content)
         {
 
             //Cmn.SaveText(content, Settings.Default.testQueryS2, Encoding.Unicode);
             //Process.Start(Settings.Default.testQueryS2);
         }
-        internal static bool IsNullOrDBNull(object val)
+        public static bool IsNullOrDBNull(object val)
         {
             return (val == null) || Convert.IsDBNull(val);
         }
-        internal static object Nvl(object v1, object v2)
+        public static object Nvl(object v1, object v2)
         {
             if (IsNullOrDBNull(v1)) {
                 return v2;
@@ -647,7 +647,7 @@ namespace sql.builder
                 return v1;
             }
         }
-        internal static object Nvle(object v1, object v2)
+        public static object Nvle(object v1, object v2)
         {
             if (IsNullOrDBNull(v1) || string.Empty.Equals(v1)) {
                 return v2;
@@ -655,8 +655,8 @@ namespace sql.builder
                 return v1;
             }
         }
-        internal static List<string> XElementsToDataTableSysFieldsNames = new List<string>(new[] { "elid", "pelid", "selid", "leaf", "ord", "lvl", "node_name", "node" });
-        internal static DataTable XElementsToDataTable(IEnumerable<XElement> elements, bool recursive = true, bool addNodeToTable = false)
+        public static List<string> XElementsToDataTableSysFieldsNames = new List<string>(new[] { "elid", "pelid", "selid", "leaf", "ord", "lvl", "node_name", "node" });
+        public static DataTable XElementsToDataTable(IEnumerable<XElement> elements, bool recursive = true, bool addNodeToTable = false)
         {
             IEnumerable<XElement> all_elements = recursive ? elements.DescendantsAndSelf() : elements;
             int i = 0;
@@ -701,7 +701,7 @@ namespace sql.builder
             }
             return dt;
         }
-        internal static List<XElement> DataTableToXElements(DataTable tbl)
+        public static List<XElement> DataTableToXElements(DataTable tbl)
         {
             List<XElement> elements = new List<XElement>();
 
@@ -717,7 +717,7 @@ namespace sql.builder
         }
 
         // емцов - без проверки что pelid пустой
-        internal static List<XElement> DataTableToXElements2(DataTable tbl)
+        public static List<XElement> DataTableToXElements2(DataTable tbl)
         {
             List<XElement> elements = new List<XElement>();
             var rows = tbl.AsEnumerable().OrderBy(r => Convert.ToInt32(r["ord"]));
@@ -769,7 +769,7 @@ namespace sql.builder
         /// <param name="file_size">размер файла, из которого был загружен документ. Используется для прогнозирования размера выходной строки
         /// </param>
         /// <returns>строка, содержащая XML-документ</returns>
-        internal static string XDocumentToString(XDocument doc, long file_size = 0)
+        public static string XDocumentToString(XDocument doc, long file_size = 0)
         {
             long estimated_length;
             if (file_size <= 0) {
@@ -790,7 +790,7 @@ namespace sql.builder
             }
             return data;
         }*/
-        /*internal static string XDocumentToString(XDocument doc)
+        /*public static string XDocumentToString(XDocument doc)
         {
             MemoryStream stream = new MemoryStream();
             doc.Save(stream);
@@ -805,7 +805,7 @@ namespace sql.builder
             stream = null;
             return str;
         }*/
-        internal static object GetProperty(object obj, string fieldName, object def)
+        public static object GetProperty(object obj, string fieldName, object def)
         {
 
             string[] path = fieldName.Split('.');
@@ -847,14 +847,14 @@ namespace sql.builder
                 return def;
             }
         }
-        internal static void FocusFile(string path)
+        public static void FocusFile(string path)
         {
 
             System.Diagnostics.Process.Start("explorer.exe", @"/select, " + path);
 
         }
 
-        internal static object GetProperty(object obj, string fieldName)
+        public static object GetProperty(object obj, string fieldName)
         {
 
             string[] path = fieldName.Split('.');
@@ -897,7 +897,7 @@ namespace sql.builder
                 return obj.GetType().GetField(path[i], flags).GetValue(obj);
             }
         }
-        internal static void SetProperty(object obj, string fieldName, object value)
+        public static void SetProperty(object obj, string fieldName, object value)
         {
             if (IsNullOrDBNull(value)) {
                 value = null;
@@ -940,11 +940,11 @@ namespace sql.builder
 
 
         }
-        internal static bool IsNull(object val)
+        public static bool IsNull(object val)
         {
             return val == null || val == DBNull.Value || string.Empty.Equals(val);
         }
-        internal static XDocument OpenXmlClearNS(string fileName)
+        public static XDocument OpenXmlClearNS(string fileName)
         {
 			try
 			{
@@ -961,10 +961,10 @@ namespace sql.builder
         /// </summary>
         /// <param name="node">XML-документ или элемент</param>
         /// <param name="file_name">наименование файла</param>
-        internal static void SaveXmlWithCheckOut(XNode node, string file_name)
+        public static void SaveXmlWithCheckOut(XNode node, string file_name)
         {
         }
-        internal static VDataTable CopyTableStructure(VDataTable source)
+        public static VDataTable CopyTableStructure(VDataTable source)
         {
             VDataTable target = new VDataTable();
             CopyTableStructure(source, target);
@@ -979,7 +979,7 @@ namespace sql.builder
                 target.Columns.Add(col1);
             }
         }
-        internal static void CopyTable(VDataTable source, VDataTable target)
+        public static void CopyTable(VDataTable source, VDataTable target)
         {
             target.ClearColumns();
             target.Clear();
@@ -1008,7 +1008,7 @@ namespace sql.builder
             target.Merge(source);
 
         }
-        internal static XElement GetFakeGlobalParams()
+        public static XElement GetFakeGlobalParams()
         {
             return XElement.Parse("<params><param name=\"dep\"><const>null</const></param><param name=\"tep_el\"><const>1</const></param></params>");
         }
@@ -1033,7 +1033,7 @@ namespace sql.builder
                 return new List<XElement>();
             }
         }*/
-        internal static List<XElement> ReadAllSubXElementsFromRegistry(string path)
+        public static List<XElement> ReadAllSubXElementsFromRegistry(string path)
         {
             var list = new List<XElement>();
             using (var key = getRegistryKey(path))
@@ -1042,7 +1042,7 @@ namespace sql.builder
             }
             return list;
         }
-        internal static XElement ReadXElementFromRegistry(string path, string valueName)
+        public static XElement ReadXElementFromRegistry(string path, string valueName)
         {
             string s = ReadStringFromRegistry(path, valueName);
             if (s != null)
@@ -1054,7 +1054,7 @@ namespace sql.builder
                 return null;
             }
         }
-        internal static string ReadStringFromRegistry(string path, string valueName)
+        public static string ReadStringFromRegistry(string path, string valueName)
         {
             object o = getRegistryKey(path).GetValue(valueName);
             if (o != null)
@@ -1064,7 +1064,7 @@ namespace sql.builder
             return null;
         }
 
-        internal static void WriteXElementToRegistry(string path, string valueName, XElement data)
+        public static void WriteXElementToRegistry(string path, string valueName, XElement data)
         {
             string s = null;
             if (data != null)
@@ -1073,7 +1073,7 @@ namespace sql.builder
             }
             WriteStringToRegistry(path, valueName, s);
         }
-        internal static void WriteStringToRegistry(string path, string valueName, string data)
+        public static void WriteStringToRegistry(string path, string valueName, string data)
         {
             if (data != null)
             {
@@ -1088,7 +1088,7 @@ namespace sql.builder
                 }
             }
         }
-        /*internal static void ClearRegistry(string path = "")
+        /*public static void ClearRegistry(string path = "")
         {
             if (!string.IsNullOrEmpty(path))
             {
@@ -1099,7 +1099,7 @@ namespace sql.builder
             Registry.CurrentUser.DeleteSubKeyTree(_reg_path);
         }*/
         #endregion
-        internal static List<string> ExtractParamsFromString(string str)
+        public static List<string> ExtractParamsFromString(string str)
         {
             if (str == null) {
                 return null;
@@ -1134,21 +1134,21 @@ namespace sql.builder
         /// <summary>
         /// Интервал времени в полсекунды
         /// </summary>
-        internal static readonly TimeSpan HalfOfSecond = new TimeSpan(500L * TimeSpan.TicksPerMillisecond);
+        public static readonly TimeSpan HalfOfSecond = new TimeSpan(500L * TimeSpan.TicksPerMillisecond);
         */ 
         /// <summary>
         /// Записывает наиболее позднюю из двух дат в <paramref name="last_date"/>
         /// </summary>
         /// <param name="last_date"></param>
         /// <param name="date"></param>
-        internal static void GetLastDate(ref DateTime last_date, DateTime date)
+        public static void GetLastDate(ref DateTime last_date, DateTime date)
         {
             if (date > last_date) {
                 last_date = date;
             }
         }
         /*
-        internal static DateTime GetDirectoryLastChange(string directoryPath)
+        public static DateTime GetDirectoryLastChange(string directoryPath)
         {
             var d = DateTime.MinValue;
             var di = new DirectoryInfo(directoryPath);
@@ -1172,7 +1172,7 @@ namespace sql.builder
             return d;
         }
         */
-        internal static string GetCashDirectoryName()
+        public static string GetCashDirectoryName()
         {
             string name = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), XmlReports.NativeProductName);
             if (!Directory.Exists(name))
@@ -1193,7 +1193,7 @@ namespace sql.builder
                 return XDocument.Parse(reader.ReadToEnd()).Root;
             }
         }
-        internal static void PutXmlToZip(ZipArchive zip, XElement xml, string file_name)
+        public static void PutXmlToZip(ZipArchive zip, XElement xml, string file_name)
         {
             // если файл уже есть, просто обновляем текст в нем
             if (zip[file_name] != null)
@@ -1206,7 +1206,7 @@ namespace sql.builder
                 zip.AddText(file_name, xml.ToString());
             }
         }
-        internal static void CopyZipFile(ZipArchive dest, ZipArchive src, string file_name, string file_name_new = null)
+        public static void CopyZipFile(ZipArchive dest, ZipArchive src, string file_name, string file_name_new = null)
         {
             file_name_new = file_name_new ?? file_name;
             dest.AddStream(file_name_new, src[file_name].Open());
@@ -1235,7 +1235,7 @@ namespace sql.builder
                 UpdateVForm(xitem, applying_parts);
             }
         }*/
-        internal static void SyncWithVForm(XElement xroot, List<VSXElement> applying_parts)
+        public static void SyncWithVForm(XElement xroot, List<VSXElement> applying_parts)
         {
             foreach (XElement xitem in xroot.Elements()) {
                 VSXElement vitem = applying_parts.FirstOrDefault(item => item.BaseElementOrSelf().GetUniqueKey().ToString() == xitem.Attribute(AName.id).Value);
@@ -1263,12 +1263,12 @@ namespace sql.builder
                 SyncWithVForm(xitem, applying_parts);
             }
         }
-        internal static bool OSWin7AndNewer()
+        public static bool OSWin7AndNewer()
         {
             return ((Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1) ||
                     Environment.OSVersion.Version.Major >= 10);
         }
-        internal static string GetAvgReportFormingTime(string repname)
+        public static string GetAvgReportFormingTime(string repname)
         {
             #if DEBUG
             DateTime d1 = DateTime.Now;
@@ -1289,7 +1289,7 @@ namespace sql.builder
             }
         }
   
-        internal static Color MixColors(this Color source, Color target, float percent)
+        public static Color MixColors(this Color source, Color target, float percent)
         {
             float amountSource = 1.0f - percent;
 
@@ -1305,7 +1305,7 @@ namespace sql.builder
             throw new NotImplementedException();
         }
         // Cross-platform: Image is Windows-only, replaced with object
-        internal static object GetIcon(XElement xcmd)
+        public static object GetIcon(XElement xcmd)
         {
             XAttribute xicon = xcmd.Attribute(AName.icon);
             if (xicon == null) {
@@ -1326,7 +1326,7 @@ namespace sql.builder
             //    return null;
             //}
         }
-        internal static VSXElement GetActionInfo(XElement xcmd)
+        public static VSXElement GetActionInfo(XElement xcmd)
         {
             return VSXElement.Get(new XElement(xcmd));
         }
@@ -1400,7 +1400,7 @@ namespace sql.builder
             return btn;
         }*/
 
-        internal static DataSet ToDataSet(VDataSet vds)
+        public static DataSet ToDataSet(VDataSet vds)
         {
             var ds = new DataSet(vds.DataSetName);
 
@@ -1411,7 +1411,7 @@ namespace sql.builder
 
             return ds;
         }
-        internal static VDataSet ToVDataSet(DataSet ds)
+        public static VDataSet ToVDataSet(DataSet ds)
         {
             var vds = new VDataSet();
             vds.DataSetName = ds.DataSetName;
@@ -1446,7 +1446,7 @@ namespace sql.builder
             }*/
             return dt;
         }
-        internal static VDataTable ToVDataTable(DataTable dt)
+        public static VDataTable ToVDataTable(DataTable dt)
         {
             VDataTable vdt = new VDataTable();
             vdt.TableName = dt.TableName;
@@ -1475,7 +1475,7 @@ namespace sql.builder
         /// </summary>
         /// <param name="src">Исходный DataTable</param>
         /// <param name="dest">DataTable, у которого надо установить первичный ключ</param>
-        internal static void CopyPrimaryKey(DataTable src, DataTable dest)
+        public static void CopyPrimaryKey(DataTable src, DataTable dest)
         {
             Contract.Assert(src != null);
             Contract.Assert(dest != null);
@@ -1500,7 +1500,7 @@ namespace sql.builder
         /// <param name="table">Таблица с данными</param>
         /// <param name="column_name">Наименование интернируемой колонки</param>
         /// <returns>Количество уникальных значений в колонке</returns>
-        internal static int InternStringColumn(DataTable table, string column_name)
+        public static int InternStringColumn(DataTable table, string column_name)
         { 
             Contract.Assert(table != null);
             Contract.Assert(!string.IsNullOrEmpty(column_name));
@@ -1536,7 +1536,7 @@ namespace sql.builder
             }
             return set.Count;
         }
-        internal static XElement LoadDefaultReportParams(string repname)
+        public static XElement LoadDefaultReportParams(string repname)
         {
             string data = db.SelectDefaultSettingData(repname);
             if (data == null) {
@@ -1545,13 +1545,13 @@ namespace sql.builder
                 return XElement.Parse(data).Element(EName.@params);
             }
         }
-        //internal static Color GetHighlightColor()
+        //public static Color GetHighlightColor()
         //{
 
         //    return CommonSkins.GetSkin(UserLookAndFeel.Default).Colors[CommonColors.Highlight];
         //}
 
-        internal static string ExtractProjectName(string path)
+        public static string ExtractProjectName(string path)
         {
             string[] parts = path.Split('\\');
             // первая папка после папки source
@@ -1562,7 +1562,7 @@ namespace sql.builder
             }
             return proj;
         }
-        internal static string GetProjectPath(XElement xproject)
+        public static string GetProjectPath(XElement xproject)
         {
             string name = xproject.Attribute(AName.name).Value;
             XAttribute attr = xproject.Attribute(AName.directory);
@@ -1572,12 +1572,12 @@ namespace sql.builder
                 return Path.Combine(XmlReports.GetRootPath(), attr.Value, name);
             }
         }
-        //internal static Color GetFocusedBackColor()
+        //public static Color GetFocusedBackColor()
         //{
         //    return CommonSkins.GetSkin(UserLookAndFeel.Default)[CommonSkins.SkinSelection].Color.BackColor;
         //}
 
-        internal static bool IsAdministrator()
+        public static bool IsAdministrator()
         {
             var identity = WindowsIdentity.GetCurrent();
             var principal = new WindowsPrincipal(identity);
@@ -1590,7 +1590,7 @@ namespace sql.builder
             return db.GetTableColumns(table_name, owner).AsEnumerable().Select(r => ((string)r["COLUMN_NAME"]).ToLower()).ToArray();
         }*/
 
-        internal static Type GetTypeFromStringType(string type, Type def)
+        public static Type GetTypeFromStringType(string type, Type def)
         {
             if (string.IsNullOrEmpty(type)) {
                 return def;
@@ -1612,7 +1612,7 @@ namespace sql.builder
                     return def;
             }
         }
-        internal static string OracleTypeDefinitionFromType(Type type, int length = 0)
+        public static string OracleTypeDefinitionFromType(Type type, int length = 0)
         {
 
             if (type == XmlReports.numberType)
@@ -1648,7 +1648,7 @@ namespace sql.builder
         }
 
         private static string _exe_info;
-        internal static string GetExeInfo()
+        public static string GetExeInfo()
         {
             try
             {
@@ -1670,7 +1670,7 @@ namespace sql.builder
         }
 
         private static string _db_info;
-        internal static string GetDBInfo()
+        public static string GetDBInfo()
         {
             try
             {
@@ -1687,13 +1687,13 @@ namespace sql.builder
             }
         }
 
-        /*internal static IEnumerable<IEnumerable<T>> Batch<T>(this IEnumerable<T> items, int maxItems)
+        /*public static IEnumerable<IEnumerable<T>> Batch<T>(this IEnumerable<T> items, int maxItems)
         {
             return items.Select((item, inx) => new { item, inx })
                 .GroupBy(x => x.inx / maxItems)
                 .Select(g => g.Select(x => x.item));
         }*/
-        internal static Devart.Data.Oracle.OracleDbType GetDBType(string type)
+        public static Devart.Data.Oracle.OracleDbType GetDBType(string type)
         {
             switch (type) {
                 case "number":
@@ -1712,7 +1712,7 @@ namespace sql.builder
                     return Devart.Data.Oracle.OracleDbType.VarChar;
             }
         }
-        internal static Devart.Data.Oracle.OracleDbType GetDBType(Type type)
+        public static Devart.Data.Oracle.OracleDbType GetDBType(Type type)
         {
             if (type == typeof(Decimal)) {
                 return Devart.Data.Oracle.OracleDbType.Number;
@@ -1722,7 +1722,7 @@ namespace sql.builder
                 return Devart.Data.Oracle.OracleDbType.VarChar;
             }
         }
-        internal static string writeScriptFile(string name, string data)
+        public static string writeScriptFile(string name, string data)
         {
             var namefile = string.Format("{0}\\{1}_{2}_{3}_ddl.sql", Path.GetDirectoryName(Path.GetTempPath()), DateTime.Now.ToString("yyMMdd"), Environment.MachineName, name);
             using (var sw = new StreamWriter(new FileStream(namefile, FileMode.Create), Encoding.GetEncoding(1251)))
@@ -1733,7 +1733,7 @@ namespace sql.builder
         }
 
 
-        internal static string WriteFileToTemp(string name, string data)
+        public static string WriteFileToTemp(string name, string data)
         {
             var namefile = string.Format("{0}\\{1}", Path.GetDirectoryName(Path.GetTempPath()), name);
             using (var sw = new StreamWriter(new FileStream(namefile, FileMode.Create), Encoding.GetEncoding(1251)))
@@ -1743,7 +1743,7 @@ namespace sql.builder
             return namefile;
         }
 
-        internal static StringBuilder BuildCodeOfXmlString(string sxml)
+        public static StringBuilder BuildCodeOfXmlString(string sxml)
         {
             var el = XElement.Parse(sxml);
             var sb = new StringBuilder();
@@ -1835,7 +1835,7 @@ namespace sql.builder
         /// заменяет все переводы строки ("\n\r", "\r\n" и "\n") на "\r".
         /// </summary>
         /// <param name="sb"></param>
-        internal static void RefineExcelText(StringBuilder sb)
+        public static void RefineExcelText(StringBuilder sb)
         {
             Contract.Assert(sb != null);
             sb.Replace("\n\r", "\r");
@@ -1853,7 +1853,7 @@ namespace sql.builder
                 }
             }
         }
-        internal static bool TryGetParameter(this Devart.Data.Oracle.OracleParameterCollection parameters, string parameter_name, out Devart.Data.Oracle.OracleParameter parameter)
+        public static bool TryGetParameter(this Devart.Data.Oracle.OracleParameterCollection parameters, string parameter_name, out Devart.Data.Oracle.OracleParameter parameter)
         {
             Contract.Assert(parameters != null);
             int index = parameters.IndexOf(parameter_name);
@@ -1865,7 +1865,7 @@ namespace sql.builder
                 return false;
             }
         }
-        internal static string[] GetParameterNames(DbParameterCollection parameters)
+        public static string[] GetParameterNames(DbParameterCollection parameters)
         {
             Contract.Assume(parameters != null);
             string[] param_names;
@@ -1880,7 +1880,7 @@ namespace sql.builder
             }
             return param_names;
         }
-        internal static string[] GetParameterNames<T>(IList<T> parameters)
+        public static string[] GetParameterNames<T>(IList<T> parameters)
             where T : DbParameter
         {
             Contract.Assume(parameters != null);
@@ -1901,7 +1901,7 @@ namespace sql.builder
         /// </summary>
         /// <param name="sql">текст запроса</param>
         /// <returns>массив bind-переменных в запросе <paramref name="sql"/></returns>
-        internal static string[] ExtractParameterNamesFromSQL(string sql)
+        public static string[] ExtractParameterNamesFromSQL(string sql)
         {
             string[] param_names;
             using (Devart.Data.Oracle.OracleCommand cmd = new VOracleCommand()) {
@@ -1912,21 +1912,21 @@ namespace sql.builder
             return param_names;
         }
         #region Для использования в качестве аргумента Select() и SelectAsArray()
-        internal static string GetDataColumnName(DataColumn col)
+        public static string GetDataColumnName(DataColumn col)
         {
             return col.ColumnName;
         }
-        internal static string GetParameterName(DbParameter col)
+        public static string GetParameterName(DbParameter col)
         {
             return col.ParameterName;
         }
         #endregion
-        internal static bool HasPrimaryKey(this DataTable dt)
+        public static bool HasPrimaryKey(this DataTable dt)
         {
             Contract.Assert(dt != null);
             return !Array.IsNullOrEmpty(dt.PrimaryKey);
         }
-        internal static DataRow AddRow(this DataTable dt, object value)
+        public static DataRow AddRow(this DataTable dt, object value)
         {
             Contract.Assert(dt != null);
             Contract.Assert(dt.Columns.Count >= 1);
@@ -1935,7 +1935,7 @@ namespace sql.builder
             dt.Rows.Add(row);
             return row;
         }
-        internal static DataRow AddRow(this DataTable dt, object value_1, object value_2)
+        public static DataRow AddRow(this DataTable dt, object value_1, object value_2)
         {
             Contract.Assert(dt != null);
             Contract.Assert(dt.Columns.Count >= 2);
@@ -1945,7 +1945,7 @@ namespace sql.builder
             dt.Rows.Add(row);
             return row;
         }
-        internal static DataRow AddRow(this DataTable dt, object value_1, object value_2, object value_3)
+        public static DataRow AddRow(this DataTable dt, object value_1, object value_2, object value_3)
         {
             Contract.Assert(dt != null);
             Contract.Assert(dt.Columns.Count >= 3);
@@ -1956,7 +1956,7 @@ namespace sql.builder
             dt.Rows.Add(row);
             return row;
         }
-        internal static DataRow AddRow(this DataTable dt, object value_1, object value_2, object value_3, object value_4)
+        public static DataRow AddRow(this DataTable dt, object value_1, object value_2, object value_3, object value_4)
         {
             Contract.Assert(dt != null);
             Contract.Assert(dt.Columns.Count >= 4);
@@ -1968,7 +1968,7 @@ namespace sql.builder
             dt.Rows.Add(row);
             return row;
         }
-        internal static DataRow AddRow(this DataTable dt, object value_1, object value_2, object value_3, object value_4, object value_5)
+        public static DataRow AddRow(this DataTable dt, object value_1, object value_2, object value_3, object value_4, object value_5)
         {
             Contract.Assert(dt != null);
             Contract.Assert(dt.Columns.Count >= 5);
@@ -1981,7 +1981,7 @@ namespace sql.builder
             dt.Rows.Add(row);
             return row;
         }
-        internal static DataRow[] ToArray(this DataRowCollection rows)
+        public static DataRow[] ToArray(this DataRowCollection rows)
         {
             int count = rows.Count;
             if (count == 0) {
@@ -1992,7 +1992,7 @@ namespace sql.builder
                 return arr;
             }
         }
-        internal static void DisposeAndSetNull<T>(ref T disposable)
+        public static void DisposeAndSetNull<T>(ref T disposable)
             where T : class, IDisposable
         {
             if (disposable!=null)
@@ -2002,7 +2002,7 @@ namespace sql.builder
            
             disposable = null;
         }
-        internal static void RaiseEvent<TEventArgs>(ref EventHandler<TEventArgs> event_delegate, object sender, TEventArgs args)
+        public static void RaiseEvent<TEventArgs>(ref EventHandler<TEventArgs> event_delegate, object sender, TEventArgs args)
         {
             EventHandler<TEventArgs> handler = System.Threading.Volatile.Read(ref event_delegate);
             if (handler != null) {
@@ -2010,7 +2010,7 @@ namespace sql.builder
             }
         }
         // Предикат для сортировки по длине строки
-        internal static int LengthOfString(string s)
+        public static int LengthOfString(string s)
         {
             Contract.Assume(s != null);
             return s.Length;
@@ -2021,23 +2021,23 @@ namespace sql.builder
         /// <param name="x">первая строка</param>
         /// <param name="y">вторая строка</param>
         /// <returns>положительное число, если <paramref name="y" /> длинее <paramref name="x" />, ноль, если <paramref name="y" /> и <paramref name="x" /> равной длины и отрицательное число, если <paramref name="y" /> короче <paramref name="x" /></returns>
-        internal static int DescComparsionByLength(string x, string y)
+        public static int DescComparsionByLength(string x, string y)
         {
             Contract.Assume(x != null);
             Contract.Assume(y != null);
             return y.Length - x.Length;
         }
         // Предикат для поиска
-        internal static bool IsNotNull(object obj)
+        public static bool IsNotNull(object obj)
         {
             return obj != null;
         }
     }
 
-    internal class XElementEventArgs : EventArgs
+    public class XElementEventArgs : EventArgs
     {
-        internal List<XElement> Elements;
-        internal XElementEventArgs(List<XElement> elements)
+        public List<XElement> Elements;
+        public XElementEventArgs(List<XElement> elements)
             : base()
         {
             Elements = elements;
@@ -2045,5 +2045,5 @@ namespace sql.builder
 
     }
 
-    internal delegate void XElementEventHandler(Object sender, XElementEventArgs e);
+    public delegate void XElementEventHandler(Object sender, XElementEventArgs e);
 }

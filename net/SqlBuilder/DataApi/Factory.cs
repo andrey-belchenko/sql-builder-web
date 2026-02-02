@@ -8,7 +8,7 @@ namespace sql.builder.DataApi
     /// <summary>
     /// Статический класс в котором собраны методы для создания XML
     /// </summary>
-    internal static class Factory
+    public static class Factory
     {
         #region call
         /// <summary>
@@ -16,7 +16,7 @@ namespace sql.builder.DataApi
         /// </summary>
         /// <param name="function">значение атрибута function, используйте <see cref="TextConst.AVFunction"/></param>
         /// <returns>созданный тег</returns>
-        internal static XElement NewCall(string function)
+        public static XElement NewCall(string function)
         {
             Contract.Assert(!string.IsNullOrEmpty(function));
             XElement call = new XElement(EName.call);
@@ -29,7 +29,7 @@ namespace sql.builder.DataApi
         /// <param name="function">значение атрибута function, используйте <see cref="TextConst.AVFunction"/></param>
         /// <param name="arg">аргумент</param>
         /// <returns>созданный тег</returns>
-        internal static XElement NewCall(string function, XElement arg)
+        public static XElement NewCall(string function, XElement arg)
         {
             XElement call = NewCall(function);
             call.Add(arg);
@@ -42,7 +42,7 @@ namespace sql.builder.DataApi
         /// <param name="arg_1">первый аргумент</param>
         /// <param name="arg_2">второй аргумент</param>
         /// <returns>созданный тег</returns>
-        internal static XElement NewCall(string function, XElement arg_1, XElement arg_2)
+        public static XElement NewCall(string function, XElement arg_1, XElement arg_2)
         {
             XElement call = NewCall(function);
             call.Add(arg_1);
@@ -57,7 +57,7 @@ namespace sql.builder.DataApi
         /// <param name="arg_2">второй аргумент</param>
         /// <param name="arg_3">третий аргумент</param>
         /// <returns>созданный тег</returns>
-        internal static XElement NewCall(string function, XElement arg_1, XElement arg_2, XElement arg_3)
+        public static XElement NewCall(string function, XElement arg_1, XElement arg_2, XElement arg_3)
         {
             XElement call = NewCall(function);
             call.Add(arg_1);
@@ -75,7 +75,7 @@ namespace sql.builder.DataApi
         /// <param name="field_name">значение атрибутов name и parname</param>
         /// <param name="data_type">значение атрибута type, используйте значения из <see cref="TextConst.AVDataType"/></param>
         /// <returns>добавленный тег</returns>
-        internal static XElement AddNewField(XElement parent, string field_name, string data_type)
+        public static XElement AddNewField(XElement parent, string field_name, string data_type)
         {
             Contract.Assert(parent != null);
             Contract.Assert(!string.IsNullOrEmpty(field_name));
@@ -94,7 +94,7 @@ namespace sql.builder.DataApi
         /// <param name="table">значение атрибута table</param>
         /// <param name="column">значение атрибута column</param>
         /// <returns>созданный тег</returns>
-        internal static XElement NewColumn(string table, string column)
+        public static XElement NewColumn(string table, string column)
         {
             Contract.Assert(!string.IsNullOrEmpty(table));
             Contract.Assert(!string.IsNullOrEmpty(column));
@@ -111,7 +111,7 @@ namespace sql.builder.DataApi
         /// <param name="data_type">значение атрибута type, используйте значения из <see cref="TextConst.AVDataType"/></param>
         /// <param name="title">значение атрибута title или null</param>
         /// <returns>созданный тег</returns>
-        internal static XElement NewColumn(string name, string data_type, string title = null)
+        public static XElement NewColumn(string name, string data_type, string title = null)
         {
             Contract.Assert(!string.IsNullOrEmpty(name));
             Contract.Assert(!string.IsNullOrEmpty(data_type));
@@ -129,7 +129,7 @@ namespace sql.builder.DataApi
         /// </summary>
         /// <param name="name">значение атрибута name</param>
         /// <returns>созданный тег</returns>
-        internal static XElement NewUseParam(string name)
+        public static XElement NewUseParam(string name)
         {
             Contract.Assert(!string.IsNullOrEmpty(name));
             XElement up = new XElement(EName.useparam);
@@ -142,7 +142,7 @@ namespace sql.builder.DataApi
         /// <param name="param_name">значение атрибута name</param>
         /// <param name="data_type">значение атрибута type, используйте значения из <see cref="TextConst.AVDataType"/></param>
         /// <returns>созданный тег</returns>
-        internal static XElement NewParam(string param_name, string data_type)
+        public static XElement NewParam(string param_name, string data_type)
         {
             Contract.Assert(!string.IsNullOrEmpty(param_name));
             Contract.Assert(!string.IsNullOrEmpty(data_type));
@@ -151,12 +151,12 @@ namespace sql.builder.DataApi
             xpar.Add(new XAttribute(AName.type, data_type));
             return xpar;
         }
-        internal static XElement NewConst(string value)
+        public static XElement NewConst(string value)
         {
             Contract.Assert(value != null);
             return new XElement(EName.@const, new XText(value));
         }
-        internal static void NewSelectFromQuery(out XElement query, out XElement select, out XElement from)
+        public static void NewSelectFromQuery(out XElement query, out XElement select, out XElement from)
         {
             query = new XElement(EName.query);
             select = new XElement(EName.select);
@@ -164,13 +164,13 @@ namespace sql.builder.DataApi
             from = new XElement(EName.from);
             query.Add(from);
         }
-        internal static void NewSelectFromDualQuery(out XElement query, out XElement select, out XElement from, out XElement dual)
+        public static void NewSelectFromDualQuery(out XElement query, out XElement select, out XElement from, out XElement dual)
         {
             NewSelectFromQuery(out query, out select, out from);
             dual = new XElement(EName.table, new XAttribute(AName.name, TextConst.AVTable.Dual));
             from.Add(dual);
         }
-        internal static void NewUnionQuery(out XElement query, out XElement union)
+        public static void NewUnionQuery(out XElement query, out XElement union)
         {
             query = new XElement(EName.query);
             union = new XElement(EName.union);

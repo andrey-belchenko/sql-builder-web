@@ -3,22 +3,22 @@ using sql.builder.UI;
 
 namespace sql.builder.Controls.Containers
 {
-    internal partial class ucBaseContainer
+    public partial class ucBaseContainer
     {
         protected UIFormC _paramsC;
-        internal UIFormC ParamFormC
+        public UIFormC ParamFormC
         {
             get { return _paramsC; }
         }
         public string ContainerTitle { get; set; }
         public string ContainerName { get; set; }
         protected UIFormC _parentParamsC;
-        internal void SetParentParamsForm(UIFormC form)
+        public void SetParentParamsForm(UIFormC form)
         {
             _parentParamsC = form;
         }
 
-        internal UIFormC GetParentParamsForm()
+        public UIFormC GetParentParamsForm()
         {
             return _parentParamsC;
         }

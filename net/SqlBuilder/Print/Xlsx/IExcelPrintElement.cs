@@ -8,7 +8,7 @@ namespace sql.builder.Print.Xlsx
     /// Печатаемый элемент (строка или группа строк) шаблона Excel в формате xlsx
     /// </summary>
     /// <seealso cref="sql.builder.Print.XML.IExcelPrintElement"/>
-    internal interface IExcelPrintElement
+    public interface IExcelPrintElement
     {
         /// <summary>
         /// Группа строк
@@ -21,7 +21,7 @@ namespace sql.builder.Print.Xlsx
     /// Группа строк шаблона Excel в формате xlsx
     /// </summary>
     /// <seealso cref="sql.builder.Print.XML.IExcelPrintGroup"/>
-    internal interface IExcelPrintGroup : IExcelPrintElement
+    public interface IExcelPrintGroup : IExcelPrintElement
     {
         /// <summary>
         /// Печатаемые элементы шаблона (строки и группы строк)

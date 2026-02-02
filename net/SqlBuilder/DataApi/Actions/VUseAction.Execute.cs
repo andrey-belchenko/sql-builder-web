@@ -22,7 +22,7 @@ using sql.builder.UI;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VUseAction
+    public partial class VUseAction
     {
     }
 }

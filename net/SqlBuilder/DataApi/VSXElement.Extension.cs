@@ -7,7 +7,7 @@ using sql.builder.UI;
 using sql.builder.Exceptions;
 namespace sql.builder.DataApi
 {
-    internal partial class VSXElement : VXElement
+    public partial class VSXElement : VXElement
     {
         public string GetColumnTempName()
         {

@@ -7,53 +7,53 @@ using sql.builder.DataApi;
 
 namespace sql.builder.FieldInfo
 {
-    internal static class VFieldInfo
+    public static class VFieldInfo
     {
         //public delegate bool DReadonly();
         //public DReadonly Readonly;
         //public delegate string DName();
         //public DName Name;
-        internal static string Title(object obj, string propName)
+        public static string Title(object obj, string propName)
         {
             return getInfo<string>(obj, "Title", propName);
         }
-        internal static string ControlType(object obj, string propName)
+        public static string ControlType(object obj, string propName)
         {
             return getInfo<string>(obj, "ControlType", propName);
         }
-        internal static string FieldGroup(object obj, string propName)
+        public static string FieldGroup(object obj, string propName)
         {
             return getInfo<string>(obj, "FieldGroup", propName);
         }
-        internal static bool VisibleInTable(object obj, string propName)
+        public static bool VisibleInTable(object obj, string propName)
         {
             return getInfo<bool>(obj, "VisibleInTable", propName);
         }
-        internal static bool VisibleInForm(object obj, string propName)
+        public static bool VisibleInForm(object obj, string propName)
         {
             return getInfo<bool>(obj, "VisibleInForm", propName);
         }
-        internal static bool Exists(object obj, string propName)
+        public static bool Exists(object obj, string propName)
         {
             return getInfo<bool>(obj, "Exists", propName);
         }
-        internal static bool IsHtml(object obj, string propName)
+        public static bool IsHtml(object obj, string propName)
         {
             return getInfo<bool>(obj, TextConst.PInfo.IsHtml, propName);
         }
-        internal static bool Editable(object obj, string propName)
+        public static bool Editable(object obj, string propName)
         {
             return getInfo<bool>(obj, TextConst.PInfo.Editable, propName);
         }
-        internal static VSXElement UsedEl(object obj, string propName)
+        public static VSXElement UsedEl(object obj, string propName)
         {
             return getInfo<VSXElement>(obj, TextConst.PInfo.UsedEl, propName);
         }
-        internal static VSXElement Source(object obj, string propName)
+        public static VSXElement Source(object obj, string propName)
         {
             return getInfo<VSXElement>(obj, TextConst.PInfo.Source, propName);
         }
-        internal static int Order(object obj, string propName)
+        public static int Order(object obj, string propName)
         {
             return getInfo<int>(obj, "Order", propName);
         }
@@ -85,7 +85,7 @@ namespace sql.builder.FieldInfo
             }
             return false;
         }*/
-        internal static string GetValueInfo(object obj, string propName)
+        public static string GetValueInfo(object obj, string propName)
         {
             MethodInfo mi = obj.GetType().GetMethod(propName + "_ValueInfo");
             if (mi != null) {
@@ -97,11 +97,11 @@ namespace sql.builder.FieldInfo
                 return GetValue(obj, propName).ToString();
             }
         }
-        internal static object GetValue(object obj, string propName)
+        public static object GetValue(object obj, string propName)
         {
             return Cmn.GetProperty(obj, propName, null);
         }
-        internal static void SetValue(VSXElement obj, string propName, object value)
+        public static void SetValue(VSXElement obj, string propName, object value)
         {
             if (obj.Row != null) {
                 string name = VSXElement.RemovePropPfx(propName);
@@ -116,7 +116,7 @@ namespace sql.builder.FieldInfo
         /// <param name="obj">объект VSXElement</param>
         /// <param name="propName">наименование свойства с префиксом "P_"</param>
         /// <returns></returns>
-        internal static VDataSet GetList(object obj, string propName)
+        public static VDataSet GetList(object obj, string propName)
         {
             string method_name = propName + "_List";
             Type type = obj.GetType();
@@ -134,7 +134,7 @@ namespace sql.builder.FieldInfo
             }
             return ds;
         }
-        internal static void RefreshListMethod(VDataSet dataSet)
+        public static void RefreshListMethod(VDataSet dataSet)
         {
             VDataTable ownerTable = (dataSet.OwnerColumn.Table as VDataTable);
             object obj = ownerTable.CurrentRow["node"]; //!! пока только частный случай для VSXElement
@@ -163,7 +163,7 @@ namespace sql.builder.FieldInfo
                 dataSet.RaiseSchemeChanged();
             }
         }
-        internal static VFieldStateAndOtherInfo GetFieldInfoForDataTableOfVSXElementCell(VDataColumn col, DataRow r, InfoTypesToGet[] getWhat)
+        public static VFieldStateAndOtherInfo GetFieldInfoForDataTableOfVSXElementCell(VDataColumn col, DataRow r, InfoTypesToGet[] getWhat)
         {
             var obj = r["node"]; //!! пока только частный случай для VSXElement
             VFieldStateAndOtherInfo fs = new VFieldStateAndOtherInfo();
@@ -182,36 +182,36 @@ namespace sql.builder.FieldInfo
             }           
             return fs;
         }
-        internal enum InfoTypesToGet
+        public enum InfoTypesToGet
         {
             State,
             ValueName
         }
-        internal enum StateValue
+        public enum StateValue
         {
             True,
             False,
             Inherit
         }
     }
-    internal class VFieldStateAndOtherInfo // Для передачи контролу
+    public class VFieldStateAndOtherInfo // Для передачи контролу
     {
-        internal bool Exists;
-        internal bool VisibleInForm;
-        internal bool Editable;
-        internal string ValueName;
+        public bool Exists;
+        public bool VisibleInForm;
+        public bool Editable;
+        public string ValueName;
         //public bool NoBorder;
-        internal VFieldStateAndOtherInfo() { }
-        internal VFieldStateAndOtherInfo(bool exists)
+        public VFieldStateAndOtherInfo() { }
+        public VFieldStateAndOtherInfo(bool exists)
         {
             Exists = exists;
             VisibleInForm = exists;           
         }
     }
-    internal class VFieldState  // Для хранения
+    public class VFieldState  // Для хранения
     {
-        internal VFieldInfo.StateValue Editable = VFieldInfo.StateValue.Inherit;
-        internal bool Required = false;
-        internal bool Valid = true;
+        public VFieldInfo.StateValue Editable = VFieldInfo.StateValue.Inherit;
+        public bool Required = false;
+        public bool Valid = true;
     }
 }

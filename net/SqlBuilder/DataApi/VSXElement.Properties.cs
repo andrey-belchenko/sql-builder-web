@@ -22,7 +22,7 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VSXElement
+    public partial class VSXElement
     {
         #region Default
         public string Default_Title()
@@ -68,7 +68,7 @@ namespace sql.builder.DataApi
         /// </summary>
         /// <param name="table"></param>
         /// <param name="arr"></param>
-        internal static void FillDataTableFromStringArray(DataTable table, string[] arr)
+        public static void FillDataTableFromStringArray(DataTable table, string[] arr)
         {
             table.Rows.Clear();
             for (int row = 0; row < arr.Length; row++) {
@@ -81,7 +81,7 @@ namespace sql.builder.DataApi
         /// а третью - заглавием (query@title)
         /// </summary>
         /// <param name="table"></param>
-        internal static void FillDataTableFromRealQueries(DataTable table)
+        public static void FillDataTableFromRealQueries(DataTable table)
         {
             table.Rows.Clear();
             HashSet<string> names = new HashSet<string>();
@@ -172,7 +172,7 @@ namespace sql.builder.DataApi
             return "Текст";
         }
         private static List<VSXElement> _elementsWithError = null;
-        internal static void SetElemntsWithError(List<VSXElement> elements)
+        public static void SetElemntsWithError(List<VSXElement> elements)
         {
             VCashUtils.ClearCashNotErrors();
             var olsEls = _elementsWithError;
@@ -383,7 +383,7 @@ namespace sql.builder.DataApi
             }
             return applyedName;
         }
-        internal bool IsRenamed()
+        public bool IsRenamed()
         {
             return this.ApplyedName() != this.P_IdName;
         }
@@ -418,7 +418,7 @@ namespace sql.builder.DataApi
             }
             return true;
         }
-        internal void SetIdName(XName name, string value)
+        public void SetIdName(XName name, string value)
         {
             if (this.RaiseRenamed(value)) {
                 this.SetAttributeValue(name, value);
@@ -529,7 +529,7 @@ namespace sql.builder.DataApi
             table.AddColumn("name", "Имя");
             table.AddColumn("title", "Заголовок");
         }
-        internal void TableListRowFromElement(VDataTable table, VQueryCall el)
+        public void TableListRowFromElement(VDataTable table, VQueryCall el)
         {
             string name = el.XName;
             table.AddRow(name ?? string.Empty, name, el.SName(), el.XTitle);
@@ -598,7 +598,7 @@ namespace sql.builder.DataApi
         {
             return value.ToString();
         }
-        internal static void AddColumnInfoToList(VDataTable table, string name, VSXElement el)
+        public static void AddColumnInfoToList(VDataTable table, string name, VSXElement el)
         {
             string etype;
             VColumn col = el as VColumn;

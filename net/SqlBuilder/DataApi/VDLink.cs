@@ -3,9 +3,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VDLink : VELink
+    public sealed class VDLink : VELink
     {
-        internal VDLink()
+        public VDLink()
             : base(EName.dlink)
         {
         }

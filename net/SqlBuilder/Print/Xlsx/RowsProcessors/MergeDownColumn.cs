@@ -6,17 +6,17 @@ namespace sql.builder.Print.Xlsx.RowsProcessors
     /// <summary>
     /// Информация о колонке для проведения merge_down
     /// </summary>
-    internal class MergeDownColumn
+    public class MergeDownColumn
     {
-        internal string ColumnName { get; private set; }
-        internal int ColumnID { get; private set; }
-        internal string Key { get; private set; }
-        internal string UseKey { get; private set; }
-        internal bool WithStartMarks { get; private set; }
+        public string ColumnName { get; private set; }
+        public int ColumnID { get; private set; }
+        public string Key { get; private set; }
+        public string UseKey { get; private set; }
+        public bool WithStartMarks { get; private set; }
         /// <summary>
         /// Колонка от которой зависят мерджи в текущей
         /// </summary>
-        internal MergeDownColumn Prev { get; set; }
+        public MergeDownColumn Prev { get; set; }
 
         public MergeDownColumn(int columnId, string mark, bool withStartMarks)
         {

@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VLabel : VSXElement
+    public sealed class VLabel : VSXElement
     {
-        internal VLabel()
+        public VLabel()
             : base(EName.label)
         {
         }

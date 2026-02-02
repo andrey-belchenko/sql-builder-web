@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    /*internal class VMultireference:VColumn
+    /*public class VMultireference:VColumn
     {
         public VMultireference(XElement element)
             : base(element)

@@ -5,20 +5,20 @@ using System.Linq;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal class ExcelRefToken : IToken
+    public class ExcelRefToken : IToken
     {
         private Dictionary<string, ExcelCellInfo> _refCells;
         private bool is_range;
         private ExcelCellInfo cell_1, cell_2;
         //private bool changed;
-        internal ExcelCellInfo Cell1 { get { return this.cell_1; } }
-        internal ExcelCellInfo Cell2 { get { return this.cell_2; } }
-        // расширять можно только диапазоны
-        internal bool IsRange { get { return this.is_range; } }
-        internal ExcelRefToken(string ref_range)
+        public ExcelCellInfo Cell1 { get { return this.cell_1; } }
+        public ExcelCellInfo Cell2 { get { return this.cell_2; } }
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        public bool IsRange { get { return this.is_range; } }
+        public ExcelRefToken(string ref_range)
         {
             Contract.Assert(!string.IsNullOrEmpty(ref_range));
-            // ref_range может иметь вид как A1:D2 так и просто A1
+            // ref_range пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ A1:D2 пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ A1
             int colon_pos = ref_range.IndexOf(':');
             ExcelCellInfo cell;
             if (colon_pos < 0) {
@@ -59,7 +59,7 @@ namespace sql.builder.Print.Xlsx
         public string GetText()
         {
             //this.changed = false;
-            // все ячейки из диапазона удалены
+            // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (this.IsEmpty()) {
                 return null;
             }
@@ -69,13 +69,13 @@ namespace sql.builder.Print.Xlsx
                 return this.Cell1.CellName;
             }
         }
-        internal void DeleteColumn(string colName)
+        public void DeleteColumn(string colName)
         {
             this.DeleteColumn(ExcelUtils.GetColumnNumber(colName));
         }
-        internal void DeleteColumn(int colId)
+        public void DeleteColumn(int colId)
         {
-            // оптимизация
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (colId < this.cell_1.ColumnID || colId > this.cell_2.ColumnID) return;
             IList<ExcelCellInfo> cells = this._refCells.Values.Where(c => c.ColumnID == colId).ToList();
             if (cells.Count > 0) {
@@ -87,13 +87,13 @@ namespace sql.builder.Print.Xlsx
                 this.UpdateBorderCells();
             }
         }
-        internal void RenameColumn(string colNameOld, string colNameNew)
+        public void RenameColumn(string colNameOld, string colNameNew)
         {
             this.RenameColumn(ExcelUtils.GetColumnNumber(colNameOld), ExcelUtils.GetColumnNumber(colNameNew));
         }
-        internal void RenameColumn(int colIdOld, int colIdNew)
+        public void RenameColumn(int colIdOld, int colIdNew)
         {
-            // оптимизация
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (colIdOld < this.cell_1.ColumnID || colIdOld > this.cell_2.ColumnID) return;
             IList<ExcelCellInfo> cells = this._refCells.Values.Where(c => c.ColumnID == colIdOld).ToList();
             for (int index = 0; index < cells.Count; index++) {
@@ -104,11 +104,11 @@ namespace sql.builder.Print.Xlsx
             }
             //this.changed = true;
         }
-        internal void ExtendToColumn(string colName)
+        public void ExtendToColumn(string colName)
         {
             this.ExtendToColumn(ExcelUtils.GetColumnNumber(colName));
         }
-        internal void ExtendToColumn(int col2)
+        public void ExtendToColumn(int col2)
         {
             for (int i = this.cell_1.RowID; i <= this.cell_2.RowID; i++) {
                 for (int j = this.cell_2.ColumnID + 1; j <= col2; j++) {
@@ -119,9 +119,9 @@ namespace sql.builder.Print.Xlsx
             this.UpdateBorderCells();
             //this.changed = true;
         }
-        internal ExcelCellInfo GetNextCellInfo(ExcelCellInfo cell)
+        public ExcelCellInfo GetNextCellInfo(ExcelCellInfo cell)
         {
-            // вернет следующую за cell ячейку. Если cell последняя или ее нет в списке - вернет null
+            // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ cell пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ cell пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅ null
             //return _refCells.Values.SkipWhile(r => r.CellName != cell.CellName).Skip(1).FirstOrDefault();
             if (this.IsEmpty()) {
                 return null;
@@ -139,7 +139,7 @@ namespace sql.builder.Print.Xlsx
                 return null;
             }
         }
-        internal void Move(int col_delta)
+        public void Move(int col_delta)
         {
             IList<ExcelCellInfo> cells = this._refCells.Values.ToList();
             this._refCells.Clear();
@@ -150,15 +150,15 @@ namespace sql.builder.Print.Xlsx
             }
             //this.changed = true;
         }
-        internal bool ContainsColumn(int colId)
+        public bool ContainsColumn(int colId)
         {
             return this._refCells.Values.Any(c => c.ColumnID == colId);
         }
-        internal bool ContainsCell(ExcelCellInfo cell)
+        public bool ContainsCell(ExcelCellInfo cell)
         {
             return this._refCells.ContainsKey(cell.CellName);
         }
-        internal bool IsEmpty()
+        public bool IsEmpty()
         {
             return this._refCells.Count == 0;
         }

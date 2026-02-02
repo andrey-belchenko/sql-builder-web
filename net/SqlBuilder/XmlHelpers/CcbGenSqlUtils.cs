@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace sql.builder.XmlHelpers
 {
-    internal static class CcbGenSqlUtils
+    public static class CcbGenSqlUtils
     {
 
 		

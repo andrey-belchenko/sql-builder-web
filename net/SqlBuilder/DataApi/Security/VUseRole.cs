@@ -9,13 +9,13 @@ namespace sql.builder.DataApi
     /// <summary>
     /// &lt;use-role object="" /&gt;
     /// </summary>
-    internal sealed class VUseRole : VSXElement
+    public sealed class VUseRole : VSXElement
     {
-        internal VUseRole()
+        public VUseRole()
             : base(EName.use_role)
         {
         }
-        internal VRole UsedRole()
+        public VRole UsedRole()
         {
             return XmlReports.Environment.GetRole(this.P_CalledObject);
         }

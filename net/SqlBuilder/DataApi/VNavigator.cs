@@ -8,13 +8,13 @@ namespace sql.builder.DataApi
     /// <summary>
     /// &lt;navigator name="" &gt;
     /// </summary>
-    internal sealed class VNavigator : VSXElement, IVParent
+    public sealed class VNavigator : VSXElement, IVParent
     {
-        internal VNavigator()
+        public VNavigator()
             : base(EName.navigator)
         {
         }
-        internal static string[] child_nodes = { TextConst.EName.Folder, TextConst.EName.UseReport, TextConst.EName.UseForm, TextConst.EName.UsePart };
+        public static string[] child_nodes = { TextConst.EName.Folder, TextConst.EName.UseReport, TextConst.EName.UseForm, TextConst.EName.UsePart };
         IList<string> IVParent.AllowedChildNodes()
         {
             return child_nodes;

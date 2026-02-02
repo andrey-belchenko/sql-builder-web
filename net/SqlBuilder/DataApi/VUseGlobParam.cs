@@ -5,9 +5,9 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VUseGlobParam : VSXElement
+    public sealed class VUseGlobParam : VSXElement
     {
-        internal VUseGlobParam()
+        public VUseGlobParam()
             : base(EName.useglobparam)
         {
         }

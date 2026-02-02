@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace sql.builder.XmlHelpers
 {
-    internal static class DokGenerationASUTP
+    public static class DokGenerationASUTP
     {
 
         public static void GeterateDoc()

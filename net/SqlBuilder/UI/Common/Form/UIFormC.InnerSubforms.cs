@@ -14,21 +14,21 @@ namespace sql.builder.UI
 {
     public partial class UIFormC : IForm
     {
-        //internal Dictionary<string, LayoutControl> innerSubForms = new Dictionary<string, LayoutControl>();
-        internal Dictionary<string, InnerSubFormInfo> innerSubFormsNew = new Dictionary<string, InnerSubFormInfo>();
+        //public Dictionary<string, LayoutControl> innerSubForms = new Dictionary<string, LayoutControl>();
+        public Dictionary<string, InnerSubFormInfo> innerSubFormsNew = new Dictionary<string, InnerSubFormInfo>();
         //frmDynamicEditor activeSubForm = null;
-        internal void ShowInnerSubformNew(string name)
+        public void ShowInnerSubformNew(string name)
         {
             throw new NotImplementedException();
         }
-        internal void HideInnerSubform()
+        public void HideInnerSubform()
         {
             //if (activeSubForm != null)
             //{
             //    activeSubForm.Hide();
             //}
         }
-        internal class InnerSubFormInfo
+        public class InnerSubFormInfo
         {
             public VLayout Layout { get; set; }
             public IDisposable Parent { get; set; }

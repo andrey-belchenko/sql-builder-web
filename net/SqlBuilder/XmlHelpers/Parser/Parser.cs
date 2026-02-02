@@ -16,7 +16,7 @@ namespace sql.builder.XmlHelpers
     //using PivotFieldsByTable = Dictionary<string, IEnumerable<PivotGridField>>;
     //using TreeColumnsByTable = Dictionary<string, IEnumerable<TreeListColumn>>;
 
-    internal partial class Parser
+    public partial class Parser
     {
         #region Закрытые переменные
         private static SortedList<string, SortedList<string, List<DataRow>>> _parentIndexes;
@@ -56,7 +56,7 @@ namespace sql.builder.XmlHelpers
 
         //    xRoot.Add(form.GetReportParams());
         //}
-        internal static void SaveReportInfoToXml(XElement xRoot, Dictionary<string, string> settings, XElement scheme)
+        public static void SaveReportInfoToXml(XElement xRoot, Dictionary<string, string> settings, XElement scheme)
         {
             XElement xScheme = new XElement(scheme);
             xScheme.SetAttrValue("repname", settings["repname"]);
@@ -122,7 +122,7 @@ namespace sql.builder.XmlHelpers
                 form.RefreshData(xparams);
             }
         }
-        internal static Dictionary<string, string> LoadReportInfoFromXml(XElement xRoot)
+        public static Dictionary<string, string> LoadReportInfoFromXml(XElement xRoot)
         {
             var settings = new Dictionary<string, string>();
             XElement xScheme = xRoot.Element(EName.scheme);
@@ -174,7 +174,7 @@ namespace sql.builder.XmlHelpers
         {
             return table.Attribute(AName.@as).Value != "Table1";
         }
-        internal static XElement RepairParams(XElement xpars1, XElement xpars2, XElement xform, bool hide_new_fields = true)
+        public static XElement RepairParams(XElement xpars1, XElement xpars2, XElement xform, bool hide_new_fields = true)
         {
             // берем актуальное описание параметров xpars2 и модифицируем его в соответствии с описанием параметров из шаблона xpars1
 

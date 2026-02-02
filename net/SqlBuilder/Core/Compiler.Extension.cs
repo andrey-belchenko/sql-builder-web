@@ -11,7 +11,7 @@ using sql.builder.Clean.Extensions;
 
 namespace sql.builder
 {
-    internal partial class Compiler
+    public partial class Compiler
     {
 
        

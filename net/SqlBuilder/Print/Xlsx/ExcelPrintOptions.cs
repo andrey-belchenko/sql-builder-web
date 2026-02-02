@@ -5,11 +5,11 @@ using sql.builder.DataApi;
 namespace sql.builder.Print.Xlsx
 {
     /// <summary>
-    /// Настройки вывода в Excel
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ Excel
     /// </summary>
     public class ExcelPrintOptions
     {
-        #region Поля
+        #region пїЅпїЅпїЅпїЅ
         private bool only_columns;
         private bool delete_unused_columns;
         private bool use_data_reader;
@@ -22,51 +22,51 @@ namespace sql.builder.Print.Xlsx
         private FileFormat output_format;
         private string format_source;
         #endregion
-        #region свойства
+        #region пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         /// <summary>
-        /// Выполняется только функция обработки колонок шаблона, шаблон не заполняется данными. Для отладки
+        /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         /// </summary>
-        internal bool OnlyColumns { get { return this.only_columns; } set { this.only_columns = value; } }
+        public bool OnlyColumns { get { return this.only_columns; } set { this.only_columns = value; } }
         /// <summary>
-        /// Определяет имя поля содержащего ширину колонки Excel 
+        /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ Excel 
         /// </summary>
-        internal string PivotColumn_WidthSource { get { return this.pivot_column_width_source; } /*set { this.pivot_column_width_source = value; }*/ }
+        public string PivotColumn_WidthSource { get { return this.pivot_column_width_source; } /*set { this.pivot_column_width_source = value; }*/ }
         /// <summary>
-        /// Удалять колонки, для которых нет данных
+        /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         /// </summary>
-        internal bool DeleteUnusedColumns { get { return this.delete_unused_columns; } set { this.delete_unused_columns = value; } }
+        public bool DeleteUnusedColumns { get { return this.delete_unused_columns; } set { this.delete_unused_columns = value; } }
         /// <summary>
-        /// Список используемых переменных вида "table_name.variable_name". Используется если DeleteUnusedColumns = true
+        /// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ "table_name.variable_name". пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ DeleteUnusedColumns = true
         /// </summary>
-        internal string[] UsedVariables { get { return this.used_variables; } set { this.used_variables = value; } }
+        public string[] UsedVariables { get { return this.used_variables; } set { this.used_variables = value; } }
         /// <summary>
-        /// Печать данных без предварительной загрузки на клиент
+        /// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         /// </summary>
-        internal bool UseDataReader { get { return this.use_data_reader; } set { this.use_data_reader = value; } }
+        public bool UseDataReader { get { return this.use_data_reader; } set { this.use_data_reader = value; } }
         /// <summary>
-        /// Автоматическая конвертация шаблона из формата, отличного от xlsx
+        /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ xlsx
         /// </summary>
         public bool NeedConvert { get { return this.need_convert; } set { this.need_convert = value; } }
         /// <summary>
-        /// Обрабатывать файл после печати
+        /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         /// </summary>
-        internal bool NeedPostProcess { get { return this.need_post_process; } set { this.need_post_process = value; } }
+        public bool NeedPostProcess { get { return this.need_post_process; } set { this.need_post_process = value; } }
         /// <summary>
-        /// Формат итогового файла
+        /// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         /// </summary>
-        internal FileFormat OutputFormat { get { return this.output_format; } set { this.output_format = value; } }
+        public FileFormat OutputFormat { get { return this.output_format; } set { this.output_format = value; } }
         /// <summary>
-        /// Файл из которого будет скопировано форматирование, по листам для с одинаковым названием
+        /// пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         /// </summary>
-        internal string FormatSource { get { return this.format_source; } set { this.format_source = value; } }
+        public string FormatSource { get { return this.format_source; } set { this.format_source = value; } }
         /// <summary>
-        /// Использовать библиотеку FlexCel для обработки вместо Interop
+        /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ FlexCel пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Interop
         /// </summary>
         public bool UseFlexCel { get { return this.use_flex_cel; } set { this.use_flex_cel = value; } }
         /// <summary>
-        /// Перед печатью создает копию файла шаблона. Нужно чтобы печатать, даже если шаблон открыт в Excel
+        /// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ Excel
         /// </summary>
-        internal bool CopyTemplate { get { return this.copy_template; } set { this.copy_template = value; } }
+        public bool CopyTemplate { get { return this.copy_template; } set { this.copy_template = value; } }
         #endregion
         public ExcelPrintOptions()
         {
@@ -79,7 +79,7 @@ namespace sql.builder.Print.Xlsx
             this.use_flex_cel = false;
             this.copy_template = false;
         }
-        internal ExcelPrintOptions(XElement xtemplate)
+        public ExcelPrintOptions(XElement xtemplate)
         {
             this.pivot_column_width_source = "column_width";
             this.delete_unused_columns = xtemplate.AttrOrDefault(TextConst.AName.DelCols, false);
@@ -91,14 +91,14 @@ namespace sql.builder.Print.Xlsx
             this.copy_template = false;
         }
         /// <summary>
-        /// Значения по умолчанию
+        /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         /// </summary>
         public static ExcelPrintOptions Default {
             get {
                 return new ExcelPrintOptions();
             }
         }
-        internal enum FileFormat
+        public enum FileFormat
         {
             Xlsx,
             Xlsb,

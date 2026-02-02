@@ -7,7 +7,7 @@ using System.Xml.Linq;
 
 namespace sql.builder
 {
-    internal static class ExcelEnvironment
+    public static class ExcelEnvironment
     {
         private static string _temp_directory;
 
@@ -26,15 +26,15 @@ namespace sql.builder
             _sheet_path = Path.Combine(_temp_directory, "xl", "worksheets", "sheet1.xml");
             _strings_path = Path.Combine(_temp_directory, "xl", "sharedStrings.xml");
         }
-        internal static void BeginPrintBigData()
+        public static void BeginPrintBigData()
         {
             throw new NotImplementedException();
         }
-        internal static void EndPrintBigData(string output_path)
+        public static void EndPrintBigData(string output_path)
         {
             throw new NotImplementedException();
         }
-        internal static int InternStringAndGetIndex(string text)
+        public static int InternStringAndGetIndex(string text)
         {
             int index = 0;
             if (!_strings.TryGetValue(text, out index))
@@ -44,7 +44,7 @@ namespace sql.builder
             }
             return index;
         }
-        internal enum BigDataFormats
+        public enum BigDataFormats
         {
             Date = 1,
             Default = 2,

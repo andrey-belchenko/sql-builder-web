@@ -27,7 +27,7 @@ namespace sql.builder.UI
 {
     public partial class UIFormC : IForm
     {
-        internal enum UseType
+        public enum UseType
         {
             ParamEditor,
             SchemeEditor,
@@ -125,7 +125,7 @@ namespace sql.builder.UI
                 return this._auto_refresh;
             }
         }
-        internal UIBase LastActiveField { get; set; }
+        public UIBase LastActiveField { get; set; }
         public bool ClearDataOnClose { get; set; }
         public string GroupName { get; set; }
         public XElement DefaultParams { get; set; }
@@ -225,7 +225,7 @@ namespace sql.builder.UI
         /// <summary>
         /// Набор полей формы
         /// </summary>
-        internal Dictionary<string, UIBase> controls
+        public Dictionary<string, UIBase> controls
         {
             get
             {
@@ -233,11 +233,11 @@ namespace sql.builder.UI
             }
             //set;
         }
-        //internal List<CommandItemController> commandItems;
+        //public List<CommandItemController> commandItems;
         //bool _layout_shown;
         public XElement XParams;
         private VDataSet dataSource;
-        internal VDataSet DataSource
+        public VDataSet DataSource
         {
             get
             {
@@ -291,7 +291,7 @@ namespace sql.builder.UI
             }
         }
         private UseType _useType;
-        internal UseType FormUseType
+        public UseType FormUseType
         {
             get
             {
@@ -323,13 +323,13 @@ namespace sql.builder.UI
                 return this._no_data;
             }
         }
-        internal VDataTable SelectionTarget = null;
+        public VDataTable SelectionTarget = null;
         //private readonly Dictionary<string, ucTableViewerContainer> _grids;
         /// <summary>
         /// Набор гридов на форме. 
         /// Ключом является grid@table
         /// </summary>
-        //internal Dictionary<string, ucTableViewerContainer> Grids {
+        //public Dictionary<string, ucTableViewerContainer> Grids {
         //    get {
         //        return this._grids;
         //    }
@@ -351,7 +351,7 @@ namespace sql.builder.UI
         public event EventHandler AnyValueChanged;
         public event Action<UIFormC, string, object> SpecialTypeChanged;
         public event Func<UIFormC, XElement> NeedReportScheme;
-        internal event Func<UIFormC, VReport> NeedReport;
+        public event Func<UIFormC, VReport> NeedReport;
         #endregion
         #region Открытые методы
         public UIFormC()
@@ -424,7 +424,7 @@ namespace sql.builder.UI
                 }
             }
         }
-        internal UIFormC(VDataSet ds, UseType useType, bool noData = false, VDataTable selectionTarget = null)
+        public UIFormC(VDataSet ds, UseType useType, bool noData = false, VDataTable selectionTarget = null)
             : this()
         {
             this.Equip(ds, useType, noData, selectionTarget);
@@ -437,7 +437,7 @@ namespace sql.builder.UI
                 return this._equiped;
             }
         }
-        internal void Equip(VDataSet ds, UseType useType, bool noData = false, VDataTable selectionTarget = null)
+        public void Equip(VDataSet ds, UseType useType, bool noData = false, VDataTable selectionTarget = null)
         {
             this._equiped = true;
             this.SelectionTarget = selectionTarget;
@@ -557,7 +557,7 @@ namespace sql.builder.UI
             Debug.WriteLine("UIFormC.Initialize(), " + this._form_name + ": " + sw.ElapsedMilliseconds.ToString() + " мс");
 #endif
         }
-        internal void UpdateControlDependence(UIBase control)
+        public void UpdateControlDependence(UIBase control)
         {
             foreach (string name in control.GetParamsNames())
             {
@@ -641,14 +641,14 @@ namespace sql.builder.UI
             this.IsRefreshig = false;
         }
 
-        internal void ItemVisibleChanged(UIBase ctrl, bool update_immediately = false)// new done
+        public void ItemVisibleChanged(UIBase ctrl, bool update_immediately = false)// new done
         {
         }
-        internal void SetLayoutItemVisible(UIBase ctrl, bool visible, bool update_immediately = false)
+        public void SetLayoutItemVisible(UIBase ctrl, bool visible, bool update_immediately = false)
         {
         }
 
-        internal void SetControlOptions(string name, VFieldStateAndOtherInfo options)
+        public void SetControlOptions(string name, VFieldStateAndOtherInfo options)
         {
             UIBase control = null;
             if (!this._controls.TryGetValue(name, out control))
@@ -750,7 +750,7 @@ namespace sql.builder.UI
             // Емцов - иначе не прогружаются simple параметры в условиях поиска
         }
 
-        internal XElement GetValue(Dictionary<string, UIBase> namedControls = null)
+        public XElement GetValue(Dictionary<string, UIBase> namedControls = null)
         {
             if (this.dataSource == null) return null;
             List<UIBase> controls;
@@ -914,7 +914,7 @@ namespace sql.builder.UI
         }
         #endregion
         #region Закрытые методы
-        internal UIBase CreateUIControl(XElement xfield)
+        public UIBase CreateUIControl(XElement xfield)
         {
             Contract.Assert(xfield != null);
             string typeName = xfield.Attribute(AName.controlType).Value;
@@ -980,7 +980,7 @@ namespace sql.builder.UI
             }
             return control;
         }
-        internal void LoadContentFromXmlNew(XElement xparent, VLayoutContainerInfo parent, TabContainerItem tabContainerItem, TabItem tabItem)
+        public void LoadContentFromXmlNew(XElement xparent, VLayoutContainerInfo parent, TabContainerItem tabContainerItem, TabItem tabItem)
         {
             Contract.Assert(xparent != null);
             VLayoutNodeInfo item_info = null;
@@ -1350,7 +1350,7 @@ namespace sql.builder.UI
         {
             ActiveForm = this;
         }
-        internal void ApplyVisibitlityForce()
+        public void ApplyVisibitlityForce()
         {
             this._layout.RefreshLayout();
         }
@@ -1373,7 +1373,7 @@ namespace sql.builder.UI
         {
             Button_Click(actionInfo, null);
         }
-        internal class EditorButtonInfo
+        public class EditorButtonInfo
         {
             public IVEditorButton ButtonControl = null;
             public UIBase FieldControl = null;
@@ -1606,7 +1606,7 @@ namespace sql.builder.UI
         {
             return (NeedReportScheme != null) ? NeedReportScheme(this) : null;
         }
-        internal VReport UIForm_GetReport()
+        public VReport UIForm_GetReport()
         {
             return (NeedReport != null) ? NeedReport(this) : null;
         }
@@ -1814,7 +1814,7 @@ namespace sql.builder.UI
             var btn = (IVEditorButton)sender;
             this.Button_Click(btn, null);
         }
-        internal void Button_Click(object sender, EventArgs e)
+        public void Button_Click(object sender, EventArgs e)
         {
 
             throw new NotImplementedException();
@@ -1828,7 +1828,7 @@ namespace sql.builder.UI
         {
             //this._grids[GetCheckTableName()].SetSelection(values);
         }
-        internal string GetCheckTableName()
+        public string GetCheckTableName()
         {
             throw new NotImplementedException();
             //var grid = Grids.FirstOrDefault(g => g.Value.GetMainView().OptionsSelection.MultiSelectMode == GridMultiSelectMode.CheckBoxRowSelect);
@@ -1837,26 +1837,26 @@ namespace sql.builder.UI
         }
         #region Сохранение/загрузка настроек формы
         private decimal _selected_kod_gs;
-        internal XElement SaveParamsXML()
+        public XElement SaveParamsXML()
         {
             throw new NotImplementedException();
             //var xroot = new XElement(EName.root);
             //Parser.SaveReportParamsToXml(xroot, this);
             //return xroot;
         }
-        internal void LoadParamsXML(XElement reportParams)
+        public void LoadParamsXML(XElement reportParams)
         {
             throw new NotImplementedException();
             //Parser.LoadReportParamsFromXml(reportParams, this);
         }
-        internal void SaveGS()
+        public void SaveGS()
         {
             throw new NotImplementedException();
         }
-        internal void LoadGS()
+        public void LoadGS()
         {
         }
-        internal bool ChooseReportParams(string title = null)
+        public bool ChooseReportParams(string title = null)
         {
             throw new NotImplementedException();
         }
@@ -1909,13 +1909,13 @@ namespace sql.builder.UI
         private void setTitle(string title)
         {
         }
-        internal void SetButtonVisible(string btn, bool visible)
+        public void SetButtonVisible(string btn, bool visible)
         {
             GetBarButton(btn).SetVisible(visible);
             //BarButtonItem button = GetBarButton(btn);
             //button.Visibility = (visible) ? BarItemVisibility.Always : BarItemVisibility.Never;
         }
-        internal void SetButtonEnable(string btn, bool enable)
+        public void SetButtonEnable(string btn, bool enable)
         {
             GetBarButton(btn).SetEnabled(enable);
             //BarButtonItem button = GetBarButton(btn);

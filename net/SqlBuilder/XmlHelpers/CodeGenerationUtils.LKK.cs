@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace sql.builder.XmlHelpers
 {
-    internal static class CodeGenerationUtilsLKK
+    public static class CodeGenerationUtilsLKK
     {
 
         public static void Generate()

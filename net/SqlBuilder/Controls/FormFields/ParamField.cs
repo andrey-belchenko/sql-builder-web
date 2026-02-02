@@ -14,7 +14,7 @@ namespace sql.builder.Controls.FormFields
     /// </summary>
     public abstract class ParamField
     {
-        internal static ParamField Create(UIBase control)
+        public static ParamField Create(UIBase control)
         {
             UIList list = control as UIList;
             if (list != null) {
@@ -23,7 +23,7 @@ namespace sql.builder.Controls.FormFields
                 return new ScalarField(control);
             }
         }
-        internal/* protected */ abstract UIBase Control { get; }
+        public/* protected */ abstract UIBase Control { get; }
         /// <summary>
         /// Возвращает тип поля
         /// </summary>
@@ -143,14 +143,14 @@ namespace sql.builder.Controls.FormFields
             return this.Control.Used;
         }
     }
-    internal sealed class ScalarField : ParamField
+    public sealed class ScalarField : ParamField
     {
         private UIBase control;
-        internal ScalarField(UIBase control)
+        public ScalarField(UIBase control)
         {
                  this.control = control;
         }
-        internal/* protected */ override UIBase Control { get { return this.control; } }
+        public/* protected */ override UIBase Control { get { return this.control; } }
         public override void LoadList()
         {
         }
@@ -165,14 +165,14 @@ namespace sql.builder.Controls.FormFields
             return this.control.GetText();
         }
     }
-    internal sealed class ListField : ParamField
+    public sealed class ListField : ParamField
     {
         private UIList list;
-        internal ListField(UIList list)
+        public ListField(UIList list)
         {
             this.list = list;
         }
-        internal/* protected */ override UIBase Control { get { return this.list; } }
+        public/* protected */ override UIBase Control { get { return this.list; } }
         public override void LoadList()
         {
             this.list.LoadList();
@@ -198,7 +198,7 @@ namespace sql.builder.Controls.FormFields
             }
             return arr;
         }
-        internal void SetValueByNames(string[] values)
+        public void SetValueByNames(string[] values)
         {
             if (list.RowsLimit > 0) {
                 list._need_refresh = true;

@@ -18,7 +18,7 @@ using sql.builder.UI;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VSXElement : VXElement
+    public partial class VSXElement : VXElement
     {
 
         public bool IsStringAddision(string s)

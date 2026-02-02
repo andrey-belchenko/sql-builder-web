@@ -8,10 +8,10 @@ using Devart.Data.Oracle;
 
 namespace sql.builder.DataApi
 {
-    internal static class VGroupingUtils
+    public static class VGroupingUtils
     {
         // private static string checkPfx = "_check";
-        internal static void ExtendQueryAsGroupingDetail(XElement query, XElement groupingQuery, string groupName, DataRow row, DataColumn column, bool applyReportConds, bool use_zeros = false)
+        public static void ExtendQueryAsGroupingDetail(XElement query, XElement groupingQuery, string groupName, DataRow row, DataColumn column, bool applyReportConds, bool use_zeros = false)
         {
 
 

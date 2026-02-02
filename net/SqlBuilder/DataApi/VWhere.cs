@@ -4,13 +4,13 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VWhere : VSXElement, IVParent
+    public sealed class VWhere : VSXElement, IVParent
     {
-        internal VWhere()
+        public VWhere()
             : base(EName.where)
         {
         }
-        internal static string[] child_nodes = { TextConst.EName.Call, TextConst.EName.UsePart };
+        public static string[] child_nodes = { TextConst.EName.Call, TextConst.EName.UsePart };
         IList<string> IVParent.AllowedChildNodes()
         {
             return child_nodes;

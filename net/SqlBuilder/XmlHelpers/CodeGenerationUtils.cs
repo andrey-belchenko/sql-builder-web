@@ -12,7 +12,7 @@ using sql.builder.Clean;
 
 namespace sql.builder.XmlHelpers
 {
-    internal static class CodeGenerationUtils
+    public static class CodeGenerationUtils
     {
 
 
@@ -696,7 +696,7 @@ namespace sql.builder.XmlHelpers
                 string col_name = col.ColumnName;
                 string mod;
                 if (col_name == relColName || !TextConst.AVColumn.IsNotSysColumn(col_name)) {
-                    mod = "internal";
+                    mod = "public";
                 } else {
                     mod = "public";
                 }

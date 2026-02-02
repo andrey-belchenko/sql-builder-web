@@ -5,20 +5,20 @@ using System.Collections.Generic;
 namespace sql.builder.Print.Xlsx
 {
     /// <summary>
-    /// Адрес ячейки Excel в формате A1
+    /// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Excel пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ A1
     /// </summary>
-    internal class ExcelCellInfo : IEquatable<ExcelCellInfo>
+    public class ExcelCellInfo : IEquatable<ExcelCellInfo>
     {
-        #region поля
+        #region пїЅпїЅпїЅпїЅ
         private int row_id;
         private int column_id;
         private string column_name;
         #endregion
-        #region свойства
+        #region пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         /// <summary>
-        /// Порядковый номер колонки, начиная с единицы (A - 1, B - 2, ..., Z - 26, AA - 27 и т. д.)
+        /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (A - 1, B - 2, ..., Z - 26, AA - 27 пїЅ пїЅ. пїЅ.)
         /// </summary>
-        internal int ColumnID
+        public int ColumnID
         {
             get {
                 return this.column_id;
@@ -29,9 +29,9 @@ namespace sql.builder.Print.Xlsx
             }
         }
         /// <summary>
-        /// Порядковый номер ряда, начиная с единицы
+        /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         /// </summary>
-        internal int RowID
+        public int RowID
         {
             get {
                 return this.row_id;
@@ -41,9 +41,9 @@ namespace sql.builder.Print.Xlsx
             }
         }
         /// <summary>
-        /// Буквенное обозначение колонки
+        /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         /// </summary>
-        internal string ColumnName {
+        public string ColumnName {
             get {
                 return this.column_name;
             }
@@ -53,21 +53,21 @@ namespace sql.builder.Print.Xlsx
             }
         }
         /// <summary>
-        /// Адрес ячейки в формате A1
+        /// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ A1
         /// </summary>
-        internal string CellName
+        public string CellName
         {
             get {
                 return this.column_name + this.row_id.ToString();
             }
         }
         #endregion
-        internal ExcelCellInfo(string cell_name)
+        public ExcelCellInfo(string cell_name)
         {
             Contract.Assert(!string.IsNullOrEmpty(cell_name));
             ExcelUtils.ParseCellName(cell_name, out this.row_id, out this.column_id, out this.column_name);
         }
-        internal ExcelCellInfo(int row_id, int colunm_id)
+        public ExcelCellInfo(int row_id, int colunm_id)
         {
             this.row_id = row_id;
             this.column_id = colunm_id;
@@ -93,17 +93,17 @@ namespace sql.builder.Print.Xlsx
                 return (obj.column_id == this.column_id) && (obj.row_id == this.row_id);
             }
         }
-        internal void GetRowAndColumn(out int row_id, out int column_id)
+        public void GetRowAndColumn(out int row_id, out int column_id)
         {
             row_id = this.row_id;
             column_id = this.column_id;
         }
-        internal void SetColumnFrom(ExcelCellInfo cell)
+        public void SetColumnFrom(ExcelCellInfo cell)
         {
             this.column_id = cell.column_id;
             this.column_name = cell.column_name;
         }
-        internal static IEnumerable<ExcelCellInfo> Range(ExcelCellInfo cellFrom, ExcelCellInfo cellTo)
+        public static IEnumerable<ExcelCellInfo> Range(ExcelCellInfo cellFrom, ExcelCellInfo cellTo)
         {
             for (int row = cellFrom.row_id; row <= cellTo.row_id; row++) {
                 for (int colunm = cellFrom.column_id; colunm <= cellTo.column_id; colunm++) {
@@ -111,16 +111,16 @@ namespace sql.builder.Print.Xlsx
                 }
             }
         }
-        #region Условные предикаты
-        internal bool IsBeginOfMerge(ExcelWorksheetMerge merge)
+        #region пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        public bool IsBeginOfMerge(ExcelWorksheetMerge merge)
         {
             return merge.StartsWith(this);
         }
-        internal bool IsEndOfMerge(ExcelWorksheetMerge merge)
+        public bool IsEndOfMerge(ExcelWorksheetMerge merge)
         {
             return merge.EndsWith(this);
         }
-        internal bool ContainsIn(ExcelWorksheetMerge merge)
+        public bool ContainsIn(ExcelWorksheetMerge merge)
         {
             return merge.ContainsCell(this);
         }

@@ -15,7 +15,7 @@ using Devart.Data.Oracle;
 
 namespace sql.builder.DataApi
 {
-    /*internal class VPrintSheet:VSXElement
+    /*public class VPrintSheet:VSXElement
     {
         public VPrintSheet(XElement element)
             : base(element)

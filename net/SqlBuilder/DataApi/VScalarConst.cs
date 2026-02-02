@@ -3,9 +3,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VScalarConst: VConst
+    public sealed class VScalarConst: VConst
     {
-        internal VScalarConst()
+        public VScalarConst()
             : base(EName.@const)
         {
         }

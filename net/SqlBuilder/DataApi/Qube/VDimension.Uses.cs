@@ -6,7 +6,7 @@ namespace sql.builder.DataApi
 {
 
 
-    internal partial class VDimension : VSXElement 
+    public partial class VDimension : VSXElement 
     {
         #region old
         protected override List<ElementUse> searchUses()

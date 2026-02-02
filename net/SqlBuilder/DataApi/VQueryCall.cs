@@ -9,7 +9,7 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal abstract partial class VQueryCall : VSXElement 
+    public abstract partial class VQueryCall : VSXElement 
     {
         protected VQueryCall(XName name)
             : base(name)
@@ -19,7 +19,7 @@ namespace sql.builder.DataApi
             : base(element)
         {
         }
-        internal string GetRelChildColumnName() // колонка, которая ссылается на родителя, для query в отчете, частный случай для генерации кода
+        public string GetRelChildColumnName() // колонка, которая ссылается на родителя, для query в отчете, частный случай для генерации кода
         {
             VSXElement call = this.GetElementsP(EName.call).FirstOrDefault();
             if (call != null) {
@@ -128,7 +128,7 @@ namespace sql.builder.DataApi
             AddCashValue(l, MethodBase.GetCurrentMethod().ToString(), null);
             return l;
         }
-        internal List<VQueryCall> Links(VSourcedElement heir)
+        public List<VQueryCall> Links(VSourcedElement heir)
         {
             var links = new List<VQueryCall>();
             foreach (VQueryCall link in this.GetElementsP().Where(e1=> e1 is VQueryCall  & !(e1 is VDimSet))) {
@@ -146,7 +146,7 @@ namespace sql.builder.DataApi
             }
             return links;
         }
-        internal IList<VQueryCall> SelfAndELinks()
+        public IList<VQueryCall> SelfAndELinks()
         {
             IList<VSXElement> links = this.GetDescedantsP(EName.elink);
             var list = new List<VQueryCall>(links.Count + 1);
@@ -169,7 +169,7 @@ namespace sql.builder.DataApi
             }
             return list;
         }
-        internal IList<VQueryCall> SelfAndAllMasterLinks()
+        public IList<VQueryCall> SelfAndAllMasterLinks()
         {
             var list = new List<VQueryCall>(1);
             list.Add(this);
@@ -195,7 +195,7 @@ namespace sql.builder.DataApi
         //{
         //    return this.GetOwnerQuery().AddColumn(this.XName, name);
         //}
-        internal string SName()
+        public string SName()
         {
             return this.AttrOrEmpty(AName_.name);
         }
@@ -259,7 +259,7 @@ namespace sql.builder.DataApi
         {
             return !(this.IsMainElement());
         }
-        internal bool IsQube()
+        public bool IsQube()
         {
             return this.Elements(EName.select).Elements(EName.column).Any(e => e.AttrOrEmpty(AName_.table) == "*");
         }

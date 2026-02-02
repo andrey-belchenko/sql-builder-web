@@ -10,7 +10,7 @@ namespace sql.builder.DataApi
     /// <summary>
     /// Набор методов расширения для <see cref="XElement"/>
     /// </summary>
-    internal static class XElementExtensions
+    public static class XElementExtensions
     {
         /// <summary>
         /// Формат дат по умолчанию

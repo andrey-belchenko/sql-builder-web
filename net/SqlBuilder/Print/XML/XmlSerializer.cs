@@ -8,13 +8,13 @@ using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.Print.XML
 {
-    internal class XmlSerializer : IDisposable
+    public class XmlSerializer : IDisposable
     {
         private XmlWriter writer;
         private DataSet dataset;
         private bool print_big_data;
         private DataRow row;
-        internal XmlSerializer(string file_name, DataSet dataset, bool print_big_data)
+        public XmlSerializer(string file_name, DataSet dataset, bool print_big_data)
             : base()
         {
             Contract.Assert(!string.IsNullOrEmpty(file_name));
@@ -33,15 +33,15 @@ namespace sql.builder.Print.XML
             this.dataset = dataset;
             this.print_big_data = print_big_data;
         }
-        internal XmlWriter Writer { get { return this.writer; } }
-        internal DataSet DataSet { get { return this.dataset; } }
-        internal DataRow Row { get { return this.row; } }
-        internal bool PrintBigData { get { return this.print_big_data; } }
-        internal void SetRow(DataRow row)
+        public XmlWriter Writer { get { return this.writer; } }
+        public DataSet DataSet { get { return this.dataset; } }
+        public DataRow Row { get { return this.row; } }
+        public bool PrintBigData { get { return this.print_big_data; } }
+        public void SetRow(DataRow row)
         {
             this.row = row;
         }
-        internal void Close()
+        public void Close()
         {
             this.writer.Close();
         }

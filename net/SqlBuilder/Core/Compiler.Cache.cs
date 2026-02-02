@@ -3,7 +3,7 @@ using sql.builder.DataApi;
 
 namespace sql.builder
 {
-    internal static partial class Compiler
+    public static partial class Compiler
     {
         private static Dictionary<string, object> cash = new Dictionary<string, object>();
         private static void AddCashValue(object val, string methodName, string parmsInfo)

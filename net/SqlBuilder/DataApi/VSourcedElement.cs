@@ -6,7 +6,7 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal abstract class VSourcedElement : VQueryCall
+    public abstract class VSourcedElement : VQueryCall
     {
         protected VSourcedElement(XName name)
             : base(name)
@@ -27,23 +27,23 @@ namespace sql.builder.DataApi
             }
             return list;
         }
-        internal List<VSXElement> GetAllSectionsContainingColumnsSW()
+        public List<VSXElement> GetAllSectionsContainingColumnsSW()
         {
             List<VSXElement> list = this.GetMEISelectSections();
             list.AddRange(GetWhereSections());
             return list;
         }
-        internal List<VSXElement> GetMEISelectSections()
+        public List<VSXElement> GetMEISelectSections()
         {
             var list = this.GetExtensionsAndParentAndMain().SelectMany(VSourcedElement.GetSelfSelectSections).ToList();
             return list;
         }
-        internal List<VSXElement> GetMESelectSections()
+        public List<VSXElement> GetMESelectSections()
         {
             var list = this.GetExtensionsAndMain().SelectMany(VSourcedElement.GetSelfSelectSections).ToList();
             return list;
         }
-        internal List<VSXElement> GetContentSections()
+        public List<VSXElement> GetContentSections()
         {
             var list = this.Elements(EName.content).Select(VSXElement.Get).ToList();
             list.AddRange(this.Elements(EName.toolbar).Select(VSXElement.Get).ToList());
@@ -62,12 +62,12 @@ namespace sql.builder.DataApi
             var list = this.Elements(EName.having).Select(VSXElement.Get).ToList();
             return list;
         }
-        internal virtual List<VSXElement> GetMEIFromSections()
+        public virtual List<VSXElement> GetMEIFromSections()
         {
             var list = this.GetExtensionsAndParentAndMain().SelectMany(e => e.GetSelfFromSections()).ToList();
             return list;
         }
-        internal virtual List<VSXElement> GetMEFromSections()
+        public virtual List<VSXElement> GetMEFromSections()
         {
             var list = this.GetExtensionsAndMain().SelectMany(e => e.GetSelfFromSections()).ToList();
             return list;
@@ -117,7 +117,7 @@ namespace sql.builder.DataApi
             AddCashValue(srcs, MethodBase.GetCurrentMethod().ToString(), null);
             return srcs;
         }
-        internal virtual VQueryCall MainSource()
+        public virtual VQueryCall MainSource()
         {
             IList<VQueryCall> list = this.AllSources();
             for (int index = 0; index < list.Count; index++) {
@@ -128,11 +128,11 @@ namespace sql.builder.DataApi
             }
             return null;
         }
-        internal IList<VQueryCall> GetSourceByAlias(string alias)
+        public IList<VQueryCall> GetSourceByAlias(string alias)
         {
             return this.AllSources().Where(e => e.XName == alias).ToList();
         }
-        internal VSourcedElement GetMainIE()
+        public VSourcedElement GetMainIE()
         {
             if (this.IsExtension()) {
                 VQuery qry = XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.queries)
@@ -148,7 +148,7 @@ namespace sql.builder.DataApi
                 return this;
             }
         }
-        internal VSourcedElement GetMainE()
+        public VSourcedElement GetMainE()
         {
             if (this.IsExtension()) {
                 VQuery qry = XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.queries)
@@ -159,7 +159,7 @@ namespace sql.builder.DataApi
                 return this;
             }
         }
-        internal static string GetSysColDefaultValue(string name)
+        public static string GetSysColDefaultValue(string name)
         {
             switch (name) {
                 case TextConst.AVColumn.IsNew:
@@ -170,7 +170,7 @@ namespace sql.builder.DataApi
                     return null;
             }
         }
-        internal static XElement CreateVirtualSysColumnElement(string table ,string name)
+        public static XElement CreateVirtualSysColumnElement(string table ,string name)
         {
             XElement col = Factory.NewColumn(table, name);
             col.Add(new XAttribute(AName_.type, TextConst.AVDataType.Number));
@@ -181,7 +181,7 @@ namespace sql.builder.DataApi
             return col;
         }
         private List<VSXElement> virtualSysColumns = null;
-        internal List<VSXElement> VirtualSysColumns() 
+        public List<VSXElement> VirtualSysColumns() 
         {
             if (virtualSysColumns == null) {
                 virtualSysColumns = new List<VSXElement>();
@@ -198,7 +198,7 @@ namespace sql.builder.DataApi
             }
             return virtualSysColumns;
         }
-        internal virtual List<VSXElement> SelfColumns()
+        public virtual List<VSXElement> SelfColumns()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSXElement>);
@@ -211,7 +211,7 @@ namespace sql.builder.DataApi
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), null);
             return list;
         }
-        internal virtual List<VExpression> Expressions()
+        public virtual List<VExpression> Expressions()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VExpression>);
@@ -227,7 +227,7 @@ namespace sql.builder.DataApi
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), null);
             return list;
         }
-        internal List<VCustomerUse> Customers()
+        public List<VCustomerUse> Customers()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VCustomerUse>);
@@ -239,7 +239,7 @@ namespace sql.builder.DataApi
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), null);
             return list;
         }
-        internal VExpression SearchExpression(string name)
+        public VExpression SearchExpression(string name)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VExpression);
@@ -251,7 +251,7 @@ namespace sql.builder.DataApi
             AddCashValue(col as VExpression, MethodBase.GetCurrentMethod().ToString(), name);
             return col as VExpression;
         }
-        internal List<VSXElement> ColumnsWithDublers()
+        public List<VSXElement> ColumnsWithDublers()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSXElement>);
@@ -324,7 +324,7 @@ namespace sql.builder.DataApi
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), null);
             return list;
         }
-        internal virtual IList<VViewColumn> ViewColumns()
+        public virtual IList<VViewColumn> ViewColumns()
         {
             var list = new List<VViewColumn>();
             IList<VColumns> colSections = this.GetNamedSections(TextConst.EName.Columns).Cast<VColumns>().ToList();
@@ -333,7 +333,7 @@ namespace sql.builder.DataApi
             }
             return list;
         }
-        internal VSXElement SearchColumn(string columnName, VColumn exclude = null)
+        public VSXElement SearchColumn(string columnName, VColumn exclude = null)
         {
             List<VSXElement> cols;
             if (exclude != null) {
@@ -350,7 +350,7 @@ namespace sql.builder.DataApi
             }
             return col;
         }
-        internal VSXElement SearchColumnByFactName(string name)
+        public VSXElement SearchColumnByFactName(string name)
         {
             IList<VSXElement> cols = this.Columns();
             int index;
@@ -372,15 +372,15 @@ namespace sql.builder.DataApi
             }
             return null;
         }
-        internal List<VColumn> AllUsedColumnsByTableNameAndColumnName(string tableName, string columnName)
+        public List<VColumn> AllUsedColumnsByTableNameAndColumnName(string tableName, string columnName)
         {
             return this.AllUsedColumns().Where(e => e.P_Column == columnName && e.P_Table == tableName).ToList();
         }
-        internal List<VColumn> AllUsedColumnsByTableNameAndColumnAlias(string tableName, string columnAlias)
+        public List<VColumn> AllUsedColumnsByTableNameAndColumnAlias(string tableName, string columnAlias)
         {
             return this.AllUsedColumns().Where(e => e.XName == columnAlias && e.P_Table == tableName).ToList();
         }
-        internal List<VColumn> AllUsedColumns()
+        public List<VColumn> AllUsedColumns()
         {
             // вроде выбираются колонки только из под select -неправильно
             //if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
@@ -396,7 +396,7 @@ namespace sql.builder.DataApi
             //  AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), null);
             return list;
         }
-        internal List<VFact> AllUsedFacts()
+        public List<VFact> AllUsedFacts()
         {
             // вроде выбираются колонки только из под select -неправильно
             List<VFact> list = new List<VFact>();
@@ -407,15 +407,15 @@ namespace sql.builder.DataApi
             }
             return list;
         }
-        internal bool IsExtension()
+        public bool IsExtension()
         {
             return this.Attribute(AName_.extend) != null;
         }
-        internal bool IsInherit()
+        public bool IsInherit()
         {
             return this.Attribute(AName_.inherit) != null;
         }
-        internal List<VSourcedElement> GetExtensionsAndParentAndMain()
+        public List<VSourcedElement> GetExtensionsAndParentAndMain()
         {
             var list = new List<VSourcedElement>();
             if (this is VForm) {
@@ -457,7 +457,7 @@ namespace sql.builder.DataApi
                 return XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.queries).Elements(EName.query).Where(e => e.AttrOrEmpty(AName_.extend) == name).ToList().SelectAsArray(VSXElement.Get<VSourcedElement>).ToList();
             }
         }
-        internal static IList<VSXElement> GetSelfSelectSections(VSourcedElement se)
+        public static IList<VSXElement> GetSelfSelectSections(VSourcedElement se)
         {
             IList<XElement> list = se.Elements(EName.select).ToList();
             VSXElement[] arr = new VSXElement[list.Count];
@@ -466,18 +466,18 @@ namespace sql.builder.DataApi
             }
             return arr;
         }
-        /*internal IList<VSXElement> GetSelfSelectSections()
+        /*public IList<VSXElement> GetSelfSelectSections()
         {
             var list = new List<VSXElement>();
             list.AddRange(Elements(TextConst.EName.Select).ToList().Select(VSXElement.Get).ToList());
             return list;
         }*/
-        internal List<VSXElement> GetNamedSections(string sectionName)
+        public List<VSXElement> GetNamedSections(string sectionName)
         {
             var list = GetExtensionsAndParentAndMain().SelectMany(e => e.GetSelfNamedSections(sectionName)).Distinct().ToList();
             return list;
         }
-        /*internal List<VSXElement> GetNamedSectionsME(string sectionName)
+        /*public List<VSXElement> GetNamedSectionsME(string sectionName)
         {
             var list = GetExtensionsAndMain().SelectMany(e => e.GetSelfNamedSections(sectionName)).Distinct().ToList();
             return list;
@@ -486,13 +486,13 @@ namespace sql.builder.DataApi
         {
             return XmlReports.Environment.GetForm(this.P_Form);
         }
-        internal List<VSXElement> ParamFields()
+        public List<VSXElement> ParamFields()
         {
             List<VSXElement> list = null;
             list = this.GetContentSections().SelectMany(e => VSXElement.GetDescedantsP(e).Where(e1 => e1 is VField || e1 is VUseField)).ToList();
             return list;
         }
-        internal IList<VSXElement> FormalParams()
+        public IList<VSXElement> FormalParams()
         {
             var list = GetNamedSections(TextConst.EName.Params).SelectMany(e => e.GetElementsP(EName.param)).ToList();
 
@@ -525,13 +525,13 @@ namespace sql.builder.DataApi
             
             return list;
         }
-        internal List<VSXElement> GetSelfNamedSections(string sectionName)
+        public List<VSXElement> GetSelfNamedSections(string sectionName)
         {
             var list = new List<VSXElement>();
             list.AddRange(this.GetElementsP(sectionName).Where(EPredicate.IsNotExcuded).Select(VSXElement.Get).ToList());
             return list;
         }
-        internal List<VSXElement> GetSelfFromSections()
+        public List<VSXElement> GetSelfFromSections()
         {
             var list = this.Elements(EName.from).ToList().SelectAsArray(VSXElement.Get).ToList();
             XElement push = Element(EName.push);
@@ -540,7 +540,7 @@ namespace sql.builder.DataApi
             }
             return list;
         }
-        internal string NameOrExtend()
+        public string NameOrExtend()
         {
             XAttribute attr = this.Attribute(AName_.extend);
             if (attr == null) {
@@ -549,11 +549,11 @@ namespace sql.builder.DataApi
                 return attr.Value;
             }
         }
-        internal IList<VAction> Actions()
+        public IList<VAction> Actions()
         {
             return this.GetNamedSections(TextConst.EName.Actions).SelectMany(VSXElement.GetElementsP).Cast<VAction>().ToList();
         }
-        internal VAction GetAction(string name)
+        public VAction GetAction(string name)
         {
             IList<VAction> actions = this.Actions();
             for (int index = 0; index < actions.Count; index++) {
@@ -564,7 +564,7 @@ namespace sql.builder.DataApi
             }
             return null;
         }
-        internal List<VParam> Params()
+        public List<VParam> Params()
         {
             return this.GetElementsP(EName.@params).SelectMany(VSXElement.GetElementsP).Cast<VParam>().ToList();
         }

@@ -5,13 +5,13 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VGrid : VSXElement, IVParent
+    public sealed class VGrid : VSXElement, IVParent
     {
-        internal VGrid()
+        public VGrid()
             : base(EName.grid)
         {
         }
-        internal VQueryCall Source()
+        public VQueryCall Source()
         {
             return this.RootQuery().AllSources().FirstOrDefault(e => e.XName == this.P_Table);
         }

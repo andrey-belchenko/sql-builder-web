@@ -9,13 +9,13 @@ namespace sql.builder.DataApi
     /// &lt;color-package name="" &gt;
     /// </summary>
     /// <seealso cref="VColor"/>
-    internal sealed class VColorPackage : VSXElement, IVParent
+    public sealed class VColorPackage : VSXElement, IVParent
     {
-        internal VColorPackage()
+        public VColorPackage()
             : base(EName.color_package)
         {
         }
-        /*internal VColor GetColor(string name)
+        /*public VColor GetColor(string name)
         {
             IList<VSXElement> colors = this.GetElementsP();
             for (int index = 0; index < colors.Count; index++) {

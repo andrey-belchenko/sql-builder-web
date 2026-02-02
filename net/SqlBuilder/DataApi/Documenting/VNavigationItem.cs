@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    /*internal class VNavigationItem:VSourcedElement
+    /*public class VNavigationItem:VSourcedElement
     {
         public VNavigationItem(XElement element)
             : base(element)

@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal class ExcelSharedStrings : ExcelBaseFile
+    public class ExcelSharedStrings : ExcelBaseFile
     {
         [ThreadStatic]
         private static StringBuilder buffer;
@@ -30,9 +30,9 @@ namespace sql.builder.Print.Xlsx
             buffer.Clear();
             return text;
         }
-        // <уникальная строка, <позиция строки, xml со строкой>>
+        // <пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, <пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, xml пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ>>
         private Dictionary<string, Tuple<int, XElement>> _strings;
-        internal ExcelSharedStrings(string file_path)
+        public ExcelSharedStrings(string file_path)
             : base(file_path)
         {
             XElement root = this.xml.Root;
@@ -45,11 +45,11 @@ namespace sql.builder.Print.Xlsx
             }
             foreach (XElement xsi in root.Elements(ns.Main.si)) {
                 XElement xt = xsi.Element(ns.Main.t);
-                string text;  // текст для хэширования
+                string text;  // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                 if (xt != null) {
                     text = xt.Value;
                 } else {
-                    // xsi может содержать узлы r с настройками шрифтов - плюхаем их как текст
+                    // xsi пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ r пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
                     text = xsi.ToString(SaveOptions.DisableFormatting);
                 }
                 this._strings.Add(GetSafeExcelText(text), new Tuple<int, XElement>(_strings.Count, new XElement(xsi)));
@@ -57,17 +57,17 @@ namespace sql.builder.Print.Xlsx
             root.RemoveNodes();
             this.xml = null;
         }
-        internal int InternStringAndGetIndex(string text)
+        public int InternStringAndGetIndex(string text)
         {
             Tuple<int, XElement> info = null;
             text = GetSafeExcelText(text);
             if (!this._strings.TryGetValue(text, out info)) {
                 XElement xsi;
-                // текст с xml настройками
+                // пїЅпїЅпїЅпїЅпїЅ пїЅ xml пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                 if (text.StartsWith("<si")) {
                     xsi = XElement.Parse(text);
                 } else {
-                    // сохранять пробелы xml:space = preserve
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ xml:space = preserve
                     XElement xt = new XElement(ns.Main.t);
                     xt.Add(new XAttribute(ns.Xml.space, "preserve"));
                     xt.Add(new XText(text));
@@ -78,25 +78,25 @@ namespace sql.builder.Print.Xlsx
             }
             return info.Item1;
         }
-        internal string GetStringByIndex(string index)
+        public string GetStringByIndex(string index)
         {
             return this._strings.Keys.ElementAt(int.Parse(index));
         }
         /// <summary>
-        /// Сохраняет отдельный xml-файл внутри zip-архива *.xslx
+        /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ xml-пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ zip-пїЅпїЅпїЅпїЅпїЅпїЅ *.xslx
         /// </summary>
-        internal override void Save()
+        public override void Save()
         {
-            // Более эффективно было бы использовать класс XmlWriter, 
-            // чтобы можно было использовать XElement.WriteTo(XmlWriter)
+            // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ XmlWriter, 
+            // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ XElement.WriteTo(XmlWriter)
             /*using (StreamWriter writer = new StreamWriter(this.FilePath)) {
                 writer.Write(@"<?xml version=""1.0"" encoding=""utf-8"" standalone=""yes""?>");
                 writer.Write(@"<sst xmlns=""http://schemas.openxmlformats.org/spreadsheetml/2006/main"">");
                 foreach (Tuple<int, XElement, bool> v in this._strings.Values) {
-                    // перенес создание xml в InternStringAndGetIndex
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ xml пїЅ InternStringAndGetIndex
                     //var xsi = new XElement("si", new XElement("t", new XAttribute(XNamespace.Xml + "space", "preserve"), str));
                     writer.Write(v.Item2.ToString(SaveOptions.DisableFormatting));
-                    //v.Item2.Save(writer, SaveOptions.DisableFormatting); // Не работает, ломается на открытии файла xlsx
+                    //v.Item2.Save(writer, SaveOptions.DisableFormatting); // пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ xlsx
                 }
                 writer.Write("</sst>");
                 writer.Close();

@@ -11,7 +11,7 @@ using sql.builder.DataApi;
 
 namespace sql.builder.UI
 {
-    internal partial class UIText : UIBase
+    public partial class UIText : UIBase
     {
         public UIText()
         {

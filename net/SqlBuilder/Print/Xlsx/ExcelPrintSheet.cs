@@ -15,10 +15,10 @@ using sql.builder.Print.Xlsx;
 namespace sql.builder.Print.Xlsx
 {
     /// <seealso cref="sql.builder.Print.XML.ExcelPrintSheet"/>
-    internal class ExcelPrintSheet
+    public class ExcelPrintSheet
     {
         #region static
-        internal static ExcelPrintSheet Create(ExcelWorksheet worksheet, ExcelPrintDocument document, ExcelPrintSheet prev_sheet)
+        public static ExcelPrintSheet Create(ExcelWorksheet worksheet, ExcelPrintDocument document, ExcelPrintSheet prev_sheet)
         {
             ExcelPrintSheet sheet;
             string name = worksheet.NativeSheetName;
@@ -50,7 +50,7 @@ namespace sql.builder.Print.Xlsx
         /// </summary>
         protected int row_count;
         #endregion
-        internal ExcelPrintSheet(ExcelWorksheet worksheet, ExcelPrintDocument document)
+        public ExcelPrintSheet(ExcelWorksheet worksheet, ExcelPrintDocument document)
         {
             this.worksheet = worksheet;
             this.document = document;
@@ -60,21 +60,21 @@ namespace sql.builder.Print.Xlsx
         /// <summary>
         /// Число напечатаных строк в отчёте
         /// </summary>
-        internal int RowCount { get { return this.row_count; } }
-        internal bool Printed { get { return this.printed; } }
-        internal ExcelWorksheet Worksheet { get { return this.worksheet; } }
+        public int RowCount { get { return this.row_count; } }
+        public bool Printed { get { return this.printed; } }
+        public ExcelWorksheet Worksheet { get { return this.worksheet; } }
         /// <summary>
         /// Ссылка на следующий лист
         /// </summary>
-        internal ExcelPrintSheet NextSheet { get { return this.next_sheet; } }
+        public ExcelPrintSheet NextSheet { get { return this.next_sheet; } }
         #endregion
-        internal void MarkUnprinted()
+        public void MarkUnprinted()
         {
             this.printed = false;
             this.row_count = 0;
         }
         /// <seealso cref="sql.builder.Print.XML.ExcelPrintSheet.makeChildsList"/>
-        internal IList<IExcelPrintElement> makeChildsList(string table_prefix, IList<ExcelRow> rows, ExcelPrintGroup parent, ExcelCell beginCell)
+        public IList<IExcelPrintElement> makeChildsList(string table_prefix, IList<ExcelRow> rows, ExcelPrintGroup parent, ExcelCell beginCell)
         {
             List<IExcelPrintElement> childs = new List<IExcelPrintElement>();
             List<ExcelRow> childRows = null;
@@ -147,7 +147,7 @@ namespace sql.builder.Print.Xlsx
             }
             return childs;
         }
-        internal virtual ExcelPrintSheet Print(DataSet data, bool use_data_reader)
+        public virtual ExcelPrintSheet Print(DataSet data, bool use_data_reader)
         {
             this.PrintData(data, use_data_reader);
             return this.next_sheet;
@@ -176,18 +176,18 @@ namespace sql.builder.Print.Xlsx
             }
             this.document.NextPrintedSheet(this);
         }
-        internal void NextRow()
+        public void NextRow()
         {
             this.row_count++;
             this.document.NextPrintedRow(this);
         }
     }
-    internal class ExcelPrintMultiplicatedSheet : ExcelPrintSheet
+    public class ExcelPrintMultiplicatedSheet : ExcelPrintSheet
     {
         #region поля
         private string name_variable;
         #endregion
-        internal ExcelPrintMultiplicatedSheet(ExcelWorksheet worksheet, ExcelPrintDocument document, string name_variable)
+        public ExcelPrintMultiplicatedSheet(ExcelWorksheet worksheet, ExcelPrintDocument document, string name_variable)
             : base(worksheet, document)
         {
             Contract.Assert(!string.IsNullOrEmpty(name_variable));
@@ -204,7 +204,7 @@ namespace sql.builder.Print.Xlsx
                 list.Add(new Tuple<ExcelPrintMultiplicatedSheet, string, DataRow>(this, name, row));
             }
         }
-        internal override ExcelPrintSheet Print(DataSet data, bool use_data_reader)
+        public override ExcelPrintSheet Print(DataSet data, bool use_data_reader)
         {
             if (this.printed) {
                 return this.next_sheet;

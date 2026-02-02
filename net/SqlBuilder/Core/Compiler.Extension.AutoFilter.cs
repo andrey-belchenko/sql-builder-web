@@ -5,7 +5,7 @@ using sql.builder.DataApi;
 
 namespace sql.builder
 {
-    internal partial class Compiler
+    public partial class Compiler
     {
         private static void AddQueryAutoFilterParsAndConds(XElement xquery) 
             // предположительно ресурсоемкая операция, может замедлить precompile

@@ -7,14 +7,14 @@ using sql.builder.DataApi;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal class ExcelWorksheetMerges
+    public class ExcelWorksheetMerges
     {
         private List<ExcelWorksheetMerge> _merges;
-        internal ExcelWorksheetMerges()
+        public ExcelWorksheetMerges()
         {
             this._merges = new List<ExcelWorksheetMerge>();
         }
-        internal ExcelWorksheetMerges(XElement xitem)
+        public ExcelWorksheetMerges(XElement xitem)
         {
             Contract.Assert(xitem != null);
             Contract.Assert(xitem.Name == ns.Main.mergeCells);
@@ -28,7 +28,7 @@ namespace sql.builder.Print.Xlsx
                 this._merges.Add(new ExcelWorksheetMerge(xmerge.Attribute(ns.None.ref_).Value));
             }
         }
-        internal ExcelWorksheetMerges(ExcelWorksheetMerges merges)
+        public ExcelWorksheetMerges(ExcelWorksheetMerges merges)
         {
             Contract.Assert(merges != null);
             int count = merges._merges.Count;
@@ -37,7 +37,7 @@ namespace sql.builder.Print.Xlsx
                 merges._merges[index].CopyTo(this._merges);
             }
         }
-        internal void CopyRowMerge(int rowIdOld, int rowIdNew)
+        public void CopyRowMerge(int rowIdOld, int rowIdNew)
         {
             for (int index = 0; index < this._merges.Count; index++) {
                 ExcelWorksheetMerge merge = this._merges[index];
@@ -46,7 +46,7 @@ namespace sql.builder.Print.Xlsx
                 }
             }
         }
-        internal void DeleteRowMerge(int rowId)
+        public void DeleteRowMerge(int rowId)
         {
             for (int index = 0; index < this._merges.Count; index++) {
                 ExcelWorksheetMerge merge = this._merges[index];
@@ -55,7 +55,7 @@ namespace sql.builder.Print.Xlsx
                 }
             }
         }
-        internal void DeleteColumn(string colName)
+        public void DeleteColumn(string colName)
         {
             for (int index = 0; index < this._merges.Count; index++) {
                 ExcelWorksheetMerge merge = this._merges[index];
@@ -64,7 +64,7 @@ namespace sql.builder.Print.Xlsx
                 }
             }
         }
-        internal void RenameColumn(string colNameOld, string colNameNew)
+        public void RenameColumn(string colNameOld, string colNameNew)
         {
             for (int index = 0; index < this._merges.Count; index++) {
                 ExcelWorksheetMerge merge = this._merges[index];
@@ -73,7 +73,7 @@ namespace sql.builder.Print.Xlsx
                 }
             }
         }
-        internal XElement GetXml()
+        public XElement GetXml()
         {
             XElement xmerges = new XElement(ns.Main.mergeCells);
             uint count = 0;
@@ -83,15 +83,15 @@ namespace sql.builder.Print.Xlsx
             xmerges.Add(new XAttribute(ns.None.count, count.ToString()));
             return xmerges;
         }
-        internal bool IsBeginOfMerge(ExcelCellInfo cell)
+        public bool IsBeginOfMerge(ExcelCellInfo cell)
         {
             return this._merges.Any(cell.IsBeginOfMerge);
         }
-        internal bool IsEndOfMerge(ExcelCellInfo cell)
+        public bool IsEndOfMerge(ExcelCellInfo cell)
         {
             return this._merges.Any(cell.IsEndOfMerge);
         }
-        internal ExcelWorksheetMerge GetContainedMerge(ExcelCellInfo cell)
+        public ExcelWorksheetMerge GetContainedMerge(ExcelCellInfo cell)
         {
             //return _merges.Select(m => m.GetContainedMerge(cell)).FirstOrDefault(m => m != null);
             for (int index = 0; index < this._merges.Count; index++) {
@@ -102,7 +102,7 @@ namespace sql.builder.Print.Xlsx
             }
             return null;
         }
-        internal void ExtendMergeToColumn(ExcelCellInfo cellFrom, ExcelCellInfo cellTo)
+        public void ExtendMergeToColumn(ExcelCellInfo cellFrom, ExcelCellInfo cellTo)
         {
             //foreach (ExcelWorksheetMerge merge in this._merges.Where(cellFrom.IsEndOfMerge)) {
             for (int index = 0; index < this._merges.Count; index++) {
@@ -112,14 +112,14 @@ namespace sql.builder.Print.Xlsx
                 }
             }
         }
-        internal void CreateMerge(ExcelCellInfo cellFrom, ExcelCellInfo cellTo)
+        public void CreateMerge(ExcelCellInfo cellFrom, ExcelCellInfo cellTo)
         {
             //XElement xmerge = new XElement(ns.Main.mergeCell, new XAttribute("ref", cellFrom.CellName + ":" + cellTo.CellName));
             this._merges.Add(new ExcelWorksheetMerge(cellFrom.CellName + ":" + cellTo.CellName));
         }
-        internal bool CreateMergeChecked(ExcelCellInfo cellFrom, ExcelCellInfo cellTo)
+        public bool CreateMergeChecked(ExcelCellInfo cellFrom, ExcelCellInfo cellTo)
         {
-            // надо бы проверять все ячейки между cellFrom и cellTo, но будем надеяться на лучшее
+            // пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ cellFrom пїЅ cellTo, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
             //if (check_exists && (this._merges.Any(m => m.ContainsCell(cellFrom) || m.ContainsCell(cellTo)))) return false;
             for (int index = 0; index < this._merges.Count; index++) {
                 ExcelWorksheetMerge merge = this._merges[index];
@@ -130,7 +130,7 @@ namespace sql.builder.Print.Xlsx
             this.CreateMerge(cellFrom, cellTo);
             return true;
         }
-        internal void RemoveMergesInRange(ExcelCellInfo cellFrom, ExcelCellInfo cellTo)
+        public void RemoveMergesInRange(ExcelCellInfo cellFrom, ExcelCellInfo cellTo)
         {
             var cells = ExcelCellInfo.Range(cellFrom, cellTo).ToList();
             foreach (ExcelCellInfo cell in cells) {
@@ -141,7 +141,7 @@ namespace sql.builder.Print.Xlsx
                 }
             }
         }
-        internal ExcelCellInfo GetNextMergedCell(ExcelCellInfo cell)
+        public ExcelCellInfo GetNextMergedCell(ExcelCellInfo cell)
         {
             ExcelWorksheetMerge merge = this._merges.FirstOrDefault(cell.ContainsIn);
             if (merge != null) {
@@ -151,21 +151,21 @@ namespace sql.builder.Print.Xlsx
             }
         }
     }
-    internal class ExcelWorksheetMerge
+    public class ExcelWorksheetMerge
     {
         //private bool copied;
         private bool deleted;
         private List<ExcelWorksheetMerge> _copies;
         private ExcelRefToken _refs;
-        internal bool Deleted { get { return this.deleted; } }
-        internal ExcelCellInfo FirstCell { get { return this._refs.Cell1; } }
-        internal ExcelCellInfo LastCell { get { return this._refs.Cell2; } }
-        internal ExcelWorksheetMerge(string refs)
+        public bool Deleted { get { return this.deleted; } }
+        public ExcelCellInfo FirstCell { get { return this._refs.Cell1; } }
+        public ExcelCellInfo LastCell { get { return this._refs.Cell2; } }
+        public ExcelWorksheetMerge(string refs)
         {
             this._refs = new ExcelRefToken(refs);
             //this._copies = new List<ExcelWorksheetMerge>();
         }
-        internal bool StartsWith(ExcelCellInfo cell)
+        public bool StartsWith(ExcelCellInfo cell)
         {
             if (this._copies != null) {
                 return this._copies.Any(cell.IsBeginOfMerge);
@@ -175,7 +175,7 @@ namespace sql.builder.Print.Xlsx
                 return this.FirstCell.Equals(cell);
             }
         }
-        internal bool EndsWith(ExcelCellInfo cell)
+        public bool EndsWith(ExcelCellInfo cell)
         {
             if (this._copies != null) {
                 return this._copies.Any(cell.IsEndOfMerge);
@@ -185,7 +185,7 @@ namespace sql.builder.Print.Xlsx
                 return this.LastCell.Equals(cell);
             }
         }
-        internal bool ContainsCell(ExcelCellInfo cell)
+        public bool ContainsCell(ExcelCellInfo cell)
         {
             if (this._copies != null) {
                 return this._copies.Any(cell.ContainsIn);
@@ -195,7 +195,7 @@ namespace sql.builder.Print.Xlsx
                 return this._refs.ContainsCell(cell);
             }
         }
-        internal ExcelWorksheetMerge GetContainedMerge(ExcelCellInfo cell)
+        public ExcelWorksheetMerge GetContainedMerge(ExcelCellInfo cell)
         {
             if (this._copies != null) {
                 return this._copies.FirstOrDefault(cell.ContainsIn);
@@ -207,7 +207,7 @@ namespace sql.builder.Print.Xlsx
                 return null;
             }
         }
-        internal ExcelCellInfo GetNextMergedCellInfo(ExcelCellInfo cell)
+        public ExcelCellInfo GetNextMergedCellInfo(ExcelCellInfo cell)
         {
             if (this._copies != null) {
                 ExcelWorksheetMerge copy = this._copies.FirstOrDefault(cell.ContainsIn);
@@ -217,17 +217,17 @@ namespace sql.builder.Print.Xlsx
                     return null;
                 }
             } else if (this.deleted) {
-                // не имеет смысла
+                // пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
                 return null;
             } else {
                 return this._refs.GetNextCellInfo(cell);
             }
         }
-        internal bool BeginsFromRow(int rowId)
+        public bool BeginsFromRow(int rowId)
         {
             return this.FirstCell.RowID == rowId;
         }
-        internal void CopyRowMerge(int rowIdNew)
+        public void CopyRowMerge(int rowIdNew)
         {
             ExcelCellInfo first_cell = this.FirstCell;
             ExcelCellInfo last_cell = this.LastCell;
@@ -237,28 +237,28 @@ namespace sql.builder.Print.Xlsx
             }
             this._copies.Add(new ExcelWorksheetMerge(refs));
         }
-        internal void DeleteColumn(string colName)
+        public void DeleteColumn(string colName)
         {
             this._refs.DeleteColumn(colName);
-            // если не осталось смерженых ячеек - удаляем
+            // пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (this._refs.IsEmpty()) {
                 this.Delete();
             }
         }
-        internal void RenameColumn(string colNameOld, string colNameNew)
+        public void RenameColumn(string colNameOld, string colNameNew)
         {
             this._refs.RenameColumn(colNameOld, colNameNew);
         }
-        internal void ExtendToColumn(string colName)
+        public void ExtendToColumn(string colName)
         {
             this._refs.ExtendToColumn(colName);
         }
-        internal void Delete()
+        public void Delete()
         {
             this.deleted = true;
             this._copies = null;
         }
-        internal void CopyTo(IList<ExcelWorksheetMerge> list)
+        public void CopyTo(IList<ExcelWorksheetMerge> list)
         {
             if (this.deleted) {
                 return;
@@ -273,7 +273,7 @@ namespace sql.builder.Print.Xlsx
                 }
             }
         }
-        internal uint CopyTo(XElement xmerges)
+        public uint CopyTo(XElement xmerges)
         {
             XElement xmerge;
             if (this.deleted) {
@@ -298,7 +298,7 @@ namespace sql.builder.Print.Xlsx
                 }
             }
         }
-        /*internal IEnumerable<XElement> GetMergesXml()
+        /*public IEnumerable<XElement> GetMergesXml()
         {
             if (this.deleted) {
                 return Enumerable.Empty<XElement>();

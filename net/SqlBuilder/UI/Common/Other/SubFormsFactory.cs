@@ -4,7 +4,7 @@ using sql.builder.DataApi;
 
 namespace sql.builder.UI
 {
-    internal class SubFormsFactory
+    public class SubFormsFactory
     {
         bool AsyncMode = false;
 

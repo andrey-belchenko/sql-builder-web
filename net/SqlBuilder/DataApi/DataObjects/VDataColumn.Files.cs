@@ -12,7 +12,7 @@ using SqlBuilderLib.DevTools;
 using sql.builder.Clean;
 namespace sql.builder.DataApi
 {
-    internal partial class VDataColumn
+    public partial class VDataColumn
     {
 
         //Пока нужен только один вариант хранения файлов , если понадобяться дугие сделать подгрузку этих данных их схемы в нестатические поля

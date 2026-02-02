@@ -9,10 +9,10 @@ using sql.builder.DataApi;
 
 namespace sql.builder
 {
-    internal static partial class Compiler
+    public static partial class Compiler
     {
         // Перевод VReport.MakeResultScheme()
-        internal static XElement MakeResultScheme(XElement report, XElement compiled)
+        public static XElement MakeResultScheme(XElement report, XElement compiled)
         {
             Contract.Assert(compiled != null);
             Contract.Assert(compiled.Name == EName.root);
@@ -57,7 +57,7 @@ namespace sql.builder
             return xscheme;
         }
         // Скопировано из VReport.addBandsForClassTitles()
-        internal static void addBandsForClassTitles(XElement scheme)
+        public static void addBandsForClassTitles(XElement scheme)
         {
             if (!scheme.Descendants().Attributes(AName.class_title).Any()) {
                 return;

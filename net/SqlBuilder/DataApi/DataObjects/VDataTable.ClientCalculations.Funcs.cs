@@ -10,7 +10,7 @@ using System.Linq;
 using System.IO;
 namespace sql.builder.DataApi
 {
-    internal static partial class VClientCalculations
+    public static partial class VClientCalculations
     {
 
         public delegate object ClientFunction(FactParam[] pars);

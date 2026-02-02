@@ -10,7 +10,7 @@ using sql.builder.DataApi;
 
 namespace sql.builder.UI
 {
-    internal partial class UITextArray : UIText
+    public partial class UITextArray : UIText
     {
 
         public override bool IsStringToArray()

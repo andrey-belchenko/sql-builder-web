@@ -7,9 +7,9 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal sealed partial class VForm : VSourcedElement, IVParent
+    public sealed partial class VForm : VSourcedElement, IVParent
     {
-        internal VForm()
+        public VForm()
             : base(EName.form)
         {
         }
@@ -47,7 +47,7 @@ namespace sql.builder.DataApi
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), null);
             return list;
         }
-        internal List<VAction> GetRefreshColumnActions()
+        public List<VAction> GetRefreshColumnActions()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VAction>);
@@ -335,11 +335,11 @@ namespace sql.builder.DataApi
             }
             return list;
         }
-        internal List<VQueryCall> MainAndRelatedQueries()
+        public List<VQueryCall> MainAndRelatedQueries()
         {
             return MainQueries().SelectMany(e => e.SelfAndELinks()).ToList();
         }
-        internal VSXElement ContentElement()
+        public VSXElement ContentElement()
         {
             IList<VSXElement> list = this.GetElementsP(EName.content);
             if (list.Count != 0) {
@@ -348,11 +348,11 @@ namespace sql.builder.DataApi
                 return this;
             }
         }
-        internal List<VSXElement> Fields()
+        public List<VSXElement> Fields()
         {
             return this.ContentElement().GetDescedantsP(EPredicate.IsFieldOrUseField);
         }
-        internal List<VSXElement> Groups()
+        public List<VSXElement> Groups()
         {
             return this.ContentElement().GetDescedantsP(EName.fieldgroup);
         }
@@ -385,7 +385,7 @@ namespace sql.builder.DataApi
             }
             return list;
         }
-        internal IList<VSXElement> VariableColumns()
+        public IList<VSXElement> VariableColumns()
         {
             return this.ColumnsAndExpressions().Where(VSXElement.HasParameterName).ToList();
         }
@@ -393,7 +393,7 @@ namespace sql.builder.DataApi
         {
             return this.GetElementsP(EName.@params).FirstOrDefault();
         }
-        internal VSXElement SearchVariableSource(string name)
+        public VSXElement SearchVariableSource(string name)
         {
             VSXElement col = this.VariableColumns().FirstOrDefault(e => e.P_ParName == name);
             if (col == null) {

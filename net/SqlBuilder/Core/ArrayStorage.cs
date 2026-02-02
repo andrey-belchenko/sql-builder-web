@@ -12,7 +12,7 @@ using sql.builder.Clean;
 
 namespace sql.builder.Core
 {
-    internal class ArrayStorage
+    public class ArrayStorage
     {
         #region static
         /// <summary>
@@ -34,7 +34,7 @@ namespace sql.builder.Core
             TryGetOracleType("ASUSETYPES.NUMBER$TABLE", ref _number_table_type);
             TryGetOracleType("ASUSETYPES.VARCHAR2$TABLE", ref _varchar2_table_type);
         }
-        internal static void ClearStoredValues(string id)
+        public static void ClearStoredValues(string id)
         {
             OracleParameter par = new OracleParameter("array_id", OracleDbType.VarChar, id, ParameterDirection.Input);
             DataHelper.SqlExecute("DELETE FROM vr_array_storage WHERE array_id = :array_id", new OracleParameter[1] { par }, Global.Connection);
@@ -44,15 +44,15 @@ namespace sql.builder.Core
         private string _value_column;
         //private string _datatype;
         private object[] _values;
-        internal ArrayStorage(string id)
+        public ArrayStorage(string id)
         {
             this._id = id;
         }
-        /*internal void PrepareValues(object[] values)
+        /*public void PrepareValues(object[] values)
         {
             this._values = values;
         }
-        internal void ApplyValues()
+        public void ApplyValues()
         {
             SetValues(_values);
         }*/
@@ -140,7 +140,7 @@ namespace sql.builder.Core
                 // Debug.WriteLine("ArrayStorage.SetStoredValues(): Вставка в vr_array_storage." + this._value_column + " " + values.Length.ToString() + " значений с array_id=\"" + this._id + "\" за " + sw.ElapsedTicks.ToString() + " тактов = " + sw.ElapsedMilliseconds.ToString() + " мс");
                 #endif
         }
-        internal void SetValues(object[] values)
+        public void SetValues(object[] values)
         {
             if (values.Length > 30) { // раньше было 999 , и получался очень большой текст sql
                 this.SetStoredValues(values);
@@ -148,7 +148,7 @@ namespace sql.builder.Core
                 this.SetInlinedValues(values);
             }
         }
-        internal void SetValues(object[] values, string mode)
+        public void SetValues(object[] values, string mode)
         {
             if (mode == TextConst.AVArrayParamModes.Store) {
                 this.SetStoredValues(values);
@@ -167,7 +167,7 @@ namespace sql.builder.Core
         //    var dt = db.GetFromArrayStorage(_id);
         //    return dt.AsEnumerable().Select(r => (decimal)r["VAL"]).ToArray();
         //}
-        /*internal string GetSql()
+        /*public string GetSql()
         {
             string sql;
             if (this._values != null) {
@@ -182,7 +182,7 @@ namespace sql.builder.Core
             }
             return sql;
         }*/
-        internal string GetSql()
+        public string GetSql()
         {
             if (this._values == null) {
                 return " (select " + this._value_column + " from vr_array_storage where array_id = '" + this._id + "') ";
@@ -200,13 +200,13 @@ namespace sql.builder.Core
                 return sb.ToString();
             }
         }
-        /*internal static string DataColumnName(string datatype)
+        /*public static string DataColumnName(string datatype)
         {
             return (datatype == "number") ? "nval"
                  : (datatype == "string") ? "sval"
                  : null;
         }
-        internal static string TypedValueString(object value, string datatype)
+        public static string TypedValueString(object value, string datatype)
         {
             return (datatype == "number") ? Cmn.ToOracleString(value)
                  : (datatype == "string") ? ("\'" + value + "\'")

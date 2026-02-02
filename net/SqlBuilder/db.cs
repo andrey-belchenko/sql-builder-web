@@ -14,10 +14,10 @@ using SqlBuilderLib.DevTools;
 
 namespace sql.builder
 {
-    internal static class db
+    public static class db
     {
         private static OracleConnection _connection;
-        internal static OracleConnection Connection {
+        public static OracleConnection Connection {
             get {
                 if (_connection == null) {
                     _connection = Global.Connection;
@@ -55,12 +55,12 @@ namespace sql.builder
             }
             return dt;
         }*/
-        internal static string SelectSettingData(decimal kod_gs)
+        public static string SelectSettingData(decimal kod_gs)
         {
             OracleParameter[] parameters = new OracleParameter[1] { new OracleParameter("kod_gs", OracleDbType.Number, kod_gs, ParameterDirection.Input) };
             return DataHelper.SqlGetString("SELECT data FROM vr_grid_settings WHERE kod_gs = :kod_gs", parameters, Connection);
         }
-        internal static decimal InsertReportSetting(string repname, string name, string data)
+        public static decimal InsertReportSetting(string repname, string name, string data)
         {
             OracleParameter kod_gs = new OracleParameter("kod_gs", OracleDbType.Number, null, ParameterDirection.Output);
             OracleParameter[] parameters = new OracleParameter[4] {
@@ -73,7 +73,7 @@ namespace sql.builder
             Connection.Commit();
             return Convert.ToDecimal(kod_gs.Value);
         }
-        internal static void UpdateReportSettingData(decimal kod_gs, string data)
+        public static void UpdateReportSettingData(decimal kod_gs, string data)
         {
             OracleParameter[] parameters = new OracleParameter[2] {
                 new OracleParameter("kod_gs", OracleDbType.Number, (object)kod_gs, ParameterDirection.Input),
@@ -82,7 +82,7 @@ namespace sql.builder
             DataHelper.SqlExecute("UPDATE vr_grid_settings SET data = :data WHERE kod_gs = :kod_gs", parameters, Connection);
             Connection.Commit();
         }
-        internal static void UpdateReportSettingName(decimal kod_gs, string name)
+        public static void UpdateReportSettingName(decimal kod_gs, string name)
         {
             OracleParameter[] parameters = new OracleParameter[2] {
                 new OracleParameter("kod_gs", OracleDbType.Number, (object)kod_gs, ParameterDirection.Input),
@@ -91,13 +91,13 @@ namespace sql.builder
             DataHelper.SqlExecute("UPDATE vr_grid_settings SET name = :name WHERE kod_gs = :kod_gs", parameters, Connection);
             Connection.Commit();
         }
-        internal static void DeleteReportSetting(decimal kod_gs)
+        public static void DeleteReportSetting(decimal kod_gs)
         {
             OracleParameter[] parameters = new OracleParameter[1] { new OracleParameter("kod_gs", OracleDbType.Number, (object)kod_gs, ParameterDirection.Input) };
             DataHelper.SqlExecute("DELETE FROM vr_grid_settings WHERE kod_gs = :kod_gs", parameters, Connection);
             Connection.Commit();
         }
-        internal static string SelectDefaultSettingData(string repname)
+        public static string SelectDefaultSettingData(string repname)
         {
             OracleParameter[] parameters = new OracleParameter[1] { new OracleParameter("repname", OracleDbType.VarChar, repname, ParameterDirection.Input) };
             DataTable dt = DataHelper.SqlGetTable("SELECT data FROM vr_grid_settings WHERE repname = :repname AND name = 'default' AND visible = 0 AND u_m = USER", parameters, Connection, false);
@@ -107,7 +107,7 @@ namespace sql.builder
                 return dt.Rows[0]["data"].ToString();
             }
         }
-        internal static void MergeDefaultReportSetting(string repname, string data)
+        public static void MergeDefaultReportSetting(string repname, string data)
         {
             OracleParameter[] parameters = new OracleParameter[2] {
                 new OracleParameter("repname", OracleDbType.VarChar, repname, ParameterDirection.Input),
@@ -116,7 +116,7 @@ namespace sql.builder
             DataHelper.SqlExecute("MERGE INTO vr_grid_settings USING dual ON (repname = :repname AND name = 'default' AND visible = 0 AND u_m = USER) WHEN MATCHED THEN UPDATE SET data = :data WHEN NOT MATCHED THEN INSERT (repname, name, visible, data) VALUES(:repname, 'default', 0, :data)", parameters, Connection); 
             Connection.Commit();
         }
-        internal static void DeleteDefaultReportSetting(string repname)
+        public static void DeleteDefaultReportSetting(string repname)
         {
             OracleParameter[] parameters = new OracleParameter[1] { new OracleParameter("repname", OracleDbType.VarChar, repname, ParameterDirection.Input) };
             DataHelper.SqlExecute("DELETE FROM vr_grid_settings WHERE repname = :repname AND name = 'default' AND visible = 0 AND u_m = USER", parameters, Connection);
@@ -187,9 +187,9 @@ namespace sql.builder
         }
         #endregion*/
         #region vr_reports_log
-        //internal static string repLogTableName = "vr_reports_log";
-        //internal static string repLogTimeTotalColName = "time_total";
-        //internal static string repLogRepnameColName = "repname";
+        //public static string repLogTableName = "vr_reports_log";
+        //public static string repLogTimeTotalColName = "time_total";
+        //public static string repLogRepnameColName = "repname";
         /*public static DataTable SelectReportLogWithoutError(string repname)
         {
             var args = new[]
@@ -208,7 +208,7 @@ namespace sql.builder
 
             return SqlMethods.Select(repLogTableName, args, Connection);
         }*/
-        internal static decimal InsertReportLog(string repname, string report_params)
+        public static decimal InsertReportLog(string repname, string report_params)
         {
             OracleParameter kod_log = new OracleParameter("kod_log", OracleDbType.Number, null, ParameterDirection.Output);
             OracleParameter[] parameters = new OracleParameter[3] {
@@ -220,7 +220,7 @@ namespace sql.builder
             Connection.Commit();
             return Convert.ToDecimal(kod_log.Value);
         }
-        internal static void UpdateReportLog(decimal kod_log, string error_text, string stack_text)
+        public static void UpdateReportLog(decimal kod_log, string error_text, string stack_text)
         {
             OracleParameter[] parameters = new OracleParameter[3] {
                 new OracleParameter("error_text", OracleDbType.VarChar, error_text, ParameterDirection.Input),
@@ -230,7 +230,7 @@ namespace sql.builder
             DataHelper.SqlExecute("UPDATE vr_reports_log SET error_text = :error_text, stack_text = :stack_text WHERE kod_log = :kod_log", parameters, Connection, false);
             Connection.Commit();
         }
-        internal static TimeSpan? AverageReportFormingTime(string report_name)
+        public static TimeSpan? AverageReportFormingTime(string report_name)
         {
             OracleParameter p_repname  = new OracleParameter("p_repname", OracleDbType.VarChar, report_name, ParameterDirection.Input);
             OracleParameter p_avg_time = new OracleParameter("p_avg_time", OracleDbType.IntervalDS, ParameterDirection.Output);
@@ -274,7 +274,7 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
             }
         }
         #endregion
-        internal static DataTable SelectConstraintTableColumns(string schema_name, string constraint_name)
+        public static DataTable SelectConstraintTableColumns(string schema_name, string constraint_name)
         {
             OracleParameter[] parameters = new OracleParameter[2] {
                 new OracleParameter("schema", OracleDbType.VarChar, schema_name, ParameterDirection.Input),

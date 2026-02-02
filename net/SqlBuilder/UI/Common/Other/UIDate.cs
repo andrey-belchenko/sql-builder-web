@@ -13,10 +13,10 @@ using sql.builder.DataApi;
 
 namespace sql.builder.UI
 {
-    internal partial class UIDate : UIBase
+    public partial class UIDate : UIBase
     {
         #region static
-        internal static object ConvertToDateTime(object value)
+        public static object ConvertToDateTime(object value)
         {
             if (value is DateTime) {
                 return value;
@@ -26,7 +26,7 @@ namespace sql.builder.UI
                 return (object)Convert.ToDateTime(value);
             }
         }
-        internal static string ValueToString(object value)
+        public static string ValueToString(object value)
         {
             if (Cmn.IsNullOrDBNull(value)) {
                 return null;

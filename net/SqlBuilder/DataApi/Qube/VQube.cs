@@ -6,22 +6,22 @@ using System.Reflection;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VQube : VQueryCall, IVParent
+    public sealed class VQube : VQueryCall, IVParent
     {
-        internal VQube()
+        public VQube()
             : base(EName.qube)
         {
         }
-        internal IList<VSXElement> DimSets()
+        public IList<VSXElement> DimSets()
         {
             var list = this.GetElementsP(EName.dimset);
             return list;
         }
-        internal VSXElement GetDimSet(string alias)
+        public VSXElement GetDimSet(string alias)
         {
             return this.DimSets().FirstOrDefault(e => e.AttrOrEmpty(TextConst.AName.As) == alias);
         }
-        internal List<VQueryCall> AllQubeLinks()
+        public List<VQueryCall> AllQubeLinks()
         {
             var links = Links(null);
             links.AddRange(AllDimsetsLinks());
@@ -59,7 +59,7 @@ namespace sql.builder.DataApi
             return links;
         }
 
-        internal List<VQueryCall> FactLinks()
+        public List<VQueryCall> FactLinks()
         {
 
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
@@ -85,7 +85,7 @@ namespace sql.builder.DataApi
             AddCashValue(links, MethodBase.GetCurrentMethod().ToString(), null);
             return links;
         }
-        /*internal List<VQueryCall> AllLinks()
+        /*public List<VQueryCall> AllLinks()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
             {
@@ -114,7 +114,7 @@ namespace sql.builder.DataApi
             }
             return links;
         }
-        internal List<VQueryCall> GetDimsetLinks(string dimsetAlias)
+        public List<VQueryCall> GetDimsetLinks(string dimsetAlias)
         {
 
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), dimsetAlias))

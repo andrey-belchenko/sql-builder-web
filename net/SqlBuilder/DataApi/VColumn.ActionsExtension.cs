@@ -16,7 +16,7 @@ using Devart.Data.Oracle;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VColumn
+    public partial class VColumn
     {
         public override object GetRuntimeValue(VDataSet dataSet, DataRow row, VDataColumn col)
         {

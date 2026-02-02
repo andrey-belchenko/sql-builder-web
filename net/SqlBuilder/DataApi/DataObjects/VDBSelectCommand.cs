@@ -22,11 +22,11 @@ using sql.builder.Clean;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VDBSelectCommand : IDisposable
+    public sealed class VDBSelectCommand : IDisposable
     {
         #region static stuff
         private static Dictionary<string, object> _queryResults = new Dictionary<string, object>();
-        internal static object GetQueryScalarResult(string queryName, bool useChash = true)
+        public static object GetQueryScalarResult(string queryName, bool useChash = true)
         {
             if (useChash && _queryResults.ContainsKey(queryName)) {
                 return _queryResults[queryName];
@@ -43,24 +43,24 @@ namespace sql.builder.DataApi
         private OracleCommand procedureCommand;
         private SortedList<int, string> orderedParams;
         #endregion
-        internal string GetCommandText()
+        public string GetCommandText()
         {
             return this.mainCommand.CommandText;
         }
-        internal void SetCommandText(string value)
+        public void SetCommandText(string value)
         {
             this.mainCommand.CommandText = value;
         }
-        internal void CreateRetParam()
+        public void CreateRetParam()
         {
             var par = new OracleParameter(TextConst.DBParams.PrimaryKeyParam, OracleDbType.Number, ParameterDirection.Output);
             this.mainCommand.Parameters.Add(par);
         }
-        internal object GetRetValue()
+        public object GetRetValue()
         {
             return this.mainCommand.Parameters[TextConst.DBParams.PrimaryKeyParam].Value;
         }
-        internal int GetParamIndex(string paramName)
+        public int GetParamIndex(string paramName)
         {
             foreach (KeyValuePair<int, string> p in this.orderedParams) {
                 if (p.Value == paramName) {
@@ -69,7 +69,7 @@ namespace sql.builder.DataApi
             }
             return -1;
         }
-        internal SortedList<int, object> GetRetValues()
+        public SortedList<int, object> GetRetValues()
         {
             var list = new SortedList<int, object>();
             foreach (DbParameter par in this.mainCommand.Parameters) {
@@ -98,11 +98,11 @@ namespace sql.builder.DataApi
             }
             this.setOrderedParams(query_params);
         }
-        internal VDBSelectCommand(string commandText, XElement formalParsSource)
+        public VDBSelectCommand(string commandText, XElement formalParsSource)
             : this(commandText, null, formalParsSource)
         {
         }
-        internal static VDBSelectCommand CreateFromCompiledQuery(XElement query, XElement compiledQuery)
+        public static VDBSelectCommand CreateFromCompiledQuery(XElement query, XElement compiledQuery)
         {
             string selectText = Compiler.GetQuerySelectStatmentFromCompiledQuery(compiledQuery);
             string procedureText = Compiler.GetQuerProcedureFromCompiledQuery(compiledQuery);
@@ -126,7 +126,7 @@ namespace sql.builder.DataApi
                 }
             }
         }
-        internal XElement ToXml()
+        public XElement ToXml()
         {
             var xroot = new XElement(EName.root);
             var xpars = new XElement(EName.@params);
@@ -174,7 +174,7 @@ namespace sql.builder.DataApi
             }
             return xroot;
         }
-        internal static VDBSelectCommand FromXml(XElement xroot)
+        public static VDBSelectCommand FromXml(XElement xroot)
         {
             var xpars = xroot.Element(EName.@params);
             var xselect = xroot.Element(EName.select);
@@ -283,12 +283,12 @@ namespace sql.builder.DataApi
                 par.Value = srcPar.Value;
             }
         }
-        internal DataTable ExecuteDataTable(IList<object> pars, OracleConnection connection)
+        public DataTable ExecuteDataTable(IList<object> pars, OracleConnection connection)
         {
             SetParamsValues(pars);
             return ExecuteDataTable(connection);
         }
-        internal DataTable ExecuteDataTable(OracleParameter[] pars, OracleConnection connection)
+        public DataTable ExecuteDataTable(OracleParameter[] pars, OracleConnection connection)
         {
             if (procedureCommand != null) {
                 setCommandParamsValues(procedureCommand, pars);
@@ -296,7 +296,7 @@ namespace sql.builder.DataApi
             setCommandParamsValues(mainCommand, pars);
             return ExecuteDataTable(connection);
         }
-        internal string GetText(OracleParameter[] pars)
+        public string GetText(OracleParameter[] pars)
         {
             if (procedureCommand != null) {
                 setCommandParamsValues(procedureCommand, pars);
@@ -317,7 +317,7 @@ namespace sql.builder.DataApi
             cmd.Connection = connection;
             return cmd;
         }
-        internal static bool TryGetGlobalDbParam(string param_name, out OracleParameter db_param)
+        public static bool TryGetGlobalDbParam(string param_name, out OracleParameter db_param)
         {
             if (param_name.StartsWith(TextConst.Pfx.GlobParam))
             {
@@ -339,7 +339,7 @@ namespace sql.builder.DataApi
         //var parName2 = paramName.Substring(TextConst.Pfx.GlobParam.Length, paramName.Length - TextConst.Pfx.GlobParam.Length);
         //dbPar.Value = XmlReports.GetGlobalParValue(parName2);
         //}
-        internal DataTable ExecuteDataTable(OracleConnection connection)
+        public DataTable ExecuteDataTable(OracleConnection connection)
         {
             DataTable tbl;
             OracleCommand preparedCmd = this.PrepareToExecute(connection);
@@ -350,7 +350,7 @@ namespace sql.builder.DataApi
             }
             return tbl;
         }
-        internal void ExecuteNonQuery(OracleConnection connection)
+        public void ExecuteNonQuery(OracleConnection connection)
         {
             if (string.IsNullOrEmpty(this.mainCommand.CommandText)) {
                 return;
@@ -365,7 +365,7 @@ namespace sql.builder.DataApi
                 }
             }
         }
-        internal void ExecuteNonQuery(IList<object> pars, OracleConnection connection)
+        public void ExecuteNonQuery(IList<object> pars, OracleConnection connection)
         {
             this.SetParamsValues(pars);
             this.ExecuteNonQuery(connection);
@@ -385,7 +385,7 @@ namespace sql.builder.DataApi
             newCmd.CommandText = Cmn.ClearUndefined(newCmd.CommandText);
             return newCmd;
         }
-        internal static OracleCommand CopyCommand(OracleCommand other)
+        public static OracleCommand CopyCommand(OracleCommand other)
         {
             var newCmd = new VOracleCommand(other.CommandText, other.Connection);
             for (int index = 0; index < other.Parameters.Count; index++) {
@@ -394,14 +394,14 @@ namespace sql.builder.DataApi
             }
             return newCmd;
         }
-        internal static OracleParameter CreateKeyDBParameter(DataTable table, DataRow row)
+        public static OracleParameter CreateKeyDBParameter(DataTable table, DataRow row)
         {
             DataColumn column = table.PrimaryKey[0];
             OracleParameter par = CreateDBParameter(column.ColumnName + TextConst.Pfx.PrimaryKeyParam, column.DataType);
             par.Value = row[column];
             return par;
         }
-        internal static IList<OracleParameter> CreateExtensionKeysDBParameters(VDataTable table, DataRow row)
+        public static IList<OracleParameter> CreateExtensionKeysDBParameters(VDataTable table, DataRow row)
         {
             if (table.ExtensionKeys == null) {
                 return Array.Empty<OracleParameter>();
@@ -414,7 +414,7 @@ namespace sql.builder.DataApi
             }
             return list;
         }
-        internal static OracleParameter CreateKeysDBParameter(DataTable table, DataRow[] rows)// !!! Тест
+        public static OracleParameter CreateKeysDBParameter(DataTable table, DataRow[] rows)// !!! Тест
         {
             DataColumn column = table.PrimaryKey[0];
             OracleParameter par = new OracleParameter(column.ColumnName + TextConst.Pfx.PrimaryKeyParam, OracleDbType.Array);
@@ -433,7 +433,7 @@ namespace sql.builder.DataApi
             par.Value = val;
             return par;
         }
-        internal static IList<OracleParameter> CreateForegnKeyDBParameter(DataTable table, DataRow row)
+        public static IList<OracleParameter> CreateForegnKeyDBParameter(DataTable table, DataRow row)
         {
             if (table.ParentRelations.Count == 0) {
                 return Array.Empty<OracleParameter>();
@@ -444,7 +444,7 @@ namespace sql.builder.DataApi
                 return new OracleParameter[1] { par };
             }
         }
-        internal static OracleParameter CreateNewRowDBParameter(DataRow row)
+        public static OracleParameter CreateNewRowDBParameter(DataRow row)
         {
             object value;
             if (row.RowState == DataRowState.Added) {
@@ -454,7 +454,7 @@ namespace sql.builder.DataApi
             }
             return new OracleParameter(TextConst.Pfx.Param + TextConst.DBParams.IsNewRowParam, OracleDbType.Number, value, ParameterDirection.Input);
         }
-        internal static OracleParameter TempRowIdParametr(DataTable table, DataRow row)
+        public static OracleParameter TempRowIdParametr(DataTable table, DataRow row)
         {
             DataColumn column = table.PrimaryKey[0];
             OracleParameter par = CreateDBParameter(TextConst.DBParams.TempRowId, column.DataType);
@@ -465,11 +465,11 @@ namespace sql.builder.DataApi
             }
             return par;
         }
-        internal string[] GetParamsNames()
+        public string[] GetParamsNames()
         {
             return Cmn.GetParameterNames(this.mainCommand.Parameters);
         }
-        internal IList<OracleParameter> CreateCurValDBParameters(DataRow row)
+        public IList<OracleParameter> CreateCurValDBParameters(DataRow row)
         {
             var pars = new SortedList<string, OracleParameter>();
             foreach (OracleParameter par in mainCommand.Parameters) {
@@ -515,7 +515,7 @@ namespace sql.builder.DataApi
             OracleDbType db_type = Cmn.GetDBType(type);
             return new OracleParameter(name, db_type, ParameterDirection.Input);
         }        
-        internal List<OracleParameter> ObjParsToOraclePars(IList<object> pars)
+        public List<OracleParameter> ObjParsToOraclePars(IList<object> pars)
         {
             var list = new List<OracleParameter>(pars.Count);
             for (int index = 0; index < pars.Count; index++) {
@@ -557,7 +557,7 @@ namespace sql.builder.DataApi
             }
         }
         //для отладки
-        internal static string GetCmdParametrizedText(DbCommand cmd)
+        public static string GetCmdParametrizedText(DbCommand cmd)
         {
             if (cmd == null) {
                 return string.Empty;

@@ -5,9 +5,9 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VSelect : VOutputElement, IVParent
+    public sealed class VSelect : VOutputElement, IVParent
     {
-        internal VSelect()
+        public VSelect()
             : base(EName.select)
         {
         }

@@ -11,7 +11,7 @@ using SqlBuilderLib.DevTools;
 namespace sql.builder.Clean
 {
 
-    internal static class CleanSqlBuilder
+    public static class CleanSqlBuilder
     {
 
         public static string ExecReportGetPath(string repName, Dictionary<string, object> param, string templateName)

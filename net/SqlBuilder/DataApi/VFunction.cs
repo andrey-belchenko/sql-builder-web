@@ -6,13 +6,13 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VFunction : VSXElement
+    public sealed class VFunction : VSXElement
     {
-        internal VFunction()
+        public VFunction()
             : base(EName.function)
         {
         }
-        internal string MakeText()
+        public string MakeText()
         {
             XElement el = new XElement(this);
             IList<XElement> list = new List<XElement>(el.Descendants(EName.val));

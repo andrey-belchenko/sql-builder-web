@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VGrouping : VSXElement, IVParent
+    public sealed class VGrouping : VSXElement, IVParent
     {
-        internal VGrouping()
+        public VGrouping()
             : base(EName.grouping)
         {
         }

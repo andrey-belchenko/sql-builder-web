@@ -5,13 +5,13 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VGroup : VSXElement, IVParent
+    public sealed class VGroup : VSXElement, IVParent
     {
-        internal VGroup()
+        public VGroup()
             : base(EName.group)
         {
         }
-        internal List<VSourceLink> GroupLinks()
+        public List<VSourceLink> GroupLinks()
         {
             return this.GetElementsP(EName.sourcelink).Cast<VSourceLink>().ToList();
         }

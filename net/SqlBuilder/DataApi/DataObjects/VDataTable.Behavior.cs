@@ -10,7 +10,7 @@ using System.ComponentModel;
 using SqlBuilderLib.DevTools;
 namespace sql.builder.DataApi
 {
-    internal partial class VDataTable
+    public partial class VDataTable
     {
         private bool _allowMerge = false;
         public bool Merged = false;

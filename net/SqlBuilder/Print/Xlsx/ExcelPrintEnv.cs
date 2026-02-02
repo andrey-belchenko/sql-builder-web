@@ -15,7 +15,7 @@ using sql.builder.DataApi;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal class ExcelPrintEnv : IDisposable
+    public class ExcelPrintEnv : IDisposable
     {
         #region поля
         private string _print_directory;
@@ -28,21 +28,21 @@ namespace sql.builder.Print.Xlsx
         private ExcelStyles styles;
         private List<ExcelWorksheet> worksheets;
         #endregion
-        internal ExcelSharedStrings SharedStrings { get { return this.shared_strings; } }
-        internal ExcelWorkbook Workbook { get { return this.workbook; } }
-        internal ExcelWorkbookRels WorkbookRels { get { return this.workbook_rels; } }
-        //internal ExcelCore Core { get; private set; }
-        //internal ExcelApp App { get; private set; }
-        //internal ExcelContentTypes ContentTypes { get { return this.content_types; } }
-        //internal ExcelStyles Styles { get { return this.styles; } }
-        internal List<ExcelWorksheet> Worksheets { get { return this.worksheets; } }
+        public ExcelSharedStrings SharedStrings { get { return this.shared_strings; } }
+        public ExcelWorkbook Workbook { get { return this.workbook; } }
+        public ExcelWorkbookRels WorkbookRels { get { return this.workbook_rels; } }
+        //public ExcelCore Core { get; private set; }
+        //public ExcelApp App { get; private set; }
+        //public ExcelContentTypes ContentTypes { get { return this.content_types; } }
+        //public ExcelStyles Styles { get { return this.styles; } }
+        public List<ExcelWorksheet> Worksheets { get { return this.worksheets; } }
 
         private string _numericMask = string.Format(@"^[+-]?[0-9]+(\{0}[0-9]+)?$", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
         public void AddFileToList(ExcelBaseFile file)
         {
             _files.Add(file);
         }
-        internal ExcelPrintEnv(string template_path, ExcelPrintOptions options, DataSet data)
+        public ExcelPrintEnv(string template_path, ExcelPrintOptions options, DataSet data)
         {
             this._print_directory = ExcelUtils.GetPrintDirectory();
             this._printers = new List<WorksheetPrint>();
@@ -120,7 +120,7 @@ namespace sql.builder.Print.Xlsx
             return null;
 
         }*/
-        internal WorksheetPrint BeginPrint(ExcelWorksheet worksheet, string name = null)
+        public WorksheetPrint BeginPrint(ExcelWorksheet worksheet, string name = null)
         {
             string rid = null;
             string filename = null;
@@ -163,7 +163,7 @@ namespace sql.builder.Print.Xlsx
 
             return pi;
         }
-        internal void DeleteWorksheet(ExcelWorksheet worksheet)
+        public void DeleteWorksheet(ExcelWorksheet worksheet)
         {
             this.workbook_rels.DeleteWorksheet(worksheet.NativeSheetRID);
             this.content_types.DeleteWorksheet(worksheet.NativeSheetFileName);
@@ -171,7 +171,7 @@ namespace sql.builder.Print.Xlsx
             File.Delete(worksheet.FilePath);
             this.worksheets.Remove(worksheet);
         }
-        internal void PrintRow(WorksheetPrint pi, ExcelRow row, Dictionary<ExcelCell, object> values, Dictionary<ExcelCell, string> hyperlinkTargets)
+        public void PrintRow(WorksheetPrint pi, ExcelRow row, Dictionary<ExcelCell, object> values, Dictionary<ExcelCell, string> hyperlinkTargets)
         {
             ExcelRow cur = row;
             // если строки печатаются несколько раз подряд, учитывать отступ только для первой
@@ -240,7 +240,7 @@ namespace sql.builder.Print.Xlsx
             }
             pi.PrintRow(row, rowXml);
         }
-        internal static void EndPrint(WorksheetPrint pi)
+        public static void EndPrint(WorksheetPrint pi)
         {
             foreach (ExcelRow row in pi.NotPrintedRows) {
                 pi.RemoveRowMerge(row);
@@ -326,7 +326,7 @@ namespace sql.builder.Print.Xlsx
             xf.RemoveAttributes();
             xf.SetValue(formula);
         }
-        internal void Save(string output_path)
+        public void Save(string output_path)
         {
             for (int index = 0; index < this._files.Count; index++) {
                 this._files[index].Save();
@@ -337,7 +337,7 @@ namespace sql.builder.Print.Xlsx
             ZipFile.CreateFromDirectory(_print_directory, output_path);
         }
         // для отладки - посмотреть что получилось после размазывания колонок и т.д.
-        internal void SaveTemplate(string output_path)
+        public void SaveTemplate(string output_path)
         {
             foreach (ExcelWorksheet excelWorksheet in this.worksheets) {
                 using (WorksheetPrint pi = this.BeginPrint(excelWorksheet)) {

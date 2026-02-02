@@ -19,9 +19,9 @@ using sql.builder.UI;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VColDimVal : VSXElement
+    public sealed class VColDimVal : VSXElement
     {
-        internal VColDimVal()
+        public VColDimVal()
             : base(EName.col_dim_val)
         {
         }

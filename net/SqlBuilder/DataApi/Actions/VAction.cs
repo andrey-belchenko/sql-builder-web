@@ -8,13 +8,13 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VAction : VSXElement, IVParent
+    public partial class VAction : VSXElement, IVParent
     {
         protected VAction(XName name)
             : base(name)
         {
         }
-        internal VAction()
+        public VAction()
             : base(EName.action)
         {
         }
@@ -30,7 +30,7 @@ namespace sql.builder.DataApi
 		{
             return TextConst.AVActionTypeArray.WithThisFormFieldControl.Contains(this.P_ActionType);
 		}
-        internal bool IsWithForm()
+        public bool IsWithForm()
         {
             return TextConst.AVActionTypeArray.WithForm.Contains(this.P_ActionType);
         }
@@ -75,7 +75,7 @@ namespace sql.builder.DataApi
                 return this.ActionOrSelf().GetElementsP(EName.@params).SelectMany(VSXElement.GetElementsP).Cast<VParam>().ToList();
             }
         }
-        internal VQuery CalledQuery()
+        public VQuery CalledQuery()
         {
             if (!this.IsWithQuery()) {
                 return null;
@@ -132,8 +132,8 @@ namespace sql.builder.DataApi
                 return new List<VSXElement>(0);
             }
         }
-        internal static string[] child_nodes_custom = { TextConst.EName.Params, TextConst.EName.UseAction, TextConst.EName.UsePart };
-        internal static string[] child_nodes_other = { TextConst.EName.Params, TextConst.EName.UsePart };
+        public static string[] child_nodes_custom = { TextConst.EName.Params, TextConst.EName.UseAction, TextConst.EName.UsePart };
+        public static string[] child_nodes_other = { TextConst.EName.Params, TextConst.EName.UsePart };
         IList<string> IVParent.AllowedChildNodes()
         {
             if (this.P_ActionType == TextConst.AVActionType.Custom) {

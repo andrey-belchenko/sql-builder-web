@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VExtendWhere : VSXElement, IVParent
+    public sealed class VExtendWhere : VSXElement, IVParent
     {
-        internal VExtendWhere()
+        public VExtendWhere()
             : base(EName.extendwhere)
         {
         }

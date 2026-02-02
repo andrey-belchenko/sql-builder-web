@@ -71,7 +71,7 @@ namespace sql.builder.UI
             }
         }
 
-        internal void loadFormForSelectedTabNew(VLayoutGroupInfo tab)
+        public void loadFormForSelectedTabNew(VLayoutGroupInfo tab)
         {
 
             UIFormC frm = tab.GetProperty(TextConst.AName.Form) as UIFormC;

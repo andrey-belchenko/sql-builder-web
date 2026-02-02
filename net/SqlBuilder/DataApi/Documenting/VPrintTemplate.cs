@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi.Documenting
 {
-    /*internal class VPrintTemplate:VSourcedElement
+    /*public class VPrintTemplate:VSourcedElement
     {
         public VPrintTemplate(XElement element)
             : base(element)

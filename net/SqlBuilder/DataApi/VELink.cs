@@ -5,13 +5,13 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal class VELink : VQueryCall
+    public class VELink : VQueryCall
     {
         protected VELink(XName name)
             : base(name)
         {
         }
-        internal VELink()
+        public VELink()
             : base(EName.elink)
         {
         }

@@ -16,9 +16,9 @@ using System.ComponentModel.DataAnnotations; // из-за конфликта с 
 
 namespace sql.builder.DataApi
 {
-    internal partial class VForm
+    public partial class VForm
     {
-        internal static void MultiplicateSources(XElement compiledQuery, VDataSet dataSet, string keyDimension)
+        public static void MultiplicateSources(XElement compiledQuery, VDataSet dataSet, string keyDimension)
         {
             HashSet<string> tabsToMultiplicate = new HashSet<string>();
             for (int index = 0; index < dataSet.Tables.Count; index++) {
@@ -934,11 +934,11 @@ namespace sql.builder.DataApi
             }
             return xcol;
         }
-        internal static void WriteAttrAsElem(XElement element, string attrName, string value)
+        public static void WriteAttrAsElem(XElement element, string attrName, string value)
         {
             WriteAttrAsElem(element, (XName)attrName, value);
         }
-        internal static void WriteAttrAsElem(XElement element, XName name, string value)
+        public static void WriteAttrAsElem(XElement element, XName name, string value)
         {
             element.Elements(name).Remove();
             XElement el = new XElement(name);

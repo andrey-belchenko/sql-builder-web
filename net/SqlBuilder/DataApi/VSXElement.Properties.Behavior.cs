@@ -20,7 +20,7 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VSXElement : VXElement
+    public partial class VSXElement : VXElement
     {
         private VSXElement BehaviorPropSource(string property_name, bool useColumnOptionsForLink)
         {

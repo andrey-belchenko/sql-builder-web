@@ -5,13 +5,13 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VDimSet : VQueryCall, IVParent
+    public sealed class VDimSet : VQueryCall, IVParent
     {
-        internal VDimSet()
+        public VDimSet()
             : base(EName.dimset)
         {
         }
-        internal IList<VFact> GetFacts()
+        public IList<VFact> GetFacts()
         {
             var list = (this.GetMainParent() as VQuery).AllUsedFacts().Where(f => f.P_Table == P_Alias).ToList();
             return list;

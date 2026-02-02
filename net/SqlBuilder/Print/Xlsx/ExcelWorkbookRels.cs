@@ -8,13 +8,13 @@ using sql.builder.DataApi;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal class ExcelWorkbookRels : ExcelBaseFile
+    public class ExcelWorkbookRels : ExcelBaseFile
     {
         private const string SHEET_TYPE = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet";
         private List<ExcelRel> _rels;
         private int last_id;
         private int last_sheet_num;
-        internal ExcelWorkbookRels(string file_path)
+        public ExcelWorkbookRels(string file_path)
             : base(file_path)
         {
             XElement root = this.xml.Root;
@@ -47,7 +47,7 @@ namespace sql.builder.Print.Xlsx
                 this._rels.Add(new ExcelRel(rid, type, target));
             }
         }
-        internal string GetNativeWorksheetRID(string file_name)
+        public string GetNativeWorksheetRID(string file_name)
         {
             file_name = file_name.Replace('\\', '/');
             for (int index = 0; index < this._rels.Count; index++) {
@@ -58,8 +58,8 @@ namespace sql.builder.Print.Xlsx
             }
             return null;
         }
-        // rId из файла Rels, name - имя файла 
-        internal void CreateWorksheetRel(ExcelWorksheet worksheet, out string rid, out string name)
+        // rId пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ Rels, name - пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ 
+        public void CreateWorksheetRel(ExcelWorksheet worksheet, out string rid, out string name)
         {
             this.last_id++;
             rid = "rId" + this.last_id.ToString();
@@ -73,7 +73,7 @@ namespace sql.builder.Print.Xlsx
             this.XmlChanged.Root.Add(xml);
             this._rels.Add(new ExcelRel(rid, SHEET_TYPE, target));
         }
-        internal void DeleteWorksheet(string rid)
+        public void DeleteWorksheet(string rid)
         {
             XElement el = this.XmlChanged.Root.Elements(ns.Relsp.Relationship).SearchByAttribute("Id", rid);
             if (el != null) {
@@ -88,19 +88,19 @@ namespace sql.builder.Print.Xlsx
             }
         }
     }
-    internal class ExcelRel
+    public class ExcelRel
     {
         private string id;
         private string type;
         private string target;
-        internal ExcelRel(string id, string type, string target)
+        public ExcelRel(string id, string type, string target)
         {
             this.id = id;
             this.type = type;
             this.target = target;
         }
-        internal string ID { get { return this.id; } }
-        internal string Type { get { return this.type; } }
-        internal string Target { get { return this.target; } }
+        public string ID { get { return this.id; } }
+        public string Type { get { return this.type; } }
+        public string Target { get { return this.target; } }
     }
 }

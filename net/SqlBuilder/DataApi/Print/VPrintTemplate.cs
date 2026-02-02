@@ -10,9 +10,9 @@ namespace sql.builder.DataApi
     /// <summary>
     /// &lt;template name="" title="" /&gt;
     /// </summary>
-    internal sealed class VPrintTemplate: VSXElement
+    public sealed class VPrintTemplate: VSXElement
     {
-        internal VPrintTemplate()
+        public VPrintTemplate()
             : base(EName.template)
         {
         }

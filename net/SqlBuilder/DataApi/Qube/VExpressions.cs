@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VExpressions : VOutputElement, IVParent
+    public sealed class VExpressions : VOutputElement, IVParent
     {
-        internal VExpressions()
+        public VExpressions()
             : base(EName.expressions)
         {
         }

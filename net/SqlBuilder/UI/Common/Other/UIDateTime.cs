@@ -11,7 +11,7 @@ using System.Xml.Linq;
 
 namespace sql.builder.UI
 {
-    internal partial class UIDateTime : UIBase
+    public partial class UIDateTime : UIBase
     {
         public UIDateTime()
         {

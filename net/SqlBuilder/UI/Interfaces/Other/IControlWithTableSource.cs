@@ -6,7 +6,7 @@ using System.Data;
 using sql.builder.DataApi;
 namespace sql.builder.UI
 {
-    internal interface IControlWithTableSource : IControlWithTableSourcePubl
+    public interface IControlWithTableSource : IControlWithTableSourcePubl
     {
         VDataTable GetDataTable();
         void BeginUpdate();

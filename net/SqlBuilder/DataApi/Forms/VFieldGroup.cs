@@ -4,13 +4,13 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal class VFieldGroup : VOutputElement, IVParent
+    public class VFieldGroup : VOutputElement, IVParent
     {
         protected VFieldGroup(XName name)
             : base(name)
         {
         }
-        internal VFieldGroup()
+        public VFieldGroup()
             : base(EName.fieldgroup)
         {
         }

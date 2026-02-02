@@ -7,7 +7,7 @@ using sql.builder;
 using System.Data;
 namespace sql.builder.DataApi
 {
-    internal partial class VDataTable : DataTable
+    public partial class VDataTable : DataTable
     {
        
         public bool IsNonDb = false;

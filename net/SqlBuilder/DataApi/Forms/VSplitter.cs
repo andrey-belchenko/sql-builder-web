@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VSplitter : VSXElement
+    public sealed class VSplitter : VSXElement
     {
-        internal VSplitter()
+        public VSplitter()
             : base(EName.splitter)
         {
         }

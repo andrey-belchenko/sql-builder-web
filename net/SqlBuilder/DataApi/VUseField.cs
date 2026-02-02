@@ -5,9 +5,9 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VUseField : VSXElement, IVParent
+    public sealed class VUseField : VSXElement, IVParent
     {
-        internal VUseField()
+        public VUseField()
             : base(EName.usefield)
         {
         }

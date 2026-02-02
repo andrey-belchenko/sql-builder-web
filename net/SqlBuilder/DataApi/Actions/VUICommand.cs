@@ -6,13 +6,13 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VUICommand : VUseAction
+    public sealed class VUICommand : VUseAction
     {
-        internal VUICommand()
+        public VUICommand()
             : base(EName.uicommand)
         {
         }
-        internal VSXElement ButtonType()
+        public VSXElement ButtonType()
         {
             string button_type = this.P_ButtonType;
             if (string.IsNullOrEmpty(button_type)) {

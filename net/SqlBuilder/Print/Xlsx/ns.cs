@@ -3,15 +3,15 @@ using System.Xml.Linq;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal static class ns
+    public static class ns
     {
-        internal static XNamespace relsp = "http://schemas.openxmlformats.org/package/2006/relationships";
-        internal static XNamespace relsd = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
-        internal static XNamespace main = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
-        internal static XNamespace ct = "http://schemas.openxmlformats.org/package/2006/content-types";
-        internal static XNamespace cp = "http://schemas.openxmlformats.org/package/2006/metadata/core-properties";
-        internal static XNamespace dc = "http://purl.org/dc/elements/1.1/";
-        internal static void InitXNameStaticFields(XNamespace ns, Type type)
+        public static XNamespace relsp = "http://schemas.openxmlformats.org/package/2006/relationships";
+        public static XNamespace relsd = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+        public static XNamespace main = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+        public static XNamespace ct = "http://schemas.openxmlformats.org/package/2006/content-types";
+        public static XNamespace cp = "http://schemas.openxmlformats.org/package/2006/metadata/core-properties";
+        public static XNamespace dc = "http://purl.org/dc/elements/1.1/";
+        public static void InitXNameStaticFields(XNamespace ns, Type type)
         {
             System.Reflection.FieldInfo[] fields = type.GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public);
             for (int index = 0; index < fields.Length; index++) {
@@ -21,106 +21,106 @@ namespace sql.builder.Print.Xlsx
                 }
             }
         }
-        internal static class None
+        public static class None
         {
-            internal static readonly XName activeCell;
-            internal static readonly XName bestFit;
-            internal static readonly XName ContentType;
-            internal static readonly XName count;
-            internal static readonly XName customWidth;
-            internal static readonly XName f;
-            internal static readonly XName hidden;
-            internal static readonly XName Id;
-            internal static readonly XName max;
-            internal static readonly XName min;
-            internal static readonly XName name;
-            internal static readonly XName outlineLevel;
-            internal static readonly XName PartName;
-            internal static readonly XName r;
-            internal static readonly XName ref_ = XNamespace.None.GetName("ref");
-            internal static readonly XName s;
-            internal static readonly XName sheetId;
-            internal static readonly XName si;
-            internal static readonly XName spans;
-            internal static readonly XName sqref;
-            internal static readonly XName style;
-            internal static readonly XName t;
-            internal static readonly XName tabSelected;
-            internal static readonly XName Target;
-            internal static readonly XName TargetMode;
-            internal static readonly XName tooltip;
-            internal static readonly XName Type;
-            internal static readonly XName width;
-            internal static readonly XName uniqueCount;
+            public static readonly XName activeCell;
+            public static readonly XName bestFit;
+            public static readonly XName ContentType;
+            public static readonly XName count;
+            public static readonly XName customWidth;
+            public static readonly XName f;
+            public static readonly XName hidden;
+            public static readonly XName Id;
+            public static readonly XName max;
+            public static readonly XName min;
+            public static readonly XName name;
+            public static readonly XName outlineLevel;
+            public static readonly XName PartName;
+            public static readonly XName r;
+            public static readonly XName ref_ = XNamespace.None.GetName("ref");
+            public static readonly XName s;
+            public static readonly XName sheetId;
+            public static readonly XName si;
+            public static readonly XName spans;
+            public static readonly XName sqref;
+            public static readonly XName style;
+            public static readonly XName t;
+            public static readonly XName tabSelected;
+            public static readonly XName Target;
+            public static readonly XName TargetMode;
+            public static readonly XName tooltip;
+            public static readonly XName Type;
+            public static readonly XName width;
+            public static readonly XName uniqueCount;
             static None()
             {
                 ns.InitXNameStaticFields(XNamespace.None, typeof(ns.None));
             }
         }
-        internal static class Main
+        public static class Main
         {
-            internal static readonly XName autoFilter;
-            internal static readonly XName breaksCells;
-            internal static readonly XName cellXfs;
-            internal static readonly XName c;
-            internal static readonly XName col;
-            internal static readonly XName cols;
-            internal static readonly XName conditionalFormatting;
-            internal static readonly XName dataValidations;
-            internal static readonly XName definedNames;
-            internal static readonly XName dimension;
-            internal static readonly XName f;
-            internal static readonly XName hyperlink;
-            internal static readonly XName hyperlinks;
-            internal static readonly XName mergeCell;
-            internal static readonly XName mergeCells;
-            internal static readonly XName row;
-            internal static readonly XName selection;
-            internal static readonly XName si;
-            internal static readonly XName sheet;
-            internal static readonly XName sheetData;
-            internal static readonly XName sheets;
-            internal static readonly XName sheetView;
-            internal static readonly XName sheetViews;
-            internal static readonly XName sst;
-            internal static readonly XName styleSheet;
-            internal static readonly XName t;
-            internal static readonly XName v;
-            internal static readonly XName workbook;
-            internal static readonly XName worksheet;
-            internal static readonly XName xf;
+            public static readonly XName autoFilter;
+            public static readonly XName breaksCells;
+            public static readonly XName cellXfs;
+            public static readonly XName c;
+            public static readonly XName col;
+            public static readonly XName cols;
+            public static readonly XName conditionalFormatting;
+            public static readonly XName dataValidations;
+            public static readonly XName definedNames;
+            public static readonly XName dimension;
+            public static readonly XName f;
+            public static readonly XName hyperlink;
+            public static readonly XName hyperlinks;
+            public static readonly XName mergeCell;
+            public static readonly XName mergeCells;
+            public static readonly XName row;
+            public static readonly XName selection;
+            public static readonly XName si;
+            public static readonly XName sheet;
+            public static readonly XName sheetData;
+            public static readonly XName sheets;
+            public static readonly XName sheetView;
+            public static readonly XName sheetViews;
+            public static readonly XName sst;
+            public static readonly XName styleSheet;
+            public static readonly XName t;
+            public static readonly XName v;
+            public static readonly XName workbook;
+            public static readonly XName worksheet;
+            public static readonly XName xf;
             static Main()
             {
                 ns.InitXNameStaticFields(ns.main, typeof(ns.Main));
             }
         }
-        internal static class Relsp
+        public static class Relsp
         {
-            internal static XName Relationship   = ns.relsp.GetName("Relationship");
-            internal static XName Relationships  = ns.relsp.GetName("Relationships");
+            public static XName Relationship   = ns.relsp.GetName("Relationship");
+            public static XName Relationships  = ns.relsp.GetName("Relationships");
         }
-        internal static class Relsd
+        public static class Relsd
         {
-            internal static XName id = ns.relsd.GetName("id");
+            public static XName id = ns.relsd.GetName("id");
         }
-        internal static class CT
+        public static class CT
         {
-            internal static XName Override  = ns.ct.GetName("Override");
-            internal static XName Types     = ns.ct.GetName("Types");
+            public static XName Override  = ns.ct.GetName("Override");
+            public static XName Types     = ns.ct.GetName("Types");
         }
-        internal static class DC
+        public static class DC
         {
-            internal static XName creator       = ns.dc.GetName("creator");
-            internal static XName description   = ns.dc.GetName("description");
+            public static XName creator       = ns.dc.GetName("creator");
+            public static XName description   = ns.dc.GetName("description");
         }
-        internal static class CP
+        public static class CP
         {
-            internal static XName coreProperties   = ns.cp.GetName("coreProperties");
-            internal static XName lastModifiedBy   = ns.cp.GetName("lastModifiedBy");
+            public static XName coreProperties   = ns.cp.GetName("coreProperties");
+            public static XName lastModifiedBy   = ns.cp.GetName("lastModifiedBy");
         }
-        internal static class Xml
+        public static class Xml
         {
-            internal static XName space = XNamespace.Xml.GetName("space");
+            public static XName space = XNamespace.Xml.GetName("space");
         }
     }
 }

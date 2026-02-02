@@ -12,21 +12,21 @@ namespace sql.builder.DataApi
     /// &lt;column table="" column="" as="" /&gt;
     /// </summary>
     /// <seealso cref="VFact"/>
-    internal partial class VColumn : VSXElement, IVParent
+    public partial class VColumn : VSXElement, IVParent
     {
         protected VColumn(XName name)
             : base(name)
         {
         }
-        internal VColumn()
+        public VColumn()
             : base(EName.column)
         {
         }
-        internal string FirstTableName()
+        public string FirstTableName()
         {
             return this.P_Table.SubstringBefore('.');
         }
-        internal VQueryCall Source()
+        public VQueryCall Source()
         {
             VSourcedElement root = this.ExtendedOrRootQuery();
             if (root != null) {
@@ -75,7 +75,7 @@ namespace sql.builder.DataApi
             }
             return col;
         }
-        internal VColumn SearchSourceDbColumn()
+        public VColumn SearchSourceDbColumn()
         {
             var cols = this.SourceColumn();
             if (cols.Count != 0 && cols[0] is VColumn) {
@@ -122,7 +122,7 @@ namespace sql.builder.DataApi
             AddCashValue(col, MethodBase.GetCurrentMethod().ToString(), null);
             return col;
         }
-        internal override IList<VSXElement> SourceColumns()
+        public override IList<VSXElement> SourceColumns()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSXElement>);
@@ -163,7 +163,7 @@ namespace sql.builder.DataApi
             list.Add(this);
             return list;
         }
-        /*internal override IList<VSXElement> SelfOrMultipleSource()
+        /*public override IList<VSXElement> SelfOrMultipleSource()
         {
             if (this.P_Column != TextConst.AVColumn.All) {
                 return new VSXElement[1] { this };
@@ -171,7 +171,7 @@ namespace sql.builder.DataApi
                 return this.SourceQuery().SelectMany(q => q.Columns()).SelectMany(e => e.SelfOrMultipleSource()).ToList();
             }
         }*/
-        internal static IList<VSXElement> SelfOrMultipleSource(VSXElement el)
+        public static IList<VSXElement> SelfOrMultipleSource(VSXElement el)
         {
             VColumn col = el as VColumn;
             if (col == null || el.P_Column != TextConst.AVColumn.All) {
@@ -179,11 +179,11 @@ namespace sql.builder.DataApi
             }
             return col.SourceQuery().SelectMany(q => q.Columns()).SelectMany(VColumn.SelfOrMultipleSource).ToList();
         }
-        internal string TreeSourceName()
+        public string TreeSourceName()
         {
             return this.P_Table.SubstringBefore('-');
         }
-        internal string TreeSpecSourceName()
+        public string TreeSpecSourceName()
         {
             string[] ss = P_Table.Split('-');
             if (ss.Length < 2) {
@@ -224,12 +224,12 @@ namespace sql.builder.DataApi
                 }
             }
         }
-        internal VRelation TypeRelation()
+        public VRelation TypeRelation()
         {
             string s = string.Empty;
             return TypeRelation(ref s);
         }
-        internal VRelation TypeRelation(ref string xtraPath)
+        public VRelation TypeRelation(ref string xtraPath)
         {
             VQuery query = this.SourceQuery().FirstOrDefault();
             if (query != null) {
@@ -257,7 +257,7 @@ namespace sql.builder.DataApi
             }
             return null;
         }
-        internal VQuery TypeQuery()
+        public VQuery TypeQuery()
         {
             VRelation parentLink = this.TypeRelation();
             if (parentLink != null) {
@@ -266,7 +266,7 @@ namespace sql.builder.DataApi
                 return null;
             }
         }
-        internal XElement AsNameColumnOrSelf()
+        public XElement AsNameColumnOrSelf()
         {
             XElement col2;
             VRelation rel = this.TypeRelation();
@@ -283,7 +283,7 @@ namespace sql.builder.DataApi
             }
             return col2;
         }
-        internal XElement TypeQueryAsListQuery()
+        public XElement TypeQueryAsListQuery()
         {
             VQuery query;
             VQueryCall qq = this.ListQueryCallElement();
@@ -318,7 +318,7 @@ namespace sql.builder.DataApi
             }
             return null;
         }
-        internal VQueryCall ListQueryCallElement()
+        public VQueryCall ListQueryCallElement()
         {
             IList<VSXElement> list = this.GetElementsP(EName.listquery);
             if (list.Count == 0) {
@@ -330,7 +330,7 @@ namespace sql.builder.DataApi
             }
             return (VQueryCall)list[0];
         }
-        internal IList<VColumn> ListQueryCallUsedColumns()
+        public IList<VColumn> ListQueryCallUsedColumns()
         {
             VQueryCall lqc = this.ListQueryCallElement();
             if (lqc != null) {
@@ -343,7 +343,7 @@ namespace sql.builder.DataApi
             }
             return null;
         }
-        internal VDataSet SelectionListDataSet()
+        public VDataSet SelectionListDataSet()
         {
             XElement q = this.TypeQueryAsListQuery();
             if (q != null) {
@@ -353,7 +353,7 @@ namespace sql.builder.DataApi
             }
             return null;
         }
-        internal bool IsRefreshedByAction()
+        public bool IsRefreshedByAction()
         {
             VForm form = this.RootQuery() as VForm;
             IList<VAction> actions = form.GetRefreshColumnActions();
@@ -385,7 +385,7 @@ namespace sql.builder.DataApi
             }
             return s;
         }
-        internal string EType {
+        public string EType {
             get {
                 VQuery rc = this.RootQuery() as VQuery;
                 if (rc == null) {
@@ -480,11 +480,11 @@ namespace sql.builder.DataApi
         {
             return true;
         }
-        internal bool IsAddision;
-        internal bool IsKey;
-        internal bool IsAddisionForName;
-        internal bool IsRelation;
-        internal string TextSourceFor; // используется в момент компиляции формы
+        public bool IsAddision;
+        public bool IsKey;
+        public bool IsAddisionForName;
+        public bool IsRelation;
+        public string TextSourceFor; // используется в момент компиляции формы
         //public bool HasButtons = false;// используется в момент компиляции формы
         public override List<VSXElement> GetUsedElements()
         {
@@ -505,7 +505,7 @@ namespace sql.builder.DataApi
             }
             return list;
         }
-        internal VQueryCall MasterSource()
+        public VQueryCall MasterSource()
         {
             VSXElement src = this.Source();
             if (src == null) {
@@ -519,7 +519,7 @@ namespace sql.builder.DataApi
             }
             return (VQueryCall)src;
         }
-        internal VSXElement DefaultExpression()
+        public VSXElement DefaultExpression()
         {
             if (string.IsNullOrEmpty(this.P_Default)) {
                 return null;
@@ -527,7 +527,7 @@ namespace sql.builder.DataApi
                 return this.RootQuery().Columns().First(c => c.XName == this.P_Default);
             }
         }
-        internal XElement CreateNameColumn()
+        public XElement CreateNameColumn()
         {
             VRelation rel = this.TypeRelation();
             if (rel == null) {
@@ -688,7 +688,7 @@ namespace sql.builder.DataApi
         {
             return this.GetNodeText(false);
         }
-        internal string GetNodeText(bool is_arg)
+        public string GetNodeText(bool is_arg)
         {
             string s;
             if (this.P_Prior == TextConst.AVBool.True) {
@@ -985,7 +985,7 @@ namespace sql.builder.DataApi
         /// </summary>
         /// <param name="col">колонка</param>
         /// <returns>Возвращает true, если в @table указана ссылка на таблицу</returns>
-        internal static bool IsTableColumn(VColumn col)
+        public static bool IsTableColumn(VColumn col)
         {
             VSourcedElement rc = col.RootQuery();
             if (rc == null) {

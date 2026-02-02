@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VListQuery : VSXElement, IVParent
+    public sealed class VListQuery : VSXElement, IVParent
     {
-        internal VListQuery(XName name)
+        public VListQuery(XName name)
             : base(name)
         {
         }

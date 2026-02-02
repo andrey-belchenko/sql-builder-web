@@ -8,9 +8,9 @@ namespace sql.builder.DataApi
     /// <summary>
     /// &lt;use-object object="asuse_ur_pir" editable="" /&gt;
     /// </summary>
-    internal sealed class VUseObject : VSXElement
+    public sealed class VUseObject : VSXElement
     {
-        internal VUseObject()
+        public VUseObject()
             : base(EName.use_object)
         {
         }

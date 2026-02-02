@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace sql.builder.DataApi
 {
-    internal interface IVParent
+    public interface IVParent
     {
         IList<string> AllowedChildNodes();
     }

@@ -9,7 +9,7 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    /*internal sealed partial class VReport
+    /*public sealed partial class VReport
     {
         // См. перевод на LINQ: Compiler.MakeResultScheme()
         private static XElement MakeResultScheme(XElement report, XElement compiled)
@@ -55,7 +55,7 @@ namespace sql.builder.DataApi
             #endif
             return xscheme;
         }
-        internal static void addBandsForClassTitles(XElement scheme)
+        public static void addBandsForClassTitles(XElement scheme)
         {
             if (!scheme.Descendants().Attributes(AName_.class_title).Any()) {
                 return;

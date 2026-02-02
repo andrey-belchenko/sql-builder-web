@@ -10,37 +10,37 @@ using sql.builder.Core;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VEnvironment
+    public partial class VEnvironment
     {
         private ProjectManager manager;
         private OracleConnection сonnection;
         private SortedList<string, VReport> reportsCash;
-        internal VEnvironment(OracleConnection connection)
+        public VEnvironment(OracleConnection connection)
         {
             this.manager = new ProjectManager();
             this.сonnection = connection;
             this.reportsCash = new SortedList<string, VReport>();
         }
-        internal OracleConnection Connection { get { return this.сonnection; } }
-        internal ProjectManager Manager { get { return this.manager; } }
+        public OracleConnection Connection { get { return this.сonnection; } }
+        public ProjectManager Manager { get { return this.manager; } }
         /*public VSXElement ForAdd(IEnumerable<VSXElement> scheme)
         {
             return scheme.First();
         }*/
-        internal DateTime GetLastSchemeAssembleTime()
+        public DateTime GetLastSchemeAssembleTime()
         {
             string val = this.manager.GetNativeScheme().First().AttrOrDefault(AName.timestamp, null);
             return (val == null) ? DateTime.MinValue : DateTime.Parse(val);
         }
-        internal void UpdateLastSchemeAssembleTime()
+        public void UpdateLastSchemeAssembleTime()
         {
             this.manager.GetNativeScheme().First().SetAttributeValue(AName.timestamp, DateTime.Now);
         }
-        internal string GetGuid()
+        public string GetGuid()
         {
             return GetHashCode().ToString();
         }
-        internal VReport GetPrecompiledReport(string name, string project = null)
+        public VReport GetPrecompiledReport(string name, string project = null)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VReport);
@@ -52,15 +52,15 @@ namespace sql.builder.DataApi
             AddCashValue(rep, MethodBase.GetCurrentMethod().ToString(), name);
             return rep;
         }
-        internal VReport GetPrecompiledReport(XElement element)
+        public VReport GetPrecompiledReport(XElement element)
         {
             return new VReport(this, element);
         }
-        internal VQuery GetPrecompiledQuery(string name)
+        public VQuery GetPrecompiledQuery(string name)
         {
             return VQuery.GetOrCreate(this, name);
         }
-        /*internal VUseReport GetUseReport(string report_name)
+        /*public VUseReport GetUseReport(string report_name)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), report_name)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), report_name) as VUseReport);
@@ -73,7 +73,7 @@ namespace sql.builder.DataApi
             AddCashValue(userep, MethodBase.GetCurrentMethod().ToString(), report_name);
             return userep;
         }*/
-        /*internal VUseForm GetUseForm(string form_name)
+        /*public VUseForm GetUseForm(string form_name)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), form_name)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), form_name) as VUseForm);
@@ -83,18 +83,18 @@ namespace sql.builder.DataApi
             return useform;
         }*/
         // Емцов - добавил параметр имя узла
-        internal string GetTypeParenElementtName(string elementType)
+        public string GetTypeParenElementtName(string elementType)
         {
             XElement parentElement = this.manager.GetNativeScheme().Elements().First(e1 => e1.AttrOrEmpty(TextConst.AName.ChildName) == elementType);
             return parentElement.Name.LocalName;
         }
-        internal string GetKeyName(string elementType)
+        public string GetKeyName(string elementType)
         {
             var parentElements = this.manager.GetNativeScheme().Elements().Where(e1 => e1.AttrOrEmpty(TextConst.AName.ChildName) == elementType);
             string keyName = parentElements.Attributes(AName.key_name).First().Value;
             return keyName;
         }
-        internal T GetElement<T>(XName parent_name, XName key_name, string key)
+        public T GetElement<T>(XName parent_name, XName key_name, string key)
             where T : VSXElement
         {
             XElement element = this.manager.GetNativeScheme().Elements(parent_name).Elements().SearchByAttribute(key_name, key);
@@ -104,7 +104,7 @@ namespace sql.builder.DataApi
                 return null;
             }
         }
-        internal VSXElement GetElement(XName parent_name, string id, string keyName, string file = null, string name = null)
+        public VSXElement GetElement(XName parent_name, string id, string keyName, string file = null, string name = null)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), parent_name.LocalName + "|" + id)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), parent_name.LocalName + "|" + id) as VSXElement);
@@ -134,7 +134,7 @@ namespace sql.builder.DataApi
             AddCashValue(el, MethodBase.GetCurrentMethod().ToString(), parent_name.LocalName + "|" + id);
             return el;
         }
-        internal List<VSXElement> GetElements(string parentName = null)
+        public List<VSXElement> GetElements(string parentName = null)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), parentName)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), parentName) as List<VSXElement>);
@@ -149,7 +149,7 @@ namespace sql.builder.DataApi
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), parentName);
             return list;
         }
-        internal List<VSXElement> GetUsePartElements(string partName)
+        public List<VSXElement> GetUsePartElements(string partName)
 		{
 			if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), partName)) {
 				return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), partName) as List<VSXElement>);
@@ -159,7 +159,7 @@ namespace sql.builder.DataApi
 			AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), partName);
 			return list;
 		}
-        internal List<VSXElement> GetUseFieldElements(string fieldName)
+        public List<VSXElement> GetUseFieldElements(string fieldName)
 		{
 			if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), fieldName)) {
 				return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), fieldName) as List<VSXElement>);
@@ -169,7 +169,7 @@ namespace sql.builder.DataApi
 			AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), fieldName);
 			return list;
 		}
-        internal List<VSourcedElement> GetSourcedElements()
+        public List<VSourcedElement> GetSourcedElements()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSourcedElement>);
@@ -178,7 +178,7 @@ namespace sql.builder.DataApi
             AddCashValue(list1, MethodBase.GetCurrentMethod().ToString(), null);
             return list1;
         }
-        internal List<VQueryCall> GetQueryCallsInFields()
+        public List<VQueryCall> GetQueryCallsInFields()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VQueryCall>);
@@ -193,7 +193,7 @@ namespace sql.builder.DataApi
             AddCashValue(list5, MethodBase.GetCurrentMethod().ToString(), null);
             return list5;
         }
-        internal List<VSXElement> GetReportsAndQReports()
+        public List<VSXElement> GetReportsAndQReports()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSXElement>);
@@ -204,7 +204,7 @@ namespace sql.builder.DataApi
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), null);
             return list;
         }
-        internal List<VSXElement> GetQReports()
+        public List<VSXElement> GetQReports()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSXElement>);
@@ -230,7 +230,7 @@ namespace sql.builder.DataApi
             templateInfo = VSXElement.Get(templateInfo);
             return (VSXElement)templateInfo;
         }*/
-        internal VQuery GetQuery(string name)
+        public VQuery GetQuery(string name)
         {
             //if (WebReportsAdapter.IsWebItem(name))
             //{
@@ -247,7 +247,7 @@ namespace sql.builder.DataApi
             AddCashValue(qry, MethodBase.GetCurrentMethod().ToString(), name);
             return qry;
         }
-        internal VQuery GetQueryByKeyDimensionName(string name)
+        public VQuery GetQueryByKeyDimensionName(string name)
         {
             if (string.IsNullOrEmpty(name)) {
                 return null;
@@ -264,7 +264,7 @@ namespace sql.builder.DataApi
         /// </summary>
         /// <param name="name">наименование запроса</param>
         /// <returns>найденое измерение или null</returns>
-        internal VDimension GetDimensionByQueryName(string name)
+        public VDimension GetDimensionByQueryName(string name)
         {
             if (string.IsNullOrEmpty(name)) {
                 return null;
@@ -280,7 +280,7 @@ namespace sql.builder.DataApi
             AddCashValue(dim, MethodBase.GetCurrentMethod().ToString(), name);
             return dim;
         }
-        internal IList<VDimension> GetDimensions()
+        public IList<VDimension> GetDimensions()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as IList<VDimension>);
@@ -298,7 +298,7 @@ namespace sql.builder.DataApi
         /// </summary>
         /// <param name="name">наименование измерения</param>
         /// <returns>найденое измерение или null</returns>
-        internal VDimension GetDimension(string name)
+        public VDimension GetDimension(string name)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VDimension);
@@ -311,7 +311,7 @@ namespace sql.builder.DataApi
             AddCashValue(dim, MethodBase.GetCurrentMethod().ToString(), name);
             return dim;
         }
-        internal VAction GetAction(string name)
+        public VAction GetAction(string name)
         {
             if (this.IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
                 return (this.GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VAction);
@@ -320,7 +320,7 @@ namespace sql.builder.DataApi
             this.AddCashValue(action, MethodBase.GetCurrentMethod().ToString(), name);
             return action;
         }
-        internal VField GetField(string id)
+        public VField GetField(string id)
         {
             if (this.IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), id)) {
                 return (this.GetCashValue(MethodBase.GetCurrentMethod().ToString(), id) as VField);
@@ -329,7 +329,7 @@ namespace sql.builder.DataApi
             this.AddCashValue(field, MethodBase.GetCurrentMethod().ToString(), id);
             return field;
         }
-        internal VColor GetColor(string name)
+        public VColor GetColor(string name)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VColor);
@@ -342,7 +342,7 @@ namespace sql.builder.DataApi
             AddCashValue(clr, MethodBase.GetCurrentMethod().ToString(), name);
             return clr;
         }
-        /*internal IList<VColor> GetColors()
+        /*public IList<VColor> GetColors()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as IList<VColor>);
@@ -355,7 +355,7 @@ namespace sql.builder.DataApi
             AddCashValue(arr, MethodBase.GetCurrentMethod().ToString(), null);
             return arr;
         }*/
-        /*internal VFormat GetFormat(string name)
+        /*public VFormat GetFormat(string name)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VFormat);
@@ -370,7 +370,7 @@ namespace sql.builder.DataApi
             AddCashValue(clr, MethodBase.GetCurrentMethod().ToString(), name);
             return clr;
         }*/
-        /*internal IList<VFormat> GetFormats()
+        /*public IList<VFormat> GetFormats()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as IList<VFormat>);
@@ -388,7 +388,7 @@ namespace sql.builder.DataApi
         /// Возвращает все выражения (&lt;call&gt) из &lt;expression_packages&gt;
         /// </summary>
         /// <returns></returns>
-        internal IList<VExpression> GetExpressions()
+        public IList<VExpression> GetExpressions()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as IList<VExpression>);
@@ -401,7 +401,7 @@ namespace sql.builder.DataApi
             AddCashValue(arr, MethodBase.GetCurrentMethod().ToString(), null);
             return arr;
         }
-        internal List<VRole> GetRoles()
+        public List<VRole> GetRoles()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VRole>);
@@ -415,7 +415,7 @@ namespace sql.builder.DataApi
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), null);
             return list;
         }
-        internal List<VSXElement> GetFactColumns()
+        public List<VSXElement> GetFactColumns()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSXElement>);
@@ -432,7 +432,7 @@ namespace sql.builder.DataApi
         /// </summary>
         /// <param name="name">наименование выражения (call@as)</param>
         /// <returns>найденое выражение или null</returns>
-        internal VExpression GetExpression(string name)
+        public VExpression GetExpression(string name)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VExpression);
@@ -445,7 +445,7 @@ namespace sql.builder.DataApi
             AddCashValue(exp, MethodBase.GetCurrentMethod().ToString(), name);
             return exp;
         }
-        internal VRole GetRole(string name)
+        public VRole GetRole(string name)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VRole);
@@ -454,7 +454,7 @@ namespace sql.builder.DataApi
             AddCashValue(exp, MethodBase.GetCurrentMethod().ToString(), name);
             return exp;
         }
-        internal List<VSXElement> GetQueryUseByColumnLink(string queryName)
+        public List<VSXElement> GetQueryUseByColumnLink(string queryName)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), queryName)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), queryName) as List<VSXElement>);
@@ -474,7 +474,7 @@ namespace sql.builder.DataApi
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), queryName);
             return list;
         }
-        internal VSXElement GetFactColumn(string name)
+        public VSXElement GetFactColumn(string name)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VSXElement);
@@ -503,7 +503,7 @@ namespace sql.builder.DataApi
             AddCashValue(col, MethodBase.GetCurrentMethod().ToString(), name);
             return col;
         }
-        internal VSXElement GetFactSource(string name)
+        public VSXElement GetFactSource(string name)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VSXElement);
@@ -515,7 +515,7 @@ namespace sql.builder.DataApi
             AddCashValue(source, MethodBase.GetCurrentMethod().ToString(), name);
             return source;
         }
-        internal List<VSXElement> GetSecurityObjects()
+        public List<VSXElement> GetSecurityObjects()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSXElement>);
@@ -528,7 +528,7 @@ namespace sql.builder.DataApi
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), null);
             return list;
         }
-        internal VSXElement GetSecurityObject(string name)
+        public VSXElement GetSecurityObject(string name)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VSXElement);
@@ -569,12 +569,12 @@ namespace sql.builder.DataApi
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), name);
             return list;
         }*/
-        internal VReport GetReport(string name)
+        public VReport GetReport(string name)
         {
             XElement q = this.manager.GetNativeScheme().Elements(EName.reports).Elements(EName.report).SearchByAttribute(AName.name, name);
             return VSXElement.Get<VReport>(q);
         }
-        internal VSXElement GetReportOrQuery(string name)
+        public VSXElement GetReportOrQuery(string name)
         {
             VSXElement ret = GetReport(name);
             if (ret == null) {
@@ -582,7 +582,7 @@ namespace sql.builder.DataApi
             }
             return ret;
         }
-        internal VForm GetForm(string name)
+        public VForm GetForm(string name)
         {
             //if (WebReportsAdapter.IsWebItem(name))
             //{
@@ -596,7 +596,7 @@ namespace sql.builder.DataApi
                 return VSXElement.Get<VForm>(q);
             }
         }
-        internal VSXElement GetFormOrQuery(string name)
+        public VSXElement GetFormOrQuery(string name)
         {
             VSXElement vform = this.GetForm(name);
             if (vform == null) {
@@ -604,11 +604,11 @@ namespace sql.builder.DataApi
             }
             return vform;
         }
-        internal void LoadProject(string name)
+        public void LoadProject(string name)
         {
             this.manager.LoadProjectIfNeed(name);
         }
-        internal VForm GetFormOrQueryAsForm(string name)
+        public VForm GetFormOrQueryAsForm(string name)
         {
             VForm vform = this.GetForm(name);
             if (vform == null) {
@@ -616,7 +616,7 @@ namespace sql.builder.DataApi
             }
             return vform;
         }
-        internal VForm GetFormFromQuery(string name)
+        public VForm GetFormFromQuery(string name)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VForm);
@@ -631,12 +631,12 @@ namespace sql.builder.DataApi
             AddCashValue(form, MethodBase.GetCurrentMethod().ToString(), name);
             return form;
         }
-        internal VFunction GetFunction(string name)
+        public VFunction GetFunction(string name)
         {
             XElement q = this.manager.GetNativeScheme().Elements(EName.functions).Elements(EName.function).SearchByAttribute(AName.name, name);
             return VSXElement.Get<VFunction>(q);
         }
-        internal VPart GetPart(string id)
+        public VPart GetPart(string id)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), id)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), id) as VPart);//! без кешмрования baseelement будет работать некорректно
@@ -656,14 +656,14 @@ namespace sql.builder.DataApi
             AddCashValue(part, MethodBase.GetCurrentMethod().ToString(), id);
             return part;
         }
-        internal List<VSXElement> GetParts()
+        public List<VSXElement> GetParts()
         {
             var list = this.manager.GetNativeScheme().Elements(EName.parts).Elements(EName.part).Select(VSXElement.Get).ToList();
             var virtParts = this.manager.GetNativeScheme().Descendants().Where(e => e.Attribute(AName.part_id) != null).Select(VSXElement.Get).ToList();
             list.AddRange(virtParts);
             return list;
         }
-        internal VSXElement CreateElement(string elementType, string templateName)
+        public VSXElement CreateElement(string elementType, string templateName)
         {
             XElement parentElement = this.manager.GetNativeScheme().Elements().First(e1 => e1.AttrOrEmpty(TextConst.AName.ChildName) == elementType);
             XElement template;
@@ -675,13 +675,13 @@ namespace sql.builder.DataApi
             VSXElement el = CreateElement(elementType, template);
             return el;
         }
-        internal string GetElementTypeKeyAttrName(string elementType)
+        public string GetElementTypeKeyAttrName(string elementType)
         {
             XElement parentElement = this.manager.GetNativeScheme().Elements().First(e1 => e1.AttrOrEmpty(TextConst.AName.ChildName) == elementType);
             string keyName = parentElement.Attribute(AName.key_name).Value;
             return keyName;
         }
-        internal VSXElement CreateElement(string elementType, XElement template, string fileName = null)
+        public VSXElement CreateElement(string elementType, XElement template, string fileName = null)
         {
             XElement parentElement = this.manager.GetNativeScheme().Elements().First(e1 => Cmn.GetAttrValue(e1, TextConst.AName.ChildName) == elementType);
             XElement element;
@@ -714,13 +714,13 @@ namespace sql.builder.DataApi
             }
             return el;
         }
-        /*internal VQuery CreateForm()
+        /*public VQuery CreateForm()
         {
             XElement element = new XElement(EName.form);
             Manager.GetNativeScheme().Elements(EName.forms).First().Add(element);
             return VSXElement.Get<VQuery>(element);
         }*/
-        internal void SyncNavigators(VSXElement e)
+        public void SyncNavigators(VSXElement e)
         {
             throw new NotImplementedException();
             if (!(e is VQuery) && !(e is VReport) && !(e is VForm)) return;

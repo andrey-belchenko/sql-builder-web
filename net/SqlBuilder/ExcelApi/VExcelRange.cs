@@ -4,22 +4,22 @@ using System.Xml.Linq;
 
 namespace sql.builder.ExcelApi
 {
-    internal sealed class VExcelRange
+    public sealed class VExcelRange
     {
-        internal readonly VExcelCell FirstCell;
-        internal readonly VExcelCell LastCell;
+        public readonly VExcelCell FirstCell;
+        public readonly VExcelCell LastCell;
         private readonly VExcelSheet Sheet;
         private int firstRowIndex;
         private int lastRowIndex;
         private int firstColIndex;
         private int lastColIndex;
-        internal VExcelRange(VExcelCell firstCell, VExcelCell lastCell)
+        public VExcelRange(VExcelCell firstCell, VExcelCell lastCell)
         {
             this.FirstCell = firstCell;
             this.LastCell = lastCell;
             this.Sheet = firstCell.Sheet;
         }
-        internal List<List<VExcelCell>> Data()
+        public List<List<VExcelCell>> Data()
         {
             this.firstRowIndex = this.FirstCell.RowIndex;
             this.lastRowIndex = this.LastCell.RowIndex;
@@ -38,7 +38,7 @@ namespace sql.builder.ExcelApi
             }
             return rows;
         }
-        internal List<VExcelColumn> Columns()
+        public List<VExcelColumn> Columns()
         {
             int firstColIndex = this.FirstCell.Index;
             int lastColIndex = this.LastCell.Index;
@@ -49,7 +49,7 @@ namespace sql.builder.ExcelApi
             }
             return columns;
         }
-        internal void Remove()
+        public void Remove()
         {
             foreach (VExcelColumn col in this.Columns()) {
                 col.Remove();
@@ -84,7 +84,7 @@ namespace sql.builder.ExcelApi
                 ir++;
             }
         }
-        internal void Replace(string value, string newValue)
+        public void Replace(string value, string newValue)
         {
             List<List<VExcelCell>> rows = Data();
             foreach (List<VExcelCell> row in rows) {

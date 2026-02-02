@@ -14,7 +14,7 @@ namespace sql.builder.Print.XML
     /// Группа строк шаблона Excel в формате xml
     /// </summary>
     /// <seealso cref="sql.builder.Print.Xlsx.ExcelPrintGroup"/>
-    internal class ExcelPrintGroup : IExcelPrintGroup, IExcelPrintEl
+    public class ExcelPrintGroup : IExcelPrintGroup, IExcelPrintEl
     {
         #region поля
         private readonly ExcelPrintGroup parent;
@@ -24,7 +24,7 @@ namespace sql.builder.Print.XML
         private readonly IList<IExcelPrintElement> childs;
         private readonly bool dont_remove;
         #endregion
-        internal ExcelPrintGroup(ExcelPrintSheet sheet, List<XElement> rows, bool dontRemove, ExcelPrintGroup parent = null, string tableName = "")
+        public ExcelPrintGroup(ExcelPrintSheet sheet, List<XElement> rows, bool dontRemove, ExcelPrintGroup parent = null, string tableName = "")
         {
             //this.sheet = sheet;
             this.parent = parent;
@@ -120,7 +120,7 @@ namespace sql.builder.Print.XML
                 this.childs[index].ClearData();
             }
         }
-        internal List<DataRow> GetRowsByParent(DataSet dataSet, bool print_big_data)
+        public List<DataRow> GetRowsByParent(DataSet dataSet, bool print_big_data)
         {
             List<DataRow> res = new List<DataRow>();
             TableReference tr = this.GetTableReference();

@@ -16,7 +16,7 @@ using Devart.Data.Oracle;
 
 namespace sql.builder.DataApi
 {
-    /*internal class VVisualizers:VOutputElement
+    /*public class VVisualizers:VOutputElement
     {
         public VVisualizers(XElement element)
             : base(element)

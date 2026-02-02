@@ -10,9 +10,9 @@ using SqlBuilderLib.DevTools;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VDataColumn : DataColumn
+    public partial class VDataColumn : DataColumn
     {
-        internal static VDataColumn Create(XElement scheme)
+        public static VDataColumn Create(XElement scheme)
         {
             Contract.Assert(scheme != null);
             Contract.Assert(scheme.Name == EName.column);
@@ -47,10 +47,10 @@ namespace sql.builder.DataApi
         #region поля
         private bool editableOld;
         private XElement scheme;
-        internal string DbColumnName;
-        internal string TempColumnName;
-        internal bool Visible;
-        internal bool IsHtml;
+        public string DbColumnName;
+        public string TempColumnName;
+        public bool Visible;
+        public bool IsHtml;
         private VDataSet selectionList;
         private List<UIBase> _bound_controls;
         #endregion
@@ -60,7 +60,7 @@ namespace sql.builder.DataApi
         /// <param name="column_name">наименование колонки</param>
         /// <param name="type">тип данных колонки</param>
         /// <param name="caption">заголовок</param>
-        internal VDataColumn(string column_name, Type type, string caption)
+        public VDataColumn(string column_name, Type type, string caption)
             : this(column_name, type)
         {
             this.Caption = caption;
@@ -70,7 +70,7 @@ namespace sql.builder.DataApi
         /// </summary>
         /// <param name="column_name">наименование колонки</param>
         /// <param name="type">тип данных колонки</param>
-        internal VDataColumn(string column_name, Type type)
+        public VDataColumn(string column_name, Type type)
             : base(column_name, type)
         {
             this._bound_controls = new List<UIBase>();
@@ -79,14 +79,14 @@ namespace sql.builder.DataApi
         /// Создаёт строковую колонку с наименованием <paramref name="column_name"/>
         /// </summary>
         /// <param name="column_name">наименование колонки</param>
-        internal VDataColumn(string column_name)
+        public VDataColumn(string column_name)
             : this(column_name, typeof(string))
         {
         }
         #region свойства
         public new Type DataType { get { return base.DataType; } }
-        internal XElement Scheme { get { return this.scheme; } }
-        internal bool EditableOld
+        public XElement Scheme { get { return this.scheme; } }
+        public bool EditableOld
         {
             get
             {
@@ -106,7 +106,7 @@ namespace sql.builder.DataApi
                 }
             }
         }
-        internal VDataSet SelectionList
+        public VDataSet SelectionList
         {
             get
             {
@@ -118,11 +118,11 @@ namespace sql.builder.DataApi
             }
         }
         #endregion
-        internal VDataTable GetTable()
+        public VDataTable GetTable()
         {
             return this.Table as VDataTable;
         }
-        internal object GetValue(DataRow row)
+        public object GetValue(DataRow row)
         {
             if (row.RowState == DataRowState.Deleted)
             {
@@ -133,7 +133,7 @@ namespace sql.builder.DataApi
                 return row[this];
             }
         }
-        internal bool SetValue(DataRow row, object value, bool isUser = false)
+        public bool SetValue(DataRow row, object value, bool isUser = false)
         {
             if (row.RowState == DataRowState.Deleted)
             {
@@ -216,7 +216,7 @@ namespace sql.builder.DataApi
                 return null;
             }
         }
-        /*internal void MakeAttributes()
+        /*public void MakeAttributes()
         {
             XElement viewcolumn = this.GetViewColumn();
             string editor;
@@ -236,11 +236,11 @@ namespace sql.builder.DataApi
             }
         }*/
         #region Динамические свойства поля для создания интерфейса
-        internal VFieldStateAndOtherInfo GetFieldState()
+        public VFieldStateAndOtherInfo GetFieldState()
         {
             return this.GetFieldInfo(new[] { VFieldInfo.InfoTypesToGet.State });
         }
-        internal string GetFieldValueName(UIFormC.UseType useType)
+        public string GetFieldValueName(UIFormC.UseType useType)
         {
             string s = null;
             switch (useType)
@@ -257,7 +257,7 @@ namespace sql.builder.DataApi
             }
             return s;
         }
-        internal string GetFieldValueName(DataRow row = null)
+        public string GetFieldValueName(DataRow row = null)
         {
             string s = null;
             if (row == null)
@@ -285,7 +285,7 @@ namespace sql.builder.DataApi
             }
             return s;
         }
-        internal void SetFieldValueName(string name)
+        public void SetFieldValueName(string name)
         {
             DataRow row = this.GetTable().CurrentRow;
             if (row != null)
@@ -318,11 +318,11 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Binding + Validation
-        internal List<UIBase> BoundControls
+        public List<UIBase> BoundControls
         {
             get { return this._bound_controls; }
         }
-        internal void BindControl(UIBase ctrl)
+        public void BindControl(UIBase ctrl)
         {
             if (!this._bound_controls.Contains(ctrl))
             {
@@ -330,37 +330,37 @@ namespace sql.builder.DataApi
                 this.GetTable().HasControls = true;
             }
         }
-        internal void UnbindControl(UIBase ctrl)
+        public void UnbindControl(UIBase ctrl)
         {
             if (this._bound_controls.Contains(ctrl))
             {
                 this._bound_controls.Remove(ctrl);
             }
         }
-        //internal void SetCellError(DataRow row, string error_text)
+        //public void SetCellError(DataRow row, string error_text)
         //{
         //    row.SetColumnError(this, error_text);
         //}
-        //internal string GetCellError(DataRow row)
+        //public string GetCellError(DataRow row)
         //{
         //    if (row == null) return null;
         //    return row.GetColumnError(this);
         //}
         // static, чтобы можно было использовать как условный предикат: Where(VDataColumn.HasBoundControl)
-        internal static bool HasBoundControl(VDataColumn col)
+        public static bool HasBoundControl(VDataColumn col)
         {
             return !List.IsNullOrEmpty(col._bound_controls);
         }
         #endregion
     }
-    internal class VInternedStringDataColumn : VDataColumn
+    public class VInternedStringDataColumn : VDataColumn
     {
         /// <summary>
         /// Создаёт колонку типа <paramref name="type"/> с наименованием <paramref name="column_name"/> и заголовком <paramref name="caption"/>
         /// </summary>
         /// <param name="column_name">наименование колонки</param>
         /// <param name="caption">заголовок</param>
-        internal VInternedStringDataColumn(string column_name, string caption)
+        public VInternedStringDataColumn(string column_name, string caption)
             : base(column_name, typeof(string), caption)
         {
         }
@@ -368,7 +368,7 @@ namespace sql.builder.DataApi
         /// Создаёт колонку с наименованием <paramref name="column_name"/> типа <paramref name="type"/>
         /// </summary>
         /// <param name="column_name">наименование колонки</param>
-        internal VInternedStringDataColumn(string column_name)
+        public VInternedStringDataColumn(string column_name)
             : base(column_name, typeof(string))
         {
         }

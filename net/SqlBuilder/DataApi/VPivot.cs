@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VPivot : VSXElement, IVParent
+    public sealed class VPivot : VSXElement, IVParent
     {
-        internal VPivot()
+        public VPivot()
             : base(EName.pivot)
         {
         }

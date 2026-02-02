@@ -6,9 +6,9 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VCustomerUse : VSXElement
+    public sealed class VCustomerUse : VSXElement
     {
-        internal VCustomerUse()
+        public VCustomerUse()
             : base(EName.customer)
         {
         }

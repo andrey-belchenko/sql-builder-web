@@ -7,9 +7,9 @@ namespace sql.builder.DataApi
     /// <summary>
     /// &lt;table name="" as="" /&gt;
     /// </summary>
-    internal sealed class VTable : VQueryCall, IVParent
+    public sealed class VTable : VQueryCall, IVParent
     {
-        internal VTable()
+        public VTable()
             : base(EName.table)
         {
         }

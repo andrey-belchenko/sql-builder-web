@@ -5,15 +5,15 @@ using System.Reflection;
 
 namespace sql.builder.DataApi
 {
-    internal sealed partial class VEntityType
+    public sealed partial class VEntityType
     {
         private VQuery query;
-        internal VEntityType(VQuery query)
+        public VEntityType(VQuery query)
         {
             this.query = query;
         }
-        internal VQuery Query { get { return this.query; } }
-        /*internal List<VEntityTypeField> Fields()
+        public VQuery Query { get { return this.query; } }
+        /*public List<VEntityTypeField> Fields()
         {
             List<XElement> items = this.query.Element(EName.select).Elements().ToList();
             List<VEntityTypeField> retItems = new List<VEntityTypeField>(items.Count);
@@ -38,7 +38,7 @@ namespace sql.builder.DataApi
         {
             return this.query.GetMESelectSections();
         }
-        internal List<VRelation> ParentLinks()
+        public List<VRelation> ParentLinks()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VRelation>);
@@ -55,7 +55,7 @@ namespace sql.builder.DataApi
             AddCashValue(retItems1, MethodBase.GetCurrentMethod().ToString(), null);
             return retItems1;
         }
-        internal List<VSXElement> AllDimensionLinks()
+        public List<VSXElement> AllDimensionLinks()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSXElement>);
@@ -67,7 +67,7 @@ namespace sql.builder.DataApi
             AddCashValue(items, MethodBase.GetCurrentMethod().ToString(), null);
             return items;
         }
-        internal List<VSXElement> ColumnDimensionLinks()
+        public List<VSXElement> ColumnDimensionLinks()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSXElement>);
@@ -76,7 +76,7 @@ namespace sql.builder.DataApi
             AddCashValue(items, MethodBase.GetCurrentMethod().ToString(), null);
             return items;
         }
-        internal List<VRelation> ParentDimensionLinks()
+        public List<VRelation> ParentDimensionLinks()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VRelation>);
@@ -89,7 +89,7 @@ namespace sql.builder.DataApi
             AddCashValue(retItems, MethodBase.GetCurrentMethod().ToString(), null);
             return retItems;
         }
-        internal List<VQueryCall> PrimaryExtDimensionLinks()
+        public List<VQueryCall> PrimaryExtDimensionLinks()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VQueryCall>);
@@ -98,7 +98,7 @@ namespace sql.builder.DataApi
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), null);
             return list;
         }
-        internal List<VQueryCall> SecondaryExtDimensionLinks()
+        public List<VQueryCall> SecondaryExtDimensionLinks()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VQueryCall>);
@@ -107,7 +107,7 @@ namespace sql.builder.DataApi
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), null);
             return list;
         }
-        internal List<VQueryCall> AllExtDimensionLinks()
+        public List<VQueryCall> AllExtDimensionLinks()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VQueryCall>);
@@ -140,7 +140,7 @@ namespace sql.builder.DataApi
                AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), null);
            return list;
         }
-        internal VRelation ParentLink(string name)
+        public VRelation ParentLink(string name)
         {
             XElement item = fromElementsMEI().Elements().ToList().SelectAsArray(VSXElement.Get).FirstOrDefault(e => e.Attribute(AName.join) != null && e.XName == name);
             if (item != null) {
@@ -158,7 +158,7 @@ namespace sql.builder.DataApi
         //    }
         //    return null;
         //}
-        internal List<VRelation> ChildLinks()
+        public List<VRelation> ChildLinks()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VRelation>);
@@ -185,7 +185,7 @@ namespace sql.builder.DataApi
             AddCashValue(retItems, MethodBase.GetCurrentMethod().ToString(), null);
             return retItems;
         }
-        internal VRelation ChildLink(string name)
+        public VRelation ChildLink(string name)
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VRelation);

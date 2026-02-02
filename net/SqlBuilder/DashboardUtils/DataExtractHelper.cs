@@ -18,7 +18,7 @@ namespace sql.builder.DashboardUtils
 	class DataExtractHelper
 
 	{
-		internal static string MergeSqlScheme(string sql, XElement scheme)
+		public static string MergeSqlScheme(string sql, XElement scheme)
 		{
 			SortedList columnsList = new SortedList();
 			string mergedSQL = "SELECT ";
@@ -73,7 +73,7 @@ namespace sql.builder.DashboardUtils
 			return mergedSQL;
 		}
 
-		internal static void RegisterDataExtract(string fixedNamesSql, string project, string extractName, string allowReplace = "false")
+		public static void RegisterDataExtract(string fixedNamesSql, string project, string extractName, string allowReplace = "false")
 		{
 			//Must be refactored with webRequest (for net4.0)
 #if DEBUG
@@ -141,7 +141,7 @@ namespace sql.builder.DashboardUtils
 #endif
 		}
 
-		internal static string[] GetProjectList()
+		public static string[] GetProjectList()
 		{
 
 			string[] projectList = null;
@@ -177,7 +177,7 @@ namespace sql.builder.DashboardUtils
 			return projectList;
 		}
 
-		internal static string[] GetDataExtractNameListByProject(string project)
+		public static string[] GetDataExtractNameListByProject(string project)
 		{
 
 			string[] extractList = null;

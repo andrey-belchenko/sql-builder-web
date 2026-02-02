@@ -27,22 +27,22 @@ using SqlBuilderLib.DevTools;
 
 namespace sql.builder.WinForms
 {
-    internal sealed partial class CleanFrmExpressReport
+    public sealed partial class CleanFrmExpressReport
     {
         /// <summary>
         ///          
         /// </summary>
-        internal event EventHandler<CleanExpressReportEventArgs> ReportOpening;
+        public event EventHandler<CleanExpressReportEventArgs> ReportOpening;
         /// <summary>
         ///     
         /// </summary>
-        internal event EventHandler<CleanExpressReportEventArgs> CustomPrint;
+        public event EventHandler<CleanExpressReportEventArgs> CustomPrint;
 
         private bool _openDocumentAfterPrint = true;
         /// <summary>
         ///     
         /// </summary>
-        internal bool OpenDocumentAfterPrint
+        public bool OpenDocumentAfterPrint
         {
             get
             {
@@ -54,7 +54,7 @@ namespace sql.builder.WinForms
             }
         }
         private bool _showMessages = true;
-        internal bool ShowMessages
+        public bool ShowMessages
         {
             get
             {
@@ -66,7 +66,7 @@ namespace sql.builder.WinForms
             }
         }
 
-        internal DataSet GetParamsData()
+        public DataSet GetParamsData()
         {
             //  ,  
             return (DataSet)this._uIForm.DataSource;
@@ -75,7 +75,7 @@ namespace sql.builder.WinForms
         ///   ResultData   CustomPrint
         /// </summary>
         /// <param name="param"></param>
-        internal void DoCustomPrint(string param)
+        public void DoCustomPrint(string param)
         {
             if (this.ValidateParams() != string.Empty)
             {
@@ -93,7 +93,7 @@ namespace sql.builder.WinForms
         private DataTable _dt_repository_info;
         private DataTable _dt_print_forms;
         private bool _isWithBehavior;
-        internal static object lockObj = new Object();
+        public static object lockObj = new Object();
         private CancellationTokenSource cts;
         private bool in_process;
         private Dictionary<string, object> _user_settings;
@@ -150,19 +150,19 @@ namespace sql.builder.WinForms
         #endregion
         #region  
 
-        internal UIFormC GetUIForm()
+        public UIFormC GetUIForm()
         {
             return this._uIForm;
         }
         /// <summary>
         ///     Initialize(string report_name)
         /// </summary>
-        internal CleanFrmExpressReport()
+        public CleanFrmExpressReport()
         {
             //this.InitializeComponent();
             this._user_settings = new Dictionary<string, object>();
         }
-        internal static string GetProjectNameFromNavigator(string reportName) //  
+        public static string GetProjectNameFromNavigator(string reportName) //  
         {
             XElement xusereport = XmlReports.GetUseReport(reportName);
             if (xusereport != null)
@@ -464,7 +464,7 @@ namespace sql.builder.WinForms
             //this.TaskBarAssistent.ProgressMode = TaskbarButtonProgressMode.NoProgress;
             this.in_process = false;
         }
-        internal string ExecuteReport(XmlNode templateInfo)
+        public string ExecuteReport(XmlNode templateInfo)
         {
             if (this.ValidateParams() != string.Empty)
             {
@@ -504,7 +504,7 @@ namespace sql.builder.WinForms
             }
             return path;
         }
-        internal DataSet GetExecuteReportResult()
+        public DataSet GetExecuteReportResult()
         {
             this.ShowMessages = false;
             this.BeginForming();
@@ -657,7 +657,7 @@ namespace sql.builder.WinForms
             Parser.SaveReportParamsToXml(xroot, this._uIForm);
             db.MergeDefaultReportSetting(this._report_name, xroot.ToString());
         }
-        internal string ValidateParams()
+        public string ValidateParams()
         {
             if (!this._isWithBehavior)
             {
@@ -666,7 +666,7 @@ namespace sql.builder.WinForms
             return this._uIForm.GetValidation() ?? string.Empty;
         }
     }
-    internal sealed class CleanCustomTaskScheduler : TaskScheduler
+    public sealed class CleanCustomTaskScheduler : TaskScheduler
     {
         #region Fields
 

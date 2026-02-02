@@ -452,7 +452,7 @@ namespace sql.builder
         //private static bool multipage = false;
         //private static SortedList<string, SortedList<string, int>> columnsIndexesList; // = new SortedList<string, SortedList<string, int>>();
         //private static SortedList<string, SortedList<string, XmlNode>> columnsInfoList; // = new SortedList<string, SortedList<string, XmlNode>>();
-        internal static bool applySource(XmlNode templatePart, int sourceIndex, XmlNode data, string parentName, XmlNode rootData, bool multipage, SortedList<string, SortedList<string, Tuple<int, XmlNode>>> columnsInfo)
+        public static bool applySource(XmlNode templatePart, int sourceIndex, XmlNode data, string parentName, XmlNode rootData, bool multipage, SortedList<string, SortedList<string, Tuple<int, XmlNode>>> columnsInfo)
         {
             string tableName = null;
             if (rootData == null) {
@@ -593,7 +593,7 @@ namespace sql.builder
 
 
         }
-        internal static void applyValues(XmlNode templatePart, string tableName, int sourceIndex, XmlNode row, SortedList<string, Tuple<int, XmlNode>> columns)//SortedList<string, int> columnsIndexes, SortedList<string, XmlNode> columnsInfo)
+        public static void applyValues(XmlNode templatePart, string tableName, int sourceIndex, XmlNode row, SortedList<string, Tuple<int, XmlNode>> columns)//SortedList<string, int> columnsIndexes, SortedList<string, XmlNode> columnsInfo)
         {
             XmlNodeList values = templatePart.SelectNodes(".//*[name()='ss:Data' and contains(.,'value:" + tableName + ".')] | .//*[name()='ss:Cell' and contains(@ss:Formula,'value:" + tableName + ".')] ", excelNamespaseManager);
             XmlNode cells = row.SelectSingleNode("cells");

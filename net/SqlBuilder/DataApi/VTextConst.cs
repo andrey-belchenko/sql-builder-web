@@ -3,15 +3,15 @@
 namespace sql.builder.DataApi
 {
 
-    internal static partial class TextConst
+    public static partial class TextConst
     {
-        internal static class MsgTypePref
+        public static class MsgTypePref
         {
             public const string Information = "[inf]"; // только значок
             public const string Warning = "[wrn]"; //  значок и предупреждение но можно сохранить// переделал, теперь предупреждение без значка // для гридов не реализовано
             public const string Error = "[err]"; // Емцов 43400(1) как wrn, только нельзя сохранить
         }
-        internal static class MsgTypePrefArray
+        public static class MsgTypePrefArray
         {
             public static string[] All = { MsgTypePref.Information,MsgTypePref.Warning,MsgTypePref.Error};
             public static string[] CanSave = { MsgTypePref.Information, MsgTypePref.Warning };
@@ -19,7 +19,7 @@ namespace sql.builder.DataApi
            
 
         }
-        internal static class EName
+        public static class EName
         {
             public const string Function = "function";
             public const string Insert = "insert";
@@ -196,7 +196,7 @@ namespace sql.builder.DataApi
             public const string Measures = "measures";
         }
 
-        internal static class ENameArray
+        public static class ENameArray
         {
             public static string[] ALinks = { EName.Link, EName.ELink, EName.DLink, EName.SLink };
             public static string[] ALinksAndQuery = { EName.Query, EName.Link, EName.ELink, EName.DLink, EName.SLink };
@@ -207,14 +207,14 @@ namespace sql.builder.DataApi
             public static string[] AllowTextMode = { EName.Column, EName.Field, EName.Fact, EName.Label };
             public static string[] AllowLayoutMode = { EName.FieldGroup };
         }
-        internal static class ANameSpec
+        public static class ANameSpec
         {
             public const string IsFromTemp = "is-from-temp";
            
         }
 
 
-        internal static class AName
+        public static class AName
         {
             public const string Async = "async";
             public const string InsByLoop = "ins-by-loop";
@@ -518,7 +518,7 @@ namespace sql.builder.DataApi
 			public const string DetailsUseZeros = "details-use-zeros";
             public const string EnableShowHiddenCollumnsOption = "Enable-Show-Hidden-Columns-Option";
         }
-        internal static class AVHAlign
+        public static class AVHAlign
         {
             public const string Left = "left";
             public const string Right = "right";
@@ -526,7 +526,7 @@ namespace sql.builder.DataApi
             
         }
 
-        internal static class AVFormButtonType
+        public static class AVFormButtonType
         {
 
 
@@ -542,7 +542,7 @@ namespace sql.builder.DataApi
 
          
 
-        internal static class AVFormButtonTypeArray
+        public static class AVFormButtonTypeArray
         {
 
 
@@ -552,7 +552,7 @@ namespace sql.builder.DataApi
 
 
 
-        internal static class AVGridButtonType
+        public static class AVGridButtonType
         {
             public const string SaveSettings = "ButtonSaveSettings";
             public const string RestoreSettings = "ButtonRestoreSettings";
@@ -567,15 +567,15 @@ namespace sql.builder.DataApi
             public const string Paste = "ButtonPaste";
             public const string CopyToCB = "ButtonCopyToCB";
         }
-        internal static class AVEditMask
+        public static class AVEditMask
         {
             public const string N2 = "N2";
         }
-        internal static class AVHAlignArray
+        public static class AVHAlignArray
         {
             public static string[] All = { AVHAlign.Left, AVHAlign.Right, AVHAlign.Center };
         }
-        internal static class AVRowSelector
+        public static class AVRowSelector
         {
             public const string Parent = "parent";
             public const string IsGrset = "isgrset";
@@ -584,41 +584,41 @@ namespace sql.builder.DataApi
             public const string PrevRow = "prev-row";
         }
 
-        internal static class AVParam
+        public static class AVParam
         {
             public const string FormValid = "is_form_valid";
             public const string RowsLimit = "p_rows_limit";
             public const string FormValidNot = "is_form_valid_not";
             public const string HasChanges = "_has_changes";
         }
-        internal static class AVArrayParamModes
+        public static class AVArrayParamModes
         {
-            internal const string Auto   = "auto";
-            internal const string Inline = "inline";
-            internal const string Store  = "store";
+            public const string Auto   = "auto";
+            public const string Inline = "inline";
+            public const string Store  = "store";
         }
-        internal static class AVParamTypes
+        public static class AVParamTypes
         {
             public const string Condition = "condition";
         }
 
-        internal static class AVConstrDelOptionsArray
+        public static class AVConstrDelOptionsArray
         {
             public static string[] All = { AVConstrDelOptions.Cascade, AVConstrDelOptions.SetNull };
         }
 
-        internal static class AVConstrDelOptions
+        public static class AVConstrDelOptions
         {
             public const string Cascade = "cascade";
             public const string SetNull = "set null";
         }
 
-        internal static class AVParamTypesArray
+        public static class AVParamTypesArray
         {
             public static string[] All = { AVParamTypes.Condition };
         }
 
-        internal static class AVViewModes
+        public static class AVViewModes
         {
             public const string None = "none";
             public const string Empty = "empty";
@@ -630,62 +630,62 @@ namespace sql.builder.DataApi
             public const string DashboardViewer = "dviewer";
         }
 
-        internal static class AVViewModesArray
+        public static class AVViewModesArray
         {
             public static string[] All = {AVViewModes.Default, AVViewModes.Pivot, AVViewModes.Tree, AVViewModes.Excel, AVViewModes.DashboardDesigner, AVViewModes.DashboardViewer};
         }
 
-        internal static class AVParamArray
+        public static class AVParamArray
         {
             public static string[] FormExtPars = new string[] { AVParam.FormValid, AVParam.FormValidNot };
             public static string[] TableExtPars = new string[] { AVParam.HasChanges };
 
         }
-        internal static class AVActionRows
+        public static class AVActionRows
         {
             public const string All = "all";
             public const string Selected = "selected";
             public const string Current = "current";
 
         }
-        internal static class AVActionRowsArray
+        public static class AVActionRowsArray
         {
             public static string[] All = new string[] { AVActionRows.All, AVActionRows.Current, AVActionRows.Selected };
 
         }
-        internal static class AVFuncArray
+        public static class AVFuncArray
         {
             public static string[] AndOr = new string[] { AVFunction.Or, AVFunction.And };
             public static string[] TrueFalse = new string[] { AVFunction.True, AVFunction.False };
 
         }
 
-        internal static class AVSpecType
+        public static class AVSpecType
         {
             public const string ColSets = "colsets";
             public const string SelectRep = "selectrep";
 
         }
 
-        internal static class AVSpecTable
+        public static class AVSpecTable
         {
             public const string File = "file";
         }
 
-        internal static class AVSides
+        public static class AVSides
         {
             public const string Left = "Left";
             public const string Right = "Right";
         }
 
-        internal static class AVSidesArray
+        public static class AVSidesArray
         {
             public static string[] All = { AVSides.Left, AVSides.Right };
         }
 
 
 
-        internal static class AVSpecColumn
+        public static class AVSpecColumn
         {
             public const string FileName = "file-name";
             public const string FileSize = "file-size";
@@ -693,7 +693,7 @@ namespace sql.builder.DataApi
             public const string RowId = "rowid";
         }
       
-        internal static class AVSpecColumnGrset
+        public static class AVSpecColumnGrset
         {
             //с именами этих колонок путница, навести порядок, не везде используются эти константы
             public const string GroupingId = "groupingid";
@@ -713,14 +713,14 @@ namespace sql.builder.DataApi
         }
 
       
-        internal static class TreeSources
+        public static class TreeSources
         {
             public const string Self = "self";
             public const string Child = "child";
             
         }
 
-        internal static class TreeSourcesArray
+        public static class TreeSourcesArray
         {
 
             public static string[] All =
@@ -730,7 +730,7 @@ namespace sql.builder.DataApi
             
         }
 
-        internal static class AVEventName
+        public static class AVEventName
         {
             public const string Click = "click";
             public const string DoubleClick = "double-click";
@@ -746,43 +746,43 @@ namespace sql.builder.DataApi
             public const string ObjectRangeSave = "object-range-save";
         }
 
-        internal static class AVEventNameArray
+        public static class AVEventNameArray
         {
             public static string[] All =
             {
                 AVEventName.Click, AVEventName.DoubleClick,AVEventName.RowSave,AVEventName.NewRowSave,AVEventName.CheckedRowSave,AVEventName.FormLoaded,AVEventName.Save,AVEventName.SaveOrSaveAndClose,AVEventName.ObjectSave,AVEventName.InsteadObjectSave,AVEventName.InsteadObjectDelete,AVEventName.ObjectRangeSave
             };
         }
-        internal static class ANameArray
+        public static class ANameArray
         {
             // См. APredicate.IsLayoutOptions
-            internal static string[] AllLayoutOptions = {
+            public static string[] AllLayoutOptions = {
                 AName.Size, AName.MinSize, AName.MaxSize, AName.Position, AName.TextLocation, AName.TextVisible, AName.IsLayoutBlock, AName.WidthPerc, AName.WidthFixed, AName.FixedSide, AName.FillHeight
             };
             /*
             // См. APredicate.IsCustomLayoutOptions
-            internal static string[] CustomLayoutOptions = {
+            public static string[] CustomLayoutOptions = {
                 AName.Size, AName.MinSize, AName.MaxSize, AName.Position
             };*/
             // См. APredicate.IsBehaviorColumns
-            internal static string[] BehaviorColumns = {
+            public static string[] BehaviorColumns = {
                 AName.Default, AName.Editable, AName.Valid, AName.TextSource,AName.Mandatory, AName.Visible,AName.NewVal, AName.FontColor
             };
-            internal static string[] RoBehaviorColumns = {
+            public static string[] RoBehaviorColumns = {
                 AName.Visible, AName.FontColor
             };
             // См. APredicate.IsColumnRecoveredAttribute
-            /*internal static string[] ColumnRecoveredAttributes = {
+            /*public static string[] ColumnRecoveredAttributes = {
                 AName.Title, AName.Agg, AName.ClassTitle // дополнить
             };*/
         }
-        internal static class AVHint
+        public static class AVHint
         {
             public const string Materialize = "materialize";
 
         }
 
-        internal static class AVDataType
+        public static class AVDataType
         {
             public const string Date = "date";
             public const string Number = "number";
@@ -794,14 +794,14 @@ namespace sql.builder.DataApi
             public const string Variant = "variant";
         }
 
-        internal static class AVMaterializeType
+        public static class AVMaterializeType
         {
             public const string Hint = "hint";
             public const string TempTable = "temp-table";
            
         }
 
-        internal static class AVControlType
+        public static class AVControlType
         {
             public const string Check = "UICheck";
             public const string Text = "UIText";
@@ -817,7 +817,7 @@ namespace sql.builder.DataApi
             public const string TextArray = "UITextArray";
         }
 
-        internal static class AVControlTypeArray
+        public static class AVControlTypeArray
         {
             public static string[] All =
             {
@@ -826,7 +826,7 @@ namespace sql.builder.DataApi
             };
         }
 
-        internal static class AVTable
+        public static class AVTable
         {
             public const string Dual = "dual";
             public const string Ths = "this";
@@ -835,7 +835,7 @@ namespace sql.builder.DataApi
 
 
 
-        internal static class AVTypeArray
+        public static class AVTypeArray
         {
             public static string[] Real =
             {
@@ -843,14 +843,14 @@ namespace sql.builder.DataApi
             };
         }
 
-        internal static class AVJoin
+        public static class AVJoin
         {
             public const string Inner = "inner";
             public const string LeftOuter = "left outer";
             public const string Cross = "cross";
         }
 
-        internal static class AVActionType
+        public static class AVActionType
         {
             public const string ExecuteAdd = "execute-add";
             public const string ExecuteUpdate = "execute-update";
@@ -896,14 +896,14 @@ namespace sql.builder.DataApi
            
         }
 
-        internal static class AVTitle
+        public static class AVTitle
         {
             public const string Add = "{+}";
             public const string No = "-";
 
         }
 
-        internal static class AVActionTypeArray
+        public static class AVActionTypeArray
         {
             public static string[] All =
         {
@@ -989,7 +989,7 @@ namespace sql.builder.DataApi
 			};
         }
 
-        internal static class AVFunction
+        public static class AVFunction
         {
             public const string Bitand = "bitand";
             public const string Array = "array";
@@ -1047,13 +1047,13 @@ namespace sql.builder.DataApi
             public const string Listagg = "listagg";
         }
 
-        internal static class AVBool
+        public static class AVBool
         {
             public const string True = "1";
             public const string False = "0";
         }
 
-        internal static class AVGroup
+        public static class AVGroup
         {
             public const string Sum = "sum";
             public const string Max = "max";
@@ -1071,20 +1071,20 @@ namespace sql.builder.DataApi
             //public const string SumKeepLast = "sum keep last";
         }
 
-        internal static class AVAggArray
+        public static class AVAggArray
         {
             public static string[] ForAgg = { AVGroup.Sum, AVGroup.Max, AVGroup.Min, AVGroup.No, AVGroup.StrAgg, AVGroup.StrAggDist, AVGroup.Group, AVGroup.List };
             public static string[] ForAggCml = { AVGroup.Sum, AVGroup.Max, AVGroup.Min, AVFunction.LastValue };
         }
 
-        internal static class AVCallType
+        public static class AVCallType
         {
             public const string Doubleclick = "doubleclick";
             public const string PopupMenu = "popupmenu";
         }
 
 
-        internal static class TVType
+        public static class TVType
         {
             public const string Date = "Дата (ДД.ММ.ГГГГ)";
             public const string Link = "Ссылка";
@@ -1093,37 +1093,37 @@ namespace sql.builder.DataApi
             public const string Check = "Признак";
         }
 
-        internal static class TVSource
+        public static class TVSource
         {
             public const string ValList = "Список значений";
 
         }
 
-        internal static class TVValue
+        public static class TVValue
         {
             public const string Yes = "Да";
             public const string No = "Нет";
             public const string Checked = "Установлен";
             public const string NotChecked = "Не установлен";
         }
-        internal static class AVColumn
+        public static class AVColumn
         {
-            internal const string All = "*";
-            internal const string IsNew = "is_new";
-            internal const string IsNotNew = "is_not_new";
-            internal const string Dummy = "dummy";
-            internal const string Sid = "sid";
-            internal const string SparentId = "sparentid";
-            internal static bool IsNotRepDsSysColumn(string col_name)
+            public const string All = "*";
+            public const string IsNew = "is_new";
+            public const string IsNotNew = "is_not_new";
+            public const string Dummy = "dummy";
+            public const string Sid = "sid";
+            public const string SparentId = "sparentid";
+            public static bool IsNotRepDsSysColumn(string col_name)
             {
                 return (col_name != Sid) && (col_name != SparentId);
             }
-            internal static bool IsNotSysColumn(string col_name)
+            public static bool IsNotSysColumn(string col_name)
             {
                 return IsNotRepDsSysColumn(col_name) && (col_name != IsNew) && (col_name != IsNotNew);
             }
         }
-        internal static class AVColumnArray
+        public static class AVColumnArray
         {
             public static string[] SysColNamesForEditedObject =
             {
@@ -1138,7 +1138,7 @@ namespace sql.builder.DataApi
                 AVColumn.Sid, AVColumn.SparentId, AVColumn.IsNew, AVColumn.IsNotNew
             };*/
         }
-        internal static class PInfo
+        public static class PInfo
         {
             //public const string Search = "Search";
             //public const string Lookup = "Lookup";
@@ -1151,7 +1151,7 @@ namespace sql.builder.DataApi
             public const string Source = "Source";
         }
 
-        internal static class RegPath
+        public static class RegPath
         {
             public const string SchemeEditor = "schemeeditor";
             public const string SchemeOpenItems = SchemeEditor + @"\openitems";
@@ -1159,7 +1159,7 @@ namespace sql.builder.DataApi
             public const string Forms = "forms";
         }
 
-        internal static class RegVal
+        public static class RegVal
         {
             //public const string OpenItems = "openitems";
             public const string Global = "global";
@@ -1167,7 +1167,7 @@ namespace sql.builder.DataApi
         }
 
 
-        internal static class Pfx
+        public static class Pfx
         {
 
             public const string ExtValName = "_x_n";
@@ -1206,7 +1206,7 @@ namespace sql.builder.DataApi
         }
 
 
-        internal static class DBParams
+        public static class DBParams
         {
 
 
@@ -1222,7 +1222,7 @@ namespace sql.builder.DataApi
             public const string ObjNameParam = "obj_name";
         }
 
-        internal static class DBObjects
+        public static class DBObjects
         {
             public const string TempTable = "rr_temp";
             public const string TempTableTableIdColumn = "skod";
@@ -1231,7 +1231,7 @@ namespace sql.builder.DataApi
             public const string TempTableFormIdColumn = "names";
         }
 
-        internal static class DBObjectsArray
+        public static class DBObjectsArray
         {
             public static string[] TempTableSpecCols =
         {
@@ -1241,7 +1241,7 @@ namespace sql.builder.DataApi
         }
 
 
-        internal static class SpecCols
+        public static class SpecCols
         {
 
             public const string Check = "sp_col_check";
@@ -1252,26 +1252,26 @@ namespace sql.builder.DataApi
 
         }
 
-        internal static class SpecColsTitle
+        public static class SpecColsTitle
         {
 
             public const string Check = "Выбор";
 
         }
 
-        internal static class GridButton
+        public static class GridButton
         {
             public const string Add = "grid-add";
             public const string Copy = "grid-copy";
         }
-        internal static class GridButtonControl
+        public static class GridButtonControl
         {
             public const string Commit = "ButtonCommit";
             public const string Choice = "ButtonChoiceRow";
 
         }
 
-        internal static class SchEdirorFieldGr
+        public static class SchEdirorFieldGr
         {
             public const string Main = "Главная";
             public const string MainOther = "Главная/Другие свойства";
@@ -1294,7 +1294,7 @@ namespace sql.builder.DataApi
             public const string Appearance = "Внешний вид";
         }
 
-        internal static class AVTimeAttr
+        public static class AVTimeAttr
         {
 
             public const string Name = "name";
@@ -1305,14 +1305,14 @@ namespace sql.builder.DataApi
 
         }
 
-        internal static class AVTimeAttrArray
+        public static class AVTimeAttrArray
         {
             public static string[] All = { AVTimeAttr.Val, AVTimeAttr.Name, AVTimeAttr.BeginTime, AVTimeAttr.EndTime };
 
 
         }
 
-        internal static class AVTimeType // задумывалось для времени, но может использоваться для любых констант
+        public static class AVTimeType // задумывалось для времени, но может использоваться для любых констант
         {
 
             public const string Day = "day";
@@ -1324,57 +1324,57 @@ namespace sql.builder.DataApi
 
         }
 
-        internal static class AVTimeTypeArray
+        public static class AVTimeTypeArray
         {
             public static string[] All = { AVTimeType.Day, AVTimeType.Month, AVTimeType.Month2, AVTimeType.Year, AVTimeType.Str, AVTimeType.Num };
         }
 
-        internal static class AVFixedSide
+        public static class AVFixedSide
         {
             public const string Left = "left";
             public const string Right = "right";
         }
 
-        internal static class AVFixedSideArray
+        public static class AVFixedSideArray
         {
             public static string[] All = { AVFixedSide.Left, AVFixedSide.Right };
         }
 
-        //internal const string FormCacheFileName = "cache.zip";
-        internal static class APostReportArray
+        //public const string FormCacheFileName = "cache.zip";
+        public static class APostReportArray
         {
             public static string[] All = { AName.CellsMerge, AName.CellsDelete, AName.RowsHeight, AName.PagesBreak };
         }
 
-        internal static class ExcelMarks
+        public static class ExcelMarks
         {
-            internal const string MergeDown = "[merge_down]";
-            internal const string MergeStart = "[merge_start]";
-            internal const string MergeRight = "[merge_right]";
-            internal const string HeadMarker = "headmarker";
-            internal const string DeleteRanges = "!delete";
-            internal const string DeleteRow = "!deleterow";
+            public const string MergeDown = "[merge_down]";
+            public const string MergeStart = "[merge_start]";
+            public const string MergeRight = "[merge_right]";
+            public const string HeadMarker = "headmarker";
+            public const string DeleteRanges = "!delete";
+            public const string DeleteRow = "!deleterow";
             /// <summary>
             /// Синтаксис: !columnwidth:&lt;число&gt;
             /// </summary>
             /// <seealso cref="Printing.SetColumnsWidth"/>
-            internal const string ColumnWidth = "!columnwidth";
+            public const string ColumnWidth = "!columnwidth";
             /// <summary>
             /// Синтаксис: !rowheight:&lt;число&gt;
             /// </summary>
             /// <seealso cref="Printing.SetRowsHeight"/>
-            internal const string RowHeight = "!rowheight";
-            internal const string AutoRowHeight = "!autorowheight";
-            internal const string NoAutoRowHeight = "!noautorowheight";
-            internal const string AllColsAutoFit = "!allcolumsautofit";
-            internal const string RowID = "!rowid";
-            internal const string ProtectSheet = "!protectsheet";
-            internal const string PageBreak = "!pagebreak";
-            internal const string MergeIgnore = "!mergeignore";
-            internal const string PrintTitleRows = "!printtitlerows";
+            public const string RowHeight = "!rowheight";
+            public const string AutoRowHeight = "!autorowheight";
+            public const string NoAutoRowHeight = "!noautorowheight";
+            public const string AllColsAutoFit = "!allcolumsautofit";
+            public const string RowID = "!rowid";
+            public const string ProtectSheet = "!protectsheet";
+            public const string PageBreak = "!pagebreak";
+            public const string MergeIgnore = "!mergeignore";
+            public const string PrintTitleRows = "!printtitlerows";
         }
 
-        internal static class NullConsts
+        public static class NullConsts
         {
             public const string SNULL = "~~~~";
             // потому что ym

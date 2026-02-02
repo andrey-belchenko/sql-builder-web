@@ -6,9 +6,9 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VAddition : VSXElement
+    public sealed class VAddition : VSXElement
     {
-        internal VAddition()
+        public VAddition()
             : base(EName.addition)
         {
         }

@@ -12,7 +12,7 @@ using Devart.Data.Oracle;
 //using System.Windows.Forms;
 namespace sql.builder.UI
 {
-    internal partial class UIBase
+    public partial class UIBase
     {
         #region поля
         protected VDataTable array_edit_value;
@@ -27,12 +27,12 @@ namespace sql.builder.UI
         /// Колонка "value" устанавливается ключевой, в ней допускаются значения NULL.
         /// Создаётся методом <see cref="UIBase.CreateBoundTable" />.
         /// </summary>
-        internal VDataTable ArrayEditValue {
+        public VDataTable ArrayEditValue {
             get {
                 return this.array_edit_value;
             }
         }
-        internal VDataTable DataTableList {
+        public VDataTable DataTableList {
             get {
                 if (this.data_set_list == null) {
                     return null;
@@ -43,7 +43,7 @@ namespace sql.builder.UI
         }
         #endregion
         #region Открытые методы
-        internal void BindData()
+        public void BindData()
         {
             if (this.SourceType == ReturnType.Simple) {
                 this.CreateBoundColumn(this.field_name);
@@ -808,7 +808,7 @@ namespace sql.builder.UI
                 return dt.Columns[0];
             }
         }
-        internal void ApplyArrayValueToControl()
+        public void ApplyArrayValueToControl()
         {
             if (this.Form.NoData) {
                 return;
@@ -875,7 +875,7 @@ namespace sql.builder.UI
 				}
             }
         }
-        internal bool SetArraySourceValueMultiple(IList<object> values, IList<string> names, bool resumeChange)
+        public bool SetArraySourceValueMultiple(IList<object> values, IList<string> names, bool resumeChange)
         {
             string[] svalue = new string[values.Count];
             List<object> value1 = new List<object>(values.Count);
@@ -937,7 +937,7 @@ namespace sql.builder.UI
             }
             return changes;
         }
-        //internal void SetArraySourceValue(object[] values)
+        //public void SetArraySourceValue(object[] values)
         //{
         //    ClearSourceValues();
         //    foreach (var value in values)
@@ -945,7 +945,7 @@ namespace sql.builder.UI
         //        SetArraySourceValue(new Tuple<object, string, bool>(value, "", true));
         //    }
         //}
-        internal object[] GetArraySourceValue()
+        public object[] GetArraySourceValue()
         {
             var rows = this.array_edit_value.GetRowsForCurrentParent().Where(r => r.RowState != DataRowState.Deleted).ToArray();
             object[] values = rows.Select(r => r[getArrayEditValueKeyColumn()]);

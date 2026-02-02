@@ -10,7 +10,7 @@ namespace sql.builder.UI
         
        // bool IsButtonCustomVisibility(object button); // костыль, чтобы не приятать кнопки для нередактируемого поля если видимость установлена через переменную
     }
-    internal interface IRange : IBase
+    public interface IRange : IBase
     {
         void GetText(out string value_1, out string value_2);
     }

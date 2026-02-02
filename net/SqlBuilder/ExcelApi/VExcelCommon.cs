@@ -8,9 +8,9 @@ using sql.builder.DataApi; // XElementExtensions
 
 namespace sql.builder.ExcelApi
 {
-    internal static class VExcelCommon
+    public static class VExcelCommon
     {
-        internal static int GetIndex(XElement element)
+        public static int GetIndex(XElement element)
         {
             Contract.Assert(element != null);
             Contract.Assert(element.Name.Namespace == VExcelNS.ss);
@@ -39,7 +39,7 @@ namespace sql.builder.ExcelApi
             }
             return index;
         }
-        internal static XElement GetElementByIndex(XElement parentElement, XName name, int index, ref XElement lastBefore)
+        public static XElement GetElementByIndex(XElement parentElement, XName name, int index, ref XElement lastBefore)
         {
             XElement element = null;
             lastBefore = null;
@@ -139,7 +139,7 @@ namespace sql.builder.ExcelApi
             
             return element;
         }*/
-        internal static void IncrementIndexAfter(XElement cell, int i = 1)
+        public static void IncrementIndexAfter(XElement cell, int i = 1)
         {
             XName name = cell.Name;
             XElement next = cell.ElementsAfterSelf(name).FirstOrDefault();
@@ -153,7 +153,7 @@ namespace sql.builder.ExcelApi
                 el.SetAttrValue(VExcelNS.SpreadSheet.Index, index + i);
             }
         }
-        internal static void IncrementIndexAfter(VExcelRow row, int start, int i = 1)
+        public static void IncrementIndexAfter(VExcelRow row, int start, int i = 1)
         {
             IEnumerable<XElement> cells = row.Element.Elements().Where(e => GetIndexAttrVal(e) > start);
             foreach (XElement el in cells) {
@@ -161,19 +161,19 @@ namespace sql.builder.ExcelApi
                 el.SetAttrValue(VExcelNS.SpreadSheet.Index, index + i);
             }
         }
-        internal static int GetIndexAttrVal(XElement element)
+        public static int GetIndexAttrVal(XElement element)
         {
             return element.AttrOrDefault(VExcelNS.SpreadSheet.Index, -1);
         }
-        internal static int GetMergeAcrossAttrVal(XElement element)
+        public static int GetMergeAcrossAttrVal(XElement element)
         {
             return element.AttrOrDefault(VExcelNS.SpreadSheet.MergeAcross, 0);
         }
-        internal static int GetMergeDownAttrVal(XElement element)
+        public static int GetMergeDownAttrVal(XElement element)
         {
             return element.AttrOrDefault(VExcelNS.SpreadSheet.MergeDown, 0);
         }
-        internal static void SetMergeAcrossAttrVal(XElement element, int val)
+        public static void SetMergeAcrossAttrVal(XElement element, int val)
         {
             if (val == 0) {
                 element.RemoveAttribute(VExcelNS.SpreadSheet.MergeAcross);
@@ -181,7 +181,7 @@ namespace sql.builder.ExcelApi
                 element.SetAttrValue(VExcelNS.SpreadSheet.MergeAcross, val);
             }
         }
-        internal static void SetMergeDownAttrVal(XElement element, int val)
+        public static void SetMergeDownAttrVal(XElement element, int val)
         {
             if (val == 0) {
                 element.RemoveAttribute(VExcelNS.SpreadSheet.MergeDown);
@@ -189,11 +189,11 @@ namespace sql.builder.ExcelApi
                 element.SetAttrValue(VExcelNS.SpreadSheet.MergeDown, val);
             }
         }
-        internal static bool IsHasIndex(XElement element)
+        public static bool IsHasIndex(XElement element)
         {
             return element.Attribute(VExcelNS.SpreadSheet.Index) != null;
         }
-        internal static XElement GetXElementByIndex(IEnumerable<XElement> elements, int index)
+        public static XElement GetXElementByIndex(IEnumerable<XElement> elements, int index)
         {
             if (elements.Count() > index) {
                 return elements.ElementAt(index);

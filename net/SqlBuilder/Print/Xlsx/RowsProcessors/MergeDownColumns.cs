@@ -8,11 +8,11 @@ namespace sql.builder.Print.Xlsx.RowsProcessors
     /// <summary>
     /// Аккумулирует всю необходимую информацию для проведения merge_down в листе
     /// </summary>
-    internal class MergeDownColumns
+    public class MergeDownColumns
     {
-        internal int BeginMergeRowsId {get; private set;}
+        public int BeginMergeRowsId {get; private set;}
 
-        internal MergeDownColumn[] Columns {get; private set;}
+        public MergeDownColumn[] Columns {get; private set;}
         public MergeDownColumns(IEnumerable<ExcelRow> rows)
         {
             var list = new List<MergeDownColumn>();

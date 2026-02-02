@@ -4,13 +4,13 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VGridBand : VOutputElement, IVParent
+    public sealed class VGridBand : VOutputElement, IVParent
     {
-        internal VGridBand()
+        public VGridBand()
             : base(EName.band)
         {
         }
-        internal string GetPath()
+        public string GetPath()
         {
             VGridBand pBand = this.GetParent() as VGridBand;
             string s;
@@ -22,7 +22,7 @@ namespace sql.builder.DataApi
             s += this.P_Title;
             return s;
         }
-        internal static string[] child_nodes = { TextConst.EName.Band, TextConst.EName.Column, TextConst.EName.Fact, TextConst.EName.Call, TextConst.EName.UsePart };
+        public static string[] child_nodes = { TextConst.EName.Band, TextConst.EName.Column, TextConst.EName.Fact, TextConst.EName.Call, TextConst.EName.UsePart };
         IList<string> IVParent.AllowedChildNodes()
         {
             return child_nodes;

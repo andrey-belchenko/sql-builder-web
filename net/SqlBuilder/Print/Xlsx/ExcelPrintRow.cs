@@ -17,7 +17,7 @@ namespace sql.builder.Print.Xlsx
     /// Cтрока шаблона Excel в формате xlsx
     /// </summary>
     /// <seealso cref="sql.builder.Print.XML.ExcelPrintRow"/>
-    internal class ExcelPrintRow : IExcelPrintElement
+    public class ExcelPrintRow : IExcelPrintElement
     {
         #region поля
         private readonly IExcelPrintGroup parent;
@@ -26,7 +26,7 @@ namespace sql.builder.Print.Xlsx
         private readonly Dictionary<ExcelCell, IExcelPrintValue> _vals;
         private SortedList<string, string> _varCellsNames;
         #endregion
-        internal ExcelPrintRow(ExcelPrintSheet sheet, ExcelRow row, IExcelPrintGroup parent = null)
+        public ExcelPrintRow(ExcelPrintSheet sheet, ExcelRow row, IExcelPrintGroup parent = null)
         {
             this.parent = parent;
             this.sheet = sheet;
@@ -41,7 +41,7 @@ namespace sql.builder.Print.Xlsx
             }
         }
         public IExcelPrintGroup Parent { get { return this.parent; } }
-        internal SortedList<string, string> GetVarColsIndex()
+        public SortedList<string, string> GetVarColsIndex()
         {
             if (this._varCellsNames == null) {
                 this._varCellsNames = new SortedList<string, string>();

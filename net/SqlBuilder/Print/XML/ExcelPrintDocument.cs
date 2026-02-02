@@ -51,7 +51,7 @@ namespace sql.builder.Print.XML
             this.Prepare(template);
         }
         #endregion
-        internal void Prepare(XDocument template)
+        public void Prepare(XDocument template)
         {
             this.template = template;
             Contract.Assume(template.Root.Name == VExcelNS.SpreadSheet.Workbook);
@@ -166,7 +166,7 @@ namespace sql.builder.Print.XML
         /// <summary>
         /// Увеличивает счётчик напечатаных листов на единицу
         /// </summary>
-        internal void NextPrintedSheet()
+        public void NextPrintedSheet()
         {
             this.printed_sheets_count++;
         }

@@ -7,7 +7,7 @@ using System.Xml.Linq;
 
 namespace sql.builder.UI
 {
-    internal partial class UIComboRange : UIBase, IRange
+    public partial class UIComboRange : UIBase, IRange
     {
         public UIComboRange()
         {

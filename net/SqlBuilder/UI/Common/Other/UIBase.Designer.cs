@@ -5,7 +5,7 @@ using System.Xml.Linq;
 using System.Xml;
 namespace sql.builder.UI
 {
-    internal partial class UIBase
+    public partial class UIBase
     {
         protected object GetValueUnchecked()
         {
@@ -16,7 +16,7 @@ namespace sql.builder.UI
         {
             return Cmn.DECIMAL_ONE;
         }
-        internal void SetChecked(bool value)
+        public void SetChecked(bool value)
         {
             this.used = value;
             //this.checkContainer.SetChecked(used);

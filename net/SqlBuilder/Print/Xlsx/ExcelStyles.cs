@@ -5,10 +5,10 @@ using System.Xml.Linq;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal class ExcelStyles : ExcelBaseFile
+    public class ExcelStyles : ExcelBaseFile
     {
         private Dictionary<string, ExcelStyle> _styles;
-        internal ExcelStyles(string file_path)
+        public ExcelStyles(string file_path)
             : base(file_path)
         {
             Contract.Assert(this.xml.Root.Name == ns.Main.styleSheet);
@@ -19,7 +19,7 @@ namespace sql.builder.Print.Xlsx
                 i++;
             }
         }
-        internal ExcelStyle GetStyle(string styleId)
+        public ExcelStyle GetStyle(string styleId)
         {
             if (string.IsNullOrEmpty(styleId)) {
                 return null;

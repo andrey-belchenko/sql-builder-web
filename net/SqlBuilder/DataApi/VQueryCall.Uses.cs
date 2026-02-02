@@ -6,7 +6,7 @@ namespace sql.builder.DataApi
 {
 
 
-    internal partial class VQueryCall : VSXElement 
+    public partial class VQueryCall : VSXElement 
     {
         #region old
         protected override List<ElementUse> searchUses()

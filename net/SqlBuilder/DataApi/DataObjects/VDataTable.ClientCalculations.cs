@@ -7,7 +7,7 @@ using sql.builder;
 using System.Data;
 namespace sql.builder.DataApi
 {
-    internal partial class VDataTable : DataTable
+    public partial class VDataTable : DataTable
     {
         public bool HasClientCalculations;
       
@@ -49,13 +49,13 @@ namespace sql.builder.DataApi
        
     }
 
-    internal interface IClientCalculationCall
+    public interface IClientCalculationCall
     {
         object Evaluate(VClientCalculations.DataAccessor dataAccessor);
     }
 
    
-    internal static partial class VClientCalculations
+    public static partial class VClientCalculations
     {
         public enum Errors { NeedDataAccessor };
         private static FactParam ParseExpression(XElement xexpression)
@@ -188,15 +188,15 @@ namespace sql.builder.DataApi
             }
             return rowSelectorList;
         }
-        internal class FactParam
+        public class FactParam
         {
-            internal List<RowSelector> RowSelector;
-            internal DataAccessor dataAccessor;
+            public List<RowSelector> RowSelector;
+            public DataAccessor dataAccessor;
             public virtual object Evaluate(DataAccessor dataAccessor)
             {
                 return null;
             }
-            internal object Evaluate()
+            public object Evaluate()
             {                
                 return Evaluate(this.dataAccessor);
             }
@@ -214,12 +214,12 @@ namespace sql.builder.DataApi
                 }
                 return dataAccessor;
             }
-            internal static bool ValueIsNull(FactParam p)
+            public static bool ValueIsNull(FactParam p)
             {
                 return Cmn.IsNullOrDBNull(p.Evaluate());
             }
         }
-        internal class Call : FactParam, IClientCalculationCall
+        public class Call : FactParam, IClientCalculationCall
         {
             public string FunctionName = null;
             public List<FactParam> Pars = new List<FactParam>();
@@ -254,7 +254,7 @@ namespace sql.builder.DataApi
        
        
 
-        internal class FactParamColumn : FactParam
+        public class FactParamColumn : FactParam
         {
             public string Name = null;
 
@@ -295,7 +295,7 @@ namespace sql.builder.DataApi
             }
         }
 
-        internal class FactParamConst : FactParam
+        public class FactParamConst : FactParam
         {
             public object Value = null;
             public override object Evaluate(DataAccessor dataAccessor)
@@ -304,7 +304,7 @@ namespace sql.builder.DataApi
             }
         }
 
-        internal class DataAccessor
+        public class DataAccessor
         {
             public string DimensionName = null;
             public string DimensionValue = null;
@@ -493,7 +493,7 @@ namespace sql.builder.DataApi
             }
         }
 
-        internal class RowSelector
+        public class RowSelector
         {
             public string Name = null;
             public string[] Param = null;

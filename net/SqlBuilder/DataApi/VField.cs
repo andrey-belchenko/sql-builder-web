@@ -7,14 +7,14 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal sealed partial class VField : VSXElement, IVParent
+    public sealed partial class VField : VSXElement, IVParent
     {
-        internal VField()
+        public VField()
             : base(EName.field)
         {
             this.KeyField = AName_.id;
         }
-        internal VQueryCall ListQuery()
+        public VQueryCall ListQuery()
         {
             IList<VSXElement> list = this.GetDescedantsP(EName.listquery);
             if (list.Count == 0) {
@@ -38,7 +38,7 @@ namespace sql.builder.DataApi
         {
             return this;
         }
-        internal static string[] child_nodes = { TextConst.EName.ListQuery, TextConst.EName.DefaultQuery, TextConst.EName.Buttons, TextConst.EName.UsePart };
+        public static string[] child_nodes = { TextConst.EName.ListQuery, TextConst.EName.DefaultQuery, TextConst.EName.Buttons, TextConst.EName.UsePart };
         IList<string> IVParent.AllowedChildNodes()
         {
             return child_nodes;

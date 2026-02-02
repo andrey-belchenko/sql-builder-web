@@ -12,7 +12,7 @@ using System.Threading;
 ////using System.Windows.Forms;
 namespace sql.builder.DataApi
 {
-    internal partial class VDataColumn
+    public partial class VDataColumn
     {
         public bool ParamUsed {
             get {
@@ -1009,7 +1009,7 @@ namespace sql.builder.DataApi
 
             }
         }
-        internal void RefreshAllColumn()
+        public void RefreshAllColumn()
         {
             VDataTable tbl = this.GetTable();
             if (this.ValueRefreshCommand == null) {
@@ -1017,7 +1017,7 @@ namespace sql.builder.DataApi
             }
             tbl.EnqueueBackgroundRefresh(tbl.Rows.ToArray(), this.ValueRefreshCommand, null, null, false);
         }
-        internal void ResetAllColumn()
+        public void ResetAllColumn()
         {
             VDataTable tbl = this.GetTable();
             if (this.ValueResetCommand == null) {

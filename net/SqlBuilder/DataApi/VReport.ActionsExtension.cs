@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VReport
+    public partial class VReport
     {
         public List<VUseAction> RowActions()
         {

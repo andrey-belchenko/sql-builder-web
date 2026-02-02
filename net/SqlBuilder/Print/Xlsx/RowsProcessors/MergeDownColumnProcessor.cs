@@ -5,15 +5,15 @@ using System.Xml.Linq;
 namespace sql.builder.Print.Xlsx.RowsProcessors
 {
     /// <summary>
-    /// Позволяет проводить merge_down на основе MergeDownColumn конкретного листа
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ merge_down пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ MergeDownColumn пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    internal class MergeDownColumnProcessor
+    public class MergeDownColumnProcessor
     {
-        internal MergeDownColumn MergeDownCol {get; private set;}
-        internal MergeDownColumnProcessor Prev { get; set; }
-        internal string LastProcessedText { get; private set; }
-        internal int ProcessedCellsCount { get { return _cellsCount; } }
-        internal bool IsActive { get; private set; }
+        public MergeDownColumn MergeDownCol {get; private set;}
+        public MergeDownColumnProcessor Prev { get; set; }
+        public string LastProcessedText { get; private set; }
+        public int ProcessedCellsCount { get { return _cellsCount; } }
+        public bool IsActive { get; private set; }
 
         private ExcelCellInfo _cellFirst;
         private ExcelCellInfo _cellLast;
@@ -26,7 +26,7 @@ namespace sql.builder.Print.Xlsx.RowsProcessors
             _merges = new List<Tuple<ExcelCellInfo, ExcelCellInfo>>();
         }
 
-        internal void Process(XElement xcell, ExcelCellInfo cell)
+        public void Process(XElement xcell, ExcelCellInfo cell)
         {
             bool needMerge = false;
             string text = "";
@@ -34,12 +34,12 @@ namespace sql.builder.Print.Xlsx.RowsProcessors
             if (xv != null) {
                 text = xv.Value;
             }
-            // !!! если ячейка пустая изначально (в шаблоне) ее не будет в xml и она не смержится c другими
-            // !!! ячейки в которых были переменные, но стали пустые - смержатся
-            // !!! это как раз то что надо, но возможны лишние мержи если пустая ячейка все-таки будет в xml
+            // !!! пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ) пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ xml пїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ c пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+            // !!! пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+            // !!! пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ-пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ xml
             if (//!string.IsNullOrEmpty(LastProcessedText) && !string.IsNullOrEmpty(text) && 
                 string.Equals(LastProcessedText, text)) {
-                // в колонке слева ячейки тоже смержены
+                // пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                 if (Prev == null || Prev.ProcessedCellsCount > 1) {
                     needMerge = true;
                 }
@@ -53,7 +53,7 @@ namespace sql.builder.Print.Xlsx.RowsProcessors
                 _cellLast = cell;
                 _cellsCount = 1;
             }
-            // удаляем числовые данные из всех смерженных ячеек кроме первой
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
             if (_cellsCount > 1 && xcell.Attribute(ns.None.t) == null && xv != null) {
                 xv.Remove();
             }
@@ -61,10 +61,10 @@ namespace sql.builder.Print.Xlsx.RowsProcessors
         }
 
         /// <summary>
-        /// Возвращает итоговый набор диапазонов, которые необходимо смержить
+        /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         /// </summary>
         /// <returns></returns>
-        internal IEnumerable<Tuple<ExcelCellInfo, ExcelCellInfo>> GetMerges()
+        public IEnumerable<Tuple<ExcelCellInfo, ExcelCellInfo>> GetMerges()
         {
             SaveMerge();
 
@@ -74,9 +74,9 @@ namespace sql.builder.Print.Xlsx.RowsProcessors
         }
 
         /// <summary>
-        /// Заканчивает мерж в колонке и начинает новый
+        /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         /// </summary>
-        internal void SaveMerge()
+        public void SaveMerge()
         {
             if (_cellsCount > 1)
             {
@@ -88,12 +88,12 @@ namespace sql.builder.Print.Xlsx.RowsProcessors
             _cellsCount = 0;
         }
 
-        internal void Start()
+        public void Start()
         {
             IsActive = true;
         }
 
-        internal void Stop()
+        public void Stop()
         {
             IsActive = false;
             SaveMerge();

@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VSplitContainer : VSXElement, IVParent
+    public sealed class VSplitContainer : VSXElement, IVParent
     {
-        internal VSplitContainer()
+        public VSplitContainer()
             : base(EName.splitcontainer)
         {
         }

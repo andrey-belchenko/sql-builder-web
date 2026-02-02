@@ -10,7 +10,7 @@ using sql.builder.DataApi;
 
 namespace sql.builder.UI
 {
-    internal partial class UINumber : UIBase
+    public partial class UINumber : UIBase
     {
         private decimal step;
         public UINumber()

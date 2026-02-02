@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VQueryCall
+    public partial class VQueryCall
     {
-        internal IList<VUseAction> RowActions()
+        public IList<VUseAction> RowActions()
         {
             return this.GetElementsP(EName.rowactions).SelectMany(VSXElement.GetElementsP).Cast<VUseAction>().ToList();
         }

@@ -9,19 +9,19 @@ using System.Linq;
 
 namespace sql.builder
 {
-    internal class WaitUIHelper : IDisposable
+    public class WaitUIHelper : IDisposable
     {
         #region static
         private static WaitUIHelper last_used_ui_helper;
-        internal static void ShowCursor() // оборачивает эти странные вызовы через LastUsedUIHelper потом разобраться в чем их смысл, переделать
+        public static void ShowCursor() // оборачивает эти странные вызовы через LastUsedUIHelper потом разобраться в чем их смысл, переделать
         {
             //LastUsedUIHelper.Show("", WaitUIMode.WaitCursor);
         }
-        internal static void HideCursor()
+        public static void HideCursor()
         {
            //LastUsedUIHelper.Hide();
         }
-        internal static WaitUIHelper LastUsedUIHelper {
+        public static WaitUIHelper LastUsedUIHelper {
             get {
                 if (last_used_ui_helper == null) {
                     last_used_ui_helper = new WaitUIHelper(null);
@@ -30,7 +30,7 @@ namespace sql.builder
             }
         }
         #endregion
-        internal const string DESCRIPTION_DEFAULT = "Пожалуйста, подождите...";
+        public const string DESCRIPTION_DEFAULT = "Пожалуйста, подождите...";
         const string PROGRESS_PANEL_NAME = "pProgress__";
         #region поля
         //private Form _form;
@@ -42,8 +42,8 @@ namespace sql.builder
         #endregion
         // панелька "подождите" встраивается прямо в форму
         // влючил только для ExpressForm, т.к. нормально отображается только если не заблокирован основной поток
-        internal bool CanEmbed { get; set; }
-        internal WaitUIHelper(Object form = null)
+        public bool CanEmbed { get; set; }
+        public WaitUIHelper(Object form = null)
         {
             //_form = form;
             ////_formControlStates = new Dictionary<Control, bool>();
@@ -53,13 +53,13 @@ namespace sql.builder
             //CanEmbed = false;
             //ChangeLastUsedUIHelperIfCan();
         }
-        internal void Show(string caption, WaitUIMode mode, bool overlap = false, string description = DESCRIPTION_DEFAULT)
+        public void Show(string caption, WaitUIMode mode, bool overlap = false, string description = DESCRIPTION_DEFAULT)
         {
         }
-        internal void SetDescription(string description)
+        public void SetDescription(string description)
         {
         }
-        internal void Hide()
+        public void Hide()
         {
             //if (Wait.Waiting()) return;
             //ChangeLastUsedUIHelperIfCan();
@@ -69,7 +69,7 @@ namespace sql.builder
             //// выполняем в потоке UI формы
             //InvokeIfNeed(ShowPrev);
         }
-        internal void ForceHide()
+        public void ForceHide()
         {
             //if (Wait.Waiting()) return;
             //ChangeLastUsedUIHelperIfCan();
@@ -180,22 +180,22 @@ namespace sql.builder
        
         private class WaitUIInfo
         {
-            internal string Caption {get;set;}
-            internal WaitUIMode Mode {get;set;}
-            internal bool Overlap {get;set;}
-            internal string Description {get;set;}
-            internal static bool IsWaitPanel(WaitUIInfo info)
+            public string Caption {get;set;}
+            public WaitUIMode Mode {get;set;}
+            public bool Overlap {get;set;}
+            public string Description {get;set;}
+            public static bool IsWaitPanel(WaitUIInfo info)
             {
                 return info.Mode == WaitUIMode.WaitPanel;
             }
-            internal static bool IsWaitCursor(WaitUIInfo info)
+            public static bool IsWaitCursor(WaitUIInfo info)
             {
                 return info.Mode == WaitUIMode.WaitCursor;
             }
         }
     }
 
-    internal enum WaitUIMode
+    public enum WaitUIMode
     {
         WaitPanel,
         WaitCursor

@@ -6,9 +6,9 @@ using System.Reflection;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VRole : VSXElement, IVParent
+    public sealed class VRole : VSXElement, IVParent
     {
-        internal VRole()
+        public VRole()
             : base(EName.role)
         {
         }
@@ -44,11 +44,11 @@ namespace sql.builder.DataApi
             AddCashValue(hs, MethodBase.GetCurrentMethod().ToString(), write.ToString());
             return hs;
         }
-        internal bool HasReadPermission(string securityId)
+        public bool HasReadPermission(string securityId)
         {
             return this.AllPermissions(false).Contains(securityId);
         }
-        internal bool HasWritePermission(string securityId)
+        public bool HasWritePermission(string securityId)
         {
             return this.AllPermissions(true).Contains(securityId);
         }

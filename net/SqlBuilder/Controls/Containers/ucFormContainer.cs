@@ -2,14 +2,14 @@
 using sql.builder.UI;
 namespace sql.builder.Controls.Containers
 {
-    internal partial class ucFormContainer : ucBaseContainer
+    public partial class ucFormContainer : ucBaseContainer
     {
-        internal ucFormContainer()
+        public ucFormContainer()
         {
             //InitializeComponent();
         }
 
-        internal void Initialize(Dictionary<string, string> report_info)
+        public void Initialize(Dictionary<string, string> report_info)
         {
             _paramsC = UIStatic.CreateForm(report_info["repname"], null, false, false, true, null, null, report_info["project"]);
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace sql.builder.DataApi
 {
-    internal class VEntityField
+    public class VEntityField
     {
         
     }

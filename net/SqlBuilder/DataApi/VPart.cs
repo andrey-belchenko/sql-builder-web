@@ -6,9 +6,9 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-	internal sealed partial class VPart : VSXElement
+	public sealed partial class VPart : VSXElement
     {
-        internal VPart()
+        public VPart()
             : base(EName.part)
         {
             this.KeyField = AName_.id;
@@ -17,12 +17,12 @@ namespace sql.builder.DataApi
         {
             return this.AttrOrDefault(AName_.id, string.Empty);
         }
-        internal List<VSXElement> Content()
+        public List<VSXElement> Content()
         {
             List<VSXElement> content = Elements().Where(e => e.Name != EName.@params).ToList().SelectAsArray(VSXElement.Get).ToList();
             return content;
         }
-        internal static void ApplyParams(XElement element, XElement factParams, XElement formalParams)
+        public static void ApplyParams(XElement element, XElement factParams, XElement formalParams)
         {
             int i = 0;
             if (formalParams == null) return;
@@ -52,7 +52,7 @@ namespace sql.builder.DataApi
                 i++;
             }
         }
-        internal List<VSXElement> Content(VUsePart usePart)
+        public List<VSXElement> Content(VUsePart usePart)
         {
             List<VSXElement> content = this.Content();
             //List<VSXElement> content = Elements().Where(e => e.Name.LocalName != "params").ToList()
@@ -84,7 +84,7 @@ namespace sql.builder.DataApi
             }
             return list1;
         }
-        internal VUsePart FirstUse()
+        public VUsePart FirstUse()
         {
             //XElement el=   GetEnvironment().SchemeNative.Descendants("usepart").Where(e =>e.Attribute("part")!=null && e.Attribute("part").Value == P_IdName).FirstOrDefault();
             //if (el != null)
@@ -93,7 +93,7 @@ namespace sql.builder.DataApi
             //}
             return FirstUse(XmlReports.Environment, this.P_IdName);
         }
-        internal static VUsePart FirstUse(VEnvironment env, string name)
+        public static VUsePart FirstUse(VEnvironment env, string name)
         {
             XElement el = env.Manager.GetNativeScheme().Descendants(EName.usepart).SearchByAttribute(AName_.part, name);
             if (el != null) {

@@ -15,7 +15,7 @@ using Devart.Data.Oracle;
 using sql.builder.UI;
 namespace sql.builder.DataApi
 {
-    internal partial class VDataSet
+    public partial class VDataSet
     {
        
         public SortedList<string, VDataColumn > VariableColumns = null;
@@ -308,7 +308,7 @@ namespace sql.builder.DataApi
 
             return id;
         }
-        internal OracleParameter CreateFormIdParametr()
+        public OracleParameter CreateFormIdParametr()
         {
             return new OracleParameter(TextConst.DBParams.FormId, OracleDbType.Number, (object)this.GetFormId(), ParameterDirection.Input);
         }

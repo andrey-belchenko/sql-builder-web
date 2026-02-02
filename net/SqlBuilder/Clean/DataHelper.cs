@@ -645,12 +645,12 @@ namespace infoenergo.core.Data
             return result;
         }
 
-        internal static Type ConvertDataType(Type type)
+        public static Type ConvertDataType(Type type)
         {
             return OracleConvention.ConvertDataType(type);
         }
 
-        internal static bool IsNumericType(Type type)
+        public static bool IsNumericType(Type type)
         {
             return OracleConvention.IsNumber(type);
         }
@@ -1350,25 +1350,25 @@ namespace infoenergo.core.Data
 
                 return d;
             }
-            internal set
+            public set
             {
                 d = value;
             }
         }
 
-        internal OracleException(int A_0, string A_1)
+        public OracleException(int A_0, string A_1)
             : this(A_0, A_1, A_2: false)
         {
         }
 
-        internal OracleException(int A_0, string A_1, bool A_2)
+        public OracleException(int A_0, string A_1, bool A_2)
             : base(A_1)
         {
             this.m_a = A_0;
             d = A_2;
         }
 
-        internal OracleException(int A_0, string A_1, Exception A_2)
+        public OracleException(int A_0, string A_1, Exception A_2)
             : base(A_1, A_2)
         {
             this.m_a = A_0;
@@ -1380,12 +1380,12 @@ namespace infoenergo.core.Data
             this.m_a = A_0.GetInt32("code");
         }
 
-        internal void a(int A_0)
+        public void a(int A_0)
         {
             b = A_0;
         }
 
-        internal void a(OracleErrorCollection A_0)
+        public void a(OracleErrorCollection A_0)
         {
             c = A_0;
         }
@@ -1544,13 +1544,13 @@ namespace infoenergo.core.Data
             {
                 return i;
             }
-            internal set
+            public set
             {
                 i = value;
             }
         }
 
-        internal OracleError(int A_0, int A_1, string A_2, OracleObjectType A_3, string A_4, string A_5)
+        public OracleError(int A_0, int A_1, string A_2, OracleObjectType A_3, string A_4, string A_5)
         {
             h = A_3;
             f = A_4;
@@ -1565,7 +1565,7 @@ namespace infoenergo.core.Data
             return c;
         }
 
-        internal void a(int A_0, int A_1)
+        public void a(int A_0, int A_1)
         {
             d = A_0;
             e = A_1;
@@ -1613,12 +1613,12 @@ namespace infoenergo.core.Data
             }
         }
 
-        internal OracleErrorCollection()
+        public OracleErrorCollection()
             : this(null)
         {
         }
 
-        internal OracleErrorCollection(OracleError[] A_0)
+        public OracleErrorCollection(OracleError[] A_0)
         {
             a = A_0;
         }

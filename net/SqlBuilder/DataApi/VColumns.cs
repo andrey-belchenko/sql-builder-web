@@ -4,13 +4,13 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VColumns : VOutputElement, IVParent
+    public sealed class VColumns : VOutputElement, IVParent
     {
-        internal VColumns()
+        public VColumns()
             : base(EName.columns)
         {
         }
-        internal static string[] child_nodes = { TextConst.EName.Band, TextConst.EName.Column, TextConst.EName.UsePart };
+        public static string[] child_nodes = { TextConst.EName.Band, TextConst.EName.Column, TextConst.EName.UsePart };
         IList<string> IVParent.AllowedChildNodes()
         {
             return child_nodes;

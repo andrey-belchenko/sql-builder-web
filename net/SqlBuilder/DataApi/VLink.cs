@@ -6,9 +6,9 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VLink : VQueryCall
+    public sealed class VLink : VQueryCall
     {
-        internal VLink()
+        public VLink()
             : base(EName.link)
         {
         }

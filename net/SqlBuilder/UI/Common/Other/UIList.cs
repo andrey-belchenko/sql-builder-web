@@ -23,7 +23,7 @@ using sql.builder.DataApi;
 
 namespace sql.builder.UI
 {
-    internal partial class UIList : UIBase, IList
+    public partial class UIList : UIBase, IList
     {
         #region Поля
         private bool _need_set_focus;
@@ -56,7 +56,7 @@ namespace sql.builder.UI
         {
             return this.SourceType == ReturnType.Array;
         }
-        internal bool ShowFooterPanel {
+        public bool ShowFooterPanel {
             set {
                 //if (value) {
                 //    listEdit.ShowFooterPanel();

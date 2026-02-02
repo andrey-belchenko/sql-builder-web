@@ -10,9 +10,9 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VQuery
+    public partial class VQuery
     {
-        internal VDBSelectCommand GetSelectCommand(bool useCache)
+        public VDBSelectCommand GetSelectCommand(bool useCache)
          {
             if (useCache) {
                  if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
@@ -220,7 +220,7 @@ namespace sql.builder.DataApi
              AddCashValue(cmd, MethodBase.GetCurrentMethod().ToString(), targetName);
              return cmd;
          }
-         internal static object ExecuteQueryReturnScalar(string name)
+         public static object ExecuteQueryReturnScalar(string name)
          {
              VQuery query = XmlReports.Environment.GetQuery(name);
              VDBSelectCommand selCmd = query.GetSelectCommand(true);

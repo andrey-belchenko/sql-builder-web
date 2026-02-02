@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal class ExcelException : Exception
+    public class ExcelException : Exception
     {
         public ExcelException()
         {

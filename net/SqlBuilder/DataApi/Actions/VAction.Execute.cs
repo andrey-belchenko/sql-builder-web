@@ -26,7 +26,7 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VAction : VSXElement
+    public partial class VAction : VSXElement
     {
         private void ExecuteCustomAction(VDataSet dataSet, UIFormC senderForm, VDataTable table, DataRow row,object[] pars)
         {
@@ -40,7 +40,7 @@ namespace sql.builder.DataApi
         {
             return this;
         }
-        internal VAction ActionOrSelf()
+        public VAction ActionOrSelf()
         {
             VAction action = this.Action();
             if (action == null) {
@@ -60,7 +60,7 @@ namespace sql.builder.DataApi
                 return null;
             }
         }
-        internal List<object> GetParamsRuntimeValues(VDataSet dataSet, DataRow row, VDataColumn col)
+        public List<object> GetParamsRuntimeValues(VDataSet dataSet, DataRow row, VDataColumn col)
         {
             var list = new List<object>();
             var factPars = this.Params();
@@ -80,7 +80,7 @@ namespace sql.builder.DataApi
                 return null;
             }
         }
-        internal List<VSXElement> Params()
+        public List<VSXElement> Params()
         {
             var pars = new List<VSXElement>();
             if (this.ActionOrSelf().IsRowAction() && this.P_CalledObject != "") {
@@ -167,7 +167,7 @@ namespace sql.builder.DataApi
         //        form.ShowDialog();
         //    }
         //}
-        internal static void TableUpdate_Add(DataTable target, List<DataRow> sourceRows)
+        public static void TableUpdate_Add(DataTable target, List<DataRow> sourceRows)
         {
             if (sourceRows.Count == 0) return;
 

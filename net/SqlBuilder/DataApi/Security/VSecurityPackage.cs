@@ -8,9 +8,9 @@ namespace sql.builder.DataApi
     /// <summary>
     /// &lt;security-package name="" &gt;
     /// </summary>
-    internal sealed class VSecurityPackage : VOutputElement, IVParent
+    public sealed class VSecurityPackage : VOutputElement, IVParent
     {
-        internal VSecurityPackage()
+        public VSecurityPackage()
             : base(EName.security_package)
         {
         }

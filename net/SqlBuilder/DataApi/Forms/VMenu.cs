@@ -4,13 +4,13 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VMenu : VSXElement, IVParent
+    public sealed class VMenu : VSXElement, IVParent
     {
-        internal VMenu()
+        public VMenu()
             : base(EName.menu)
         {
         }
-        internal static string[] child_nodes = { TextConst.EName.UICommand, TextConst.EName.Menu, TextConst.EName.UsePart };
+        public static string[] child_nodes = { TextConst.EName.UICommand, TextConst.EName.Menu, TextConst.EName.UsePart };
         IList<string> IVParent.AllowedChildNodes()
         {
             return child_nodes;

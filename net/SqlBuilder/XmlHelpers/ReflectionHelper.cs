@@ -9,7 +9,7 @@ using sql.builder.UI;
 
 namespace sql.builder.XmlHelpers
 {
-    internal static class ReflectionHelper
+    public static class ReflectionHelper
     {
         private static string[] assemblies = new string[] {
             "arbitrage.lib", "asuse.Net", "finance.Net", "sql.builder"
@@ -26,7 +26,7 @@ namespace sql.builder.XmlHelpers
                 assembly_name = "mscorlib";
             }
         }
-        internal static void ResolveAssemblyType(string assembly_name, string type_name, out Type type)
+        public static void ResolveAssemblyType(string assembly_name, string type_name, out Type type)
         {
             Contract.Assume(!string.IsNullOrEmpty(type_name));
             // Если сборка не указана, пытаемся её определить по имени класса
@@ -40,7 +40,7 @@ namespace sql.builder.XmlHelpers
                 Debug.WriteLine("Найден тип " + type.FullName);
             }
         }
-        internal static object ExecuteStaticMethod(string assembly_name, string type_name, string method_name, IList<object> input_params, DataSet ds)
+        public static object ExecuteStaticMethod(string assembly_name, string type_name, string method_name, IList<object> input_params, DataSet ds)
         {
             Contract.Assume(!string.IsNullOrEmpty(type_name));
             Contract.Assume(!string.IsNullOrEmpty(method_name));

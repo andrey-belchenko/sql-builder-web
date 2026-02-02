@@ -2,9 +2,9 @@
 
 namespace sql.builder.ExcelApi
 {
-    internal class VExcelObject
+    public class VExcelObject
     {
-        internal readonly XElement Element;
+        public readonly XElement Element;
         protected VExcelObject(XElement element)
         {
             this.Element = element;

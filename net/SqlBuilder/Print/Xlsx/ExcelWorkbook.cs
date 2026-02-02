@@ -6,14 +6,14 @@ using sql.builder.DataApi;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal class ExcelWorkbook : ExcelBaseFile
+    public class ExcelWorkbook : ExcelBaseFile
     {
-        internal ExcelWorkbook(string file_path)
+        public ExcelWorkbook(string file_path)
             : base(file_path)
         {
             Contract.Assert(this.xml.Root.Name == ns.Main.workbook);
         }
-        internal string GetNativeWorksheetName(string rid)
+        public string GetNativeWorksheetName(string rid)
         {
             XElement xsheet = this.xml.Root.Element(ns.Main.sheets).Elements(ns.Main.sheet).SearchByAttribute(ns.Relsd.id, rid);
             if (xsheet != null) {
@@ -22,7 +22,7 @@ namespace sql.builder.Print.Xlsx
                 return null;
             }
         }
-        internal void ChangeNativeWorksheetName(string rid, string name)
+        public void ChangeNativeWorksheetName(string rid, string name)
         {
             XElement root = this.XmlChanged.Root;
             XElement xsheet = root.Element(ns.Main.sheets).Elements(ns.Main.sheet).SearchByAttribute(ns.Relsd.id, rid);
@@ -41,7 +41,7 @@ namespace sql.builder.Print.Xlsx
                 }
             }
         }
-        internal void AddWorksheet(string rid, string name, string rid_prev = null)
+        public void AddWorksheet(string rid, string name, string rid_prev = null)
         {
             XElement xsheets = this.XmlChanged.Root.Element(ns.Main.sheets);
             int sheet_id = xsheets.Elements(ns.Main.sheet).Max(e => int.Parse(e.Attribute(ns.None.sheetId).Value)) + 1;
@@ -61,7 +61,7 @@ namespace sql.builder.Print.Xlsx
                 xsheet_prev.AddAfterSelf(xsheet);
             }
         }
-        internal void DeleteWorksheet(string rid)
+        public void DeleteWorksheet(string rid)
         {
             XElement xsheet = this.XmlChanged.Root.Element(ns.Main.sheets).Elements(ns.Main.sheet).SearchByAttribute(ns.Relsd.id, rid);
             if (xsheet != null) {

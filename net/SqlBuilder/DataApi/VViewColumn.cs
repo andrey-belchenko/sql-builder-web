@@ -6,9 +6,9 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VViewColumn : VOutputElement
+    public sealed class VViewColumn : VOutputElement
     {
-        internal VViewColumn()
+        public VViewColumn()
             : base(EName.column)
         {
         }

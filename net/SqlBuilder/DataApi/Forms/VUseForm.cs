@@ -4,13 +4,13 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VUseForm : VUseAction
+    public sealed class VUseForm : VUseAction
     {
-        internal VUseForm()
+        public VUseForm()
             : base(EName.useform)
         {
         }
-        internal static VUseForm Get(string form_name)
+        public static VUseForm Get(string form_name)
         {
             XElement xuseform = XmlReports.GetCurrentNavigator().Descendants(EName.useform).SearchByAttribute(AName_.form, form_name);
             if (xuseform != null) {

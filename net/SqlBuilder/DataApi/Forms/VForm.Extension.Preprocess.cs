@@ -17,7 +17,7 @@ using System.Reflection;
 using sql.builder.Exceptions;
 namespace sql.builder.DataApi
 {
-    internal partial class VForm
+    public partial class VForm
     {
         private bool IsNeedPreprocess()
         {

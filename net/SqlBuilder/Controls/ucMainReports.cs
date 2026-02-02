@@ -30,9 +30,9 @@ using DataTable = System.Data.DataTable;
 
 namespace sql.builder.Controls
 {
-    internal partial class ucMainReports //: ucBase
+    public partial class ucMainReports //: ucBase
     {
-        internal static void CopyParsToResult(UIFormC form, VDataSet result) //20171201 Новое , возможны ошибки
+        public static void CopyParsToResult(UIFormC form, VDataSet result) //20171201 Новое , возможны ошибки
         {
             if (form == null)
             {

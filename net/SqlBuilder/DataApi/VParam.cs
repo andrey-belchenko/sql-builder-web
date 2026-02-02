@@ -6,9 +6,9 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VParam : VQueryCall, IVParent
+    public sealed class VParam : VQueryCall, IVParent
     {
-        internal VParam()
+        public VParam()
             : base(EName.param)
         {
         }
@@ -16,11 +16,11 @@ namespace sql.builder.DataApi
         {
             return XmlReports.Environment.GetQuery(this.P_CalledQuery);
         }
-        internal bool IsObject()
+        public bool IsObject()
         {
             return this.P_CalledQuery != string.Empty;
         }
-        internal VSXElement GetFactParam(List<VSXElement> factParams, int index)
+        public VSXElement GetFactParam(List<VSXElement> factParams, int index)
         {
             if (factParams.Any(VSXElement.HasParameterName)) {
                 string name = this.AName();
@@ -37,7 +37,7 @@ namespace sql.builder.DataApi
                 return null;
             }
         }
-        internal object GetRuntimeValue(List<VSXElement> factParams, VDataSet dataSet, DataRow row, VDataColumn col, int index)
+        public object GetRuntimeValue(List<VSXElement> factParams, VDataSet dataSet, DataRow row, VDataColumn col, int index)
         {
             VSXElement factParam = this.GetFactParam(factParams, index);
             if (factParam == null) {

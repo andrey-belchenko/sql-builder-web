@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VIf : VSXElement, IVParent
+    public sealed class VIf : VSXElement, IVParent
     {
-        internal VIf()
+        public VIf()
             : base(EName.@if)
         {
         }

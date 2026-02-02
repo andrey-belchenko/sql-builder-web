@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VTabContainer : VSXElement, IVParent
+    public sealed class VTabContainer : VSXElement, IVParent
     {
-        internal VTabContainer()
+        public VTabContainer()
             : base(EName.tabcontainer)
         {
         }

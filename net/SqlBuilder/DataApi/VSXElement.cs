@@ -26,9 +26,9 @@ using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VSXElement : VXElement
+    public partial class VSXElement : VXElement
     {
-        internal VSXElement(XElement other)
+        public VSXElement(XElement other)
             : base(other)
         {
             this.KeyField = AName_.name;
@@ -449,16 +449,16 @@ namespace sql.builder.DataApi
             }
             return newElement;
         }
-        internal static VSXElement Get(XElement other)
+        public static VSXElement Get(XElement other)
         {
             return GetP(other, null);
         }
-        internal static T Get<T>(XElement other)
+        public static T Get<T>(XElement other)
             where T : VSXElement
         {
             return (T)Get(other);
         }
-        internal static VSXElement GetP(XElement other, XElement parent)
+        public static VSXElement GetP(XElement other, XElement parent)
         {
             
             VSXElement el;
@@ -555,7 +555,7 @@ namespace sql.builder.DataApi
         //        (this.Row.Table as VDataTable).RaiseRowChanged(this.Row);
         //    }
         //}
-        internal void RaiseParensChange()
+        public void RaiseParensChange()
         {
             VSXElement parent = this.Parent as VSXElement;
             if (parent != null && parent.ChildDependant) {
@@ -565,7 +565,7 @@ namespace sql.builder.DataApi
                 // parent.dataChangeProcessing = false;
             }
         }
-        internal static string RemovePropPfx(string propName)
+        public static string RemovePropPfx(string propName)
         {
             return propName.Substring(PropPfx.Length, propName.Length - PropPfx.Length);
         }
@@ -573,7 +573,7 @@ namespace sql.builder.DataApi
         {
             return VFieldInfo.Order(this, PropPfx + name);
         }
-        internal IList<string> GetPropNames()
+        public IList<string> GetPropNames()
         {
             if (propNames == null) {
                 List<string> list = new List<string>();
@@ -658,11 +658,11 @@ namespace sql.builder.DataApi
             element.ResumeChangeEvent();
             //element.dataChangeProcessing = false;
         }
-        internal const string PropPfx = "P_";
-        internal XName KeyField;
-        internal string SavedKey = string.Empty;
-        internal string ParentName = string.Empty;
-        internal XElement ClearBeforeSaveCmn()
+        public const string PropPfx = "P_";
+        public XName KeyField;
+        public string SavedKey = string.Empty;
+        public string ParentName = string.Empty;
+        public XElement ClearBeforeSaveCmn()
         {
             XElement el = new XElement(this);
             el.DescendantsAndSelf().Attributes().Where(a => Cmn.XElementsToDataTableSysFieldsNames.Contains(a.Name.LocalName)).Remove();
@@ -1051,7 +1051,7 @@ namespace sql.builder.DataApi
             row["node"] = this;
             return row;
         }*/
-        internal void UpdateDataRow()
+        public void UpdateDataRow()
         {
             DataRow row = this.Row;
             if (row != null && row.RowState != DataRowState.Detached) {
@@ -1068,7 +1068,7 @@ namespace sql.builder.DataApi
                 // ResumeChangeEvent();
             }
         }
-        internal void UpdateDataCell(string name)
+        public void UpdateDataCell(string name)
         {
             DataRow row = this.Row;
             if (row.RowState != DataRowState.Detached) {
@@ -1105,7 +1105,7 @@ namespace sql.builder.DataApi
                 this.SetAttrValue(name, value);
             }
         }
-        internal VPart RootPart()
+        public VPart RootPart()
         {
             //!!! Может замедлять, если так , сделать кеширование
             VPart query = (VPart)this.GetAncestorsAndSelf(EName.part).LastOrDefault();
@@ -1204,12 +1204,12 @@ namespace sql.builder.DataApi
         //    }
         //    return null;
         //}
-        internal void SetProperty(string info, object value)
+        public void SetProperty(string info, object value)
         {
             string propName = info.Replace("_Set", "");
             VFieldInfo.SetValue(this, propName, value);
         }
-        internal class ElementUse
+        public class ElementUse
         {
             public ElementUse(VSXElement parent,VSXElement user, string attribute)
             {
@@ -1295,7 +1295,7 @@ namespace sql.builder.DataApi
             }
             return new List<ElementUse>();
         }
-        internal string GetAttrForRename()
+        public string GetAttrForRename()
         {
             string attrName;
             if (this.IsMainElement()) {
@@ -1305,7 +1305,7 @@ namespace sql.builder.DataApi
             }
             return attrName;
         }
-        internal void RenameUses(string newName)
+        public void RenameUses(string newName)
         {
             var list = SearchUses();
             string attrName = GetAttrForRename();
@@ -1344,7 +1344,7 @@ namespace sql.builder.DataApi
                 el.SaveInDefSourceFile();
             }
         }
-        internal VSXElement GetMainParent()  //!!! Сделать покрасивее
+        public VSXElement GetMainParent()  //!!! Сделать покрасивее
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
             {
@@ -1487,7 +1487,7 @@ namespace sql.builder.DataApi
         {
             return GetAncestorsAndSelf(new[] { name });
         }*/
-        internal IList<VSXElement> GetAncestorsAndSelf(XName name)
+        public IList<VSXElement> GetAncestorsAndSelf(XName name)
         {
             List<VSXElement> list = new List<VSXElement>();
             VSXElement el = this;
@@ -1499,7 +1499,7 @@ namespace sql.builder.DataApi
             }
             return list;
         }
-        internal IList<VSXElement> GetAncestorsAndSelf()
+        public IList<VSXElement> GetAncestorsAndSelf()
         {
             List<VSXElement> list = new List<VSXElement>();
             VSXElement el = this;
@@ -1517,7 +1517,7 @@ namespace sql.builder.DataApi
         /// Возвращает true для элементов второго уровня (например, для /root/queries/query )
         /// </summary>
         /// <returns></returns>
-        internal bool IsMainElement()
+        public bool IsMainElement()
         {
             VSXElement parent = this.GetParent();
             if (parent == null) {
@@ -1533,7 +1533,7 @@ namespace sql.builder.DataApi
         {
             return new List<VSXElement>();
         }
-        internal string GetFullName(string name = null)
+        public string GetFullName(string name = null)
         {
             return this.GetNodeTypeInfo() + " " + this.GetName(name);
         }
@@ -1545,21 +1545,21 @@ namespace sql.builder.DataApi
                 return name;
             }
         }
-        internal List<VSXElement> AsList()
+        public List<VSXElement> AsList()
         {
             List<VSXElement> list = new List<VSXElement>(1);
             list.Add(this);
             return list;
         }
-        internal virtual IList<VSXElement> SourceColumns()
+        public virtual IList<VSXElement> SourceColumns()
         {
             return Array.Empty<VSXElement>();
         }
-        /*internal virtual IList<VSXElement> SelfOrMultipleSource()
+        /*public virtual IList<VSXElement> SelfOrMultipleSource()
         {
             return new VSXElement[1] { this };
         }*/
-        internal VSXElement SelfParentOrUsepartParent()
+        public VSXElement SelfParentOrUsepartParent()
         {
             VSXElement parent = this.GetParent();
             VPart part = parent as VPart;
@@ -1585,7 +1585,7 @@ namespace sql.builder.DataApi
         {
             return new List<VColumn>();
         }
-        internal static bool IsListColumn(VSXElement e)
+        public static bool IsListColumn(VSXElement e)
         {
             return e.AttrOrDefault(TextConst.AName.IsListColumn, false);
         }
@@ -1645,7 +1645,7 @@ namespace sql.builder.DataApi
             }
             return ifEl;
         }
-        internal string AliasPfx()
+        public string AliasPfx()
         {
 
             var ifEl = IfElement();
@@ -1668,7 +1668,7 @@ namespace sql.builder.DataApi
             }
             return null;
         }
-        internal DateTime? GetTimeStamp()
+        public DateTime? GetTimeStamp()
         {
             XAttribute atr = this.Attribute(AName_.timestamp);
             if (atr == null) {
@@ -1677,18 +1677,18 @@ namespace sql.builder.DataApi
                 return DateTime.ParseExact(atr.Value, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
             }
         }
-        internal void SetTimeStamp()
+        public void SetTimeStamp()
         {
             this.SetAttributeValue(AName_.timestamp, DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
         }
         #region Условные предикаты
-        internal static bool HasParameterName(VSXElement e)
+        public static bool HasParameterName(VSXElement e)
         {
             return !string.IsNullOrEmpty(e.P_ParName);
         }
         #endregion
     }
-    internal class VRenameEventArgs : EventArgs
+    public class VRenameEventArgs : EventArgs
     {
         public string OldName;
         public string NewName;
@@ -1706,9 +1706,9 @@ namespace sql.builder.DataApi
 
     }
 
-    internal delegate void VRenameEventHandler(object sender, VRenameEventArgs e);
+    public delegate void VRenameEventHandler(object sender, VRenameEventArgs e);
 
-    internal class NameCheck
+    public class NameCheck
     {
         public NameCheck(IList<string> names)
         {
@@ -1769,7 +1769,7 @@ namespace sql.builder.DataApi
 
     }
 
-    internal class NameAndIndex
+    public class NameAndIndex
     {
         public NameAndIndex(string name)
         {

@@ -15,10 +15,10 @@ using sql.builder.ExcelApi;
 namespace sql.builder.Print.XML
 {
     /// <seealso cref="sql.builder.Print.Xlsx.ExcelPrintSheet"/>
-    internal class ExcelPrintSheet
+    public class ExcelPrintSheet
     {
         #region static
-        internal static ExcelPrintSheet Create(XElement worksheet, ExcelPrintDocument parent, ExcelPrintSheet prev_sheet)
+        public static ExcelPrintSheet Create(XElement worksheet, ExcelPrintDocument parent, ExcelPrintSheet prev_sheet)
         {
             ExcelPrintSheet sheet;
             string name = worksheet.AttrOrDefault(VExcelNS.SpreadSheet.Name, string.Empty);
@@ -71,9 +71,9 @@ namespace sql.builder.Print.XML
         /// Счётчик строк генерируемого листа
         /// </summary>
         protected int row_count;
-        //internal static SortedList<int, string> PrintColumn = new SortedList<int, string>();
+        //public static SortedList<int, string> PrintColumn = new SortedList<int, string>();
         #endregion
-        internal ExcelPrintSheet(XElement sheet, ExcelPrintDocument document)
+        public ExcelPrintSheet(XElement sheet, ExcelPrintDocument document)
         {
             Contract.Assert(sheet.Name == VExcelNS.SpreadSheet.Worksheet);
             this.document = document;
@@ -152,21 +152,21 @@ namespace sql.builder.Print.XML
         /// <summary>
         /// Ссылка на следующий лист
         /// </summary>
-        internal ExcelPrintSheet NextSheet { get { return this.next_sheet; } }
+        public ExcelPrintSheet NextSheet { get { return this.next_sheet; } }
         /// <summary>
         /// Число напечатаных строк в отчёте
         /// </summary>
-        internal int RowCount { get { return this.row_count; } }
-        //internal bool Printed { get { return this.printed; } }
-        //internal ExcelPrintDocument Document { get { return this.document; } }
-        //internal bool Multiplicated { get { return this.multiplicated; } }
+        public int RowCount { get { return this.row_count; } }
+        //public bool Printed { get { return this.printed; } }
+        //public ExcelPrintDocument Document { get { return this.document; } }
+        //public bool Multiplicated { get { return this.multiplicated; } }
         #endregion
-        internal void MarkUnprinted()
+        public void MarkUnprinted()
         {
             this.printed = false;
             this.row_count = 0;
         }
-        internal void NextRow()
+        public void NextRow()
         {
             this.row_count++;
         }
@@ -184,7 +184,7 @@ namespace sql.builder.Print.XML
         /// если это предусмотрено для строки шаблона <paramref name="template_row"/>
         /// </summary>
         /// <param name="template_row">Номер строки шаблона</param>
-        internal void AddBreakIfNeeded(int template_row)
+        public void AddBreakIfNeeded(int template_row)
         {
             if (this.row_page_breaks == null) {
                 return;
@@ -200,14 +200,14 @@ namespace sql.builder.Print.XML
             }
         }
         #region XSLX format
-        internal virtual ExcelPrintSheet Print(DataSet dataset, bool print_big_data)
+        public virtual ExcelPrintSheet Print(DataSet dataset, bool print_big_data)
         {
             this.PrintData(null, dataset, null, print_big_data);
             return this.next_sheet;
         }
         #endregion
         #region XML format
-        internal virtual ExcelPrintSheet Print(XmlSerializer serializer)
+        public virtual ExcelPrintSheet Print(XmlSerializer serializer)
         {
             serializer.SetRow(null);
             this.Write(serializer);
@@ -358,7 +358,7 @@ namespace sql.builder.Print.XML
             }
         }
         /// <seealso cref="sql.builder.Print.Xlsx.ExcelPrintSheet.makeChildsList"/>
-        internal IList<IExcelPrintElement> makeChildsList(string table_prefix, IList<XElement> rows, ExcelPrintGroup parent)
+        public IList<IExcelPrintElement> makeChildsList(string table_prefix, IList<XElement> rows, ExcelPrintGroup parent)
         {
             IList<IExcelPrintElement> childs = new List<IExcelPrintElement>();
             List<XElement> childRows = null;
@@ -408,12 +408,12 @@ namespace sql.builder.Print.XML
             return childs;
         }
     }
-    internal class ExcelPrintMultiplicatedSheet : ExcelPrintSheet
+    public class ExcelPrintMultiplicatedSheet : ExcelPrintSheet
     {
         #region поля
         private string name_variable;
         #endregion
-        internal ExcelPrintMultiplicatedSheet(XElement sheet, ExcelPrintDocument document, string name_variable)
+        public ExcelPrintMultiplicatedSheet(XElement sheet, ExcelPrintDocument document, string name_variable)
             : base(sheet, document)
         {
             Contract.Assert(!string.IsNullOrEmpty(name_variable));
@@ -428,7 +428,7 @@ namespace sql.builder.Print.XML
                 list.Add(new Tuple<ExcelPrintMultiplicatedSheet, string, DataRow>(this, row[this.name_variable].ToString(), row));
             }
         }
-        internal override ExcelPrintSheet Print(DataSet dataset, bool print_big_data)
+        public override ExcelPrintSheet Print(DataSet dataset, bool print_big_data)
         {
             if (this.printed) {
                 return this.next_sheet;
@@ -452,7 +452,7 @@ namespace sql.builder.Print.XML
                 return sheet;
             }
         }
-        internal override ExcelPrintSheet Print(XmlSerializer serializer)
+        public override ExcelPrintSheet Print(XmlSerializer serializer)
         {
             if (this.printed) {
                 return this.next_sheet;

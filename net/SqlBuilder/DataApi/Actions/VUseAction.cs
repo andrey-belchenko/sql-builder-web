@@ -5,13 +5,13 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VUseAction : VAction, IVParent
+    public partial class VUseAction : VAction, IVParent
     {
         protected VUseAction(XName name)
             : base(name)
         {
         }
-        internal VUseAction()
+        public VUseAction()
             : base(EName.useaction)
         {
         }
@@ -69,7 +69,7 @@ namespace sql.builder.DataApi
             }
             return null;
         }
-        //internal VQueryCall Query()
+        //public VQueryCall Query()
         //{
         //    return (VQueryCall)this.GetParent().GetParent();
         //}
@@ -96,8 +96,8 @@ namespace sql.builder.DataApi
                 return new List<VSXElement>();
             }
         }
-        internal static string[] child_nodes_custom = { TextConst.EName.UseAction, TextConst.EName.UsePart };
-        internal static string[] child_nodes_other = { TextConst.EName.Column, TextConst.EName.Call, TextConst.EName.Const, TextConst.EName.UseParam, TextConst.EName.Fact, TextConst.EName.ColDimVal, TextConst.EName.UsePart };
+        public static string[] child_nodes_custom = { TextConst.EName.UseAction, TextConst.EName.UsePart };
+        public static string[] child_nodes_other = { TextConst.EName.Column, TextConst.EName.Call, TextConst.EName.Const, TextConst.EName.UseParam, TextConst.EName.Fact, TextConst.EName.ColDimVal, TextConst.EName.UsePart };
         IList<string> IVParent.AllowedChildNodes()
         {
             if (this.P_ActionType == TextConst.AVActionType.Custom) {

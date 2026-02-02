@@ -14,10 +14,10 @@ using System.IO;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VQubeUtils
+    public partial class VQubeUtils
     {
         static string LvlPfx = "_lvl_";
-        //internal class LLevelInfo
+        //public class LLevelInfo
         //{
         //    string linkAlias;
         //    int globLevel;

@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VEvents : VSXElement, IVParent
+    public sealed class VEvents : VSXElement, IVParent
     {
-        internal VEvents()
+        public VEvents()
             : base(EName.events)
         {
         }

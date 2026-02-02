@@ -6,18 +6,18 @@ using sql.builder.DataApi;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal class ExcelRow : ExcelBaseItem
+    public class ExcelRow : ExcelBaseItem
     {
         private ExcelWorksheet _worksheet;
         private List<ExcelCell> _cells;
         private ExcelRow prev_row;
         private int row_id;
         private bool head_row;
-        internal IList<ExcelCell> Cells { get { return this._cells; } }
-        internal ExcelRow PrevRow { get { return this.prev_row; } }
-        internal int RowID { get { return this.row_id; } }
-        internal bool IsHeadRow { get { return this.head_row; } }
-        internal int PrevIDDelta {
+        public IList<ExcelCell> Cells { get { return this._cells; } }
+        public ExcelRow PrevRow { get { return this.prev_row; } }
+        public int RowID { get { return this.row_id; } }
+        public bool IsHeadRow { get { return this.head_row; } }
+        public int PrevIDDelta {
             get {
                 return (this.prev_row != null) ? (int.Parse(this.ID) - int.Parse(this.prev_row.ID)) : int.Parse(this.ID);
             }
@@ -41,7 +41,7 @@ namespace sql.builder.Print.Xlsx
                 //cells_headmarker.ForEach(c => c.SetValue(""));
             }
         }
-        internal void DeleteCell(ExcelCell cell)
+        public void DeleteCell(ExcelCell cell)
         {
             this.Xml.Elements(ns.Main.c).First(c => c.Attribute(ns.None.r).Value == cell.CellInfo.CellName).Remove();
             this._cells.Remove(cell);
@@ -57,7 +57,7 @@ namespace sql.builder.Print.Xlsx
                 }
             }
         }
-        internal ExcelCell CopyCell(ExcelCell cell, string column_name)
+        public ExcelCell CopyCell(ExcelCell cell, string column_name)
         {
             ExcelCell cell_copy = cell.Copy(this, column_name);
             int column_id = ExcelUtils.GetColumnNumber(column_name);

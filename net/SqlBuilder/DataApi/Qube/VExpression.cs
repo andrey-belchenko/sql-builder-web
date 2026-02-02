@@ -9,9 +9,9 @@ namespace sql.builder.DataApi
     /// <summary>
     /// &lt;call&gt; внутри &lt;expression-package&gt; или &lt;expressions&gt;
     /// </summary>
-    internal sealed class VExpression : VCall, IVParent
+    public sealed class VExpression : VCall, IVParent
     {
-        internal VExpression()
+        public VExpression()
             : base()
         {
         }
@@ -24,7 +24,7 @@ namespace sql.builder.DataApi
             }
             return facts;
         }
-        internal IList<VSXElement> GetDimensions()
+        public IList<VSXElement> GetDimensions()
         {
             return this.GetDescedantsP(EName.column);
         }
@@ -96,7 +96,7 @@ namespace sql.builder.DataApi
             var parentExp = (VExpression)dimension.GetAncestorsAndSelf(EName.call).Last();
             return parentExp.GetFactColumns();
         }
-        internal XElement BuildExpression(XElement factPars, SortedList<string, VFact.FactDependantceInfo> infoList, List<string> conditions, List<string> outputDimensions, List<string> nonOutputDimensions, SortedList<string, int> names)
+        public XElement BuildExpression(XElement factPars, SortedList<string, VFact.FactDependantceInfo> infoList, List<string> conditions, List<string> outputDimensions, List<string> nonOutputDimensions, SortedList<string, int> names)
         {
             XElement elExpr = new XElement(this.Name);
             VSXElement expr = VSXElement.Get(new XElement(this));
@@ -113,7 +113,7 @@ namespace sql.builder.DataApi
             BuildExpressionLevel(expr, elExpr, infoList, conditions, odims, nonOutputDimensions, names);
             return elExpr;
         }
-        /*internal IList<string> GetCumulateDimensionsNames()
+        /*public IList<string> GetCumulateDimensionsNames()
         {
             IList<VFact> facts = this.GetFacts();
             List<string> names = new List<string>();
@@ -129,7 +129,7 @@ namespace sql.builder.DataApi
             }
             return names;
         }*/
-        internal IList<VParam> FormalParams()
+        public IList<VParam> FormalParams()
         {
             IList<VSXElement> pars = this.GetElementsP(EName.@params);
             if (pars.Count != 0) {

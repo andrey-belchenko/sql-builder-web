@@ -5,9 +5,9 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VCustomer : VSXElement
+    public sealed class VCustomer : VSXElement
     {
-        internal VCustomer()
+        public VCustomer()
             : base(EName.customer)
         {
             this.KeyField = AName_.id;

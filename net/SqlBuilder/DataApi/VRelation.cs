@@ -4,28 +4,28 @@ using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VRelation : VQueryCall
+    public sealed class VRelation : VQueryCall
     {
-        internal VRelation()
+        public VRelation()
             : base(EName.query)
         {
         }
-        internal VQuery ChildQuery()
+        public VQuery ChildQuery()
         {
             XElement query = this.Ancestors(EName.query).First();
             return VSXElement.Get<VQuery>(query);
         }
-        internal VSXElement ChildColumnSource()
+        public VSXElement ChildColumnSource()
         {
             VSXElement col = this.GetDescedantsP(EName.column).First(e => P_Table != this.XName || P_Table == "");
             return RootQuery().SearchColumn(col.P_Column);
         }
-        internal VSXElement ParentColumn()
+        public VSXElement ParentColumn()
         {
             VSXElement col = this.GetDescedantsP(EName.column).First(e => P_Table == this.XName || P_Table == "");
             return col;
         }
-        internal VQuery ParentQuery()
+        public VQuery ParentQuery()
         {
             XElement query = XmlReports.Environment.GetQuery(this.ParentName);
             return (VQuery)query;

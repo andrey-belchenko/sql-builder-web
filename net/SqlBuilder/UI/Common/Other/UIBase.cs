@@ -19,7 +19,7 @@ using sql.builder.Exceptions;
 
 namespace sql.builder.UI
 {
-    internal abstract partial class UIBase : IBase
+    public abstract partial class UIBase : IBase
     {
         #region поля
         private ReturnType source_type;
@@ -59,7 +59,7 @@ namespace sql.builder.UI
         {
             return false;
         }
-        internal bool GetUsed()
+        public bool GetUsed()
         {
             if (!this.ShowCheck) {
                 return true;
@@ -129,8 +129,8 @@ namespace sql.builder.UI
             }
         }
         // Общие
-        internal ReturnType SourceType { get { return this.source_type; } }
-        internal Type ValueType { get { return this.value_type; } }
+        public ReturnType SourceType { get { return this.source_type; } }
+        public Type ValueType { get { return this.value_type; } }
         public XElement XField { get { return this.xfield; } }
         public string FullName { get { return this.full_name; } set { this.full_name = value; } }
         public string FieldName { get { return this.field_name; } }
@@ -964,7 +964,7 @@ namespace sql.builder.UI
         #endregion
     }
 
-    internal enum ReturnType
+    public enum ReturnType
     {
         Simple,
         SimpleRange,

@@ -47,7 +47,7 @@ namespace sql.builder
         /// <summary>
         /// Возвращает или задает путь последней печати файла
         /// </summary>
-        internal static string LastPrintedFilePath {
+        public static string LastPrintedFilePath {
             get {
                 return last_printed_file_path;
             }
@@ -59,7 +59,7 @@ namespace sql.builder
         //#if DEBUG
         //private static int prev_printed_rows;
         //#endif
-        internal static void OnPrintingHandler(object document, object sheet, int printed_sheets, int printed_rows)
+        public static void OnPrintingHandler(object document, object sheet, int printed_sheets, int printed_rows)
         {
             long now = Environment.TickCount;
             ulong elapsed;
@@ -200,7 +200,7 @@ namespace sql.builder
         /// <param name="file_name_new">Новое имя файла</param>
         /// <param name="format_source">см. <see cref="ExcelPrintOptions.FormatSource"/></param>
         /// <returns>Полное имя обработанного файла</returns>
-        internal static string PostProcess(string file_name, string output_format, string file_name_new, string format_source)
+        public static string PostProcess(string file_name, string output_format, string file_name_new, string format_source)
         {
             if (Logger.IsAcive) Logger.Log("Постобработка файла...");
             //var exApp = new Application();
@@ -221,20 +221,20 @@ namespace sql.builder
                 //} catch { }
             }
         }
-        internal static string PostProcessFlexCel(string file_name, string output_format = "xlsx", string file_name_new = null)
+        public static string PostProcessFlexCel(string file_name, string output_format = "xlsx", string file_name_new = null)
         {
             throw new NotImplementedException();
         }
-        internal static string PostProcessBigData(string file_name, string template_path, bool xlsb)
+        public static string PostProcessBigData(string file_name, string template_path, bool xlsb)
         {
 
             throw new NotImplementedException();
         }
-        internal static string ChangeExcelFileFormat(string filePath, ExcelPrintOptions.FileFormat formatNew)
+        public static string ChangeExcelFileFormat(string filePath, ExcelPrintOptions.FileFormat formatNew)
         {
             throw new NotImplementedException();
         }
-        internal static string GetProjectExcelTemplates(string templateType)
+        public static string GetProjectExcelTemplates(string templateType)
         {
             return Path.Combine(XmlReports.GetCurrentContentFolder(), @"printTemplate\" + templateType);
         }

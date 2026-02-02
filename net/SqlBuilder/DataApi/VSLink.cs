@@ -3,9 +3,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VSLink : VQueryCall
+    public sealed class VSLink : VQueryCall
     {
-        internal VSLink()
+        public VSLink()
             : base(EName.slink)
         {
         }

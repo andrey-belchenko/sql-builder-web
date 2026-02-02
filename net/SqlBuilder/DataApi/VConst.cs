@@ -10,7 +10,7 @@ namespace sql.builder.DataApi
     /// </summary>
     /// <seealso cref="VArray"/>
     /// <seealso cref="VScalarConst"/>
-    internal abstract class VConst : VSXElement
+    public abstract class VConst : VSXElement
     {
         protected VConst(XName name)
             : base(name)
@@ -44,7 +44,7 @@ namespace sql.builder.DataApi
             string v = this.Value;
             return ValueToObject(v);
         }
-        internal static object ValueToObject(string value)
+        public static object ValueToObject(string value)
         {
             string v = value;
             if (v == "null") {

@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VFolder : VSXElement, IVParent
+    public sealed class VFolder : VSXElement, IVParent
     {
-        internal VFolder()
+        public VFolder()
             : base(EName.folder)
         {
         }

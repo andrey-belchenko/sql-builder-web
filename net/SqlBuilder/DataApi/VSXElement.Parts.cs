@@ -19,7 +19,7 @@ using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VSXElement : VXElement
+    public partial class VSXElement : VXElement
     {
 
 
@@ -51,7 +51,7 @@ namespace sql.builder.DataApi
             return vsxelement;
         }
         #region GetElementsP()
-        /*internal List<VSXElement> GetElementsP()
+        /*public List<VSXElement> GetElementsP()
         {
             var list = new List<VSXElement>();
             var list1 = this.Elements().Where(EPredicate.IsNotExcuded).ToList().Select(VSXElement.Get).ToList();
@@ -63,7 +63,7 @@ namespace sql.builder.DataApi
             }
             return list;
         }*/
-        internal static IList<VSXElement> GetElementsP(VSXElement parent)
+        public static IList<VSXElement> GetElementsP(VSXElement parent)
         {
             var list = new List<VSXElement>();
             IList<XElement> elements = parent.Elements().Where(EPredicate.IsNotExcuded).ToList();
@@ -81,11 +81,11 @@ namespace sql.builder.DataApi
         #if !FRAMEWORK_40
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         #endif
-        internal IList<VSXElement> GetElementsP()
+        public IList<VSXElement> GetElementsP()
         {
             return VSXElement.GetElementsP(this);
         }
-        internal IList<VSXElement> GetElementsP(XName name)
+        public IList<VSXElement> GetElementsP(XName name)
         {
             Contract.Assert(name != null);
             var list = new List<VSXElement>();
@@ -109,14 +109,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region GetDescedantsAndSelfP()
-        internal static IList<VSXElement> GetDescedantsAndSelfP(VSXElement parent)
+        public static IList<VSXElement> GetDescedantsAndSelfP(VSXElement parent)
         {
             Contract.Assert(parent != null);
             List<VSXElement> list = VSXElement.GetDescedantsP(parent);
             list.Add(parent);
             return list;
         }
-        internal IList<VSXElement> GetDescedantsAndSelfP(XName name)
+        public IList<VSXElement> GetDescedantsAndSelfP(XName name)
         {
             Contract.Assert(name != null);
             List<VSXElement> list = this.GetDescedantsP(name);
@@ -127,7 +127,7 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region GetDescedantsP()
-        internal static List<VSXElement> GetDescedantsP(VSXElement parent)
+        public static List<VSXElement> GetDescedantsP(VSXElement parent)
         {
             Contract.Assert(parent != null);
             IList<VSXElement> childs = VSXElement.GetElementsP(parent);
@@ -139,7 +139,7 @@ namespace sql.builder.DataApi
             }
             return list;
         }
-        internal List<VSXElement> GetDescedantsP(XName name)
+        public List<VSXElement> GetDescedantsP(XName name)
         {
             Contract.Assert(name != null);
             IList<VSXElement> childs = VSXElement.GetElementsP(this);
@@ -153,7 +153,7 @@ namespace sql.builder.DataApi
             }
             return list;
         }
-        internal List<VSXElement> GetDescedantsP(Func<VSXElement, bool> predicate)
+        public List<VSXElement> GetDescedantsP(Func<VSXElement, bool> predicate)
         {
             Contract.Assert(predicate != null);
             IList<VSXElement> childs = VSXElement.GetElementsP(this);

@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-	internal partial class VPart : VSXElement
+	public partial class VPart : VSXElement
 	{
 		protected override List<ElementUse> searchUses()
 		{

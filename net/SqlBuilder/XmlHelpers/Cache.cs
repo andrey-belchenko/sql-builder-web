@@ -13,7 +13,7 @@ namespace sql.builder.XmlHelpers
     /// <summary>
     /// кэш для форм
     /// </summary>
-    internal static class Cache
+    public static class Cache
     {
         #region Forms
         private static string _forms_folder;
@@ -57,7 +57,7 @@ namespace sql.builder.XmlHelpers
             set { _useFormsCache = value; }
         }
 
-        internal static bool IsActualForm(string form_name, DateTime item_write_date)
+        public static bool IsActualForm(string form_name, DateTime item_write_date)
         {
             if (!XmlReports.IsDeveloperMode()) return true;
             if (!_useFormsCache) return false;
@@ -73,7 +73,7 @@ namespace sql.builder.XmlHelpers
 
             return (item_changed_date <= item_write_date);
         }
-        internal static void SaveNotActualForm(XElement xform, string form_name)
+        public static void SaveNotActualForm(XElement xform, string form_name)
         {
             if (!XmlReports.IsDeveloperMode() || !XmlReports.IsNative) return;
             string filepath = Path.Combine(FormsFolder, form_name + ".xml");
@@ -88,7 +88,7 @@ namespace sql.builder.XmlHelpers
                 Cmn.SaveXmlWithCheckOut(xform, filepath);
             }
         }
-        internal static XElement GetActualForm(string form_name)
+        public static XElement GetActualForm(string form_name)
         {
             var filepath = Path.Combine(FormsFolder, form_name + ".xml");
             var file = new FileInfo(filepath);
@@ -114,7 +114,7 @@ namespace sql.builder.XmlHelpers
             }
         }
 
-        internal static DateTime GetLastQubeCacheTime(string query_name)
+        public static DateTime GetLastQubeCacheTime(string query_name)
         {
             string qube_path = Path.Combine(QubesFolder, query_name + ".xml");
             if (!File.Exists(qube_path)) {
@@ -123,7 +123,7 @@ namespace sql.builder.XmlHelpers
             XElement xqube = XElement.Load(qube_path);
             return DateTime.Parse(xqube.Attribute(AName.timestamp).Value);
         }
-        internal static void SaveQubeInfoToCache(XElement xqube, string query_name)
+        public static void SaveQubeInfoToCache(XElement xqube, string query_name)
         {
             if (!XmlReports.IsDeveloperMode() || !XmlReports.IsNative) return;
             xqube.SetAttributeValue(AName.timestamp, DateTime.Now);
@@ -141,7 +141,7 @@ namespace sql.builder.XmlHelpers
         #endregion
         #region Queries
         private static string _queries_folder;
-        internal static string QueriesFolder {
+        public static string QueriesFolder {
             get {
                 if (_queries_folder == null) {
                     _queries_folder = Path.Combine(XmlReports.GetCurrentContentFolder(), XmlReports.QueriesCacheFolderName);
@@ -149,7 +149,7 @@ namespace sql.builder.XmlHelpers
                 return _queries_folder;
             }
         }
-        internal static void SaveQueryInfoToCache(XElement xquery, string query_name)
+        public static void SaveQueryInfoToCache(XElement xquery, string query_name)
         {
             if (!XmlReports.IsDeveloperMode() || !XmlReports.IsNative) return;
             xquery.SetAttrValue(AName.timestamp, DateTime.Now);
@@ -164,7 +164,7 @@ namespace sql.builder.XmlHelpers
                 Cmn.SaveXmlWithCheckOut(xquery, query_path);
             }
         }
-        internal static XElement GetQueryInfoFromCache(string query_name, DateTime changeTime, bool allowNoCacheInRelease)
+        public static XElement GetQueryInfoFromCache(string query_name, DateTime changeTime, bool allowNoCacheInRelease)
         {
             string query_path = Path.Combine(QueriesFolder, query_name + ".xml");
             XElement xquery = null;

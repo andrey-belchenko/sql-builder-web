@@ -9,9 +9,9 @@ using System.Text.RegularExpressions;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal static class ExcelUtils
+    public static class ExcelUtils
     {
-        internal static string GetPrintDirectory()
+        public static string GetPrintDirectory()
         {
             int postfix = 1;
             string print_directory;
@@ -26,7 +26,7 @@ namespace sql.builder.Print.Xlsx
 
         static Dictionary<int, string> _cash1 = new Dictionary<int, string>();
         static Dictionary<string, int> _cash2 = new Dictionary<string, int>();
-        internal static string GetColumnName(int index)
+        public static string GetColumnName(int index)
         {
             string name;
             if (_cash1.TryGetValue(index, out name))
@@ -48,7 +48,7 @@ namespace sql.builder.Print.Xlsx
             _cash1.Add(index, name);
             return name;
         }
-        internal static int GetColumnNumber(string name)
+        public static int GetColumnNumber(string name)
         {
             int number = 0;
             if (_cash2.TryGetValue(name, out number))
@@ -68,7 +68,7 @@ namespace sql.builder.Print.Xlsx
 
             return number;
         }
-        internal static void ParseCellName(string cell_name, out int row_id, out int column_id, out string column_name)
+        public static void ParseCellName(string cell_name, out int row_id, out int column_id, out string column_name)
         {
             Contract.Assert(!string.IsNullOrEmpty(cell_name));
             int index = 0;
@@ -93,8 +93,8 @@ namespace sql.builder.Print.Xlsx
             column_name = cell_name.Substring(0, index);
             Contract.Assume(ExcelUtils.GetColumnNumber(column_name) == column_id);
         }
-        // TODO: зачем корректировать формулы-ссылки на другой лист?
-        internal static string CorrectFormulaReferences(string formula, int colDelta = 0, int rowDelta = 0)
+        // TODO: пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ?
+        public static string CorrectFormulaReferences(string formula, int colDelta = 0, int rowDelta = 0)
         {
             if (colDelta == 0 && rowDelta == 0) return formula;
 
@@ -106,7 +106,7 @@ namespace sql.builder.Print.Xlsx
             {
                 sb.Append(formula.Substring(ind, match.Index - ind));
                 string cellName = match.Groups[1].Value;
-                // корректируем имя ячейки в формуле, если формула расшарена в пределах строки
+                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
                 if (colDelta != 0)
                 {
                     cellName = GetColumnName(GetColumnNumber(cellName) + colDelta);
@@ -127,7 +127,7 @@ namespace sql.builder.Print.Xlsx
             return sb.ToString();
         }
 
-        internal static IEnumerable<string> GetVariablesNames(string text)
+        public static IEnumerable<string> GetVariablesNames(string text)
         {
             foreach (Match match in Regex.Matches(text, @"\[:(([a-zA-Z0-9_]+\.)*)([a-zA-Z0-9_]+)\]"))
             {
@@ -140,7 +140,7 @@ namespace sql.builder.Print.Xlsx
                 yield return tableName + "." + match.Groups[3].Value.ToLower();
             }
         }
-        internal static IEnumerable<string> GetVariablesNames(DataTable table)
+        public static IEnumerable<string> GetVariablesNames(DataTable table)
         {
             foreach (DataColumn col in table.Columns)
             {

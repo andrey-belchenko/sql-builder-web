@@ -11,7 +11,7 @@ namespace sql.builder.UI
 {
     public partial class UIFormC : IForm
     {
-        internal void viewTemp()
+        public void viewTemp()
         {
             //var tempViewer = new ucTempViewer();
             //tempViewer.SetSource(this.dataSource);

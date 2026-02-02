@@ -16,8 +16,8 @@ namespace sql.builder.UI
 {
     public partial class UIFormC : IForm
     {
-        internal SortedList<string, VSXElement> eventsTags = null;
-        internal void AddEventTag(string eventName, VSXElement tag)
+        public SortedList<string, VSXElement> eventsTags = null;
+        public void AddEventTag(string eventName, VSXElement tag)
         {
             if (eventsTags == null)
             {
@@ -25,7 +25,7 @@ namespace sql.builder.UI
             }
             eventsTags.Add(eventName, tag);
         }
-        internal void RaiseUIEvent(string name)
+        public void RaiseUIEvent(string name)
         {
             if (eventsTags != null)
             {
@@ -37,7 +37,7 @@ namespace sql.builder.UI
             }
         }
         public event Action<UIFormC> CustomSave = null;
-        internal void RaiseCustomSave()
+        public void RaiseCustomSave()
         {
             if (CustomSave != null)
             {
@@ -45,14 +45,14 @@ namespace sql.builder.UI
             }
         }
         public event Action<UIFormC, XElement> OnButtonClick = null;
-        internal void RaiseButtonClick(XElement xinfo)
+        public void RaiseButtonClick(XElement xinfo)
         {
             if (OnButtonClick != null)
             {
                 OnButtonClick(this, xinfo);
             }
         }
-        internal void UpdateEvents( XElement xevents)
+        public void UpdateEvents( XElement xevents)
         {
             if (xevents == null)
             {
@@ -65,7 +65,7 @@ namespace sql.builder.UI
             }
         }
     }
-    internal class UIEventArgs : EventArgs
+    public class UIEventArgs : EventArgs
     {
         public VSXElement ActionInfo;
         public DataRow Row;
@@ -81,5 +81,5 @@ namespace sql.builder.UI
             Column = column;
         }         
     }
-    internal delegate bool UIEventHandler(object sender, UIEventArgs e);
+    public delegate bool UIEventHandler(object sender, UIEventArgs e);
 }

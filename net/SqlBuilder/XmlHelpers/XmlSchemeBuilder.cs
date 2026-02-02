@@ -10,7 +10,7 @@ using sql.builder.DataApi;
 
 namespace sql.builder.XmlHelpers
 {
-    internal class XmlSchemeBuilder
+    public class XmlSchemeBuilder
     {
         const string alias = "a";
 

@@ -88,7 +88,7 @@ namespace sql.builder.UI
             XmlReports.Environment.LoadProject( name);
         }
 
-        internal static UIFormC GetForm(string formName, bool isDialog, bool useOneFormMode,
+        public static UIFormC GetForm(string formName, bool isDialog, bool useOneFormMode,
             Func<UIFormC, XElement> need_report_delegate = null)
         {
             VCashUtils.ClearCashNotErrors();// Нужно чтобы периодически кеш зачищался наверняка есть утечка поставлю зачистку на открытие формы 
@@ -213,7 +213,7 @@ namespace sql.builder.UI
                 WaitUIHelper.LastUsedUIHelper.Hide();
             }
         }
-        internal static object[] CreatePars(XElement xpars)
+        public static object[] CreatePars(XElement xpars)
         {
 
             var parsList = new List<object>();

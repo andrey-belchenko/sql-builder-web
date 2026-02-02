@@ -9,9 +9,9 @@ namespace sql.builder.DataApi
     /// &lt;dimension name="" time-type="" timeline="" /&gt;
     /// &lt;dimension name="" class-type="" /&gt;
     /// </summary>
-    internal sealed partial class VDimension : VSXElement
+    public sealed partial class VDimension : VSXElement
     {
-        internal VDimension()
+        public VDimension()
             : base(EName.dimension)
         {
         }
@@ -21,11 +21,11 @@ namespace sql.builder.DataApi
                 return attr.Value;
             }
         }
-        /*internal List<string> GetTimelineDimNames()
+        /*public List<string> GetTimelineDimNames()
         {
             return XmlReports.Environment.GetDimensionsByTimeline(P_Timeline).Select(e => e.XName).ToList();
         }*/
-        internal VQuery Query()
+        public VQuery Query()
         {
             string query_name = this.P_CalledQuery;
             if (string.IsNullOrEmpty(query_name)) {
@@ -47,7 +47,7 @@ namespace sql.builder.DataApi
                 return new List<VSXElement>(0);
             }
         }
-        internal XElement GetTimeAttrExpression(string tableAlias, string columnName, string attrName)
+        public XElement GetTimeAttrExpression(string tableAlias, string columnName, string attrName)
         {
             XElement col = Factory.NewColumn(tableAlias, columnName);
             XElement el = null;
@@ -73,7 +73,7 @@ namespace sql.builder.DataApi
             }
             return el;
         }
-        internal string GetTimeAttrType(string attrName)
+        public string GetTimeAttrType(string attrName)
         {
             if (string.IsNullOrEmpty(attrName)) {
                 return string.Empty;

@@ -16,7 +16,7 @@ using sql.builder.FieldInfo;
 using System.Reflection;
 namespace sql.builder.DataApi
 {
-    internal partial class VSXElement : VXElement
+    public partial class VSXElement : VXElement
     {
 
 
@@ -186,7 +186,7 @@ namespace sql.builder.DataApi
 
     }
 
-    internal class VContextListsInfo
+    public class VContextListsInfo
     {
 
         public VContextListsInfo(string name, string title)
@@ -210,7 +210,7 @@ namespace sql.builder.DataApi
         }
     }
 
-    internal enum VContextListsType
+    public enum VContextListsType
     {
         Column,
         Call

@@ -8,13 +8,13 @@ namespace sql.builder.DataApi
     /// &lt;from&gt;...&lt;/from&gt;
     /// </summary>
     /// <seealso cref="VReportQueries"/>
-    internal class VFrom : VSXElement, IVParent
+    public class VFrom : VSXElement, IVParent
     {
         protected VFrom(XName name)
             : base(name)
         {
         }
-        internal VFrom()
+        public VFrom()
             : base(EName.from)
         {
         }

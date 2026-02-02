@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VArray : VConst, IVParent
+    public sealed class VArray : VConst, IVParent
     {
-        internal VArray()
+        public VArray()
             : base(EName.array)
         {
         }

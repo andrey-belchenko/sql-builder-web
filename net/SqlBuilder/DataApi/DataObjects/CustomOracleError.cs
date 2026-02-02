@@ -14,11 +14,11 @@ using sql.builder.DataApi;
 
 namespace sql.builder.DataApi.DataObjects
 {
-    internal class CustomOracleError
+    public class CustomOracleError
     {
-        internal static readonly int[] Codes = { 2292 };
+        public static readonly int[] Codes = { 2292 };
 
-        internal static void HandleIfNeed(DataRow row, OracleException ex)
+        public static void HandleIfNeed(DataRow row, OracleException ex)
         {
             switch (ex.Code) {
                 case 2292:

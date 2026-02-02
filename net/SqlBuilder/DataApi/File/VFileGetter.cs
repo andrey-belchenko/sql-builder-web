@@ -16,7 +16,7 @@ using Devart.Data.Oracle;
 
 namespace sql.builder.DataApi
 {
-    internal class VFileGetter
+    public class VFileGetter
     {
         public VFileGetter(string fileName)
         {

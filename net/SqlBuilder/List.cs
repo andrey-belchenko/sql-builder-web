@@ -5,9 +5,9 @@ using System.Runtime.CompilerServices; // MethodImplAttribute
 
 namespace sql.builder
 {
-    internal static class List
+    public static class List
     {
-        internal static bool IsNullOrEmpty<T>(IList<T> list)
+        public static bool IsNullOrEmpty<T>(IList<T> list)
         {
             return list == null || list.Count == 0;
         }
@@ -15,11 +15,11 @@ namespace sql.builder
         // Этот аттрибут появился только в .Net Framework 4.5
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         #endif
-        internal static bool Any(this System.Collections.IList list)
+        public static bool Any(this System.Collections.IList list)
         {
             return list.Count != 0;
         }
-        internal static bool Any<T>(this IList<T> list, Func<T, bool> predicate)
+        public static bool Any<T>(this IList<T> list, Func<T, bool> predicate)
         {
             for (int index = 0; index < list.Count; index++) {
                 if (predicate(list[index])) {
@@ -28,7 +28,7 @@ namespace sql.builder
             }
             return false;
         }
-        internal static T FirstOrDefault<T>(this IList<T> list)
+        public static T FirstOrDefault<T>(this IList<T> list)
             where T : class
         {
             if (list.Count == 0) {
@@ -37,7 +37,7 @@ namespace sql.builder
                 return list[0];
             }
         }
-        internal static T FirstOrDefault<T>(this IList<T> list, Func<T, bool> predicate)
+        public static T FirstOrDefault<T>(this IList<T> list, Func<T, bool> predicate)
             where T : class
         {
             for (int index = 0; index < list.Count; index++) {
@@ -48,7 +48,7 @@ namespace sql.builder
             }
             return null;
         }
-        internal static T LastOrDefault<T>(this IList<T> list)
+        public static T LastOrDefault<T>(this IList<T> list)
             where T : class
         {
             int count = list.Count;
@@ -58,7 +58,7 @@ namespace sql.builder
                 return list[count - 1];
             }
         }
-        internal static T LastOrDefault<T>(this IList<T> list, Func<T, bool> predicate)
+        public static T LastOrDefault<T>(this IList<T> list, Func<T, bool> predicate)
             where T : class
         {
             for (int index = list.Count - 1; index >= 0; index--) {
@@ -69,7 +69,7 @@ namespace sql.builder
             }
             return null;
         }
-        internal static T First<T>(this IList<T> list)
+        public static T First<T>(this IList<T> list)
         {
             if (list.Count == 0) {
                 throw new InvalidOperationException();
@@ -77,7 +77,7 @@ namespace sql.builder
                 return list[0];
             }
         }
-        internal static T First<T>(this IList<T> list, Func<T, bool> predicate)
+        public static T First<T>(this IList<T> list, Func<T, bool> predicate)
         {
             for (int index = 0; index < list.Count; index++) {
                 T value = list[index];
@@ -87,7 +87,7 @@ namespace sql.builder
             }
             throw new InvalidOperationException();
         }
-        internal static T Last<T>(this IList<T> list)
+        public static T Last<T>(this IList<T> list)
         {
             int count = list.Count;
             if (count == 0) {
@@ -97,7 +97,7 @@ namespace sql.builder
             }
         }
         // Нет использования
-        /*internal static T Last<T>(this IList<T> list, Func<T, bool> predicate)
+        /*public static T Last<T>(this IList<T> list, Func<T, bool> predicate)
         {
             for (int index = list.Count - 1; index >= 0; index--) {
                 T value = list[index];
@@ -107,7 +107,7 @@ namespace sql.builder
             }
             throw new InvalidOperationException();
         }*/
-        internal static TResult[] SelectAsArray<TSource, TResult>(this IList<TSource> list, Func<TSource, TResult> selector)
+        public static TResult[] SelectAsArray<TSource, TResult>(this IList<TSource> list, Func<TSource, TResult> selector)
         {
             int count = list.Count;
             if (count == 0) {

@@ -60,19 +60,19 @@ namespace sql.builder.UI
             UpdateButtonsState();
             
         }
-        internal void Data_OnTopTableRefreshed(object sender, EventArgs args)
+        public void Data_OnTopTableRefreshed(object sender, EventArgs args)
         {
             //_is_modified = false;
             UpdateButtonsState();
         }
-        internal void Data_OnTopTableCommited(object sender, EventArgs args)
+        public void Data_OnTopTableCommited(object sender, EventArgs args)
         {
             //_is_modified = false;
             UpdateButtonsState();
         }
         private bool changeCompletedEventAttached = false;
         //private bool _is_modified;
-        internal void attachChangeCompletedEvent()
+        public void attachChangeCompletedEvent()
         {
             if (!changeCompletedEventAttached)
             {
@@ -81,7 +81,7 @@ namespace sql.builder.UI
             }
 
         }
-        internal void detachChangeCompletedEvent()
+        public void detachChangeCompletedEvent()
         {
             if (changeCompletedEventAttached)
             {
@@ -117,18 +117,18 @@ namespace sql.builder.UI
 
 
         
-        internal void attachControlStateEvent()
+        public void attachControlStateEvent()
         {
             getVariableDepandantceController().attachControlStateEvent();
 
         }
-        internal void detachControlStateEvent()
+        public void detachControlStateEvent()
         {
             getVariableDepandantceController().detachControlStateEvent();
 
         }
 
-        internal void UpdateAllControlsStates()
+        public void UpdateAllControlsStates()
         {
 
             getVariableDepandantceController().UpdateAllControlsStates();
@@ -164,7 +164,7 @@ namespace sql.builder.UI
         }
 
         public UIFormC Form = null;
-        //internal ucTableViewerContainer Grid = null;
+        //public ucTableViewerContainer Grid = null;
         //public  Form = null;
         public string AddVariableStateDependance(object control, string variable, string attr, bool invert = false) //!!! Тоже самое делается для полей по - другому . Продумать. Объединить.  Пока доделываю invert
         {
@@ -240,7 +240,7 @@ namespace sql.builder.UI
         //private bool controlStateEventAttached = false;
 
        
-        internal VDataSet DataSource
+        public VDataSet DataSource
         {
 
             get
@@ -257,7 +257,7 @@ namespace sql.builder.UI
             }
             
         }
-        internal void attachControlStateEvent()
+        public void attachControlStateEvent()
         {
             //if (!controlStateEventAttached)
             //{
@@ -270,7 +270,7 @@ namespace sql.builder.UI
             //}
 
         }
-        internal void detachControlStateEvent()
+        public void detachControlStateEvent()
         {
             //if (controlStateEventAttached)
             //{
@@ -283,7 +283,7 @@ namespace sql.builder.UI
             //}
 
         }
-        internal void DataSourceVariableChanged(string variableName)
+        public void DataSourceVariableChanged(string variableName)
         {
             string varName = variableName;
             this.UpdateControlsStates(varName);
@@ -302,7 +302,7 @@ namespace sql.builder.UI
                 }
             }
         }
-        internal void UpdateAllControlsStates()
+        public void UpdateAllControlsStates()
         {
             if (variableStateDependenceList == null) return;
 

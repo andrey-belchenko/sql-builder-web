@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    internal sealed class VFormContent : VOutputElement, IVParent
+    public sealed class VFormContent : VOutputElement, IVParent
     {
-        internal VFormContent()
+        public VFormContent()
             : base(EName.content)
         {
         }

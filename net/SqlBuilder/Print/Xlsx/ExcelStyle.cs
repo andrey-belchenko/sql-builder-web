@@ -3,17 +3,17 @@ using System.Xml.Linq;
 
 namespace sql.builder.Print.Xlsx
 {
-    internal class ExcelStyle
+    public class ExcelStyle
     {
         private bool is_numeric;
-        internal bool IsNumeric { get { return this.is_numeric; } }
-        internal ExcelStyle(XElement xitem)
+        public bool IsNumeric { get { return this.is_numeric; } }
+        public ExcelStyle(XElement xitem)
         {
             XAttribute an = xitem.Attribute("applyNumberFormat");
             XAttribute af = xitem.Attribute("numFmtId");
-            // numFmtId = 49 - в формате ячейки указан 'Текстовый'
-            // не знаю почему Excel считает нужным ставить для таких ячеек applyNumberFormat=1
-            // и если, не дай бог, текст в такой ячейке похож на число (типа 11,22) - форматировать его как число :\
+            // numFmtId = 49 - пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ'
+            // пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Excel пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ applyNumberFormat=1
+            // пїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ 11,22) - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ :\
             this.is_numeric = (an != null && an.Value == "1" && af.Value != "49");
         }
     }

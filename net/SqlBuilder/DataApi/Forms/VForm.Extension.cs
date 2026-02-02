@@ -23,16 +23,16 @@ using sql.builder.Clean;
 
 namespace sql.builder.DataApi
 {
-    internal partial class VForm
+    public partial class VForm
     {
-        internal bool WithData
+        public bool WithData
         {
             get
             {
                 return this.Element(EName.from) != null;
             }
         }
-        internal static VDataSet CreateDataSetPre(XElement xds)
+        public static VDataSet CreateDataSetPre(XElement xds)
         {
             VDataSet dataSet = new VDataSet();
             dataSet.Scheme = VSXElement.Get(new XElement(EName.scheme));
@@ -57,13 +57,13 @@ namespace sql.builder.DataApi
             //AddParamTableToDataSet(xds, dataSet);
             return dataSet;
         }
-        internal VForm GetProcessed()
+        public VForm GetProcessed()
         {
             return this;
         }
         // Емцов - попытка делать это асинхронно
         private static object lock_obj = new object();
-        internal static Tuple<XElement, VDataSet, XElement> GetFormXelementAndDataSet(string name)
+        public static Tuple<XElement, VDataSet, XElement> GetFormXelementAndDataSet(string name)
         {
             lock (lock_obj)
             {
@@ -336,7 +336,7 @@ namespace sql.builder.DataApi
             //createDataAtapter(dataTable, queryCall,returnIntoColumn,columns);
             return dataTable;
         }
-        internal static void SetColumnProperties(XElement xcol, VDataColumn column)
+        public static void SetColumnProperties(XElement xcol, VDataColumn column)
         {
             foreach (string name in TextConst.DsANameArray.AllBehProps)
             {
@@ -1965,7 +1965,7 @@ namespace sql.builder.DataApi
             }
             return xitem;
         }
-        internal static string ReadElementAsString(XElement parent, XName name)
+        public static string ReadElementAsString(XElement parent, XName name)
         {
             Contract.Assert(parent != null);
             XElement e = parent.Element(name);

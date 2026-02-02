@@ -21,13 +21,13 @@ using sql.builder.Clean;
 
 namespace sql.builder.DataApi
 {
-    internal enum StructureType
+    public enum StructureType
     {
         Table = 0,
         Info = 1,
         Array = 2
     }
-    internal partial class VDataTable : DataTable
+    public partial class VDataTable : DataTable
     {
         public VDataSet DataSetForFetch;
         private int defaultFetch = 100;
@@ -67,7 +67,7 @@ namespace sql.builder.DataApi
         {
             this.suppressChangeEventStack.Pop();
         }
-        internal StructureType StructureType
+        public StructureType StructureType
         {
             get
             {
@@ -105,14 +105,14 @@ namespace sql.builder.DataApi
             this.CreatedItems.Add(value);
         }
         private bool _has_user_changes1;
-        internal bool HasUserChanges
+        public bool HasUserChanges
         {
             get
             {
                 return this._has_user_changes1;
             }
         }
-        internal bool HasChildrenUserChanges()
+        public bool HasChildrenUserChanges()
         {
             var queue = new Queue<VDataTable>();
             foreach (var r in ChildRelations.Cast<DataRelation>().Where(r1 => !((VDataTable)r1.ChildTable).IsArrayEditValue))
@@ -133,11 +133,11 @@ namespace sql.builder.DataApi
             }
             return false;
         }
-        internal VDataSet GetDataSet()
+        public VDataSet GetDataSet()
         {
             return (this.DataSet as VDataSet);
         }
-        internal IList<VDataColumn> GetColumnsByPivotOriginalName(string columnName)
+        public IList<VDataColumn> GetColumnsByPivotOriginalName(string columnName)
         {
             VDataColumn col = this.GetColumn(columnName);
             if (col != null)
@@ -158,11 +158,11 @@ namespace sql.builder.DataApi
                 return list;
             }
         }
-        internal VDataColumn GetColumn(string columnName)
+        public VDataColumn GetColumn(string columnName)
         {
             return (VDataColumn)this.Columns[columnName];
         }
-        internal bool EditableOld
+        public bool EditableOld
         {
             get
             {
@@ -175,7 +175,7 @@ namespace sql.builder.DataApi
             }
         }
         #region Конструкторы
-        /*internal VDataTable()
+        /*public VDataTable()
             : base()
         {
             this.CaseSensitive = true;
@@ -184,7 +184,7 @@ namespace sql.builder.DataApi
             this.attachEvents(false);
             this.InitManualDelete();
         }*/
-        internal VDataTable(bool withExtraEvents = false)
+        public VDataTable(bool withExtraEvents = false)
             : base()
         {
             this.CaseSensitive = true;
@@ -194,7 +194,7 @@ namespace sql.builder.DataApi
             this.attachEvents(withExtraEvents);
             this.InitManualDelete();
         }
-        internal VDataTable(XElement scheme, bool withExtraEvents, string table_name)
+        public VDataTable(XElement scheme, bool withExtraEvents, string table_name)
             : base(table_name)
         {
             this.CaseSensitive = true;
@@ -207,24 +207,24 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region AddColumn
-        internal void AddColumn(string name)
+        public void AddColumn(string name)
         {
             VDataColumn col = new VDataColumn(name);
             this.Columns.Add(col);
         }
-        internal VDataColumn AddColumn(string name, Type type)
+        public VDataColumn AddColumn(string name, Type type)
         {
             VDataColumn col = new VDataColumn(name, type);
             this.Columns.Add(col);
             return col;
         }
-        internal VDataColumn AddColumn(string name, Type type, string caption)
+        public VDataColumn AddColumn(string name, Type type, string caption)
         {
             VDataColumn col = new VDataColumn(name, type, caption);
             this.Columns.Add(col);
             return col;
         }
-        internal void AddColumn(string name, string title)
+        public void AddColumn(string name, string title)
         {
             VDataColumn col = new VDataColumn(name, typeof(string), title);
             this.Columns.Add(col);
@@ -914,11 +914,11 @@ namespace sql.builder.DataApi
         public OracleCommand cmd;
         #region IsDependantRefresh
         private bool is_dependant_refresh;
-        internal void SetDependantRefresh(bool value)
+        public void SetDependantRefresh(bool value)
         {
             this.is_dependant_refresh = value;
         }
-        internal static bool IsDependantRefresh(DataTable dt)
+        public static bool IsDependantRefresh(DataTable dt)
         {
             VDataTable vdt = dt as VDataTable;
             if (vdt == null)
@@ -1004,7 +1004,7 @@ namespace sql.builder.DataApi
             return ParentRelations[0].ChildColumns[0].ColumnName;
 
         }
-        internal static void SetCommandParams(VDataSet ds, VDataTable dt, DbCommand command, IEnumerable<string> paramNames)
+        public static void SetCommandParams(VDataSet ds, VDataTable dt, DbCommand command, IEnumerable<string> paramNames)
         {
             command.Parameters.Clear();
             DataRelation rel;
@@ -1065,7 +1065,7 @@ namespace sql.builder.DataApi
                 }
             }
         }
-        internal HashSet<string> GetParamsNames()
+        public HashSet<string> GetParamsNames()
         {
             if (this.paramNames == null)
             {
@@ -1078,8 +1078,8 @@ namespace sql.builder.DataApi
             }
             return paramNames;
         }
-        internal bool IsReader = false;
-        internal IList<DataRow> GetRowsForCurrentParent()
+        public bool IsReader = false;
+        public IList<DataRow> GetRowsForCurrentParent()
         {
             VDataTable parentTable = this.GetParentTable();
             if (parentTable == null)
@@ -1461,7 +1461,7 @@ namespace sql.builder.DataApi
             Debug.WriteLine("VDataTable.FetchAllRows(): query \"" + this.TableName + "\", " + col_count.ToString() + " колонок и " + this.Rows.Count.ToString() + " строк за " + sw.ElapsedTicks.ToString() + " тактов = " + sw.ElapsedMilliseconds.ToString() + " мс");
             #endif
         }*/
-        internal void InternDataAsNeeded()
+        public void InternDataAsNeeded()
         {
 #if DEBUG
             Stopwatch sw = new Stopwatch();
@@ -2482,13 +2482,13 @@ namespace sql.builder.DataApi
         private AsyncLoadInfo executedTaskInfo;
         private AsyncLoadInfo queuedTaskInfo;
         private const int SLEEP_TIME = 100;
-        internal void AsyncExecuteReader(OracleCommand command)
+        public void AsyncExecuteReader(OracleCommand command)
         {
             this.CancelAsyncExecuteReader(); // отмена предыдущего асинхронного чтения
             this.queuedTaskInfo = new AsyncLoadInfo(this, command);
             this.StartQueuedTask();
         }
-        internal void CancelAsyncExecuteReader()
+        public void CancelAsyncExecuteReader()
         {
             if (this.executedTaskInfo != null)
             {
@@ -2497,9 +2497,9 @@ namespace sql.builder.DataApi
                 Cmn.RaiseEvent(ref this.AsyncLoadCanceled, this, EventArgs.Empty);
             }
         }
-        internal event EventHandler<EventArgs> AsyncLoadStart;
-        internal event EventHandler<EventArgs> AsyncLoadComplete;
-        internal event EventHandler<EventArgs> AsyncLoadCanceled;
+        public event EventHandler<EventArgs> AsyncLoadStart;
+        public event EventHandler<EventArgs> AsyncLoadComplete;
+        public event EventHandler<EventArgs> AsyncLoadCanceled;
         /// <summary>
         /// Этот метод вызывается в контексте главной нити при завершении операции асинхронного чтения
         /// Если <paramref name="data"/> равно null, то операция была отменена
@@ -2561,7 +2561,7 @@ namespace sql.builder.DataApi
             private int rows_to_fetch;
             private IDataReader reader;
             private Task<DataTable> task;
-            internal AsyncLoadInfo(VDataTable parent, OracleCommand сommand)
+            public AsyncLoadInfo(VDataTable parent, OracleCommand сommand)
             {
                 this.parent = parent;
                 this.cancellation = new CancellationTokenSource();
@@ -2580,7 +2580,7 @@ namespace sql.builder.DataApi
             /// <summary>
             /// Отмена операции асинхронного чтения
             /// </summary>
-            internal void Cancel()
+            public void Cancel()
             {
                 this.cancellation.Cancel();
                 //this.command.Cancel();
@@ -2708,7 +2708,7 @@ namespace sql.builder.DataApi
             /// <summary>
             /// Запускает операцию асинхронного чтения
             /// </summary>
-            internal void Start()
+            public void Start()
             {
                 this.task = Task.Factory.StartNew<DataTable>(this.ReadDataAsync, this.cancellation.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
                 this.task.ContinueWith(this.ReadDataComplete, TaskScheduler.FromCurrentSynchronizationContext());

@@ -8,13 +8,13 @@ namespace sql.builder.DataApi
     /// <summary>
     /// &lt;expression-package name="" /&gt;
     /// </summary>
-    internal sealed class VExpressionPackage : VOutputElement, IVParent
+    public sealed class VExpressionPackage : VOutputElement, IVParent
     {
-        internal VExpressionPackage()
+        public VExpressionPackage()
             : base(EName.expression_package)
         {
         }
-        /*internal VExpression GetExpression(string name)
+        /*public VExpression GetExpression(string name)
         {
             IList<VSXElement> list = this.GetElementsP();
             for (int index = 0; index < list.Count; index++) {
