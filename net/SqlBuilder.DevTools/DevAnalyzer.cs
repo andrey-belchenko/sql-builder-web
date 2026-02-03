@@ -66,6 +66,10 @@ namespace SqlBuilderLib.DevTools
             Console.WriteLine(conStr);
         }
 
+
+        public static void GetReports(){
+            
+        }
         public static void AnalyzeReports()
         {
             DevAnalyzer.Enabled = true;
