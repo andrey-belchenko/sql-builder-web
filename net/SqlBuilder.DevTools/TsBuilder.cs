@@ -48,14 +48,39 @@ namespace SqlBuilderLib.DevTools
                 Directory.CreateDirectory(sqlBuilderPath);
             }
 
+            var initialFolderId = 10000;
             foreach (var nav in navs)
             {
                 var fileName = $"{nav.P_IdName}.ts";
                 var filePath = Path.Combine(sqlBuilderPath, fileName);
-
-                // Create file (will overwrite if exists)
                 File.WriteAllText(filePath, "", Encoding.UTF8);
                 Console.WriteLine($"Created file: {filePath}");
+
+                foreach (var item in nav.GetElementsP())
+                {
+                    if (item is VFolder)
+                    {
+                        Console.WriteLine("Folder example:" + item.P_Title);
+                        foreach (var childItem in item.GetElementsP())
+                        {
+                            if (childItem is VFolder)
+                            {
+                                Console.WriteLine("Child folder example:" + childItem.P_Title);
+                            }
+
+                            if (childItem is VUseReport)
+                            {
+                                Console.WriteLine("Child report example:" + childItem.P_Title);
+                            }
+                        }
+                    }
+
+                    if (item is VUseReport)
+                    {
+                        Console.WriteLine("Report example:" + item.P_Title);
+                    }
+
+                }
             }
         }
 
