@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using Npgsql;
 using sql.builder;
 using sql.builder.Clean;
+using sql.builder.Clean.Extensions;
 using sql.builder.DataApi;
 
 namespace SqlBuilderLib.DevTools
@@ -19,6 +20,7 @@ namespace SqlBuilderLib.DevTools
         {
             var repFullName = $"{useReport.P_Project}.{useReport.P_Report}";
             var form = CleanSqlBuilder.GetFormConfig(repFullName);
+            var formName = form.GetAttributeValue(TextConst.AName.Name);
             return $"";
         }
 

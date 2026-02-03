@@ -107,7 +107,7 @@ namespace SqlBuilderLib.DevTools
         public static void BuildNavigators()
         {
             var navs = GetVNavigators();
-            var sqlBuilderPath = Path.Combine(BasePath, "sql-builder", "navigators");
+            var sqlBuilderPath = Path.Combine(BasePath, "navigators");
 
             // Create directory if it doesn't exist
             if (!Directory.Exists(sqlBuilderPath))

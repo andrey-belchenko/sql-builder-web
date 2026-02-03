@@ -16,7 +16,7 @@ namespace SqlBuilderLib.DevTools
     public static partial class TsBuilder
     {
 
-        static string BasePath = @"C:\Repos\ai\asuse-ai\asuse-ai-reports\reports-config";
+        static string BasePath = @"C:\Repos\ai\asuse-ai\asuse-ai-reports\reports-config\sql-builder";
         public static void Initialize()
         {
             Console.OutputEncoding = Encoding.UTF8;
@@ -41,7 +41,7 @@ namespace SqlBuilderLib.DevTools
 
         public static void DeleteGenerated()
         {
-            var sqlBuilderPath = Path.Combine(BasePath, "sql-builder");
+            var sqlBuilderPath = BasePath;
 
             if (Directory.Exists(sqlBuilderPath))
             {
