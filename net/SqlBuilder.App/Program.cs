@@ -11,7 +11,7 @@ namespace SqlBuilderApp
             // DevUtils.TestReportsAnalysis();
             // DevTasks.AnalyzeReport();
             // DevUtils.TestSqlParsing();
-            sql.builder.Program.Main(args);
+            // sql.builder.Program.Main(args);
                         // AnalyzerStorage.SaveAllCollectionsToFiles();
 
             //             DevAnalyzer.Initialize();
@@ -41,6 +41,10 @@ namespace SqlBuilderApp
 
 
             // LogsLoader.LoadLogsFromCsvFiles();
+
+            TsBuilder.DeleteGenerated();
+            TsBuilder.Initialize();
+            TsBuilder.BuildNavigators();
         }
     }
 }

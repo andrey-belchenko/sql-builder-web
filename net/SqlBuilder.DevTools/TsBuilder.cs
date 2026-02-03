@@ -16,6 +16,7 @@ namespace SqlBuilderLib.DevTools
     public static class TsBuilder
     {
 
+        static string BasePath = @"C:\Repos\ai\asuse-ai\asuse-ai-reports\reports-config";
         public static void Initialize()
         {
             Console.OutputEncoding = Encoding.UTF8;
@@ -38,9 +39,34 @@ namespace SqlBuilderLib.DevTools
         public static void BuildNavigators()
         {
 
-            var navs =  GetVNavigators();
-            foreach (var nav in navs){
-                
+            var navs = GetVNavigators();
+            var sqlBuilderPath = Path.Combine(BasePath, "sql-builder", "navigators");
+
+            // Create directory if it doesn't exist
+            if (!Directory.Exists(sqlBuilderPath))
+            {
+                Directory.CreateDirectory(sqlBuilderPath);
+            }
+
+            foreach (var nav in navs)
+            {
+                var fileName = $"{nav.P_IdName}.ts";
+                var filePath = Path.Combine(sqlBuilderPath, fileName);
+
+                // Create file (will overwrite if exists)
+                File.WriteAllText(filePath, "", Encoding.UTF8);
+                Console.WriteLine($"Created file: {filePath}");
+            }
+        }
+
+        public static void DeleteGenerated()
+        {
+            var sqlBuilderPath = Path.Combine(BasePath, "sql-builder");
+
+            if (Directory.Exists(sqlBuilderPath))
+            {
+                Directory.Delete(sqlBuilderPath, recursive: true);
+                Console.WriteLine($"Deleted directory: {sqlBuilderPath}");
             }
         }
 
