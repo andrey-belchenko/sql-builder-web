@@ -50,5 +50,36 @@ namespace SqlBuilderLib.DevTools
             }
         }
 
+        private static string ClearName(string value){
+            if (string.IsNullOrEmpty(value))
+                return value;
+            
+            // Convert to lowercase
+            value = value.ToLowerInvariant();
+            
+            // Replace all symbols except latin letters and digits with _
+            var sb = new StringBuilder();
+            foreach (char c in value)
+            {
+                if ((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9'))
+                {
+                    sb.Append(c);
+                }
+                else
+                {
+                    sb.Append('_');
+                }
+            }
+            value = sb.ToString();
+            
+            // Replace __ with _ while there is __
+            while (value.Contains("__"))
+            {
+                value = value.Replace("__", "_");
+            }
+            
+            return value;
+        }
+
     }
 }

@@ -27,6 +27,20 @@ namespace sql.builder.DataApi
                 return (VQueryCall)list[0];
             }
         }
+
+        public VQueryCall DefaultQuery()
+        {
+            IList<VSXElement> list = this.GetDescedantsP(EName.defaultquery);
+            if (list.Count == 0) {
+                return null;
+            }
+            list = list[0].GetElementsP(EName.query);
+            if (list.Count == 0) {
+                return null;
+            } else {
+                return (VQueryCall)list[0];
+            }
+        }
         /*public VQueryCall DefaultQuery()
         {
             var el = GetDescedantsP(TextConst.EName.DefaultQuery)
