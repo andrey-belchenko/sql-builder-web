@@ -81,6 +81,7 @@ namespace sql.builder.DataApi
         public static readonly XName fact;                        //= TextConst.AName.Fact;
         public static readonly XName fact_dimension;              //= TextConst.AName.FactDimension;
         public static readonly XName field;                       //= TextConst.AName.Field;
+        public static readonly XName src_field;                       //= TextConst.AName.Field;
         public static readonly XName file;                        //= TextConst.AName.File;
         public static readonly XName fill_height;                 //= TextConst.AName.FillHeight;
         public static readonly XName fixed_side;                  //= TextConst.AName.FixedSide;

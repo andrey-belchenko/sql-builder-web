@@ -16,7 +16,7 @@ namespace SqlBuilderLib.DevTools
 {
     public static partial class TsBuilder
     {
-        private static string ProcessFieldGroup(VForm form, VFieldGroup field)
+        private static string ProcessFieldGroup(VForm form, VFieldGroup fieldGroup)
         {
 
            return null;

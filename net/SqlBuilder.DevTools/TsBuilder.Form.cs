@@ -18,10 +18,28 @@ namespace SqlBuilderLib.DevTools
     {
         private static string ProcessForm(VForm form)
         {
+            var content = form.ContentElement();
+            ProcessContentChildren(form, content);
 
             DebugSaveFormXML(form);
             return null;
 
+        }
+
+        private static void ProcessContentChildren(VForm form, VSXElement parent)
+        {
+            foreach (var element in parent.GetElementsP())
+            {
+                if (element is VField field)
+                {
+                    ProcessField(form, field);
+                }
+                else if (element is VFieldGroup fieldGroup)
+                {
+                    ProcessFieldGroup(form, fieldGroup);
+                    ProcessContentChildren(form, fieldGroup); // Recursive call
+                }
+            }
         }
 
 
