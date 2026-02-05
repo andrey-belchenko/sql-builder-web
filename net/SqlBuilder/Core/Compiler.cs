@@ -7737,6 +7737,10 @@ namespace sql.builder
                     subquery_select.Add(new XElement(cell));
                     field++;
                 }
+                if (el1.Parent==null)
+                {
+                    return qry;
+                }
                 el1.ReplaceWith(qry);
                 if (el1 == element && els.Count == 1) {
                     return qry;

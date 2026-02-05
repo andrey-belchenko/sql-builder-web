@@ -5,10 +5,11 @@ namespace SqlBuilderLib.DevTools
     public interface IDevUtilsProvider
     {
         bool IsAnalyzerEnabled();
+        bool IsBuildingTs();
         bool IsPrepareOnly();
         void AnalyzeExecSql(string sql);
 
-         void AnalyzeCmdSql(string sql);
+        void AnalyzeCmdSql(string sql);
 
     }
 
@@ -29,10 +30,15 @@ namespace SqlBuilderLib.DevTools
 
         public void AnalyzeCmdSql(string sql)
         {
-           
+
         }
 
-        public static IDevUtilsProvider Instance =  new DevUtilsProvider(); 
+        public bool IsBuildingTs()
+        {
+            return false;
+        }
+
+        public static IDevUtilsProvider Instance = new DevUtilsProvider();
 
     }
 }

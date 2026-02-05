@@ -8,6 +8,7 @@ namespace SqlBuilderLib.DevTools
 {
     public static partial class TsBuilder
     {
+        
         private static void ProcessQuery(VQueryCall queryCall)
         {
             if (queryCall == null) return;
@@ -20,7 +21,11 @@ namespace SqlBuilderLib.DevTools
             }
             var filePath = Path.Combine(BasePath, "queries", fileName);
             var query = queryCall.Query();
-            var sql = query.GetSql();
+
+
+            var cmd = query.GetSelectCommand(false);
+
+            var sql = cmd.GetCommandText();
 
             if (!File.Exists(filePath))
             {

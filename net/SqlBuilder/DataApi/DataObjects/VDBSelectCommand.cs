@@ -28,11 +28,13 @@ namespace sql.builder.DataApi
         private static Dictionary<string, object> _queryResults = new Dictionary<string, object>();
         public static object GetQueryScalarResult(string queryName, bool useChash = true)
         {
-            if (useChash && _queryResults.ContainsKey(queryName)) {
+            if (useChash && _queryResults.ContainsKey(queryName))
+            {
                 return _queryResults[queryName];
             }
-            var res = db.ExecuteObject( XmlReports.Environment.GetQuery(queryName).GetSql());
-            if (useChash) {
+            var res = db.ExecuteObject(XmlReports.Environment.GetQuery(queryName).GetSql());
+            if (useChash)
+            {
                 _queryResults.Add(queryName, res);
             }
             return res;
@@ -62,8 +64,10 @@ namespace sql.builder.DataApi
         }
         public int GetParamIndex(string paramName)
         {
-            foreach (KeyValuePair<int, string> p in this.orderedParams) {
-                if (p.Value == paramName) {
+            foreach (KeyValuePair<int, string> p in this.orderedParams)
+            {
+                if (p.Value == paramName)
+                {
                     return p.Key;
                 }
             }
@@ -72,8 +76,10 @@ namespace sql.builder.DataApi
         public SortedList<int, object> GetRetValues()
         {
             var list = new SortedList<int, object>();
-            foreach (DbParameter par in this.mainCommand.Parameters) {
-                if (par.Direction == ParameterDirection.Output || par.Direction == ParameterDirection.InputOutput) {
+            foreach (DbParameter par in this.mainCommand.Parameters)
+            {
+                if (par.Direction == ParameterDirection.Output || par.Direction == ParameterDirection.InputOutput)
+                {
                     list.Add(GetParamIndex(par.ParameterName), par.Value);
                 }
             }
@@ -91,9 +97,12 @@ namespace sql.builder.DataApi
             // DevAnalyzer.AnalyzePrepSql(procedureText);
             IList<XElement> query_params = formalParsSource.Elements(EName.@params).Elements(EName.param).ToList();
             this.mainCommand = CreateCommand(commandText, query_params);
-            if (!string.IsNullOrEmpty(procedureText)) {
+            if (!string.IsNullOrEmpty(procedureText))
+            {
                 this.procedureCommand = CreateCommand(procedureText, query_params);
-            } else {
+            }
+            else
+            {
                 this.procedureCommand = null;
             }
             this.setOrderedParams(query_params);
@@ -112,15 +121,18 @@ namespace sql.builder.DataApi
         private void setOrderedParams(IList<XElement> xparams)
         {
             int index = 0;
-            while (index < xparams.Count) {
+            while (index < xparams.Count)
+            {
                 XElement xpar = xparams[index];
                 string param_name = xpar.Attribute(AName.name).Value;
                 this.orderedParams.Add(index, param_name);
                 index++;
             }
-            for (int index_2 = 0; index_2 < this.mainCommand.Parameters.Count; index_2++) {
+            for (int index_2 = 0; index_2 < this.mainCommand.Parameters.Count; index_2++)
+            {
                 string param_name = this.mainCommand.Parameters[index_2].ParameterName;
-                if (!this.orderedParams.ContainsValue(param_name)) {
+                if (!this.orderedParams.ContainsValue(param_name))
+                {
                     this.orderedParams.Add(index, param_name);
                     index++;
                 }
@@ -139,35 +151,44 @@ namespace sql.builder.DataApi
             xroot.Add(xproc);
             var xProcPars = new XElement(EName.@params);
             xproc.Add(xProcPars);
-            foreach (string paramName in this.orderedParams.Values) {
+            foreach (string paramName in this.orderedParams.Values)
+            {
                 XElement xpar = new XElement(EName.param, new XAttribute(AName.name, paramName));
                 OracleParameter dbPar = null;
                 bool isSel = false;
                 bool isProc = false;
-                if (this.mainCommand != null) {
-                    if (this.mainCommand.Parameters.TryGetParameter(paramName, out dbPar)) {
+                if (this.mainCommand != null)
+                {
+                    if (this.mainCommand.Parameters.TryGetParameter(paramName, out dbPar))
+                    {
                         dbPar = mainCommand.Parameters[paramName];
                         isSel = true;
                     }
                     VForm.WriteAttrAsElem(xselect, EName.query, this.mainCommand.CommandText);
                 }
-                if (this.procedureCommand != null) {
-                    if (this.procedureCommand.Parameters.TryGetParameter(paramName, out dbPar)) {
+                if (this.procedureCommand != null)
+                {
+                    if (this.procedureCommand.Parameters.TryGetParameter(paramName, out dbPar))
+                    {
                         isProc = true;
                     }
                     VForm.WriteAttrAsElem(xselect, EName.query, this.procedureCommand.CommandText);
                 }
                 // Cmn.str
-                if (dbPar != null) {
+                if (dbPar != null)
+                {
                     xpar.SetAttributeValue(AName.type, VReport.GetStringType(dbPar.OracleDbType));
-                    if (dbPar.SourceColumn != null) {
+                    if (dbPar.SourceColumn != null)
+                    {
                         xpar.SetAttributeValue(AName.column, dbPar.SourceColumn);
                     }
                     xpars.Add(xpar);
-                    if (isSel) {
+                    if (isSel)
+                    {
                         xSelPars.Add(xpar);
                     }
-                    if (isProc) {
+                    if (isProc)
+                    {
                         xProcPars.Add(xpar);
                     }
                 }
@@ -183,28 +204,35 @@ namespace sql.builder.DataApi
             var xProcPars = xproc.Element(EName.@params);
             var cmd = new VDBSelectCommand();
             int i = 0;
-            foreach (XElement xpar in xpars.Elements()) {
+            foreach (XElement xpar in xpars.Elements())
+            {
                 cmd.orderedParams.Add(i, xpar.Attribute(AName.name).Value);
                 i++;
             }
             string selectText = VForm.ReadElementAsString(xselect, EName.query);
-            if (selectText != null) {
+            if (selectText != null)
+            {
                 cmd.mainCommand = new VOracleCommand(selectText);
-                foreach (XElement xpar in xSelPars.Elements()) {
+                foreach (XElement xpar in xSelPars.Elements())
+                {
                     OracleParameter par = CreateDBParameter(xpar.Attribute(AName.name).Value, xpar.Attribute(AName.type).Value);
-                    if (xpar.Attribute(AName.column) != null) {
+                    if (xpar.Attribute(AName.column) != null)
+                    {
                         par.SourceColumn = xpar.Attribute(AName.column).Value;
                     }
                     cmd.mainCommand.Parameters.Add(par);
                 }
             }
             string procText = VForm.ReadElementAsString(xproc, EName.query);
-            if (procText != null) {
+            if (procText != null)
+            {
                 cmd.procedureCommand = new VOracleCommand(procText);
-                foreach (XElement xpar in xSelPars.Elements()) {
+                foreach (XElement xpar in xSelPars.Elements())
+                {
                     OracleParameter par = CreateDBParameter(xpar.Attribute(AName.name).Value, xpar.Attribute(AName.type).Value);
                     XAttribute attr = xpar.Attribute(AName.column);
-                    if (attr != null) {
+                    if (attr != null)
+                    {
                         par.SourceColumn = attr.Value;
                     }
                     cmd.procedureCommand.Parameters.Add(par);
@@ -216,13 +244,15 @@ namespace sql.builder.DataApi
         {
             Contract.Assert(query_params != null);
             OracleCommand cmd = null;
-            try {
+            try
+            {
                 cmd = new VOracleCommand();
                 cmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
                 cmd.CommandText = command_text;
                 // DevAnalyzer.AnalyzePrepSql(command_text);
                 // Устанавливаем параметры
-                for (int index = 0; index < cmd.Parameters.Count; index++) {
+                for (int index = 0; index < cmd.Parameters.Count; index++)
+                {
                     OracleParameter param = cmd.Parameters[index];
                     Contract.Assert(param.Direction == ParameterDirection.Input);
                     string param_name = param.ParameterName;
@@ -231,23 +261,38 @@ namespace sql.builder.DataApi
                     //    param.OracleDbType = OracleDbType.Number; // Пока все глобальные параметры числовые
                     //    param.Value = XmlReports.GetGlobalParValue(global_param_name); // !!!временно. нужно изменить чтобы устанавливался во время выполнения
                     //} else {
-                        XElement query_param = query_params.SearchByAttribute(AName.name, param_name);
-                        if (query_param != null) {
+                    XElement query_param = query_params.SearchByAttribute(AName.name, param_name);
+                    if (query_param != null)
+                    {
+
+                        if (!DevUtilsProvider.Instance.IsBuildingTs())
+                        {
                             Contract.Assert(query_param.Attribute(AName.type) != null);
-                            string datatype = query_param.Attribute(AName.type).Value;
+                        }
+
+                        string datatype = query_param.Attribute(AName.type)?.Value;
+                        if (datatype != null)
+                        {
                             param.OracleDbType = Cmn.GetDBType(datatype);
-                            if (query_param.Attribute(AName.is_ret) != null) {
+                            if (query_param.Attribute(AName.is_ret) != null)
+                            {
                                 param.Direction = ParameterDirection.InputOutput;
                             }
                             XAttribute attr = query_param.Attribute(AName.column);
-                            if (attr != null) {
+                            if (attr != null)
+                            {
                                 param.SourceColumn = attr.Value;
                             }
                         }
+
+                    }
                     //}
                 }
-            } catch (Exception) {
-                if (cmd != null) {
+            }
+            catch (Exception)
+            {
+                if (cmd != null)
+                {
                     Cmn.DisposeAndSetNull<OracleCommand>(ref cmd);
                 }
                 throw;
@@ -278,7 +323,8 @@ namespace sql.builder.DataApi
         }*/
         private void setCommandParamsValues(OracleCommand command, OracleParameter[] pars)
         {
-            foreach (OracleParameter par in command.Parameters) {
+            foreach (OracleParameter par in command.Parameters)
+            {
                 OracleParameter srcPar = pars.Where(p => p.ParameterName == par.ParameterName).First();
                 par.Value = srcPar.Value;
             }
@@ -290,7 +336,8 @@ namespace sql.builder.DataApi
         }
         public DataTable ExecuteDataTable(OracleParameter[] pars, OracleConnection connection)
         {
-            if (procedureCommand != null) {
+            if (procedureCommand != null)
+            {
                 setCommandParamsValues(procedureCommand, pars);
             }
             setCommandParamsValues(mainCommand, pars);
@@ -298,7 +345,8 @@ namespace sql.builder.DataApi
         }
         public string GetText(OracleParameter[] pars)
         {
-            if (procedureCommand != null) {
+            if (procedureCommand != null)
+            {
                 setCommandParamsValues(procedureCommand, pars);
             }
             setCommandParamsValues(mainCommand, pars);
@@ -306,8 +354,10 @@ namespace sql.builder.DataApi
         }
         private OracleCommand PrepareToExecute(OracleConnection connection)
         {
-            if (this.procedureCommand != null) {
-                using (OracleCommand procedure = GetParametrizedCommand(this.procedureCommand)) {
+            if (this.procedureCommand != null)
+            {
+                using (OracleCommand procedure = GetParametrizedCommand(this.procedureCommand))
+                {
                     procedure.Connection = connection;
                     DevUtilsProvider.Instance.AnalyzeExecSql(procedure.CommandText);
                     procedure.ExecuteNonQuery();
@@ -344,7 +394,8 @@ namespace sql.builder.DataApi
             DataTable tbl;
             OracleCommand preparedCmd = this.PrepareToExecute(connection);
             DevUtilsProvider.Instance.AnalyzeExecSql(preparedCmd.CommandText);
-            using (OracleDataAdapter da = new OracleDataAdapter(preparedCmd)) {
+            using (OracleDataAdapter da = new OracleDataAdapter(preparedCmd))
+            {
                 tbl = new DataTable();
                 da.Fill(tbl);
             }
@@ -352,14 +403,18 @@ namespace sql.builder.DataApi
         }
         public void ExecuteNonQuery(OracleConnection connection)
         {
-            if (string.IsNullOrEmpty(this.mainCommand.CommandText)) {
+            if (string.IsNullOrEmpty(this.mainCommand.CommandText))
+            {
                 return;
             }
-            using (OracleCommand command = this.PrepareToExecute(connection)) {
+            using (OracleCommand command = this.PrepareToExecute(connection))
+            {
                 DevUtilsProvider.Instance.AnalyzeExecSql(command.CommandText);
                 command.ExecuteNonQuery();
-                foreach (OracleParameter par in command.Parameters) {
-                    if (par.Direction == ParameterDirection.Output || par.Direction == ParameterDirection.InputOutput) {
+                foreach (OracleParameter par in command.Parameters)
+                {
+                    if (par.Direction == ParameterDirection.Output || par.Direction == ParameterDirection.InputOutput)
+                    {
                         this.mainCommand.Parameters[par.ParameterName].Value = par.Value;
                     }
                 }
@@ -374,9 +429,12 @@ namespace sql.builder.DataApi
         {
             OracleCommand newCmd = null;
             newCmd = CopyCommand(command);
-            foreach (OracleParameter par in command.Parameters) {
-                if (par.Value is string) {
-                    if (par.OracleDbType != OracleDbType.VarChar || (string)par.Value == Cmn.undefinedString) {
+            foreach (OracleParameter par in command.Parameters)
+            {
+                if (par.Value is string)
+                {
+                    if (par.OracleDbType != OracleDbType.VarChar || (string)par.Value == Cmn.undefinedString)
+                    {
                         newCmd.Parameters.Remove(newCmd.Parameters[par.ParameterName]);
                         newCmd.CommandText = newCmd.CommandText.Replace(TextConst.Pfx.Param + par.ParameterName + " ", par.Value.ToString());
                     }
@@ -388,7 +446,8 @@ namespace sql.builder.DataApi
         public static OracleCommand CopyCommand(OracleCommand other)
         {
             var newCmd = new VOracleCommand(other.CommandText, other.Connection);
-            for (int index = 0; index < other.Parameters.Count; index++) {
+            for (int index = 0; index < other.Parameters.Count; index++)
+            {
                 OracleParameter param = other.Parameters[index];
                 newCmd.Parameters.Add(param.ParameterName, param.OracleDbType, param.Value, param.Direction);
             }
@@ -403,11 +462,13 @@ namespace sql.builder.DataApi
         }
         public static IList<OracleParameter> CreateExtensionKeysDBParameters(VDataTable table, DataRow row)
         {
-            if (table.ExtensionKeys == null) {
+            if (table.ExtensionKeys == null)
+            {
                 return Array.Empty<OracleParameter>();
             }
             var list = new List<OracleParameter>(table.ExtensionKeys.Count);
-            foreach (KeyValuePair<string, string> col in table.ExtensionKeys) {
+            foreach (KeyValuePair<string, string> col in table.ExtensionKeys)
+            {
                 OracleParameter par = CreateDBParameter(col.Key + TextConst.Pfx.PrimaryKeyParam, table.Columns[col.Value].DataType);
                 par.Value = row[col.Value];
                 list.Add(par);
@@ -419,11 +480,15 @@ namespace sql.builder.DataApi
             DataColumn column = table.PrimaryKey[0];
             OracleParameter par = new OracleParameter(column.ColumnName + TextConst.Pfx.PrimaryKeyParam, OracleDbType.Array);
             object[] arr;
-            if (rows.Length == 0) {
+            if (rows.Length == 0)
+            {
                 arr = Array.Empty<object>();
-            } else {
+            }
+            else
+            {
                 arr = new object[rows.Length];
-                for (int index = 0; index < rows.Length; index++) {
+                for (int index = 0; index < rows.Length; index++)
+                {
                     arr[index] = rows[index][column];
                 }
             }
@@ -435,9 +500,12 @@ namespace sql.builder.DataApi
         }
         public static IList<OracleParameter> CreateForegnKeyDBParameter(DataTable table, DataRow row)
         {
-            if (table.ParentRelations.Count == 0) {
+            if (table.ParentRelations.Count == 0)
+            {
                 return Array.Empty<OracleParameter>();
-            } else {
+            }
+            else
+            {
                 DataColumn pcolumn = table.ParentRelations[0].ParentColumns[0];
                 OracleParameter par = CreateDBParameter(TextConst.Pfx.ForegnKeyParam + table.ParentRelations[0].ChildColumns[0].ColumnName, pcolumn.DataType);
                 par.Value = ((VDataTable)pcolumn.Table).CurrentRow[pcolumn];
@@ -447,9 +515,12 @@ namespace sql.builder.DataApi
         public static OracleParameter CreateNewRowDBParameter(DataRow row)
         {
             object value;
-            if (row.RowState == DataRowState.Added) {
+            if (row.RowState == DataRowState.Added)
+            {
                 value = Cmn.DECIMAL_ONE;
-            } else {
+            }
+            else
+            {
                 value = Cmn.DECIMAL_ZERO;
             }
             return new OracleParameter(TextConst.Pfx.Param + TextConst.DBParams.IsNewRowParam, OracleDbType.Number, value, ParameterDirection.Input);
@@ -458,9 +529,12 @@ namespace sql.builder.DataApi
         {
             DataColumn column = table.PrimaryKey[0];
             OracleParameter par = CreateDBParameter(TextConst.DBParams.TempRowId, column.DataType);
-            if (row.RowState == DataRowState.Added) {
+            if (row.RowState == DataRowState.Added)
+            {
                 par.Value = row[column];
-            } else {
+            }
+            else
+            {
                 par.Value = DBNull.Value;
             }
             return par;
@@ -472,22 +546,31 @@ namespace sql.builder.DataApi
         public IList<OracleParameter> CreateCurValDBParameters(DataRow row)
         {
             var pars = new SortedList<string, OracleParameter>();
-            foreach (OracleParameter par in mainCommand.Parameters) {
-                if (!string.IsNullOrEmpty(par.SourceColumn)) {
+            foreach (OracleParameter par in mainCommand.Parameters)
+            {
+                if (!string.IsNullOrEmpty(par.SourceColumn))
+                {
                     DataColumn col = row.Table.Columns[par.SourceColumn];
                     object value;
-                    if (row.RowState == DataRowState.Added && row.Table.PrimaryKey.Contains(col)) {
+                    if (row.RowState == DataRowState.Added && row.Table.PrimaryKey.Contains(col))
+                    {
                         value = DBNull.Value;
-                    } else {
+                    }
+                    else
+                    {
                         value = row[par.SourceColumn];
                     }
                     pars.Add(par.ParameterName, new OracleParameter(par.ParameterName, par.OracleDbType, value, ParameterDirection.Input));
                 }
             }
-            if (procedureCommand != null) {
-                foreach (OracleParameter par in procedureCommand.Parameters) {
-                    if (!string.IsNullOrEmpty(par.SourceColumn)) {
-                        if (!pars.ContainsKey(par.ParameterName)) {
+            if (procedureCommand != null)
+            {
+                foreach (OracleParameter par in procedureCommand.Parameters)
+                {
+                    if (!string.IsNullOrEmpty(par.SourceColumn))
+                    {
+                        if (!pars.ContainsKey(par.ParameterName))
+                        {
                             /*var par1 = new OracleParameter(par.ParameterName, par.OracleDbType);
                             DataColumn col = row.Table.Columns[par.SourceColumn];
                             if (row.RowState == DataRowState.Added && row.Table.PrimaryKey.Contains(col)) {
@@ -514,11 +597,12 @@ namespace sql.builder.DataApi
         {
             OracleDbType db_type = Cmn.GetDBType(type);
             return new OracleParameter(name, db_type, ParameterDirection.Input);
-        }        
+        }
         public List<OracleParameter> ObjParsToOraclePars(IList<object> pars)
         {
             var list = new List<OracleParameter>(pars.Count);
-            for (int index = 0; index < pars.Count; index++) {
+            for (int index = 0; index < pars.Count; index++)
+            {
                 object val = pars[index];
                 string name = this.orderedParams[index];
                 list.Add(new OracleParameter(name, OracleDbType.Number, val, ParameterDirection.Input));
@@ -527,7 +611,8 @@ namespace sql.builder.DataApi
         }
         private void SetParamsValues(IList<object> pars)
         {
-            for (int index = 0; index < pars.Count; index++) {
+            for (int index = 0; index < pars.Count; index++)
+            {
                 object val = pars[index];
                 this.setParamValue(orderedParams[index], val);
             }
@@ -535,23 +620,31 @@ namespace sql.builder.DataApi
         private void setParamValue(string paramName, object value)
         {
             OracleParameter dbPar;
-            if (this.mainCommand != null) {
-                if (this.mainCommand.Parameters.TryGetParameter(paramName, out dbPar)) {
+            if (this.mainCommand != null)
+            {
+                if (this.mainCommand.Parameters.TryGetParameter(paramName, out dbPar))
+                {
                     bool is_undefined = (!Cmn.IsNullOrDBNull(value)) && value.ToString() == Cmn.undefinedString;
-                    if (dbPar.OracleDbType == OracleDbType.Array && !is_undefined) {
+                    if (dbPar.OracleDbType == OracleDbType.Array && !is_undefined)
+                    {
                         var arrayStorage = new ArrayStorage(paramName);
                         arrayStorage.SetValues((object[])value);
                         value = arrayStorage.GetSql();
                     }
-                    if (!is_undefined) {
+                    if (!is_undefined)
+                    {
                         dbPar.Value = value;
-                    } else if (dbPar.Direction != ParameterDirection.InputOutput) {
+                    }
+                    else if (dbPar.Direction != ParameterDirection.InputOutput)
+                    {
                         dbPar.Value = DBNull.Value;
                     }
                 }
             }
-            if (this.procedureCommand != null) {
-                if (procedureCommand.Parameters.TryGetParameter(paramName, out dbPar)) {
+            if (this.procedureCommand != null)
+            {
+                if (procedureCommand.Parameters.TryGetParameter(paramName, out dbPar))
+                {
                     dbPar.Value = value;
                 }
             }
@@ -559,11 +652,13 @@ namespace sql.builder.DataApi
         //для отладки
         public static string GetCmdParametrizedText(DbCommand cmd)
         {
-            if (cmd == null) {
+            if (cmd == null)
+            {
                 return string.Empty;
             }
             string s = cmd.CommandText;
-            foreach (OracleParameter par in cmd.Parameters.Cast<OracleParameter>().OrderByDescending(Cmn.GetParameterName).ToArray()) {
+            foreach (OracleParameter par in cmd.Parameters.Cast<OracleParameter>().OrderByDescending(Cmn.GetParameterName).ToArray())
+            {
                 string sval = Cmn.ToOracleString(par.Value);
                 s = s.Replace(TextConst.Pfx.Param + par.ParameterName, sval);
             }
@@ -574,10 +669,12 @@ namespace sql.builder.DataApi
         /// </summary>
         public void Dispose()
         {
-            if (this.procedureCommand == null) {
+            if (this.procedureCommand == null)
+            {
                 Cmn.DisposeAndSetNull<OracleCommand>(ref this.procedureCommand);
             }
-            if (this.mainCommand == null) {
+            if (this.mainCommand == null)
+            {
                 Cmn.DisposeAndSetNull<OracleCommand>(ref this.procedureCommand);
             }
         }

@@ -22,7 +22,7 @@ namespace SqlBuilderLib.DevTools
     public static class DevAnalyzer
     {
         public static bool Enabled = false;
-
+        public static bool BuildingTs = false;
         public static bool PrepareOnly = false;
 
         public static HashSet<string> TableNames = new HashSet<string>();

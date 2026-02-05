@@ -17,8 +17,13 @@ namespace SqlBuilderLib.DevTools
     {
 
         static string BasePath = @"C:\Repos\ai\asuse-ai\asuse-ai-reports\reports-config\sql-builder";
+
+        public static bool Enabled = false;
         public static void Initialize()
         {
+
+            Enabled = true;
+            DevUtilsProvider.Instance = new DevUtilsProviderImpl();
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
             var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
@@ -28,13 +33,13 @@ namespace SqlBuilderLib.DevTools
             CleanSqlBuilder.ChangeConnectionString(conStr);
             Console.WriteLine(conStr);
         }
-       
+
 
         private static string EscapeString(string input)
         {
             if (string.IsNullOrEmpty(input))
                 return "";
-            
+
             return input.Replace("'", "\\'").Replace("\n", "\\n").Replace("\r", "");
         }
 
@@ -50,13 +55,14 @@ namespace SqlBuilderLib.DevTools
             }
         }
 
-        private static string ClearName(string value){
+        private static string ClearName(string value)
+        {
             if (string.IsNullOrEmpty(value))
                 return value;
-            
+
             // Convert to lowercase
             value = value.ToLowerInvariant();
-            
+
             // Replace all symbols except latin letters and digits with _
             var sb = new StringBuilder();
             foreach (char c in value)
@@ -71,13 +77,13 @@ namespace SqlBuilderLib.DevTools
                 }
             }
             value = sb.ToString();
-            
+
             // Replace __ with _ while there is __
             while (value.Contains("__"))
             {
                 value = value.Replace("__", "_");
             }
-            
+
             return value;
         }
 
