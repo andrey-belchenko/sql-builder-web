@@ -7,12 +7,12 @@ todos:
     status: completed
   - id: fix-comma-handling
     content: Fix folder code building to directly append FolderCode instead of using intermediate list to avoid double commas
-    status: in_progress
+    status: completed
     dependencies:
       - remove-duplicate-reports
   - id: verify-formatting
     content: Ensure consistent indentation and proper comma placement in generated files
-    status: pending
+    status: completed
     dependencies:
       - fix-comma-handling
 ---

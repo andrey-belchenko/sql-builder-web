@@ -59,7 +59,7 @@ namespace SqlBuilderLib.DevTools
                         folderCode += $"\n{childIndent}    ";
                     }
                     folderCode += "],";
-                    folderCode += $"\n{childIndent}}}),";
+                    folderCode += $"\n{childIndent}}})";
 
                     // Add folder to items in order
                     folderItems.Add(folderCode);
