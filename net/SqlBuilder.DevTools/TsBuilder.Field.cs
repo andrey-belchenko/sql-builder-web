@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using System.Xml.Linq;
 using sql.builder.DataApi;
 
 
@@ -70,6 +71,92 @@ namespace SqlBuilderLib.DevTools
             }
             return null;
 
+        }
+
+        public static FieldInfo GetFieldInfo(VField field)
+        {
+            var fieldInfo = new FieldInfo();
+
+            foreach (var attr in field.Attributes())
+            {
+                string attrName = attr.Name.LocalName;
+                string attrValue = attr.Value;
+
+                switch (attrName)
+                {
+                    // Apply fields
+                    case "title":
+                        fieldInfo.Title = attrValue;
+                        break;
+                    case "name":
+                        fieldInfo.Name = attrValue;
+                        break;
+                    case "editable":
+                        fieldInfo.Editable = attrValue;
+                        break;
+                    case "column-editable":
+                        fieldInfo.ColumnEditable = attrValue;
+                        break;
+                    case "default":
+                        fieldInfo.Default = attrValue;
+                        break;
+                    case "valid":
+                        fieldInfo.Valid = attrValue;
+                        break;
+                    case "visible":
+                        fieldInfo.Visible = attrValue;
+                        break;
+                    case "column-visible":
+                        fieldInfo.ColumnVisible = attrValue;
+                        break;
+                    case "mandatory":
+                        fieldInfo.Mandatory = attrValue;
+                        break;
+                    case "column-mandatory":
+                        fieldInfo.ColumnMandatory = attrValue;
+                        break;
+                    case "valuequery":
+                        fieldInfo.Valuequery = attrValue;
+                        break;
+                    case "controlType":
+                        fieldInfo.ControlType = attrValue;
+                        break;
+                    case "val-field-name":
+                        fieldInfo.ValFieldName = attrValue;
+                        break;
+                    case "rows-limit":
+                        fieldInfo.RowsLimit = attrValue;
+                        break;
+
+                    // Not implemented fields
+                    case "hint":
+                        fieldInfo.Hint = attrValue;
+                        break;
+                    case "format":
+                        fieldInfo.Format = attrValue;
+                        break;
+                    case "step":
+                        fieldInfo.Step = attrValue;
+                        break;
+                    case "search-field-name":
+                        fieldInfo.SearchFieldName = attrValue;
+                        break;
+                    case "expand-all":
+                        fieldInfo.ExpandAll = attrValue;
+                        break;
+                    case "name-field-name":
+                        fieldInfo.NameFieldName = attrValue;
+                        break;
+                    case "parent-field-name":
+                        fieldInfo.ParentFieldName = attrValue;
+                        break;
+                    case "edit-mask":
+                        fieldInfo.EditMask = attrValue;
+                        break;
+                }
+            }
+
+            return fieldInfo;
         }
     }
 
