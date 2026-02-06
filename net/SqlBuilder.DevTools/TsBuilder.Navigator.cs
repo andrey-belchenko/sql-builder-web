@@ -19,16 +19,17 @@ namespace SqlBuilderLib.DevTools
         {
             public string FolderCode { get; set; }
             public HashSet<string> ReportImports { get; set; } = new HashSet<string>();
-            public List<string> DirectReports { get; set; } = new List<string>();
+            public HashSet<string> DirectReports { get; set; } = new HashSet<string>();
         }
 
         private static FolderProcessResult ProcessFoldersRecursive(VSXElement parent, ref int folderIdCounter, int indentLevel = 0)
         {
             var indent = new string(' ', indentLevel * 4);
-            var items = new List<string>();
             var allReportImports = new HashSet<string>();
-            var currentReports = new List<string>();
+            var directReports = new HashSet<string>(); // Reports that are DIRECT children of THIS folder only
+            var folderItems = new List<string>(); // Items in order: folders and reports as they appear in source
 
+            // Process items in the order they appear in the source
             foreach (var item in parent.GetElementsP())
             {
                 if (item is VFolder folder)
@@ -37,64 +38,68 @@ namespace SqlBuilderLib.DevTools
                     var folderTitle = EscapeString(folder.P_Title ?? folder.P_SelfTitle ?? "");
                     var childResult = ProcessFoldersRecursive(folder, ref folderIdCounter, indentLevel + 1);
 
-                    // Collect report imports from children
+                    // Collect report imports from children (for import statements)
                     foreach (var import in childResult.ReportImports)
                     {
                         allReportImports.Add(import);
                     }
 
-                    var folderCode = $"{indent}new Folder({{";
-                    folderCode += $"\n{indent}    title: '{folderTitle}',";
-                    folderCode += $"\n{indent}    folderId: {folderId},";
-                    folderCode += $"\n{indent}    items: [";
+                    // Build the child folder code
+                    var childIndent = new string(' ', (indentLevel + 1) * 4);
+                    var folderCode = $"{childIndent}new Folder({{";
+                    folderCode += $"\n{childIndent}    title: '{folderTitle}',";
+                    folderCode += $"\n{childIndent}    folderId: {folderId},";
+                    folderCode += $"\n{childIndent}    items: [";
                     
-                    var folderItems = new List<string>();
+                    var childFolderItems = new List<string>();
                     
-                    // Add child folders
+                    // Add child folders and reports in order (from childResult.FolderCode)
                     if (!string.IsNullOrWhiteSpace(childResult.FolderCode))
                     {
-                        folderItems.Add(childResult.FolderCode);
+                        childFolderItems.Add(childResult.FolderCode);
                     }
 
-                    // Add direct reports from this folder
-                    var childIndent = new string(' ', (indentLevel + 1) * 4);
+                    // Add direct reports from the child folder (these are reports that are direct children of the child folder)
                     foreach (var reportName in childResult.DirectReports)
                     {
-                        folderItems.Add($"{childIndent}report_{reportName}");
+                        childFolderItems.Add($"{childIndent}    report_{reportName}");
                     }
 
-                    if (folderItems.Count > 0)
+                    if (childFolderItems.Count > 0)
                     {
-                        folderCode += $"\n{string.Join(",\n", folderItems)}";
-                        folderCode += $"\n{indent}    ";
+                        folderCode += $"\n{string.Join(",\n", childFolderItems)}";
+                        folderCode += $"\n{childIndent}    ";
                     }
                     folderCode += "],";
-                    folderCode += $"\n{indent}}}),";
+                    folderCode += $"\n{childIndent}}}),";
 
-                    items.Add(folderCode);
+                    // Add folder to items in order
+                    folderItems.Add(folderCode);
                 }
                 else if (item is VUseReport useReport)
                 {
                     var reportClearedName = ProcessReport(useReport);
                     if (!string.IsNullOrEmpty(reportClearedName))
                     {
-                        currentReports.Add(reportClearedName);
-                        allReportImports.Add(reportClearedName);
+                        // Only add if not already added (prevent duplicates from source)
+                        if (directReports.Add(reportClearedName))
+                        {
+                            allReportImports.Add(reportClearedName);
+                            // Add report to items in order (maintain source order)
+                            folderItems.Add($"{indent}report_{reportClearedName}");
+                        }
                     }
                 }
             }
 
-            // Add current level reports to items (these are reports at the root navigator level)
-            foreach (var reportName in currentReports)
-            {
-                items.Add($"{indent}report_{reportName}");
-            }
+            // Join items in order - maintain source order, no sorting
+            var folderCodeResult = folderItems.Count > 0 ? string.Join(",\n", folderItems) : "";
 
             return new FolderProcessResult
             {
-                FolderCode = string.Join(",\n", items),
+                FolderCode = folderCodeResult,
                 ReportImports = allReportImports,
-                DirectReports = currentReports
+                DirectReports = directReports
             };
         }
 
