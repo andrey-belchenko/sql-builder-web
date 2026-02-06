@@ -4,15 +4,15 @@ overview: Implement TypeScript code generation for reports and forms. Generate f
 todos:
   - id: generate-forms
     content: Implement TypeScript form generation in ProcessForm method - generate form files with empty items array
-    status: pending
+    status: completed
   - id: generate-reports
     content: Implement TypeScript report generation in ProcessReport method - generate report files importing forms
-    status: pending
+    status: completed
     dependencies:
       - generate-forms
   - id: integrate-navigators
     content: Modify ProcessFoldersRecursive to collect reports and add them to navigator items with imports
-    status: pending
+    status: completed
     dependencies:
       - generate-reports
 ---

@@ -36,12 +36,45 @@ namespace SqlBuilderLib.DevTools
                 field.Control.PrepareListSource();
                 field.Control.PrepareDefaultSource();
             }
-            ProcessForm(form, rep);
+            var formClearedName = ProcessForm(form, rep);
 
+            if (string.IsNullOrEmpty(formClearedName))
+            {
+                return null;
+            }
 
+            var reportClearedName = ClearName(repFullName);
+            var reportTitle = EscapeString(useReport.P_Title ?? useReport.P_SelfTitle ?? "");
+            GenerateReportTypeScript(reportClearedName, formClearedName, reportTitle);
 
-            return null;
+            return reportClearedName;
+        }
 
+        private static void GenerateReportTypeScript(string reportClearedName, string formClearedName, string reportTitle)
+        {
+            var reportsPath = Path.Combine(BasePath, "reports");
+
+            // Create directory if it doesn't exist
+            if (!Directory.Exists(reportsPath))
+            {
+                Directory.CreateDirectory(reportsPath);
+            }
+
+            var fileName = $"report_{reportClearedName}.ts";
+            var filePath = Path.Combine(reportsPath, fileName);
+
+            var sb = new StringBuilder();
+            sb.AppendLine("import { RegularReport } from '@/system/reports/types/reports/RegularReport';");
+            sb.AppendLine($"import form_{formClearedName} from '../forms/form_{formClearedName}';");
+            sb.AppendLine();
+            sb.AppendLine("export default new RegularReport({");
+            sb.AppendLine("    definedIn: __filename,");
+            sb.AppendLine($"    title: '{reportTitle}',");
+            sb.AppendLine($"    paramsForm: form_{formClearedName},");
+            sb.AppendLine("});");
+
+            File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
+            Console.WriteLine($"Generated report TypeScript file: {filePath}");
         }
 
 

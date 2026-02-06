@@ -15,10 +15,19 @@ namespace SqlBuilderLib.DevTools
 {
     public static partial class TsBuilder
     {
-        private static string ProcessFoldersRecursive(VSXElement parent, ref int folderIdCounter, int indentLevel = 0)
+        private class FolderProcessResult
+        {
+            public string FolderCode { get; set; }
+            public HashSet<string> ReportImports { get; set; } = new HashSet<string>();
+            public List<string> DirectReports { get; set; } = new List<string>();
+        }
+
+        private static FolderProcessResult ProcessFoldersRecursive(VSXElement parent, ref int folderIdCounter, int indentLevel = 0)
         {
             var indent = new string(' ', indentLevel * 4);
             var items = new List<string>();
+            var allReportImports = new HashSet<string>();
+            var currentReports = new List<string>();
 
             foreach (var item in parent.GetElementsP())
             {
@@ -26,15 +35,37 @@ namespace SqlBuilderLib.DevTools
                 {
                     var folderId = folderIdCounter++;
                     var folderTitle = EscapeString(folder.P_Title ?? folder.P_SelfTitle ?? "");
-                    var childItems = ProcessFoldersRecursive(folder, ref folderIdCounter, indentLevel + 1);
+                    var childResult = ProcessFoldersRecursive(folder, ref folderIdCounter, indentLevel + 1);
+
+                    // Collect report imports from children
+                    foreach (var import in childResult.ReportImports)
+                    {
+                        allReportImports.Add(import);
+                    }
 
                     var folderCode = $"{indent}new Folder({{";
                     folderCode += $"\n{indent}    title: '{folderTitle}',";
                     folderCode += $"\n{indent}    folderId: {folderId},";
                     folderCode += $"\n{indent}    items: [";
-                    if (!string.IsNullOrWhiteSpace(childItems))
+                    
+                    var folderItems = new List<string>();
+                    
+                    // Add child folders
+                    if (!string.IsNullOrWhiteSpace(childResult.FolderCode))
                     {
-                        folderCode += $"\n{childItems}";
+                        folderItems.Add(childResult.FolderCode);
+                    }
+
+                    // Add direct reports from this folder
+                    var childIndent = new string(' ', (indentLevel + 1) * 4);
+                    foreach (var reportName in childResult.DirectReports)
+                    {
+                        folderItems.Add($"{childIndent}report_{reportName}");
+                    }
+
+                    if (folderItems.Count > 0)
+                    {
+                        folderCode += $"\n{string.Join(",\n", folderItems)}";
                         folderCode += $"\n{indent}    ";
                     }
                     folderCode += "],";
@@ -44,15 +75,30 @@ namespace SqlBuilderLib.DevTools
                 }
                 else if (item is VUseReport useReport)
                 {
-                    ProcessReport(useReport);
+                    var reportClearedName = ProcessReport(useReport);
+                    if (!string.IsNullOrEmpty(reportClearedName))
+                    {
+                        currentReports.Add(reportClearedName);
+                        allReportImports.Add(reportClearedName);
+                    }
                 }
-                // Skip VUseReport items as requested
             }
 
-            return string.Join("\n", items);
+            // Add current level reports to items (these are reports at the root navigator level)
+            foreach (var reportName in currentReports)
+            {
+                items.Add($"{indent}report_{reportName}");
+            }
+
+            return new FolderProcessResult
+            {
+                FolderCode = string.Join(",\n", items),
+                ReportImports = allReportImports,
+                DirectReports = currentReports
+            };
         }
 
-        private static string GenerateTypeScriptFile(VNavigator nav, string foldersCode)
+        private static string GenerateTypeScriptFile(VNavigator nav, FolderProcessResult result)
         {
             var navigatorId = ExtractNavigatorId(nav.P_IdName);
             var customerId = navigatorId;
@@ -63,6 +109,17 @@ namespace SqlBuilderLib.DevTools
             var sb = new StringBuilder();
             sb.AppendLine("import { Navigator } from '@/system/reports/types/Navigator';");
             sb.AppendLine("import { Folder } from '@/system/reports/types/Folder';");
+            
+            // Add report imports
+            if (result.ReportImports.Count > 0)
+            {
+                var sortedImports = result.ReportImports.OrderBy(x => x).ToList();
+                foreach (var reportName in sortedImports)
+                {
+                    sb.AppendLine($"import report_{reportName} from '../reports/report_{reportName}';");
+                }
+            }
+            
             sb.AppendLine();
             sb.AppendLine("export default async () =>");
             sb.AppendLine("    new Navigator({");
@@ -73,9 +130,9 @@ namespace SqlBuilderLib.DevTools
             sb.AppendLine($"        useReportBuilder: {useReportBuilder.ToString().ToLower()},");
             sb.AppendLine("        items: [");
 
-            if (!string.IsNullOrWhiteSpace(foldersCode))
+            if (!string.IsNullOrWhiteSpace(result.FolderCode))
             {
-                sb.AppendLine(foldersCode);
+                sb.AppendLine(result.FolderCode);
             }
 
             sb.AppendLine("        ],");
@@ -123,8 +180,8 @@ namespace SqlBuilderLib.DevTools
                 var fileName = $"nav_{navigatorId}.ts";
                 var filePath = Path.Combine(sqlBuilderPath, fileName);
 
-                var foldersCode = ProcessFoldersRecursive(nav, ref folderIdCounter, indentLevel: 3);
-                var tsContent = GenerateTypeScriptFile(nav, foldersCode);
+                var result = ProcessFoldersRecursive(nav, ref folderIdCounter, indentLevel: 3);
+                var tsContent = GenerateTypeScriptFile(nav, result);
 
                 File.WriteAllText(filePath, tsContent, Encoding.UTF8);
                 Console.WriteLine($"Generated file: {filePath}");

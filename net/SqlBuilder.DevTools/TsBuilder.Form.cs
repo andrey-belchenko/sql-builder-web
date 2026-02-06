@@ -23,12 +23,37 @@ namespace SqlBuilderLib.DevTools
 
             // UIFormC
 
-            var fileName = $"form_{ClearName(form.P_IdName)}.ts";
+            var formClearedName = ClearName(form.P_IdName);
+            var fileName = $"form_{formClearedName}.ts";
             ProcessContentChildren(form, content, rep);
 
             DebugSaveFormXML(form);
-            return null;
+            GenerateFormTypeScript(form, formClearedName, fileName);
 
+            return formClearedName;
+        }
+
+        private static void GenerateFormTypeScript(VForm form, string formClearedName, string fileName)
+        {
+            var formsPath = Path.Combine(BasePath, "forms");
+
+            // Create directory if it doesn't exist
+            if (!Directory.Exists(formsPath))
+            {
+                Directory.CreateDirectory(formsPath);
+            }
+
+            var filePath = Path.Combine(formsPath, fileName);
+
+            var sb = new StringBuilder();
+            sb.AppendLine("import { Form } from '@/system/reports/types/Form';");
+            sb.AppendLine();
+            sb.AppendLine("export default new Form({");
+            sb.AppendLine("    items: [],");
+            sb.AppendLine("});");
+
+            File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
+            Console.WriteLine($"Generated form TypeScript file: {filePath}");
         }
 
         private static void ProcessContentChildren(VForm form, VSXElement parent, CleanExpressReport rep)
