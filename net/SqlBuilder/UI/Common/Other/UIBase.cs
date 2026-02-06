@@ -27,25 +27,25 @@ namespace sql.builder.UI
         protected XElement xfield;
         private bool used;
         private bool allow_manual_used_set;
-        private bool change_source_immediately; // при любом изменении в репозитории сразу сохранять значение в DataSource
-        private string field_name;
-        private string table_name;
-        private string full_name;
-        private string query_name;
-        private string query_name_default;
-        private string special_type;
-        private string сaption;
-        protected bool mandatory;
+        public bool change_source_immediately; // при любом изменении в репозитории сразу сохранять значение в DataSource
+        public string field_name;
+        public string table_name;
+        public string full_name;
+        public string query_name;
+        public string query_name_default;
+        public string special_type;
+        public string сaption;
+        public bool mandatory;
         //private bool default_visible;
-        private bool null_as_undefined;
-        private bool show_nulls;
-        protected int rows_limit;
-        private string condition_param_name;
-        protected string key_field_name;
-        protected string name_field_name;
-        protected string search_field_name;
-        protected string parent_field_name;
-        protected string value_field_name;
+        public bool null_as_undefined;
+        public bool show_nulls;
+        public int rows_limit;
+        public string condition_param_name;
+        public string key_field_name;
+        public string name_field_name;
+        public string search_field_name;
+        public string parent_field_name;
+        public string value_field_name;
         public UIFormC Form;
         public Dictionary<string, UIBase> Dependants;
         public Dictionary<string, UIBase> Masters;
@@ -388,7 +388,7 @@ namespace sql.builder.UI
                 AddNullValue(dt);
             }
         }
-        protected static bool IsColumnShouldBeVisible(DataColumn col)
+        public static bool IsColumnShouldBeVisible(DataColumn col)
         {
             return (col.Caption != "" && (col.ColumnName != col.Caption));
         }

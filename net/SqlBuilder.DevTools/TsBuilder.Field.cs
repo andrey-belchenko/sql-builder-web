@@ -1,8 +1,12 @@
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Xml.Linq;
 using sql.builder;
 using sql.builder.DataApi;
+using sql.builder.UI;
 
 
 
@@ -74,87 +78,119 @@ namespace SqlBuilderLib.DevTools
         public static HashSet<string> devControlTypes = new HashSet<string>();
         private static string ProcessField(VForm form, VField field, CleanExpressReport rep)
         {
+
+            var fieldInfo = GetFieldInfo(field, rep);
             var fieldName = field.P_Field;
             var fieldFileName = $"field_{ClearName(fieldName)}.ts";
 
-            
+
+
             ProcessQuery(field.ListQuery());
             ProcessQuery(field.DefaultQuery());
 
-            devControlTypes.Add(field.P_ControlType);
+            // devControlTypes.Add(field.P_ControlType);
 
-            foreach (var attr in field.Attributes())
-            {
-                devAttrNames.Add(attr.Name.LocalName);
-            }
+            // foreach (var attr in field.Attributes())
+            // {
+            //     devAttrNames.Add(attr.Name.LocalName);
+            // }
             return null;
 
         }
 
-        public static FieldInfo GetFieldInfo(VField field)
+        public static IEnumerable<FieldInfo> GetFieldInfo(VField field, CleanExpressReport rep)
         {
-            var fieldInfo = new FieldInfo();
 
-            // Apply fields - using P_ properties
-            fieldInfo.Title = field.P_Title ?? string.Empty;
-            fieldInfo.Name = field.P_Name ?? string.Empty;
-            fieldInfo.Editable = field.P_Editable ?? string.Empty;
-            fieldInfo.ColumnEditable = field.P_ColumnEditable ?? string.Empty;
-            fieldInfo.Default = field.P_Default ?? string.Empty;
-            fieldInfo.Valid = field.P_Valid ?? string.Empty;
-            fieldInfo.Visible = field.P_Visible ?? string.Empty;
-            fieldInfo.ColumnVisible = field.P_ColumnVisible ?? string.Empty;
-            fieldInfo.Mandatory = field.P_Mandatory ?? string.Empty;
-            fieldInfo.ColumnMandatory = field.P_ColumnMandatory ?? string.Empty;
-            fieldInfo.ControlType = field.P_ControlType ?? string.Empty;
-            fieldInfo.RowsLimit = field.P_RowsLimit ?? string.Empty;
+            var fieldNames = new[] { field.P_Name };
+            if (field.P_ControlType.Contains("Range"))
+            {
+                fieldNames = new[] { $"{field.P_Name}1", $"{field.P_Name}2" };
+            }
 
-            // Fields without P_ properties - using AttrOrEmpty
-            fieldInfo.Valuequery = field.AttrOrEmpty(AName.valuequery);
-            fieldInfo.ValFieldName = field.AttrOrEmpty(AName.val_field_name);
+            var fieldInfos = new List<FieldInfo>();
 
-            // Not implemented fields - using P_ properties where available
-            fieldInfo.Hint = field.P_Hint ?? string.Empty;
-            fieldInfo.Format = field.P_Format ?? string.Empty;
-            fieldInfo.Step = field.P_Step ?? string.Empty;
-            fieldInfo.ExpandAll = field.P_ExpandAll ?? string.Empty;
-            fieldInfo.ParentFieldName = field.P_ParentFieldName ?? string.Empty;
-            fieldInfo.EditMask = field.P_EditMask ?? string.Empty;
+            foreach (var name in fieldNames)
+            {
+                var fieldInfo = new FieldInfo();
+                fieldInfos.Add(fieldInfo);
 
-            // Fields without P_ properties - using AttrOrEmpty
-            fieldInfo.SearchFieldName = field.AttrOrEmpty(AName.search_field_name);
-            fieldInfo.NameFieldName = field.AttrOrEmpty(AName.name_field_name);
+                var ctrl = rep.GetParamField(name).Control;
+         
+                fieldInfo.Title = field.P_Title ?? string.Empty;
+                fieldInfo.Name = name;
+                fieldInfo.Default = ctrl.query_name_default;
+                fieldInfo.Editable = field.P_Editable ?? string.Empty;
+                fieldInfo.ColumnEditable = field.P_ColumnEditable ?? string.Empty;
+                fieldInfo.Valid = field.P_Valid ?? string.Empty;
+                fieldInfo.Visible = field.P_Visible ?? string.Empty;
+                fieldInfo.ColumnVisible = field.P_ColumnVisible ?? string.Empty;
+                fieldInfo.Mandatory = field.P_Mandatory ?? string.Empty;
+                fieldInfo.ColumnMandatory = field.P_ColumnMandatory ?? string.Empty;
+                fieldInfo.ControlType = ctrl.GetType();
+                fieldInfo.RowsLimit = ctrl.rows_limit;
 
-            return fieldInfo;
+  
+                fieldInfo.ValFieldName = ctrl.value_field_name;
+
+                fieldInfo.Hint = field.P_Hint ?? string.Empty;
+                fieldInfo.Format = field.P_Format ?? string.Empty;
+                fieldInfo.Step = field.P_Step ?? string.Empty;
+                fieldInfo.ExpandAll = field.P_ExpandAll ?? string.Empty;
+                fieldInfo.ParentFieldName =  ctrl.parent_field_name;
+                fieldInfo.EditMask = field.P_EditMask ?? string.Empty;
+                fieldInfo.SearchFieldName = ctrl.search_field_name;
+                fieldInfo.NameFieldName = ctrl.name_field_name;
+
+
+
+               
+
+                if (ctrl.data_set_list != null)
+                {
+                    foreach (System.Data.DataColumn col in ctrl.data_set_list.Tables[0].Columns)
+                    {
+                        if (UIBase.IsColumnShouldBeVisible(col))
+                        {
+                            fieldInfo.ListColumns.Add(col.ColumnName, col.Caption);
+                        }
+
+                    }
+                }
+
+                fieldInfo.Dependancies = ctrl.Masters.Keys.ToList();
+
+            }
+            return fieldInfos;
         }
     }
 
     public class FieldInfo
     {
         // Apply fields
-        public string Title { get; set; }
-        public string Name { get; set; }
-        public string Editable { get; set; }
-        public string ColumnEditable { get; set; }
-        public string Default { get; set; }
-        public string Valid { get; set; }
-        public string Visible { get; set; }
-        public string ColumnVisible { get; set; }
-        public string Mandatory { get; set; }
-        public string ColumnMandatory { get; set; }
-        public string Valuequery { get; set; }
-        public string ControlType { get; set; }
-        public string ValFieldName { get; set; }
-        public string RowsLimit { get; set; }
+        public string Title;
+        public string Name;
+        public string Editable;
+        public string ColumnEditable;
+        public string Default;
+        public string Valid;
+        public string Visible;
+        public string ColumnVisible;
+        public string Mandatory;
+        public string ColumnMandatory;
+        public Type ControlType;
+        public string ValFieldName;
+        public int RowsLimit;
 
         // Not implemented fields
-        public string Hint { get; set; }
-        public string Format { get; set; }
-        public string Step { get; set; }
-        public string SearchFieldName { get; set; }
-        public string ExpandAll { get; set; }
-        public string NameFieldName { get; set; }
-        public string ParentFieldName { get; set; }
-        public string EditMask { get; set; }
+        public string Hint;
+        public string Format;
+        public string Step;
+        public string SearchFieldName;
+        public string ExpandAll;
+        public string NameFieldName;
+        public string ParentFieldName;
+        public string EditMask;
+        public Dictionary<string, string> ListColumns = new Dictionary<string, string>();
+        public List<string> Dependancies = new List<string>();
     }
 }

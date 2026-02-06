@@ -16,7 +16,7 @@ namespace sql.builder.UI
     {
         #region поля
         protected VDataTable array_edit_value;
-        protected VDataSet data_set_list;
+        public VDataSet data_set_list;
         protected VDataSet data_set_default;
         private DataTable TempTable;
         #endregion
