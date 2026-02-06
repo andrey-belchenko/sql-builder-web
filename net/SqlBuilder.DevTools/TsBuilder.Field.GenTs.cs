@@ -18,11 +18,15 @@ namespace SqlBuilderLib.DevTools
         {
 
             var fieldName = field.P_Field;
-            var fieldFileName = $"field_{ClearName(fieldName)}.ts";
+            if (!string.IsNullOrEmpty(fieldName))
+            {
+                var fieldFileName = $"field_{ClearName(fieldName)}.ts";
+            }
 
 
 
-           
+
+
             return null;
 
         }
