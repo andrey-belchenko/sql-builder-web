@@ -98,7 +98,7 @@ namespace SqlBuilderLib.DevTools
 
         }
 
-        public static IEnumerable<FieldInfo> GetFieldInfo(VField field, CleanExpressReport rep)
+        public static IEnumerable<SqlbFieldInfo> GetFieldInfo(VField field, CleanExpressReport rep)
         {
 
             var fieldNames = new[] { field.P_Name };
@@ -107,15 +107,15 @@ namespace SqlBuilderLib.DevTools
                 fieldNames = new[] { $"{field.P_Name}1", $"{field.P_Name}2" };
             }
 
-            var fieldInfos = new List<FieldInfo>();
+            var fieldInfos = new List<SqlbFieldInfo>();
 
             foreach (var name in fieldNames)
             {
-                var fieldInfo = new FieldInfo();
+                var fieldInfo = new SqlbFieldInfo();
                 fieldInfos.Add(fieldInfo);
 
                 var ctrl = rep.GetParamField(name).Control;
-         
+
                 fieldInfo.Title = field.P_Title ?? string.Empty;
                 fieldInfo.Name = name;
                 fieldInfo.Default = ctrl.query_name_default;
@@ -129,21 +129,21 @@ namespace SqlBuilderLib.DevTools
                 fieldInfo.ControlType = ctrl.GetType();
                 fieldInfo.RowsLimit = ctrl.rows_limit;
 
-  
+
                 fieldInfo.ValFieldName = ctrl.value_field_name;
 
                 fieldInfo.Hint = field.P_Hint ?? string.Empty;
                 fieldInfo.Format = field.P_Format ?? string.Empty;
                 fieldInfo.Step = field.P_Step ?? string.Empty;
                 fieldInfo.ExpandAll = field.P_ExpandAll ?? string.Empty;
-                fieldInfo.ParentFieldName =  ctrl.parent_field_name;
+                fieldInfo.ParentFieldName = ctrl.parent_field_name;
                 fieldInfo.EditMask = field.P_EditMask ?? string.Empty;
                 fieldInfo.SearchFieldName = ctrl.search_field_name;
                 fieldInfo.NameFieldName = ctrl.name_field_name;
 
 
 
-               
+
 
                 if (ctrl.data_set_list != null)
                 {
@@ -162,9 +162,15 @@ namespace SqlBuilderLib.DevTools
             }
             return fieldInfos;
         }
+
+        public static FieldProps FIeldInfoToFieldProps(SqlbFieldInfo fieldInfo)
+        {
+        }
+
+
     }
 
-    public class FieldInfo
+    public class SqlbFieldInfo
     {
         // Apply fields
         public string Title;
@@ -193,4 +199,59 @@ namespace SqlBuilderLib.DevTools
         public Dictionary<string, string> ListColumns = new Dictionary<string, string>();
         public List<string> Dependancies = new List<string>();
     }
+
+    public class MethodInfo
+    {
+        public object value;
+        public string fieldRef;
+        public string queryName;
+    }
+
+    public class ColumnInfo
+    {
+        public string dataField;
+        public string caption;
+    }
+
+    public class FormItemProps
+    {
+        // Base properties for form items can be added here if needed
+    }
+
+    public class FieldProps
+    {
+        public string label;
+        public string name;
+        public EditorProps editor;         public MethodInfo defaultValue;
+        public List<string> defaultValueDeps;
+        public MethodInfo required;
+        public List<string> requiredDeps;
+        public MethodInfo validation;
+        public List<string> validationDeps;
+        public MethodInfo exists;
+        public List<string> existsDeps;
+        public MethodInfo enabled;
+        public List<string> enabledDeps;
+        public MethodInfo visible;
+        public List<string> visibleDeps;
+    }
+
+    public class EditorProps
+    {
+
+    }
+
+    public class SelectEditorProps: EditorProps
+    {
+        public List<ColumnInfo> columns;
+        public MethodInfo listItems;
+        public List<string> listItemsDeps;
+        public string keyField;
+        public string displayField;
+        public bool? remoteOperations;
+        public bool? singleSelection;
+    }
 }
+
+
+
