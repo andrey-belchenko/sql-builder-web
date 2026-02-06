@@ -309,7 +309,7 @@ namespace SqlBuilderLib.DevTools
 
             if (controlTypeName == "UINumber")
             {
-                editorType = "CheckEditor";
+                editorType = "NumberEditor";
             }
 
             if (editorType == "SelectEditor")
