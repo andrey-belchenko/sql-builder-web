@@ -22,6 +22,8 @@ namespace SqlBuilderLib.DevTools
             var content = form.ContentElement();
 
             // UIFormC
+
+            var fileName = $"form_{ClearName(form.P_IdName)}.ts";
             ProcessContentChildren(form, content, rep);
 
             DebugSaveFormXML(form);
