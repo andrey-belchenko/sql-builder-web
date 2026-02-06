@@ -52,22 +52,39 @@ using sql.builder.DataApi;
 // "id"
 
 
+/////////////////////
+// "UIComboRange"
+// "UIList"
+// "UICombo"
+// "UIDate"
+// "UIText"
+// "UINumber"
+// "UICheck"
+// "UIDateRange"
+
+
+
 namespace SqlBuilderLib.DevTools
 {
 
     public static partial class TsBuilder
     {
-        public static HashSet<string> attrNames = new HashSet<string>();
+        public static HashSet<string> devAttrNames = new HashSet<string>();
+        public static HashSet<string> devControlTypes = new HashSet<string>();
         private static string ProcessField(VForm form, VField field)
         {
             var fieldName = field.P_Field;
             var fieldFileName = $"field_{ClearName(fieldName)}.ts";
+
+            
             ProcessQuery(field.ListQuery());
             ProcessQuery(field.DefaultQuery());
 
+            devControlTypes.Add(field.P_ControlType);
+
             foreach (var attr in field.Attributes())
             {
-                attrNames.Add(attr.Name.LocalName);
+                devAttrNames.Add(attr.Name.LocalName);
             }
             return null;
 

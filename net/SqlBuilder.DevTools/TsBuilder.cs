@@ -25,6 +25,7 @@ namespace SqlBuilderLib.DevTools
             Enabled = true;
             DevUtilsProvider.Instance = new DevUtilsProviderImpl();
             Console.OutputEncoding = Encoding.UTF8;
+            DevAnalyzer.PrepareOnly =  true;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
             var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
             // var conStr = "User Id=asuse;Password=kl0pik;Server=REALKAZN;Pooling=False;Sid=REALKAZN;Port=1521";

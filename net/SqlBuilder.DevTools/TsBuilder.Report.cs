@@ -23,8 +23,17 @@ namespace SqlBuilderLib.DevTools
                 return null;
             }
             var repFullName = $"{useReport.P_Project}.{useReport.P_Report}";
-            var form = VSXElement.Get((CleanSqlBuilder.GetFormConfig(repFullName))) as VForm;
+            var form = VSXElement.Get(CleanSqlBuilder.GetFormConfig(repFullName)) as VForm;
+
+            var rep = new CleanExpressReport();
+            rep.OpenDocumentAfterPrint = false;
+            rep.Initialize(repFullName);
+
+            var fields = rep.GetParamFields().ToArray();
             ProcessForm(form);
+
+
+
             return null;
 
         }
