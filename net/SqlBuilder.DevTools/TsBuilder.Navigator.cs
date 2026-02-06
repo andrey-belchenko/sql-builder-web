@@ -51,23 +51,11 @@ namespace SqlBuilderLib.DevTools
                     folderCode += $"\n{childIndent}    folderId: {folderId},";
                     folderCode += $"\n{childIndent}    items: [";
                     
-                    var childFolderItems = new List<string>();
-                    
                     // Add child folders and reports in order (from childResult.FolderCode)
+                    // Note: FolderCode already contains all items including direct reports in correct order
                     if (!string.IsNullOrWhiteSpace(childResult.FolderCode))
                     {
-                        childFolderItems.Add(childResult.FolderCode);
-                    }
-
-                    // Add direct reports from the child folder (these are reports that are direct children of the child folder)
-                    foreach (var reportName in childResult.DirectReports)
-                    {
-                        childFolderItems.Add($"{childIndent}    report_{reportName}");
-                    }
-
-                    if (childFolderItems.Count > 0)
-                    {
-                        folderCode += $"\n{string.Join(",\n", childFolderItems)}";
+                        folderCode += $"\n{childResult.FolderCode}";
                         folderCode += $"\n{childIndent}    ";
                     }
                     folderCode += "],";
