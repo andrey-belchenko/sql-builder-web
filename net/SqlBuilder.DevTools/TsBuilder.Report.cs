@@ -30,6 +30,12 @@ namespace SqlBuilderLib.DevTools
             rep.Initialize(repFullName);
 
             var fields = rep.GetParamFields().ToArray();
+
+            foreach (var field in fields)
+            {
+                field.Control.PrepareListSource();
+                field.Control.PrepareDefaultSource();
+            }
             ProcessForm(form);
 
 

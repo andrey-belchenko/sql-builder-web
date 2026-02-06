@@ -546,7 +546,7 @@ namespace sql.builder.UI
                 AddNullValue(DataTableList);
             }
         }
-        private void PrepareDefaultSource()
+        public void PrepareDefaultSource()
         {
             if (!string.IsNullOrEmpty(this.query_name_default)) {
                 this.data_set_default = XmlReports.Environment.GetPrecompiledReport(this.query_name_default).Result(2, false);
