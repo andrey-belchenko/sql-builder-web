@@ -274,7 +274,7 @@ namespace SqlBuilderLib.DevTools
                 methodInfo.queryName = fieldExpr;
             }
 
-            return null;
+            return methodInfo;
 
         }
 

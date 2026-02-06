@@ -16,6 +16,8 @@ namespace SqlBuilderLib.DevTools
 
     public static partial class TsBuilder
     {
+        private static HashSet<string> processedFields = new HashSet<string>();
+
         private static string ProcessFieldGenTs(VForm form, VField field, IEnumerable<FieldProps> fieldsProps)
         {
             var fieldName = field.P_Field;
@@ -24,13 +26,20 @@ namespace SqlBuilderLib.DevTools
                 return null;
             }
 
+            var clearedName = ClearName(fieldName);
+            
+            // Skip if field with same name already processed
+            if (processedFields.Contains(clearedName))
+            {
+                return clearedName;
+            }
+
             var fieldsList = fieldsProps.ToList();
             if (fieldsList.Count == 0)
             {
                 return null;
             }
 
-            var clearedName = ClearName(fieldName);
             var fieldFileName = $"field_{clearedName}.ts";
             var fieldsPath = Path.Combine(BasePath, "fields");
 
@@ -62,6 +71,9 @@ namespace SqlBuilderLib.DevTools
 
             File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
             Console.WriteLine($"Generated field TypeScript file: {filePath}");
+
+            // Mark field as processed
+            processedFields.Add(clearedName);
 
             return clearedName;
         }
