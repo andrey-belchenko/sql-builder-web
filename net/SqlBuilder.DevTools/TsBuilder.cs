@@ -16,7 +16,7 @@ namespace SqlBuilderLib.DevTools
     public static partial class TsBuilder
     {
 
-        static string BasePath = @"C:\Repos\ai\asuse-ai\asuse-ai-reports\reports-config\sql-builder";
+        static string BasePath = @"C:\Repos\ai\asuse-ai\asuse-ai-reports\reports-config\sql-builder\generated";
 
         public static bool Enabled = false;
         public static void Initialize()
