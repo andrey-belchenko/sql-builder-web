@@ -77,84 +77,35 @@ namespace SqlBuilderLib.DevTools
         {
             var fieldInfo = new FieldInfo();
 
-            foreach (var attr in field.Attributes())
-            {
-                string attrName = attr.Name.LocalName;
-                string attrValue = attr.Value;
+            // Apply fields - using P_ properties
+            fieldInfo.Title = field.P_Title ?? string.Empty;
+            fieldInfo.Name = field.P_Name ?? string.Empty;
+            fieldInfo.Editable = field.P_Editable ?? string.Empty;
+            fieldInfo.ColumnEditable = field.P_ColumnEditable ?? string.Empty;
+            fieldInfo.Default = field.P_Default ?? string.Empty;
+            fieldInfo.Valid = field.P_Valid ?? string.Empty;
+            fieldInfo.Visible = field.P_Visible ?? string.Empty;
+            fieldInfo.ColumnVisible = field.P_ColumnVisible ?? string.Empty;
+            fieldInfo.Mandatory = field.P_Mandatory ?? string.Empty;
+            fieldInfo.ColumnMandatory = field.P_ColumnMandatory ?? string.Empty;
+            fieldInfo.ControlType = field.P_ControlType ?? string.Empty;
+            fieldInfo.RowsLimit = field.P_RowsLimit ?? string.Empty;
 
-                switch (attrName)
-                {
-                    // Apply fields
-                    case "title":
-                        fieldInfo.Title = attrValue;
-                        break;
-                    case "name":
-                        fieldInfo.Name = attrValue;
-                        break;
-                    case "editable":
-                        fieldInfo.Editable = attrValue;
-                        break;
-                    case "column-editable":
-                        fieldInfo.ColumnEditable = attrValue;
-                        break;
-                    case "default":
-                        fieldInfo.Default = attrValue;
-                        break;
-                    case "valid":
-                        fieldInfo.Valid = attrValue;
-                        break;
-                    case "visible":
-                        fieldInfo.Visible = attrValue;
-                        break;
-                    case "column-visible":
-                        fieldInfo.ColumnVisible = attrValue;
-                        break;
-                    case "mandatory":
-                        fieldInfo.Mandatory = attrValue;
-                        break;
-                    case "column-mandatory":
-                        fieldInfo.ColumnMandatory = attrValue;
-                        break;
-                    case "valuequery":
-                        fieldInfo.Valuequery = attrValue;
-                        break;
-                    case "controlType":
-                        fieldInfo.ControlType = attrValue;
-                        break;
-                    case "val-field-name":
-                        fieldInfo.ValFieldName = attrValue;
-                        break;
-                    case "rows-limit":
-                        fieldInfo.RowsLimit = attrValue;
-                        break;
+            // Fields without P_ properties - using AttrOrEmpty
+            fieldInfo.Valuequery = field.AttrOrEmpty(AName.valuequery);
+            fieldInfo.ValFieldName = field.AttrOrEmpty(AName.val_field_name);
 
-                    // Not implemented fields
-                    case "hint":
-                        fieldInfo.Hint = attrValue;
-                        break;
-                    case "format":
-                        fieldInfo.Format = attrValue;
-                        break;
-                    case "step":
-                        fieldInfo.Step = attrValue;
-                        break;
-                    case "search-field-name":
-                        fieldInfo.SearchFieldName = attrValue;
-                        break;
-                    case "expand-all":
-                        fieldInfo.ExpandAll = attrValue;
-                        break;
-                    case "name-field-name":
-                        fieldInfo.NameFieldName = attrValue;
-                        break;
-                    case "parent-field-name":
-                        fieldInfo.ParentFieldName = attrValue;
-                        break;
-                    case "edit-mask":
-                        fieldInfo.EditMask = attrValue;
-                        break;
-                }
-            }
+            // Not implemented fields - using P_ properties where available
+            fieldInfo.Hint = field.P_Hint ?? string.Empty;
+            fieldInfo.Format = field.P_Format ?? string.Empty;
+            fieldInfo.Step = field.P_Step ?? string.Empty;
+            fieldInfo.ExpandAll = field.P_ExpandAll ?? string.Empty;
+            fieldInfo.ParentFieldName = field.P_ParentFieldName ?? string.Empty;
+            fieldInfo.EditMask = field.P_EditMask ?? string.Empty;
+
+            // Fields without P_ properties - using AttrOrEmpty
+            fieldInfo.SearchFieldName = field.AttrOrEmpty(AName.search_field_name);
+            fieldInfo.NameFieldName = field.AttrOrEmpty(AName.name_field_name);
 
             return fieldInfo;
         }
