@@ -268,13 +268,6 @@ namespace SqlBuilderLib.DevTools
 
         private static EditorProps CreateEditor(SqlbFieldInfo fieldInfo)
         {
-            /////////////////////
-            // "UIList"
-            // "UICombo"
-            // "UIDate"
-            // "UIText"
-            // "UINumber"
-            // "UICheck"
             var controlTypeName = fieldInfo.ControlType.Name;
             var editorType = "";
             var isSingle = true;
@@ -322,7 +315,7 @@ namespace SqlBuilderLib.DevTools
                 selectEditor.remoteOperations = fieldInfo.RowsLimit > 0;
                 return selectEditor;
             }
-            return new EditorProps();
+            return new EditorProps() { editorType = editorType };
         }
     }
 
