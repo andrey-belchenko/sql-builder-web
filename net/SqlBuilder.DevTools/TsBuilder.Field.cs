@@ -165,6 +165,138 @@ namespace SqlBuilderLib.DevTools
 
         public static FieldProps FIeldInfoToFieldProps(SqlbFieldInfo fieldInfo)
         {
+            var props = new FieldProps();
+
+            // Basic properties
+            props.label = fieldInfo.Title;
+            props.name = fieldInfo.Name;
+
+
+
+            // Parse expressions to MethodInfo
+            props.defaultValue = CreateMethodInfo(fieldInfo.Default);
+            props.defaultValueDeps = fieldInfo.Dependancies?.ToList();
+
+            props.required = CreateMethodInfo(fieldInfo.ColumnMandatory, fieldInfo.Mandatory);
+
+            
+            if (props.required.fieldRef != null)
+            {
+                props.requiredDeps = (new[] { props.required.fieldRef }).ToList();
+            }
+            props.requiredDeps = fieldInfo.Dependancies?.ToList() ?? new List<string>();
+
+            props.validation = CreateMethodInfo(fieldInfo.Valid);
+            props.validationDeps = fieldInfo.Dependancies?.ToList() ?? new List<string>();
+
+            props.enabled = CreateMethodInfo(fieldInfo.Editable);
+            props.enabledDeps = fieldInfo.Dependancies?.ToList() ?? new List<string>();
+
+            props.visible = CreateMethodInfo(fieldInfo.Visible);
+            props.visibleDeps = fieldInfo.Dependancies?.ToList() ?? new List<string>();
+
+            // exists might map to column-visible or similar, using ColumnVisible for now
+            props.exists = CreateMethodInfo(fieldInfo.ColumnVisible);
+            props.existsDeps = fieldInfo.Dependancies?.ToList() ?? new List<string>();
+
+            // Create editor based on ControlType
+            props.editor = CreateEditor(fieldInfo);
+
+            return props;
+        }
+
+        private static bool? ToBool(string value)
+        {
+            if (value == "0")
+            {
+                return false;
+            }
+
+            if (value == "false")
+            {
+                return false;
+            }
+
+            if (value == "true")
+            {
+                return true;
+            }
+
+            if (value == "1")
+            {
+                return true;
+            }
+
+            return null;
+        }
+
+        private static MethodInfo CreateMethodInfo(string colExp, string fieldExpr = null)
+        {
+            var methodInfo = new MethodInfo();
+            var expr = fieldExpr ?? colExp;
+            var boolValue = ToBool(expr);
+
+            if (boolValue != null)
+            {
+                methodInfo.value = boolValue.Value;
+                return methodInfo;
+            }
+
+
+            if (fieldExpr != null)
+            {
+                methodInfo.fieldRef = fieldExpr;
+                return methodInfo;
+            }
+
+            if (colExp != null)
+            {
+                methodInfo.queryName = fieldExpr;
+            }
+
+            return null;
+
+        }
+
+        private static EditorProps CreateEditor(SqlbFieldInfo fieldInfo)
+        {
+            if (fieldInfo.ControlType == null)
+                return new EditorProps();
+
+            var controlTypeName = fieldInfo.ControlType.Name;
+
+            // Map ControlType to appropriate EditorProps
+            if (controlTypeName == "UICombo" || controlTypeName == "UIList" ||
+                controlTypeName == "UIComboRange" || controlTypeName == "UIDateRange")
+            {
+                var selectEditor = new SelectEditorProps();
+
+                // Convert ListColumns dictionary to ColumnInfo list
+                selectEditor.columns = fieldInfo.ListColumns?.Select(kvp => new ColumnInfo
+                {
+                    dataField = kvp.Key,
+                    caption = kvp.Value
+                }).ToList() ?? new List<ColumnInfo>();
+
+                // Set key and display fields
+                selectEditor.keyField = fieldInfo.ValFieldName ?? "id";
+                selectEditor.displayField = fieldInfo.NameFieldName ?? "name";
+
+                // Determine if single selection (not Range types)
+                selectEditor.singleSelection = !controlTypeName.Contains("Range") && controlTypeName != "UIList";
+
+                // Set remote operations if RowsLimit > 0
+                selectEditor.remoteOperations = fieldInfo.RowsLimit > 0;
+
+                // Parse listItems if there's a query (would need to check fieldInfo for list query)
+                // For now, leaving it null - might need additional fieldInfo properties
+
+                return selectEditor;
+            }
+
+            // For other types (UIText, UINumber, UIDate, UICheck), return base EditorProps
+            // In TypeScript, these would be specific editor types, but in C# we're just using base class
+            return new EditorProps();
         }
 
 
@@ -222,7 +354,7 @@ namespace SqlBuilderLib.DevTools
     {
         public string label;
         public string name;
-        public EditorProps editor;         public MethodInfo defaultValue;
+        public EditorProps editor; public MethodInfo defaultValue;
         public List<string> defaultValueDeps;
         public MethodInfo required;
         public List<string> requiredDeps;
@@ -241,7 +373,7 @@ namespace SqlBuilderLib.DevTools
 
     }
 
-    public class SelectEditorProps: EditorProps
+    public class SelectEditorProps : EditorProps
     {
         public List<ColumnInfo> columns;
         public MethodInfo listItems;
