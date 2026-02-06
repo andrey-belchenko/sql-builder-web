@@ -79,7 +79,7 @@ namespace SqlBuilderLib.DevTools
         private static string ProcessField(VForm form, VField field, CleanExpressReport rep)
         {
 
-            var fieldInfo = GetFieldInfo(field, rep);
+            var fieldsProps = GetFieldInfo(field, rep).Select(it => FIeldInfoToFieldProps(it)).ToList();
             var fieldName = field.P_Field;
             var fieldFileName = $"field_{ClearName(fieldName)}.ts";
 
@@ -101,23 +101,30 @@ namespace SqlBuilderLib.DevTools
         public static IEnumerable<SqlbFieldInfo> GetFieldInfo(VField field, CleanExpressReport rep)
         {
 
-            var fieldNames = new[] { field.P_Name };
+            // var fieldNames = new[] { field.P_Name };
+            var fieldNames = new Dictionary<string, string>();
             if (field.P_ControlType.Contains("Range"))
             {
-                fieldNames = new[] { $"{field.P_Name}1", $"{field.P_Name}2" };
+
+                fieldNames.Add(field.P_Name + "1", "С");
+                fieldNames.Add(field.P_Name + "2", "По");
+            }
+            else
+            {
+                fieldNames.Add(field.P_Name, field.P_Title);
             }
 
             var fieldInfos = new List<SqlbFieldInfo>();
 
-            foreach (var name in fieldNames)
+            foreach (var fld in fieldNames)
             {
                 var fieldInfo = new SqlbFieldInfo();
                 fieldInfos.Add(fieldInfo);
 
-                var ctrl = rep.GetParamField(name).Control;
+                var ctrl = rep.GetParamField(fld.Key).Control;
 
-                fieldInfo.Title = field.P_Title ?? string.Empty;
-                fieldInfo.Name = name;
+                fieldInfo.Title = fld.Value;
+                fieldInfo.Name = fld.Key;
                 fieldInfo.Default = ctrl.query_name_default;
                 fieldInfo.Editable = field.P_Editable ?? string.Empty;
                 fieldInfo.ColumnEditable = field.P_ColumnEditable ?? string.Empty;
@@ -319,9 +326,10 @@ namespace SqlBuilderLib.DevTools
                 selectEditor.remoteOperations = fieldInfo.RowsLimit > 0;
                 selectEditor.listItems = CreateMethodInfo(fieldInfo.ListQuery);
                 selectEditor.listItemsDeps = fieldInfo.Dependencies;
+                selectEditor.listItems.isSingleValue = isSingle;
                 return selectEditor;
             }
-            return new EditorProps() { editorType = editorType , format = fieldInfo.Format, editMask = fieldInfo.EditMask };
+            return new EditorProps() { editorType = editorType, format = fieldInfo.Format, editMask = fieldInfo.EditMask };
         }
     }
 
@@ -362,6 +370,48 @@ namespace SqlBuilderLib.DevTools
         public object value;
         public string fieldRef;
         public string queryName;
+
+        public bool isSingleValue = true;
+
+        public string ToTs()
+        {
+            if (value != null)
+            {
+                string formattedValue;
+                if (value is bool boolValue)
+                {
+                    formattedValue = boolValue.ToString().ToLower();
+                }
+                else if (value is string stringValue)
+                {
+                    formattedValue = $"'{stringValue}'";
+                }
+                else
+                {
+                    formattedValue = value.ToString();
+                }
+                return $"() => {formattedValue}";
+            }
+
+            if (fieldRef != null)
+            {
+                return $"($) => $.formValues['{fieldRef}']";
+            }
+
+            if (queryName != null)
+            {
+                if (isSingleValue)
+                {
+                    return $"$ => getFirstValue(await execQueryByName('{queryName}', $))";
+                }
+                else
+                {
+                    return $"$ => execQueryByName('{queryName}', $)";
+                }
+
+            }
+            return null;
+        }
     }
 
     public class ColumnInfo
