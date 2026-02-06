@@ -36,7 +36,7 @@ namespace SqlBuilderLib.DevTools
                 field.Control.PrepareListSource();
                 field.Control.PrepareDefaultSource();
             }
-            ProcessForm(form);
+            ProcessForm(form, rep);
 
 
 

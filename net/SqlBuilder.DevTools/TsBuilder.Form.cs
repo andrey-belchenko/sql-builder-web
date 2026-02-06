@@ -17,30 +17,30 @@ namespace SqlBuilderLib.DevTools
 {
     public static partial class TsBuilder
     {
-        private static string ProcessForm(VForm form)
+        private static string ProcessForm(VForm form, CleanExpressReport rep)
         {
             var content = form.ContentElement();
 
             // UIFormC
-            ProcessContentChildren(form, content);
+            ProcessContentChildren(form, content, rep);
 
             DebugSaveFormXML(form);
             return null;
 
         }
 
-        private static void ProcessContentChildren(VForm form, VSXElement parent)
+        private static void ProcessContentChildren(VForm form, VSXElement parent, CleanExpressReport rep)
         {
             foreach (var element in parent.GetElementsP())
             {
                 if (element is VField field)
                 {
-                    ProcessField(form, field);
+                    ProcessField(form, field, rep);
                 }
                 else if (element is VFieldGroup fieldGroup)
                 {
                     ProcessFieldGroup(form, fieldGroup);
-                    ProcessContentChildren(form, fieldGroup); // Recursive call
+                    ProcessContentChildren(form, fieldGroup, rep); // Recursive call
                 }
             }
         }

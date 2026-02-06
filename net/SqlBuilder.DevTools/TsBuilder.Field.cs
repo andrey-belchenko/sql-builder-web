@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using System.Xml.Linq;
+using sql.builder;
 using sql.builder.DataApi;
 
 
@@ -71,7 +72,7 @@ namespace SqlBuilderLib.DevTools
     {
         public static HashSet<string> devAttrNames = new HashSet<string>();
         public static HashSet<string> devControlTypes = new HashSet<string>();
-        private static string ProcessField(VForm form, VField field)
+        private static string ProcessField(VForm form, VField field, CleanExpressReport rep)
         {
             var fieldName = field.P_Field;
             var fieldFileName = $"field_{ClearName(fieldName)}.ts";
