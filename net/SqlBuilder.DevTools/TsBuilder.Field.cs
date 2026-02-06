@@ -25,6 +25,7 @@ using sql.builder.UI;
 // "controlType"
 // "val-field-name"
 // "rows-limit"
+// "name-field-name"
 
 
 // Not implemented
@@ -33,7 +34,6 @@ using sql.builder.UI;
 // "step"
 // "search-field-name"
 // "expand-all"
-// "name-field-name"
 // "parent-field-name"
 // "edit-mask"
 
@@ -141,6 +141,8 @@ namespace SqlBuilderLib.DevTools
                 fieldInfo.SearchFieldName = ctrl.search_field_name;
                 fieldInfo.NameFieldName = ctrl.name_field_name;
 
+                fieldInfo.ListQuery = ctrl.query_name;
+
 
 
 
@@ -157,7 +159,7 @@ namespace SqlBuilderLib.DevTools
                     }
                 }
 
-                fieldInfo.Dependancies = ctrl.Masters.Keys.ToList();
+                fieldInfo.Dependencies = ctrl.Masters.Keys.ToList();
 
             }
             return fieldInfos;
@@ -171,9 +173,11 @@ namespace SqlBuilderLib.DevTools
             props.label = fieldInfo.Title;
             props.name = fieldInfo.Name;
 
+            props.hint = new MethodInfo() { value = fieldInfo.Hint };
+
             // Parse expressions to MethodInfo
             props.defaultValue = CreateMethodInfo(fieldInfo.Default);
-            props.defaultValueDeps = fieldInfo.Dependancies?.ToList();
+            props.defaultValueDeps = fieldInfo.Dependencies?.ToList();
 
             props.required = CreateMethodInfo(fieldInfo.ColumnMandatory, fieldInfo.Mandatory);
             if (props.required.fieldRef != null)
@@ -313,9 +317,11 @@ namespace SqlBuilderLib.DevTools
                 selectEditor.displayField = fieldInfo.NameFieldName;
                 selectEditor.singleSelection = isSingle;
                 selectEditor.remoteOperations = fieldInfo.RowsLimit > 0;
+                selectEditor.listItems = CreateMethodInfo(fieldInfo.ListQuery);
+                selectEditor.listItemsDeps = fieldInfo.Dependencies;
                 return selectEditor;
             }
-            return new EditorProps() { editorType = editorType };
+            return new EditorProps() { editorType = editorType , format = fieldInfo.Format, editMask = fieldInfo.EditMask };
         }
     }
 
@@ -345,8 +351,10 @@ namespace SqlBuilderLib.DevTools
         public string NameFieldName;
         public string ParentFieldName;
         public string EditMask;
+
+        public string ListQuery;
         public Dictionary<string, string> ListColumns = new Dictionary<string, string>();
-        public List<string> Dependancies = new List<string>();
+        public List<string> Dependencies = new List<string>();
     }
 
     public class MethodInfo
@@ -383,11 +391,15 @@ namespace SqlBuilderLib.DevTools
         public List<string> enabledDeps;
         public MethodInfo visible;
         public List<string> visibleDeps;
+
+        public MethodInfo hint;
     }
 
     public class EditorProps
     {
         public string editorType;
+        public string format;
+        public string editMask;
     }
 
     public class SelectEditorProps : EditorProps
@@ -399,8 +411,10 @@ namespace SqlBuilderLib.DevTools
         public string displayField;
         public bool? remoteOperations;
         public bool? singleSelection;
+        public string searchField;
+        public string expandAll;
+        public string parentKeyField;
     }
 }
-
 
 
