@@ -53,9 +53,10 @@ using sql.builder.DataApi;
 
 namespace SqlBuilderLib.DevTools
 {
+
     public static partial class TsBuilder
     {
-        public static HashSet<string> attrNames =  new HashSet<string>();
+        public static HashSet<string> attrNames = new HashSet<string>();
         private static string ProcessField(VForm form, VField field)
         {
             var fieldName = field.P_Field;
@@ -63,11 +64,41 @@ namespace SqlBuilderLib.DevTools
             ProcessQuery(field.ListQuery());
             ProcessQuery(field.DefaultQuery());
 
-            foreach (var attr in field.Attributes()){
-               attrNames.Add(attr.Name.LocalName); 
+            foreach (var attr in field.Attributes())
+            {
+                attrNames.Add(attr.Name.LocalName);
             }
             return null;
 
         }
+    }
+
+    public class FieldInfo
+    {
+        // Apply fields
+        public string Title { get; set; }
+        public string Name { get; set; }
+        public string Editable { get; set; }
+        public string ColumnEditable { get; set; }
+        public string Default { get; set; }
+        public string Valid { get; set; }
+        public string Visible { get; set; }
+        public string ColumnVisible { get; set; }
+        public string Mandatory { get; set; }
+        public string ColumnMandatory { get; set; }
+        public string Valuequery { get; set; }
+        public string ControlType { get; set; }
+        public string ValFieldName { get; set; }
+        public string RowsLimit { get; set; }
+
+        // Not implemented fields
+        public string Hint { get; set; }
+        public string Format { get; set; }
+        public string Step { get; set; }
+        public string SearchFieldName { get; set; }
+        public string ExpandAll { get; set; }
+        public string NameFieldName { get; set; }
+        public string ParentFieldName { get; set; }
+        public string EditMask { get; set; }
     }
 }
