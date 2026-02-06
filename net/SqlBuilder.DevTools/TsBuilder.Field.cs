@@ -171,33 +171,41 @@ namespace SqlBuilderLib.DevTools
             props.label = fieldInfo.Title;
             props.name = fieldInfo.Name;
 
-
-
             // Parse expressions to MethodInfo
             props.defaultValue = CreateMethodInfo(fieldInfo.Default);
             props.defaultValueDeps = fieldInfo.Dependancies?.ToList();
 
             props.required = CreateMethodInfo(fieldInfo.ColumnMandatory, fieldInfo.Mandatory);
-
-            
             if (props.required.fieldRef != null)
             {
                 props.requiredDeps = (new[] { props.required.fieldRef }).ToList();
             }
-            props.requiredDeps = fieldInfo.Dependancies?.ToList() ?? new List<string>();
 
-            props.validation = CreateMethodInfo(fieldInfo.Valid);
-            props.validationDeps = fieldInfo.Dependancies?.ToList() ?? new List<string>();
 
-            props.enabled = CreateMethodInfo(fieldInfo.Editable);
-            props.enabledDeps = fieldInfo.Dependancies?.ToList() ?? new List<string>();
+            props.validation = CreateMethodInfo(null, fieldInfo.Valid);
+            if (props.validation?.fieldRef != null)
+            {
+                props.validationDeps = (new[] { props.validation.fieldRef }).ToList();
+            }
 
-            props.visible = CreateMethodInfo(fieldInfo.Visible);
-            props.visibleDeps = fieldInfo.Dependancies?.ToList() ?? new List<string>();
+            props.enabled = CreateMethodInfo(fieldInfo.ColumnEditable, fieldInfo.Editable);
+            if (props.enabled?.fieldRef != null)
+            {
+                props.enabledDeps = (new[] { props.enabled.fieldRef }).ToList();
+            }
+
+            props.visible = CreateMethodInfo(fieldInfo.ColumnVisible, fieldInfo.Visible);
+            if (props.visible?.fieldRef != null)
+            {
+                props.visibleDeps = (new[] { props.visible.fieldRef }).ToList();
+            }
 
             // exists might map to column-visible or similar, using ColumnVisible for now
             props.exists = CreateMethodInfo(fieldInfo.ColumnVisible);
-            props.existsDeps = fieldInfo.Dependancies?.ToList() ?? new List<string>();
+            if (props.exists?.fieldRef != null)
+            {
+                props.existsDeps = (new[] { props.exists.fieldRef }).ToList();
+            }
 
             // Create editor based on ControlType
             props.editor = CreateEditor(fieldInfo);
@@ -260,46 +268,62 @@ namespace SqlBuilderLib.DevTools
 
         private static EditorProps CreateEditor(SqlbFieldInfo fieldInfo)
         {
-            if (fieldInfo.ControlType == null)
-                return new EditorProps();
-
+            /////////////////////
+            // "UIList"
+            // "UICombo"
+            // "UIDate"
+            // "UIText"
+            // "UINumber"
+            // "UICheck"
             var controlTypeName = fieldInfo.ControlType.Name;
+            var editorType = "";
+            var isSingle = true;
+            if (controlTypeName == "UICombo")
+            {
+                editorType = "SelectEditor";
+            }
+            if (controlTypeName == "UIList")
+            {
+                isSingle = false;
+                editorType = "SelectEditor";
+            }
+            if (controlTypeName == "UIDate")
+            {
+                editorType = "DateEditor";
+            }
 
-            // Map ControlType to appropriate EditorProps
-            if (controlTypeName == "UICombo" || controlTypeName == "UIList" ||
-                controlTypeName == "UIComboRange" || controlTypeName == "UIDateRange")
+            if (controlTypeName == "UIText")
+            {
+                editorType = "TextEditor";
+            }
+
+            if (controlTypeName == "UICheck")
+            {
+                editorType = "CheckEditor";
+            }
+
+            if (controlTypeName == "UINumber")
+            {
+                editorType = "CheckEditor";
+            }
+
+            if (editorType == "SelectEditor")
             {
                 var selectEditor = new SelectEditorProps();
-
-                // Convert ListColumns dictionary to ColumnInfo list
                 selectEditor.columns = fieldInfo.ListColumns?.Select(kvp => new ColumnInfo
                 {
                     dataField = kvp.Key,
                     caption = kvp.Value
-                }).ToList() ?? new List<ColumnInfo>();
+                }).ToList();
 
-                // Set key and display fields
-                selectEditor.keyField = fieldInfo.ValFieldName ?? "id";
-                selectEditor.displayField = fieldInfo.NameFieldName ?? "name";
-
-                // Determine if single selection (not Range types)
-                selectEditor.singleSelection = !controlTypeName.Contains("Range") && controlTypeName != "UIList";
-
-                // Set remote operations if RowsLimit > 0
+                selectEditor.keyField = fieldInfo.ValFieldName;
+                selectEditor.displayField = fieldInfo.NameFieldName;
+                selectEditor.singleSelection = isSingle;
                 selectEditor.remoteOperations = fieldInfo.RowsLimit > 0;
-
-                // Parse listItems if there's a query (would need to check fieldInfo for list query)
-                // For now, leaving it null - might need additional fieldInfo properties
-
                 return selectEditor;
             }
-
-            // For other types (UIText, UINumber, UIDate, UICheck), return base EditorProps
-            // In TypeScript, these would be specific editor types, but in C# we're just using base class
             return new EditorProps();
         }
-
-
     }
 
     public class SqlbFieldInfo
@@ -370,7 +394,7 @@ namespace SqlBuilderLib.DevTools
 
     public class EditorProps
     {
-
+        public string editorType;
     }
 
     public class SelectEditorProps : EditorProps
