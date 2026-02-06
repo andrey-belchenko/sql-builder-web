@@ -20,7 +20,7 @@ namespace SqlBuilderLib.DevTools
 
         private static string ProcessFieldGenTs(VForm form, VField field, IEnumerable<FieldProps> fieldsProps)
         {
-            var fieldName = field.P_Field;
+            var fieldName = field.P_Name;
             if (string.IsNullOrEmpty(fieldName))
             {
                 return null;
