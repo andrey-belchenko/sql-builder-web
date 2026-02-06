@@ -43,7 +43,7 @@ namespace SqlBuilderLib.DevTools
                 return null;
             }
 
-            var reportClearedName = ClearName(repFullName);
+            var reportClearedName = ClearName(useReport.P_Report);
             var reportTitle = EscapeString(useReport.P_Title ?? useReport.P_SelfTitle ?? "");
             GenerateReportTypeScript(reportClearedName, formClearedName, reportTitle);
 
