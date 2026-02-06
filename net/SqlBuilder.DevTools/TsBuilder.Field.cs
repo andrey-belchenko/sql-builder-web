@@ -159,7 +159,7 @@ namespace SqlBuilderLib.DevTools
                 {
                     foreach (System.Data.DataColumn col in ctrl.data_set_list.Tables[0].Columns)
                     {
-                        if (UIBase.IsColumnShouldBeVisible(col))
+                        if (UIBase.IsColumnShouldBeVisible(col) && col.ColumnName != "check")
                         {
                             fieldInfo.ListColumns.Add(col.ColumnName, col.Caption);
                         }
@@ -188,7 +188,7 @@ namespace SqlBuilderLib.DevTools
             props.defaultValueDeps = fieldInfo.Dependencies?.ToList();
 
             props.required = CreateMethodInfo(fieldInfo.ColumnMandatory, fieldInfo.Mandatory);
-            if (props.required.fieldRef != null)
+            if (props.required?.fieldRef != null)
             {
                 props.requiredDeps = (new[] { props.required.fieldRef }).ToList();
             }
@@ -263,18 +263,19 @@ namespace SqlBuilderLib.DevTools
             }
 
 
-            if (fieldExpr != null)
+            if (!string.IsNullOrEmpty(fieldExpr))
             {
                 methodInfo.fieldRef = fieldExpr;
                 return methodInfo;
             }
 
-            if (colExp != null)
+            if (!string.IsNullOrEmpty(colExp))
             {
                 methodInfo.queryName = fieldExpr;
+                return methodInfo;
             }
 
-            return methodInfo;
+            return null;
 
         }
 
@@ -323,11 +324,19 @@ namespace SqlBuilderLib.DevTools
 
                 selectEditor.keyField = fieldInfo.ValFieldName;
                 selectEditor.displayField = fieldInfo.NameFieldName;
-                selectEditor.singleSelection = isSingle;
-                selectEditor.remoteOperations = fieldInfo.RowsLimit > 0;
+                if (isSingle)
+                {
+                    selectEditor.singleSelection = isSingle;
+                }
+                if (fieldInfo.RowsLimit > 0)
+                {
+                    selectEditor.remoteOperations = true;
+                }
+
                 selectEditor.listItems = CreateMethodInfo(fieldInfo.ListQuery);
                 selectEditor.listItemsDeps = fieldInfo.Dependencies;
                 selectEditor.listItems.isSingleValue = isSingle;
+                selectEditor.editorType = editorType;
                 return selectEditor;
             }
             return new EditorProps() { editorType = editorType, format = fieldInfo.Format, editMask = fieldInfo.EditMask };
