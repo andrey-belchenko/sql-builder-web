@@ -79,9 +79,7 @@ namespace SqlBuilderLib.DevTools
         private static string ProcessField(VForm form, VField field, CleanExpressReport rep)
         {
 
-            var fieldsProps = GetFieldInfo(field, rep).Select(it => FIeldInfoToFieldProps(it)).ToList();
-            var fieldName = field.P_Field;
-            var fieldFileName = $"field_{ClearName(fieldName)}.ts";
+
 
 
 
@@ -94,6 +92,9 @@ namespace SqlBuilderLib.DevTools
             // {
             //     devAttrNames.Add(attr.Name.LocalName);
             // }
+
+            var fieldsProps = GetFieldInfo(field, rep).Select(it => FIeldInfoToFieldProps(it)).ToList();
+            ProcessFieldGenTs(form, field, fieldsProps);
             return null;
 
         }
