@@ -191,7 +191,7 @@ namespace SqlBuilderLib.DevTools
             props.defaultValue = CreateMethodInfo(fieldInfo.Default);
             props.defaultValueDeps = fieldInfo.Dependencies?.ToList();
 
-            props.required = CreateMethodInfo(fieldInfo.ColumnMandatory, fieldInfo.Mandatory);
+            props.required = CreateMethodInfo(fieldInfo.ColumnMandatory, fieldInfo.Mandatory, false);
             if (props.required?.fieldRef != null)
             {
                 props.requiredDeps = (new[] { props.required.fieldRef }).ToList();
@@ -204,24 +204,24 @@ namespace SqlBuilderLib.DevTools
                 props.validationDeps = (new[] { props.validation.fieldRef }).ToList();
             }
 
-            props.enabled = CreateMethodInfo(fieldInfo.ColumnEditable, fieldInfo.Editable);
+            props.enabled = CreateMethodInfo(fieldInfo.ColumnEditable, fieldInfo.Editable, true);
             if (props.enabled?.fieldRef != null)
             {
                 props.enabledDeps = (new[] { props.enabled.fieldRef }).ToList();
             }
 
-            props.visible = CreateMethodInfo(fieldInfo.ColumnVisible, fieldInfo.Visible);
+            props.visible = CreateMethodInfo(fieldInfo.ColumnVisible, fieldInfo.Visible, true);
             if (props.visible?.fieldRef != null)
             {
                 props.visibleDeps = (new[] { props.visible.fieldRef }).ToList();
             }
 
-            // exists might map to column-visible or similar, using ColumnVisible for now
-            props.exists = CreateMethodInfo(fieldInfo.ColumnVisible);
-            if (props.exists?.fieldRef != null)
-            {
-                props.existsDeps = (new[] { props.exists.fieldRef }).ToList();
-            }
+            //// exists might map to column-visible or similar, using ColumnVisible for now
+            //props.exists = CreateMethodInfo(fieldInfo.ColumnVisible);
+            //if (props.exists?.fieldRef != null)
+            //{
+            //    props.existsDeps = (new[] { props.exists.fieldRef }).ToList();
+            //}
 
             // Create editor based on ControlType
             props.editor = CreateEditor(fieldInfo);
@@ -254,7 +254,7 @@ namespace SqlBuilderLib.DevTools
             return null;
         }
 
-        private static MethodInfo CreateMethodInfo(string colExp, string fieldExpr = null)
+        private static MethodInfo CreateMethodInfo(string colExp, string fieldExpr = null, bool dflt = true)
         {
             var methodInfo = new MethodInfo();
             var expr = fieldExpr ?? colExp;
@@ -262,7 +262,11 @@ namespace SqlBuilderLib.DevTools
 
             if (boolValue != null)
             {
-                methodInfo.value = boolValue.Value;
+                if (boolValue != dflt)
+                {
+                    methodInfo.value = boolValue.Value;
+                }
+        
                 return methodInfo;
             }
 
@@ -275,7 +279,7 @@ namespace SqlBuilderLib.DevTools
 
             if (!string.IsNullOrEmpty(colExp))
             {
-                methodInfo.queryName = fieldExpr;
+                methodInfo.queryName = colExp;
                 return methodInfo;
             }
 
