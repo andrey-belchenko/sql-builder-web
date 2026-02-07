@@ -16,22 +16,13 @@ namespace SqlBuilderLib.DevTools
 
     public static partial class TsBuilder
     {
-        private static HashSet<string> processedFields = new HashSet<string>();
-
-        private static string ProcessFieldGenTs(VForm form, VField field, IEnumerable<FieldProps> fieldsProps)
+        private static string ProcessFieldGenTs(VForm form, VField field, IEnumerable<FieldProps> fieldsProps, out FormGenerationState formState, string indent = "        ")
         {
+            formState = null;
             var fieldName = field.P_Name;
             if (string.IsNullOrEmpty(fieldName))
             {
                 return null;
-            }
-
-            var clearedName = ClearName(fieldName);
-            
-            // Skip if field with same name already processed
-            if (processedFields.Contains(clearedName))
-            {
-                return clearedName;
             }
 
             var fieldsList = fieldsProps.ToList();
@@ -40,248 +31,157 @@ namespace SqlBuilderLib.DevTools
                 return null;
             }
 
-            var fieldFileName = $"field_{clearedName}.ts";
-            var fieldsPath = Path.Combine(BasePath, "fields");
+            formState = GetOrCreateFormState(form);
 
-            // Create directory if it doesn't exist
-            if (!Directory.Exists(fieldsPath))
-            {
-                Directory.CreateDirectory(fieldsPath);
-            }
-
-            var filePath = Path.Combine(fieldsPath, fieldFileName);
-
-            var sb = new StringBuilder();
-            
-            // Generate imports
-            GenerateFieldImports(sb, fieldsList);
-            
-            sb.AppendLine("//required");
-            sb.AppendLine();
-
-            // Generate field or field group code
+            // Generate inline field or field group code
+            string fieldCode;
             if (fieldsList.Count == 1)
             {
-                GenerateSingleFieldCode(sb, fieldsList[0]);
+                fieldCode = GenerateInlineFieldCode(fieldsList[0], indent);
             }
             else
             {
-                GenerateFieldGroupCode(sb, fieldsList, field);
+                fieldCode = GenerateInlineFieldGroupCode(fieldsList, field, indent);
             }
 
-            File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
-            Console.WriteLine($"Generated field TypeScript file: {filePath}");
+            // Update form state with imports
+            UpdateFormStateImports(formState, fieldsList);
 
-            // Mark field as processed
-            processedFields.Add(clearedName);
-
-            return clearedName;
+            return fieldCode;
         }
 
-        private static void GenerateFieldImports(StringBuilder sb, List<FieldProps> fieldsProps)
-        {
-            var editorTypes = new HashSet<string>();
-            var needsExecQueryByName = false;
-            var needsGetFirstValue = false;
-
-            foreach (var props in fieldsProps)
-            {
-                if (props.editor != null)
-                {
-                    editorTypes.Add(props.editor.editorType);
-                }
-
-                // Check if any method uses queryName
-                if (HasQueryMethod(props.defaultValue))
-                {
-                    needsExecQueryByName = true;
-                }
-
-                if (props.editor is SelectEditorProps selectEditor && HasQueryMethod(selectEditor.listItems))
-                {
-                    needsExecQueryByName = true;
-                }
-
-                if (props.defaultValue?.isSingleValue == true && props.defaultValue?.queryName != null)
-                {
-                    needsGetFirstValue = true;
-                }
-            }
-
-            // Generate editor imports
-            foreach (var editorType in editorTypes.OrderBy(x => x))
-            {
-                switch (editorType)
-                {
-                    case "SelectEditor":
-                        sb.AppendLine("import { PartialSelectEditorProps, SelectEditor } from '@/system/reports/types/editors/SelectEditor';");
-                        break;
-                    case "DateEditor":
-                        sb.AppendLine("import { DateEditor } from '@/system/reports/types/editors/DateEditor';");
-                        break;
-                    case "TextEditor":
-                        sb.AppendLine("import { TextEditor } from '@/system/reports/types/editors/TextEditor';");
-                        break;
-                    case "NumberEditor":
-                        sb.AppendLine("import { NumberEditor } from '@/system/reports/types/editors/NumberEditor';");
-                        break;
-                    case "CheckEditor":
-                        sb.AppendLine("import { CheckEditor } from '@/system/reports/types/editors/CheckEditor';");
-                        break;
-                }
-            }
-
-            // Field imports
-            if (fieldsProps.Count == 1)
-            {
-                sb.AppendLine("import { Field, PartialFieldProps } from '@/system/reports/types/Field';");
-            }
-            else
-            {
-                sb.AppendLine("import { Field, PartialFieldProps } from '@/system/reports/types/Field';");
-                sb.AppendLine("import { FieldGroup } from '@/system/reports/types/FieldGroup';");
-            }
-
-            // Utils imports
-            if (needsExecQueryByName)
-            {
-                sb.AppendLine("import { execQueryByName } from './utils';");
-            }
-
-            if (needsGetFirstValue)
-            {
-                sb.AppendLine("import { getFirstValue } from './utils';");
-            }
-
-            sb.AppendLine();
-        }
 
         private static bool HasQueryMethod(MethodInfo methodInfo)
         {
             return methodInfo != null && !string.IsNullOrEmpty(methodInfo.queryName);
         }
 
-        private static void GenerateSingleFieldCode(StringBuilder sb, FieldProps props)
+        private static void UpdateFormStateImports(FormGenerationState formState, List<FieldProps> fieldsProps)
         {
-            var editorType = props.editor?.editorType ?? "";
-            var isSelectEditor = editorType == "SelectEditor";
-            var partialEditorType = isSelectEditor ? "PartialSelectEditorProps" : "";
+            foreach (var props in fieldsProps)
+            {
+                if (props.editor != null)
+                {
+                    formState.EditorTypes.Add(props.editor.editorType);
+                }
 
-            if (isSelectEditor)
-            {
-                sb.AppendLine($"export default (overrideProps: PartialFieldProps = {{}}, overrideEditorProps: {partialEditorType} = {{}}) =>");
+                // Check if any method uses queryName
+                if (HasQueryMethod(props.defaultValue))
+                {
+                    formState.NeedsExecQueryByName = true;
+                }
+
+                if (props.editor is SelectEditorProps selectEditor && HasQueryMethod(selectEditor.listItems))
+                {
+                    formState.NeedsExecQueryByName = true;
+                }
+
+                if (props.defaultValue?.isSingleValue == true && props.defaultValue?.queryName != null)
+                {
+                    formState.NeedsGetFirstValue = true;
+                }
             }
-            else
-            {
-                sb.AppendLine("export default (overrideProps: PartialFieldProps = {}) =>");
-            }
-            sb.AppendLine("    new Field({");
-            sb.AppendLine("        ...{");
+        }
+
+        private static string GenerateInlineFieldCode(FieldProps props, string indent)
+        {
+            var sb = new StringBuilder();
+            var editorType = props.editor?.editorType ?? "TextEditor";
+
+            sb.Append(indent);
+            sb.AppendLine("new Field({");
 
             // Label
             if (!string.IsNullOrEmpty(props.label))
             {
-                sb.AppendLine($"            label: '{EscapeString(props.label)}',");
+                sb.Append(indent);
+                sb.Append("    label: '");
+                sb.Append(EscapeString(props.label));
+                sb.AppendLine("',");
             }
 
             // Name
-            sb.AppendLine($"            name: '{props.name}',");
+            sb.Append(indent);
+            sb.Append("    name: '");
+            sb.Append(props.name);
+            sb.AppendLine("',");
 
             // Editor
-            sb.Append("            editor: new ");
+            sb.Append(indent);
+            sb.Append("    editor: new ");
             sb.Append(editorType);
             sb.AppendLine("({");
-            GenerateEditorCode(sb, props.editor, "                ", isSelectEditor);
-            if (isSelectEditor)
-            {
-                sb.AppendLine("                ...overrideEditorProps,");
-            }
-            sb.AppendLine("            }),");
+            GenerateEditorCode(sb, props.editor, indent + "        ", false);
+            sb.Append(indent);
+            sb.AppendLine("    }),");
 
             // Other field properties
-            GenerateFieldProperty(sb, "defaultValue", props.defaultValue, "            ");
-            GenerateFieldPropertyArray(sb, "defaultValueDeps", props.defaultValueDeps, "            ");
-            GenerateFieldProperty(sb, "required", props.required, "            ");
-            GenerateFieldPropertyArray(sb, "requiredDeps", props.requiredDeps, "            ");
-            GenerateFieldProperty(sb, "validation", props.validation, "            ");
-            GenerateFieldPropertyArray(sb, "validationDeps", props.validationDeps, "            ");
-            GenerateFieldProperty(sb, "exists", props.exists, "            ");
-            GenerateFieldPropertyArray(sb, "existsDeps", props.existsDeps, "            ");
-            GenerateFieldProperty(sb, "enabled", props.enabled, "            ");
-            GenerateFieldPropertyArray(sb, "enabledDeps", props.enabledDeps, "            ");
-            GenerateFieldProperty(sb, "visible", props.visible, "            ");
-            GenerateFieldPropertyArray(sb, "visibleDeps", props.visibleDeps, "            ");
+            GenerateFieldProperty(sb, "defaultValue", props.defaultValue, indent + "    ");
+            GenerateFieldPropertyArray(sb, "defaultValueDeps", props.defaultValueDeps, indent + "    ");
+            GenerateFieldProperty(sb, "required", props.required, indent + "    ");
+            GenerateFieldPropertyArray(sb, "requiredDeps", props.requiredDeps, indent + "    ");
+            GenerateFieldProperty(sb, "validation", props.validation, indent + "    ");
+            GenerateFieldPropertyArray(sb, "validationDeps", props.validationDeps, indent + "    ");
+            GenerateFieldProperty(sb, "exists", props.exists, indent + "    ");
+            GenerateFieldPropertyArray(sb, "existsDeps", props.existsDeps, indent + "    ");
+            GenerateFieldProperty(sb, "enabled", props.enabled, indent + "    ");
+            GenerateFieldPropertyArray(sb, "enabledDeps", props.enabledDeps, indent + "    ");
+            GenerateFieldProperty(sb, "visible", props.visible, indent + "    ");
+            GenerateFieldPropertyArray(sb, "visibleDeps", props.visibleDeps, indent + "    ");
 
-            sb.AppendLine("        },");
-            sb.AppendLine("        ...overrideProps,");
-            sb.AppendLine("    });");
+            sb.Append(indent);
+            sb.Append("})");
+
+            return sb.ToString();
         }
 
-        private static void GenerateFieldGroupCode(StringBuilder sb, List<FieldProps> fieldsProps, VField field)
+        private static string GenerateInlineFieldGroupCode(List<FieldProps> fieldsProps, VField field, string indent)
         {
-            sb.AppendLine("export default (overrideProps: PartialFieldProps = {}) =>");
-            sb.AppendLine("    new FieldGroup({");
-            
+            var sb = new StringBuilder();
+
+            sb.Append(indent);
+            sb.AppendLine("new FieldGroup({");
+
             // Group label - use field title or generate from field name
             var groupLabel = field.P_Title ?? field.P_Name ?? "";
             if (string.IsNullOrEmpty(groupLabel))
             {
                 groupLabel = fieldsProps.FirstOrDefault()?.label ?? "";
             }
-            sb.AppendLine($"        label: '{EscapeString(groupLabel)}',");
-            
-            sb.AppendLine("        items: [");
+            sb.Append(indent);
+            sb.Append("    label: '");
+            sb.Append(EscapeString(groupLabel));
+            sb.AppendLine("',");
+
+            sb.Append(indent);
+            sb.AppendLine("    items: [");
 
             // Generate each field
             for (int i = 0; i < fieldsProps.Count; i++)
             {
                 var props = fieldsProps[i];
-                sb.AppendLine("            new Field({");
-                sb.AppendLine("                ...{");
-
-                // Label
-                if (!string.IsNullOrEmpty(props.label))
-                {
-                    sb.AppendLine($"                    label: '{EscapeString(props.label)}',");
-                }
-
-                // Name
-                sb.AppendLine($"                    name: '{props.name}',");
-
-                // Editor
-                sb.Append("                    editor: new ");
-                sb.Append(props.editor?.editorType ?? "TextEditor");
-                sb.AppendLine("({");
-                GenerateEditorCode(sb, props.editor, "                        ", false);
-                sb.AppendLine("                    }),");
-
-                // Other field properties
-                GenerateFieldProperty(sb, "defaultValue", props.defaultValue, "                    ");
-                GenerateFieldPropertyArray(sb, "defaultValueDeps", props.defaultValueDeps, "                    ");
-                GenerateFieldProperty(sb, "required", props.required, "                    ");
-                GenerateFieldPropertyArray(sb, "requiredDeps", props.requiredDeps, "                    ");
-                GenerateFieldProperty(sb, "validation", props.validation, "                    ");
-                GenerateFieldPropertyArray(sb, "validationDeps", props.validationDeps, "                    ");
-                GenerateFieldProperty(sb, "exists", props.exists, "                    ");
-                GenerateFieldPropertyArray(sb, "existsDeps", props.existsDeps, "                    ");
-                GenerateFieldProperty(sb, "enabled", props.enabled, "                    ");
-                GenerateFieldPropertyArray(sb, "enabledDeps", props.enabledDeps, "                    ");
-                GenerateFieldProperty(sb, "visible", props.visible, "                    ");
-                GenerateFieldPropertyArray(sb, "visibleDeps", props.visibleDeps, "                    ");
-
-                sb.AppendLine("                },");
-                sb.AppendLine("                ...overrideProps,");
-                sb.AppendLine("            })");
+                var fieldCode = GenerateInlineFieldCode(props, indent + "        ");
+                sb.Append(fieldCode);
 
                 if (i < fieldsProps.Count - 1)
                 {
                     sb.AppendLine(",");
                 }
+                else
+                {
+                    sb.AppendLine();
+                }
             }
 
-            sb.AppendLine("        ],");
-            sb.AppendLine("    });");
+            sb.Append(indent);
+            sb.Append("    ]");
+            sb.AppendLine();
+            sb.Append(indent);
+            sb.Append("})");
+
+            return sb.ToString();
         }
+
 
         private static void GenerateEditorCode(StringBuilder sb, EditorProps editor, string indent, bool includeOverride)
         {

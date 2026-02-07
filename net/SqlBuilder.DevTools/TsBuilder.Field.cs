@@ -94,7 +94,11 @@ namespace SqlBuilderLib.DevTools
             // }
 
             var fieldsProps = GetFieldInfo(field, rep).Select(it => FIeldInfoToFieldProps(it)).ToList();
-            ProcessFieldGenTs(form, field, fieldsProps);
+            var fieldCode = ProcessFieldGenTs(form, field, fieldsProps, out FormGenerationState formState);
+            if (fieldCode != null && formState != null)
+            {
+                formState.Items.Add(fieldCode);
+            }
             return null;
 
         }
