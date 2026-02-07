@@ -121,7 +121,26 @@ namespace SqlBuilderLib.DevTools
                     formState.NeedsExecQueryByName = true;
                 }
 
-                if (props.defaultValue?.isSingleValue == true && props.defaultValue?.queryName != null)
+                // Check for getFirstValue usage in properties that are NOT unwrapped
+                // defaultValue and listItems are unwrapped, so they don't need getFirstValue import
+                // Only check: required, validation, enabled, visible, exists
+                if (props.required?.isSingleValue == true && HasQueryMethod(props.required))
+                {
+                    formState.NeedsGetFirstValue = true;
+                }
+                if (props.validation?.isSingleValue == true && HasQueryMethod(props.validation))
+                {
+                    formState.NeedsGetFirstValue = true;
+                }
+                if (props.enabled?.isSingleValue == true && HasQueryMethod(props.enabled))
+                {
+                    formState.NeedsGetFirstValue = true;
+                }
+                if (props.visible?.isSingleValue == true && HasQueryMethod(props.visible))
+                {
+                    formState.NeedsGetFirstValue = true;
+                }
+                if (props.exists?.isSingleValue == true && HasQueryMethod(props.exists))
                 {
                     formState.NeedsGetFirstValue = true;
                 }

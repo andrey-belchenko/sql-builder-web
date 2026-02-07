@@ -143,12 +143,12 @@ namespace SqlBuilderLib.DevTools
             // Utils imports
             if (formState.NeedsExecQueryByName)
             {
-                sb.AppendLine("import { execQueryByName } from './utils';");
+                sb.AppendLine("import { execQueryByName } from '../../utils';");
             }
             
             if (formState.NeedsGetFirstValue)
             {
-                sb.AppendLine("import { getFirstValue } from './utils';");
+                sb.AppendLine("import { getFirstValue } from '../../utils';");
             }
         }
 
