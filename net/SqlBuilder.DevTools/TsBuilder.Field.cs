@@ -153,7 +153,8 @@ namespace SqlBuilderLib.DevTools
                 fieldInfo.SearchFieldName = ctrl.search_field_name;
                 fieldInfo.NameFieldName = ctrl.name_field_name;
 
-                if (string.IsNullOrWhiteSpace(fieldInfo.NameFieldName)){
+                if (string.IsNullOrWhiteSpace(fieldInfo.NameFieldName))
+                {
                     fieldInfo.NameFieldName = fieldInfo.ValFieldName;
                 }
 
@@ -298,7 +299,7 @@ namespace SqlBuilderLib.DevTools
 
             if (!string.IsNullOrEmpty(colExp))
             {
-                methodInfo.queryName = colExp;
+                methodInfo.queryName = ClearName(colExp);
                 return methodInfo;
             }
 
