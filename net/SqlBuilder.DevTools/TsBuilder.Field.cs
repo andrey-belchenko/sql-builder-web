@@ -189,6 +189,7 @@ namespace SqlBuilderLib.DevTools
 
             // Parse expressions to MethodInfo
             props.defaultValue = CreateMethodInfo(fieldInfo.Default);
+
             props.defaultValueDeps = fieldInfo.Dependencies?.ToList();
 
             props.required = CreateMethodInfo(fieldInfo.ColumnMandatory, fieldInfo.Mandatory, false);
@@ -225,6 +226,20 @@ namespace SqlBuilderLib.DevTools
 
             // Create editor based on ControlType
             props.editor = CreateEditor(fieldInfo);
+
+            if (props.defaultValue != null)
+            {
+                if (props.editor is SelectEditorProps sep && sep.singleSelection.HasValue && sep.singleSelection.Value)
+                {
+                    props.defaultValue.isSingleValue = true;
+                }
+                else
+                {
+                    props.defaultValue.isSingleValue = false;
+                }
+            }
+
+
 
             return props;
         }
@@ -266,7 +281,7 @@ namespace SqlBuilderLib.DevTools
                 {
                     methodInfo.value = boolValue.Value;
                 }
-        
+
                 return methodInfo;
             }
 
@@ -343,7 +358,7 @@ namespace SqlBuilderLib.DevTools
 
                 selectEditor.listItems = CreateMethodInfo(fieldInfo.ListQuery);
                 selectEditor.listItemsDeps = fieldInfo.Dependencies;
-                selectEditor.listItems.isSingleValue = isSingle;
+                selectEditor.listItems.isSingleValue = false;
                 selectEditor.editorType = editorType;
                 return selectEditor;
             }
@@ -420,7 +435,7 @@ namespace SqlBuilderLib.DevTools
             {
                 if (isSingleValue)
                 {
-                    return $"$ => getFirstValue(await execQueryByName('{queryName}', $))";
+                    return $"async $ => getFirstValue(await execQueryByName('{queryName}', $))";
                 }
                 else
                 {
