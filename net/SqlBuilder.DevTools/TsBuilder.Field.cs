@@ -153,6 +153,10 @@ namespace SqlBuilderLib.DevTools
                 fieldInfo.SearchFieldName = ctrl.search_field_name;
                 fieldInfo.NameFieldName = ctrl.name_field_name;
 
+                if (string.IsNullOrWhiteSpace(fieldInfo.NameFieldName)){
+                    fieldInfo.NameFieldName = fieldInfo.ValFieldName;
+                }
+
                 fieldInfo.ListQuery = ctrl.query_name;
 
 
@@ -344,6 +348,15 @@ namespace SqlBuilderLib.DevTools
                     dataField = kvp.Key,
                     caption = kvp.Value
                 }).ToList();
+
+                if (selectEditor.columns.Count() == 0)
+                {
+                    selectEditor.columns.Add(new ColumnInfo
+                    {
+                        dataField = fieldInfo.NameFieldName,
+                        caption = " "
+                    });
+                }
 
                 selectEditor.keyField = fieldInfo.ValFieldName;
                 selectEditor.displayField = fieldInfo.NameFieldName;
