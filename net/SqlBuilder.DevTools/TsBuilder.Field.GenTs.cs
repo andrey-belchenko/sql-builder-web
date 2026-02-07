@@ -56,6 +56,51 @@ namespace SqlBuilderLib.DevTools
             return methodInfo != null && !string.IsNullOrEmpty(methodInfo.queryName);
         }
 
+        /// <summary>
+        /// Removes getFirstValue wrapper while preserving $ => prefix
+        /// </summary>
+        private static string UnwrapGetFirstValue(string tsCode)
+        {
+            if (string.IsNullOrEmpty(tsCode))
+            {
+                return tsCode;
+            }
+
+            // Remove await first
+            tsCode = tsCode.Replace("await ", "");
+
+            // Remove getFirstValue wrapper if present, but preserve $ => prefix
+            if (tsCode.Contains("getFirstValue("))
+            {
+                // Check if code starts with $ =>
+                if (tsCode.StartsWith("$ => "))
+                {
+                    // Extract inner expression from getFirstValue(...)
+                    var getFirstValueStart = tsCode.IndexOf("getFirstValue(");
+                    var getFirstValueEnd = tsCode.LastIndexOf(")");
+                    if (getFirstValueEnd > getFirstValueStart)
+                    {
+                        var innerExpression = tsCode.Substring(
+                            getFirstValueStart + "getFirstValue(".Length,
+                            getFirstValueEnd - getFirstValueStart - "getFirstValue(".Length);
+                        return "$ => " + innerExpression;
+                    }
+                }
+                else
+                {
+                    // Fallback: extract without prefix (shouldn't happen normally)
+                    var startIdx = tsCode.IndexOf("getFirstValue(") + "getFirstValue(".Length;
+                    var endIdx = tsCode.LastIndexOf(")");
+                    if (endIdx > startIdx)
+                    {
+                        return tsCode.Substring(startIdx, endIdx - startIdx);
+                    }
+                }
+            }
+
+            return tsCode;
+        }
+
         private static void UpdateFormStateImports(FormGenerationState formState, List<FieldProps> fieldsProps)
         {
             foreach (var props in fieldsProps)
@@ -239,18 +284,7 @@ namespace SqlBuilderLib.DevTools
                 if (!string.IsNullOrEmpty(tsCode))
                 {
                     // Remove await and getFirstValue for listItems - it should return array directly
-                    tsCode = tsCode.Replace("await ", "");
-                    // Remove getFirstValue wrapper if present (listItems should return array)
-                    if (tsCode.Contains("getFirstValue("))
-                    {
-                        // Extract the inner expression
-                        var startIdx = tsCode.IndexOf("getFirstValue(") + "getFirstValue(".Length;
-                        var endIdx = tsCode.LastIndexOf(")");
-                        if (endIdx > startIdx)
-                        {
-                            tsCode = tsCode.Substring(startIdx, endIdx - startIdx);
-                        }
-                    }
+                    tsCode = UnwrapGetFirstValue(tsCode);
                     sb.Append(indent);
                     sb.AppendLine($"listItems: {tsCode},");
                 }
@@ -304,18 +338,10 @@ namespace SqlBuilderLib.DevTools
             // Based on examples, defaultValue uses execQueryByName directly
             if (propName == "defaultValue")
             {
-                tsCode = tsCode.Replace("await ", "");
-                // Remove getFirstValue wrapper if present
-                if (tsCode.Contains("getFirstValue("))
-                {
-                    var startIdx = tsCode.IndexOf("getFirstValue(") + "getFirstValue(".Length;
-                    var endIdx = tsCode.LastIndexOf(")");
-                    if (endIdx > startIdx)
-                    {
-                        tsCode = tsCode.Substring(startIdx, endIdx - startIdx);
-                    }
-                }
+                tsCode = UnwrapGetFirstValue(tsCode);
             }
+            // Note: Other properties (required, validation, enabled, visible) may also use queries
+            // but they typically need getFirstValue wrapper, so we don't unwrap them
 
             sb.Append(indent);
             sb.AppendLine($"{propName}: {tsCode},");
