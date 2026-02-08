@@ -63,6 +63,22 @@ namespace sql.builder.Clean
             var xform = XmlReports.GetForm(report.P_Form, reportName);
             return xform;
         }
+
+        public static void ExecuteReport(string reportName,string templateName, Dictionary<string, object> pars, Dictionary<string, object> globPars)
+        {
+            
+            XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
+            var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
+
+            ChangeConnectionString(conStr);
+
+            foreach (var globPar in globPars ){
+                XmlReports.SetGlobalParValue(globPar.Key, globPar.Value);
+            }
+         
+            var path = ExecReportGetPath( reportName, pars, templateName);
+     
+        }
     }
 
 }

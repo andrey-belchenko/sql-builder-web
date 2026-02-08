@@ -83,8 +83,6 @@ namespace SqlBuilderLib.DevTools
 
 
 
-            ProcessQuery(field.ListQuery());
-            ProcessQuery(field.DefaultQuery());
 
             // devControlTypes.Add(field.P_ControlType);
 
@@ -93,13 +91,19 @@ namespace SqlBuilderLib.DevTools
             //     devAttrNames.Add(attr.Name.LocalName);
             // }
 
-            var fieldsProps = GetFieldInfo(field, rep).Select(it => FIeldInfoToFieldProps(it)).ToList();
+            var fieldsInfos = GetFieldInfo(field, rep).ToList();
+
+            //ProcessQuery(fieldsInfos[0].ListQuery);
+            //ProcessQuery(fieldsInfos[0].Default);
+            var fieldsProps = fieldsInfos.Select(it => FIeldInfoToFieldProps(it)).ToList();
             var fieldCode = ProcessFieldGenTs(form, field, fieldsProps, out FormGenerationState formState);
             if (fieldCode != null && formState != null)
             {
                 formState.Items.Add(fieldCode);
             }
             return null;
+
+
 
         }
 
@@ -130,14 +134,14 @@ namespace SqlBuilderLib.DevTools
 
                 fieldInfo.Title = fld.Value;
                 fieldInfo.Name = fld.Key;
-                fieldInfo.Default = ctrl.query_name_default;
+                fieldInfo.Default = ProcessQuery(ctrl.query_name_default);
                 fieldInfo.Editable = field.P_Editable ?? string.Empty;
-                fieldInfo.ColumnEditable = field.P_ColumnEditable ?? string.Empty;
+                fieldInfo.ColumnEditable = ProcessQuery(field.P_ColumnEditable);
                 fieldInfo.Valid = field.P_Valid ?? string.Empty;
                 fieldInfo.Visible = field.P_Visible ?? string.Empty;
-                fieldInfo.ColumnVisible = field.P_ColumnVisible ?? string.Empty;
+                fieldInfo.ColumnVisible = ProcessQuery(field.P_ColumnVisible);
                 fieldInfo.Mandatory = field.P_Mandatory ?? string.Empty;
-                fieldInfo.ColumnMandatory = field.P_ColumnMandatory ?? string.Empty;
+                fieldInfo.ColumnMandatory = ProcessQuery(field.P_ColumnMandatory);
                 fieldInfo.ControlType = ctrl.GetType();
                 fieldInfo.RowsLimit = ctrl.rows_limit;
 
@@ -158,7 +162,7 @@ namespace SqlBuilderLib.DevTools
                     fieldInfo.NameFieldName = fieldInfo.ValFieldName;
                 }
 
-                fieldInfo.ListQuery = ctrl.query_name;
+                fieldInfo.ListQuery = ProcessQuery(ctrl.query_name);
 
 
 
@@ -234,13 +238,13 @@ namespace SqlBuilderLib.DevTools
 
             if (props.defaultValue != null)
             {
-                if (props.editor is SelectEditorProps sep && sep.singleSelection.HasValue && sep.singleSelection.Value)
+                if (props.editor is SelectEditorProps sep && (!sep.singleSelection.HasValue || !sep.singleSelection.Value))
                 {
-                    props.defaultValue.isSingleValue = true;
+                    props.defaultValue.isSingleValue = false;
                 }
                 else
                 {
-                    props.defaultValue.isSingleValue = false;
+                    props.defaultValue.isSingleValue = true;
                 }
             }
 
@@ -277,6 +281,10 @@ namespace SqlBuilderLib.DevTools
         private static MethodInfo CreateMethodInfo(string colExp, string fieldExpr = null, bool dflt = true)
         {
             var methodInfo = new MethodInfo();
+            if (string.IsNullOrWhiteSpace(fieldExpr))
+            {
+                fieldExpr = null;
+            }
             var expr = fieldExpr ?? colExp;
             var boolValue = ToBool(expr);
 
@@ -300,6 +308,10 @@ namespace SqlBuilderLib.DevTools
             if (!string.IsNullOrEmpty(colExp))
             {
                 methodInfo.queryName = ClearName(colExp);
+                if (methodInfo.queryName == "1")
+                {
+
+                }
                 return methodInfo;
             }
 
@@ -365,12 +377,14 @@ namespace SqlBuilderLib.DevTools
                 {
                     selectEditor.singleSelection = isSingle;
                 }
+                selectEditor.listItems = CreateMethodInfo(fieldInfo.ListQuery);
                 if (fieldInfo.RowsLimit > 0)
                 {
                     selectEditor.remoteOperations = true;
+                    selectEditor.listItems.useLoadOptions = true;
                 }
 
-                selectEditor.listItems = CreateMethodInfo(fieldInfo.ListQuery);
+
                 selectEditor.listItemsDeps = fieldInfo.Dependencies;
                 selectEditor.listItems.isSingleValue = false;
                 selectEditor.editorType = editorType;
@@ -420,6 +434,8 @@ namespace SqlBuilderLib.DevTools
 
         public bool isSingleValue = true;
 
+        public bool useLoadOptions = false;
+
         public string ToTs()
         {
             if (value != null)
@@ -449,11 +465,19 @@ namespace SqlBuilderLib.DevTools
             {
                 if (isSingleValue)
                 {
-                    return $"async $ => getFirstValue(await execQueryByName('{queryName}', $))";
+                    return $"async $ => getFirstValue(await execQueryByName('{queryName}', $) as [])";
                 }
                 else
                 {
-                    return $"$ => execQueryByName('{queryName}', $)";
+                    if (useLoadOptions)
+                    {
+                        return $"$ => execQueryByName('{queryName}', $, true)";
+                    }
+                    else
+                    {
+                        return $"$ => execQueryByName('{queryName}', $)";
+                    }
+
                 }
 
             }

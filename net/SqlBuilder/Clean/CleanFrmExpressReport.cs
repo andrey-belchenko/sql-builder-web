@@ -527,67 +527,67 @@ namespace sql.builder.WinForms
                 this.EndForming();
             }
         }
-        private void ExecuteReportAsync(XmlNode templateInfo)
-        {
-            if (this.in_process || this.ValidateParams() != string.Empty)
-            {
-                return;
-            }
-            this.BeginForming();
-            TaskScheduler context = TaskScheduler.FromCurrentSynchronizationContext();
-            var scheduler = new CleanCustomTaskScheduler();
-            this.cts = new CancellationTokenSource();
-            Task.Factory.StartNew<string>(() =>
-            {
-                VDataSet ds = null;
-                try
-                {
-                    using (cts.Token.Register(Thread.CurrentThread.Abort))
-                    {
-                        ds = RefreshData(false);
+        //private void ExecuteReportAsync(XmlNode templateInfo)
+        //{
+        //    if (this.in_process || this.ValidateParams() != string.Empty)
+        //    {
+        //        return;
+        //    }
+        //    this.BeginForming();
+        //    TaskScheduler context = TaskScheduler.FromCurrentSynchronizationContext();
+        //    var scheduler = new CleanCustomTaskScheduler();
+        //    this.cts = new CancellationTokenSource();
+        //    Task.Factory.StartNew<string>(() =>
+        //    {
+        //        VDataSet ds = null;
+        //        try
+        //        {
+        //            using (cts.Token.Register(Thread.CurrentThread.Abort))
+        //            {
+        //                ds = RefreshData(false);
 
-                        var path = TryCustomPrint(ds);
+        //                var path = TryCustomPrint(ds);
 
-                        if (path == null)
-                        {
-                            path = PrintData(ds, templateInfo);
-                        }
+        //                if (path == null)
+        //                {
+        //                    path = PrintData(ds, templateInfo);
+        //                }
 
-                        return path;
-                    }
-                }
-                finally
-                {
-                    //   connection     RefreshData
-                    if (ds != null && ds.Connection != null && ds.Connection != XmlReports.Environment.Connection)
-                    {
-                        ds.Connection.Close();
-                    }
-                }
+        //                return path;
+        //            }
+        //        }
+        //        finally
+        //        {
+        //            //   connection     RefreshData
+        //            if (ds != null && ds.Connection != null && ds.Connection != XmlReports.Environment.Connection)
+        //            {
+        //                ds.Connection.Close();
+        //            }
+        //        }
 
-            }, cts.Token, TaskCreationOptions.None, scheduler)
-            .ContinueWith((t) =>
-            {
-                if (t.Exception == null)
-                {
-                    var args = new CleanExpressReportEventArgs
-                    {
-                        Path = t.Result,
-                        ParamsData = GetParamsData()
-                    };
-                    OnEndedReport(args);
-                }
-                EndForming();
-                if (t.Exception == null && OpenDocumentAfterPrint)
-                {
-                    //OpenFile(t.Result);
-                }
-                //if (autoClose)
-                //{
-                //    this.Close();
-                //}
-            }, cts.Token, TaskContinuationOptions.None, context);
-        }
+        //    }, cts.Token, TaskCreationOptions.None, scheduler)
+        //    .ContinueWith((t) =>
+        //    {
+        //        if (t.Exception == null)
+        //        {
+        //            var args = new CleanExpressReportEventArgs
+        //            {
+        //                Path = t.Result,
+        //                ParamsData = GetParamsData()
+        //            };
+        //            OnEndedReport(args);
+        //        }
+        //        EndForming();
+        //        if (t.Exception == null && OpenDocumentAfterPrint)
+        //        {
+        //            //OpenFile(t.Result);
+        //        }
+        //        //if (autoClose)
+        //        //{
+        //        //    this.Close();
+        //        //}
+        //    }, cts.Token, TaskContinuationOptions.None, context);
+        //}
         private XElement GetReportScheme(UIFormC sender)
         {
             if (this._dataSet == null)
@@ -611,26 +611,26 @@ namespace sql.builder.WinForms
         }
         #endregion
         #region  
-        private void start()
-        {
-            XmlNode templateInfo = this.GetTemplateInfo();
-            //    (2    )
-            if (this.changeReportName != null && this._report.P_IdName != this.changeReportName)
-            {
-                this._report = XmlReports.Environment.GetPrecompiledReport(this.changeReportName);
-            }
-            if (this.changeReportName != null)
-            {
-                var xmlreport = new XmlDocument();
-                xmlreport.LoadXml(_report.ToString());
-                templateInfo = xmlreport.FirstChild.SelectSingleNode("print-templates//template");
-            }
-            this.ExecuteReportAsync(templateInfo);
-        }
-        private void btnAccept_Click(object sender, EventArgs e)
-        {
-            this.start();
-        }
+        //private void start()
+        //{
+        //    XmlNode templateInfo = this.GetTemplateInfo();
+        //    //    (2    )
+        //    if (this.changeReportName != null && this._report.P_IdName != this.changeReportName)
+        //    {
+        //        this._report = XmlReports.Environment.GetPrecompiledReport(this.changeReportName);
+        //    }
+        //    if (this.changeReportName != null)
+        //    {
+        //        var xmlreport = new XmlDocument();
+        //        xmlreport.LoadXml(_report.ToString());
+        //        templateInfo = xmlreport.FirstChild.SelectSingleNode("print-templates//template");
+        //    }
+        //    this.ExecuteReportAsync(templateInfo);
+        //}
+        //private void btnAccept_Click(object sender, EventArgs e)
+        //{
+        //    this.start();
+        //}
         //private void btnCancel_Click(object sender, EventArgs e)
         //{
         //    this.Close();

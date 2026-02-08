@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Text;
 using sql.builder;
+using sql.builder.Clean;
 using SqlBuilderLib.DevTools;
 
 namespace SqlBuilderApp
@@ -8,11 +11,12 @@ namespace SqlBuilderApp
     {
         static void Main(string[] args)
         {
+            Console.OutputEncoding = Encoding.UTF8;
             // DevUtils.TestReportsAnalysis();
             // DevTasks.AnalyzeReport();
             // DevUtils.TestSqlParsing();
             // sql.builder.Program.Main(args);
-                        // AnalyzerStorage.SaveAllCollectionsToFiles();
+            // AnalyzerStorage.SaveAllCollectionsToFiles();
 
             //             DevAnalyzer.Initialize();
             //             string query = @"
@@ -42,9 +46,22 @@ namespace SqlBuilderApp
 
             // LogsLoader.LoadLogsFromCsvFiles();
 
-            TsBuilder.DeleteGenerated();
-            TsBuilder.Initialize();
-            TsBuilder.BuildNavigators();
+
+
+            //// Генерация форм
+            //TsBuilder.DeleteGenerated();
+            //TsBuilder.Initialize();
+            //TsBuilder.BuildNavigators();
+
+            var pars = new Dictionary<string, object>();
+            pars.Add("p_dep", 3580m);
+            pars.Add("p_ym_beg", 2025.06m);
+
+            var globPars = new Dictionary<string, object>();
+            //pars.Add("dep", 3580m);
+
+            CleanSqlBuilder.ExecuteReport("ryazan.76607", "76607.xlsx", pars, globPars);
+;
         }
     }
 }
