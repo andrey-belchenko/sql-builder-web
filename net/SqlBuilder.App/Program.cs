@@ -4,6 +4,8 @@ using System.Text;
 using sql.builder;
 using sql.builder.Clean;
 using SqlBuilderLib.DevTools;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static sql.builder.DataApi.VClientCalculations;
 
 namespace SqlBuilderApp
 {
@@ -56,6 +58,8 @@ namespace SqlBuilderApp
             var pars = new Dictionary<string, object>();
             pars.Add("p_dep", 3580m);
             pars.Add("p_ym_beg", 2025.06m);
+            //pars.Add("p_dog", new List<int> { 76111, 76108});
+
 
             var globPars = new Dictionary<string, object>();
             //pars.Add("dep", 3580m);
