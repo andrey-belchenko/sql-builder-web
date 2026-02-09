@@ -2,6 +2,7 @@ using FastReport.DataVisualization.Charting;
 using Microsoft.Extensions.Configuration;
 using Asuse.Ai.Reports.Services;
 using Asuse.Ai.Reports.Settings;
+using Asuse.Ai.Reports.Converters;
 using System.Runtime;
 using System.Text.Json;
 
@@ -14,6 +15,7 @@ builder.Services.AddControllersWithViews()
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
         options.JsonSerializerOptions.WriteIndented = true;
+        options.JsonSerializerOptions.Converters.Add(new ObjectDictionaryJsonConverter());
     });
 builder.Services.AddFastReport();
 builder.Services.AddTransient<ReportingService>();
