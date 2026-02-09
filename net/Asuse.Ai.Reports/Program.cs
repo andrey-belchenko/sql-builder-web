@@ -17,6 +17,7 @@ builder.Services.AddControllersWithViews()
     });
 builder.Services.AddFastReport();
 builder.Services.AddTransient<ReportingService>();
+builder.Services.AddTransient<SqlBuilderService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
