@@ -64,7 +64,7 @@ namespace sql.builder.Clean
             return xform;
         }
 
-        public static void ExecuteReport(string reportName,string templateName, Dictionary<string, object> pars, Dictionary<string, object> globPars)
+        public static string ExecuteReport(string reportName,string templateName, Dictionary<string, object> pars, Dictionary<string, object> globPars)
         {
             
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
@@ -77,6 +77,8 @@ namespace sql.builder.Clean
             }
          
             var path = ExecReportGetPath( reportName, pars, templateName);
+
+            return path;
      
         }
     }
