@@ -11,9 +11,14 @@ namespace Asuse.Ai.Reports.Services
             _logger = logger;
         }
 
-        public void ExecuteReport(string reportName, string templateName, Dictionary<string, object> pars, Dictionary<string, object> globPars)
+        public void ExecuteReport(string reportName, string templateName, Dictionary<string, object> pars, string fileId, string fileName)
         {
-           var path =  CleanSqlBuilder.ExecuteReport(reportName, templateName, pars, globPars);
+           var path =  CleanSqlBuilder.ExecuteReport(reportName, templateName, pars, new Dictionary<string, object>());
+        }
+
+        public void WriteResultFile( string fileId, string fileName, string filePath)
+        {
+            
         }
     }
 }
