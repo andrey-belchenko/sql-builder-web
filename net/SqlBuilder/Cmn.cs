@@ -605,7 +605,7 @@ namespace sql.builder
         public static void HtmlOutput(string content, string filename)
         {
 
-            string fullName = Printing.GetFreeName(Path.GetTempPath(), filename, "html");
+            string fullName = Printing.GetFreeName(sql.builder.Clean.Settings. GetInstance().TempPath, filename, "html");
 
 
             File.WriteAllText(fullName, content);
@@ -614,14 +614,14 @@ namespace sql.builder
         }
         /*public static void XmlOutput(XElement content, string filename)
         {
-            string fullName = Printing.GetFreeName(Path.GetTempPath(), filename, "xml");
+            string fullName = Printing.GetFreeName(sql.builder.Clean.Settings. GetInstance().TempPath, filename, "xml");
             File.WriteAllText(fullName, content.ToString());
             Process.Start(fullName);
         }*/
         public static void TxtOutput(string content, string filename)
         {
 
-            string fullName = Printing.GetFreeName(Path.GetTempPath(), filename, "txt");
+            string fullName = Printing.GetFreeName(sql.builder.Clean.Settings. GetInstance().TempPath, filename, "txt");
 
 
             File.WriteAllText(fullName, content);
@@ -1724,7 +1724,7 @@ namespace sql.builder
         }
         public static string writeScriptFile(string name, string data)
         {
-            var namefile = string.Format("{0}\\{1}_{2}_{3}_ddl.sql", Path.GetDirectoryName(Path.GetTempPath()), DateTime.Now.ToString("yyMMdd"), Environment.MachineName, name);
+            var namefile = string.Format("{0}\\{1}_{2}_{3}_ddl.sql", Path.GetDirectoryName(sql.builder.Clean.Settings. GetInstance().TempPath), DateTime.Now.ToString("yyMMdd"), Environment.MachineName, name);
             using (var sw = new StreamWriter(new FileStream(namefile, FileMode.Create), Encoding.GetEncoding(1251)))
             {
                 sw.Write(data);
@@ -1735,7 +1735,7 @@ namespace sql.builder
 
         public static string WriteFileToTemp(string name, string data)
         {
-            var namefile = string.Format("{0}\\{1}", Path.GetDirectoryName(Path.GetTempPath()), name);
+            var namefile = string.Format("{0}\\{1}", Path.GetDirectoryName(sql.builder.Clean.Settings. GetInstance().TempPath), name);
             using (var sw = new StreamWriter(new FileStream(namefile, FileMode.Create), Encoding.GetEncoding(1251)))
             {
                 sw.Write(data);

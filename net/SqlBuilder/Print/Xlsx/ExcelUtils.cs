@@ -18,7 +18,7 @@ namespace sql.builder.Print.Xlsx
             do
             {
 
-                print_directory = Path.Combine(Path.GetTempPath(), "sql.builder.printing", "report" + postfix++);
+                print_directory = Path.Combine(sql.builder.Clean.Settings. GetInstance().TempPath, "sql.builder.printing", "report" + postfix++);
             } while (Directory.Exists(print_directory));
 
             //Directory.CreateDirectory(print_directory);

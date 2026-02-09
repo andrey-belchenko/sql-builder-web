@@ -48,7 +48,7 @@ namespace sql.builder
         public static string outputFolder {
             get {
                 if (string.IsNullOrEmpty(_outputFolder)) {
-                    return Path.GetTempPath();
+                    return sql.builder.Clean.Settings. GetInstance().TempPath;
                 } else {
                     return _outputFolder;
                 }

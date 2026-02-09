@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 namespace sql.builder.Clean
 {
@@ -6,7 +7,18 @@ namespace sql.builder.Clean
     {
 
 
-        public string TempPath = @"C:\Temp\SqlBuilder";
+        private string _tempPath = @"C:\Temp\SqlBuilder";
+        public string TempPath
+        {
+            get
+            {
+                if (!Directory.Exists(_tempPath))
+                {
+                    Directory.CreateDirectory(_tempPath);
+                }
+                return _tempPath;
+            }
+        }
 
         private static Settings Instance;
         public static Settings GetInstance()
