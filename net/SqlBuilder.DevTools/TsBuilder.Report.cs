@@ -110,7 +110,7 @@ namespace SqlBuilderLib.DevTools
             sb.AppendLine();
             sb.AppendLine($"import form_{formClearedName} from '../forms/form_{formClearedName}';");
             sb.AppendLine("import { FileViewer } from '@/system/reports/types/views/FileViewer';");
-            sb.AppendLine("import { executeSqlbReport } from './utils';");
+            sb.AppendLine("import { executeSqlbReport } from '../../utils';");
             sb.AppendLine("import { buildFileId, saveFile } from '@/system/reports/utils/file';");
             sb.AppendLine();
             sb.AppendLine("export default new RegularReport({");
@@ -144,7 +144,6 @@ namespace SqlBuilderLib.DevTools
 
         private static void GenerateTableReportTypeScript(string reportClearedName, string formClearedName, string reportTitle)
         {
-            // TODO: Implement table output
             var reportsPath = Path.Combine(BasePath, "reports");
 
             // Create directory if it doesn't exist
@@ -160,6 +159,7 @@ namespace SqlBuilderLib.DevTools
             sb.AppendLine("import { RegularReport } from '@/system/reports/types/reports/RegularReport';");
             sb.AppendLine($"import form_{formClearedName} from '../forms/form_{formClearedName}';");
             sb.AppendLine();
+            sb.AppendLine("// TODO: Implement table output");
             sb.AppendLine("export default new RegularReport({");
             sb.AppendLine("    definedIn: __filename,");
             sb.AppendLine($"    title: '{reportTitle}',");
