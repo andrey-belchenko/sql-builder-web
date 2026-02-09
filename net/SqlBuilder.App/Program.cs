@@ -51,20 +51,23 @@ namespace SqlBuilderApp
 
 
             //// Генерация форм
-            //TsBuilder.DeleteGenerated();
-            //TsBuilder.Initialize();
-            //TsBuilder.BuildNavigators();
-
-            var pars = new Dictionary<string, object>();
-            pars.Add("p_dep", 3580m);
-            pars.Add("p_ym_beg", 2025.06m);
-            //pars.Add("p_dog", new List<int> { 76111, 76108});
+            TsBuilder.DeleteGenerated();
+            TsBuilder.Initialize();
+            TsBuilder.BuildNavigators();
 
 
-            var globPars = new Dictionary<string, object>();
-            //pars.Add("dep", 3580m);
+            ////////////////
 
-            CleanSqlBuilder.ExecuteReport("ryazan.76607", "76607.xlsx", pars, globPars);
+            //var pars = new Dictionary<string, object>();
+            //pars.Add("p_dep", 3580m);
+            //pars.Add("p_ym_beg", 2025.06m);
+            ////pars.Add("p_dog", new List<int> { 76111, 76108});
+
+
+            //var globPars = new Dictionary<string, object>();
+            ////pars.Add("dep", 3580m);
+
+            //CleanSqlBuilder.ExecuteReport("ryazan.76607", "76607.xlsx", pars, globPars);
 ;
         }
     }

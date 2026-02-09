@@ -86,7 +86,7 @@ namespace sql.builder.WinForms
         }
         #region  
         private string _report_name;
-        private VReport _report;
+        public VReport _report;
         private VDataSet _dataSet;
         private UIFormC _uIForm;
         private DataTable _dt_params;

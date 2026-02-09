@@ -11,7 +11,7 @@ namespace sql.builder
     /// </summary>
     public class CleanExpressReport : IDisposable
     {
-        private CleanFrmExpressReport _frm;
+        public CleanFrmExpressReport _frm;
 
         /// <summary>
         ///          

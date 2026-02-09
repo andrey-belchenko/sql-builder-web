@@ -45,12 +45,48 @@ namespace SqlBuilderLib.DevTools
 
             var reportClearedName = ClearName(useReport.P_Report);
             var reportTitle = EscapeString(useReport.P_Title ?? useReport.P_SelfTitle ?? "");
-            GenerateReportTypeScript(reportClearedName, formClearedName, reportTitle);
 
+
+            //GenerateTableReportTypeScript(reportClearedName, formClearedName, reportTitle);
+
+            var report = rep._frm._report;
+            var suffix = "";
+            var templates = report.PrintTemplates().ToArray();
+            var index = 1;
+            foreach (var template in templates)
+            {
+                if (templates.Count() > 1)
+                {
+                    suffix = "_"+ index.ToString();
+                }
+                GenerateFileReportTypeScript(reportClearedName, formClearedName, reportTitle, template.P_Name, template.P_Title + ".xlsx", suffix);
+                index++;
+            }
+            suffix = "";
+            if (report.P_NoGrid == "1")
+            {
+                if (templates.Count() > 0)
+                {
+                    suffix = "_"+ index.ToString();
+                }
+                GenerateTableReportTypeScript(reportClearedName, formClearedName, reportTitle, suffix);
+            }
             return reportClearedName;
         }
 
-        private static void GenerateReportTypeScript(string reportClearedName, string formClearedName, string reportTitle)
+        private static void GenerateFileReportTypeScript(
+            string reportClearedName, 
+            string formClearedName, 
+            string reportTitle, 
+            string templateName, 
+            string fileName,
+            string tsFileSuffix
+            )
+        {
+            
+        }
+
+        private static void GenerateTableReportTypeScript(string reportClearedName, string formClearedName, string reportTitle, string suffix)
         {
             var reportsPath = Path.Combine(BasePath, "reports");
 
@@ -60,7 +96,7 @@ namespace SqlBuilderLib.DevTools
                 Directory.CreateDirectory(reportsPath);
             }
 
-            var fileName = $"report_{reportClearedName}.ts";
+            var fileName = $"report_{reportClearedName + suffix}.ts";
             var filePath = Path.Combine(reportsPath, fileName);
 
             var sb = new StringBuilder();
