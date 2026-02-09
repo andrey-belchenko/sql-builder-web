@@ -66,15 +66,18 @@ namespace SqlBuilderLib.DevTools
                 }
                 else if (item is VUseReport useReport)
                 {
-                    var reportClearedName = ProcessReport(useReport);
-                    if (!string.IsNullOrEmpty(reportClearedName))
+                    var reportNames = ProcessReport(useReport);
+                    if (reportNames != null && reportNames.Count > 0)
                     {
-                        // Only add if not already added (prevent duplicates from source)
-                        if (directReports.Add(reportClearedName))
+                        foreach (var reportName in reportNames)
                         {
-                            allReportImports.Add(reportClearedName);
-                            // Add report to items in order (maintain source order)
-                            folderItems.Add($"{indent}report_{reportClearedName}");
+                            // Only add if not already added (prevent duplicates from source)
+                            if (directReports.Add(reportName))
+                            {
+                                allReportImports.Add(reportName);
+                                // Add report to items in order (maintain source order)
+                                folderItems.Add($"{indent}report_{reportName}");
+                            }
                         }
                     }
                 }
