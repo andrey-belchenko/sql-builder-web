@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
@@ -157,7 +157,7 @@ namespace sql.builder
 
         private static string PreProcess(string template_path, DataSet data)
         {
-            throw new NotImplementedException();
+            return SqlBuilder.DevTools.Win.ExcelPreProcessor.ConvertToXlsx(template_path);
         }
         
         #endregion
