@@ -7,7 +7,7 @@ namespace SqlBuilder.DevTools.Win
 {
     public static class ExcelPreProcessor
     {
-        public static string ConvertToXlsx(string templatePath)
+        public static string ConvertToXlsx(string templatePath, string saveAsPath = null)
         {
             Application exApp = null;
             try
@@ -16,7 +16,9 @@ namespace SqlBuilder.DevTools.Win
                 exApp.DisplayAlerts = false;
                 Workbook wb = exApp.Workbooks.Open(templatePath);
 
-                string outputPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".xlsx");
+                string outputPath = string.IsNullOrEmpty(saveAsPath)
+                    ? Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".xlsx")
+                    : saveAsPath;
                 wb.SaveAs(outputPath,
                     XlFileFormat.xlOpenXMLWorkbook,
                     ReadOnlyRecommended: false,
@@ -50,6 +52,22 @@ namespace SqlBuilder.DevTools.Win
                         Marshal.ReleaseComObject(exApp);
                     }
                 }
+            }
+        }
+
+        public static void ConvertAllXmlToXlsx(string sourceFolder)
+        {
+            var convertedFolder = Path.Combine(sourceFolder, "converted");
+            if (Directory.Exists(convertedFolder))
+                Directory.Delete(convertedFolder, true);
+            Directory.CreateDirectory(convertedFolder);
+
+            foreach (var xmlPath in Directory.GetFiles(sourceFolder, "*.xml"))
+            {
+                var fileName = Path.GetFileNameWithoutExtension(xmlPath) + ".xlsx";
+                var outputPath = Path.Combine(convertedFolder, fileName);
+                Console.WriteLine($"Converting {Path.GetFileName(xmlPath)}...");
+                ConvertToXlsx(xmlPath, outputPath);
             }
         }
     }
