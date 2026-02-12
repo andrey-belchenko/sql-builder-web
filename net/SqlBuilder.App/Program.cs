@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
 using sql.builder;
@@ -50,7 +50,7 @@ namespace SqlBuilderApp
 
 
 
-            //// Генерация форм
+            //// Р“РµРЅРµСЂР°С†РёСЏ С„РѕСЂРј
             TsBuilder.DeleteGenerated();
             TsBuilder.Initialize();
             TsBuilder.BuildNavigators();
