@@ -130,9 +130,9 @@ namespace sql.builder
                     }
                 }
             } finally {
-                if (options.NeedConvert) {
-                    File.Delete(template_path);
-                }
+                //if (options.NeedConvert) {
+                //    File.Delete(template_path);
+                //}
             }
             if (result != ExcelPrintErrors.NoData) {
                 if (options.NeedPostProcess) {
@@ -157,7 +157,7 @@ namespace sql.builder
 
         private static string PreProcess(string template_path, DataSet data)
         {
-            return SqlBuilder.DevTools.Win.ExcelPreProcessor.ConvertToXlsx(template_path);
+            return Path.Combine(Path.GetDirectoryName(template_path), "converted", Path.GetFileNameWithoutExtension(template_path) + ".xlsx");
         }
         
         #endregion
