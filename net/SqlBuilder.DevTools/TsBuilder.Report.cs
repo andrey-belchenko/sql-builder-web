@@ -118,6 +118,7 @@ namespace SqlBuilderLib.DevTools
             sb.AppendLine($"    title: '{finalReportTitle}',");
             sb.AppendLine($"    paramsForm: form_{formClearedName},");
             sb.AppendLine("    attrs: {");
+            sb.AppendLine($"        name: '{EscapeString(repFullName)}',");
             sb.AppendLine($"        template: '{EscapeString(templateName)}',");
             sb.AppendLine("    },");
             sb.AppendLine("    view: async context => {");
