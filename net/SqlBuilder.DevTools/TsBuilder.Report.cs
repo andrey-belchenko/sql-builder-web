@@ -70,6 +70,15 @@ namespace SqlBuilderLib.DevTools
                 generatedReportNames.Add(reportClearedName);
             }
 
+            // Track form name for each generated report
+            foreach (var reportName in generatedReportNames)
+            {
+                if (!ReportToFormMap.ContainsKey(reportName))
+                {
+                    ReportToFormMap[reportName] = formClearedName;
+                }
+            }
+
             return generatedReportNames;
         }
 

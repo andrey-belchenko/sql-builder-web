@@ -46,7 +46,7 @@ namespace SqlBuilderLib.DevTools
             var fileName = $"form_{formClearedName}.ts";
             ProcessContentChildren(form, content, rep);
 
-            DebugSaveFormXML(form);
+            //DebugSaveFormXML(form);
             GenerateFormTypeScript(form, formClearedName, fileName);
 
             return formClearedName;

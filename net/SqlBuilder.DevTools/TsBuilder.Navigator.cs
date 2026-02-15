@@ -15,10 +15,14 @@ namespace SqlBuilderLib.DevTools
 {
     public static partial class TsBuilder
     {
+        // Track mapping from report names to form names
+        private static Dictionary<string, string> ReportToFormMap = new Dictionary<string, string>();
+
         private class FolderProcessResult
         {
             public string FolderCode { get; set; }
             public HashSet<string> ReportImports { get; set; } = new HashSet<string>();
+            public HashSet<string> FormImports { get; set; } = new HashSet<string>();
             public HashSet<string> DirectReports { get; set; } = new HashSet<string>();
         }
 
@@ -26,6 +30,7 @@ namespace SqlBuilderLib.DevTools
         {
             var indent = new string(' ', indentLevel * 4);
             var allReportImports = new HashSet<string>();
+            var allFormImports = new HashSet<string>();
             var directReports = new HashSet<string>(); // Reports that are DIRECT children of THIS folder only
             var folderItems = new List<string>(); // Items in order: folders and reports as they appear in source
 
@@ -42,6 +47,12 @@ namespace SqlBuilderLib.DevTools
                     foreach (var import in childResult.ReportImports)
                     {
                         allReportImports.Add(import);
+                    }
+
+                    // Collect form imports from children
+                    foreach (var formImport in childResult.FormImports)
+                    {
+                        allFormImports.Add(formImport);
                     }
 
                     // Build the child folder code
@@ -75,6 +86,13 @@ namespace SqlBuilderLib.DevTools
                             if (directReports.Add(reportName))
                             {
                                 allReportImports.Add(reportName);
+                                
+                                // Track form used by this report
+                                if (ReportToFormMap.TryGetValue(reportName, out var formName))
+                                {
+                                    allFormImports.Add(formName);
+                                }
+                                
                                 // Add report to items in order (maintain source order)
                                 folderItems.Add($"{indent}report_{reportName}");
                             }
@@ -90,6 +108,7 @@ namespace SqlBuilderLib.DevTools
             {
                 FolderCode = folderCodeResult,
                 ReportImports = allReportImports,
+                FormImports = allFormImports,
                 DirectReports = directReports
             };
         }
@@ -112,7 +131,7 @@ namespace SqlBuilderLib.DevTools
                 var sortedImports = result.ReportImports.OrderBy(x => x).ToList();
                 foreach (var reportName in sortedImports)
                 {
-                    sb.AppendLine($"import report_{reportName} from '../reports/report_{reportName}';");
+                    sb.AppendLine($"import report_{reportName} from './reports/report_{reportName}';");
                 }
             }
             
@@ -157,30 +176,142 @@ namespace SqlBuilderLib.DevTools
                 .Where(it => navNames.Contains(it.P_IdName))
                 .ToList();
         }
+        private static string UpdateReportFileImports(string content)
+        {
+            // Update utils imports: '../../utils' -> '../../../utils'
+            // Match both single and double quotes
+            // Path: generated/nav_10/reports/report.ts -> generated/utils = ../../../utils (3 levels up)
+            content = Regex.Replace(content, @"from\s+['""]\.\.\/\.\.\/utils['""]", m => 
+            {
+                var quote = m.Value.Contains("'") ? "'" : "\"";
+                return $"from {quote}../../../utils{quote}";
+            });
+            
+            // Form imports stay '../forms/' - no change needed
+            
+            return content;
+        }
+
+        private static string UpdateFormFileImports(string content)
+        {
+            // Update utils imports: '../../utils' -> '../../../utils'
+            // Match both single and double quotes
+            // Path: generated/nav_10/forms/form.ts -> generated/utils = ../../../utils (3 levels up)
+            content = Regex.Replace(content, @"from\s+['""]\.\.\/\.\.\/utils['""]", m => 
+            {
+                var quote = m.Value.Contains("'") ? "'" : "\"";
+                return $"from {quote}../../../utils{quote}";
+            });
+            
+            return content;
+        }
+
+        private static void CopyReportToNavigatorFolder(string reportName, string navigatorFolderPath)
+        {
+            var sourceReportsPath = Path.Combine(BasePath, "reports");
+            var sourceFilePath = Path.Combine(sourceReportsPath, $"report_{reportName}.ts");
+            var destReportsPath = Path.Combine(navigatorFolderPath, "reports");
+            var destFilePath = Path.Combine(destReportsPath, $"report_{reportName}.ts");
+
+            if (!Directory.Exists(destReportsPath))
+            {
+                Directory.CreateDirectory(destReportsPath);
+            }
+
+            if (File.Exists(sourceFilePath))
+            {
+                var content = File.ReadAllText(sourceFilePath, Encoding.UTF8);
+                content = UpdateReportFileImports(content);
+                File.WriteAllText(destFilePath, content, Encoding.UTF8);
+                Console.WriteLine($"Copied report: {destFilePath}");
+            }
+        }
+
+        private static void CopyFormToNavigatorFolder(string formName, string navigatorFolderPath)
+        {
+            var sourceFormsPath = Path.Combine(BasePath, "forms");
+            var sourceFilePath = Path.Combine(sourceFormsPath, $"form_{formName}.ts");
+            var destFormsPath = Path.Combine(navigatorFolderPath, "forms");
+            var destFilePath = Path.Combine(destFormsPath, $"form_{formName}.ts");
+
+            if (!Directory.Exists(destFormsPath))
+            {
+                Directory.CreateDirectory(destFormsPath);
+            }
+
+            if (File.Exists(sourceFilePath))
+            {
+                var content = File.ReadAllText(sourceFilePath, Encoding.UTF8);
+                content = UpdateFormFileImports(content);
+                File.WriteAllText(destFilePath, content, Encoding.UTF8);
+                Console.WriteLine($"Copied form: {destFilePath}");
+            }
+        }
+
         public static void BuildNavigators()
         {
-            var navs = GetVNavigators();
-            var sqlBuilderPath = Path.Combine(BasePath, "navigators");
+            // Clear the report-to-form mapping at the start
+            ReportToFormMap.Clear();
 
-            // Create directory if it doesn't exist
-            if (!Directory.Exists(sqlBuilderPath))
-            {
-                Directory.CreateDirectory(sqlBuilderPath);
-            }
+            var navs = GetVNavigators();
 
             var initialFolderId = 10000;
             var folderIdCounter = initialFolderId;
             foreach (var nav in navs)
             {
                 var navigatorId = ExtractNavigatorId(nav.P_IdName);
-                var fileName = $"nav_{navigatorId}.ts";
-                var filePath = Path.Combine(sqlBuilderPath, fileName);
+                
+                // Create navigator-specific folder directly under BasePath
+                var navigatorFolderPath = Path.Combine(BasePath, $"nav_{navigatorId}");
+                if (!Directory.Exists(navigatorFolderPath))
+                {
+                    Directory.CreateDirectory(navigatorFolderPath);
+                }
 
                 var result = ProcessFoldersRecursive(nav, ref folderIdCounter, indentLevel: 3);
                 var tsContent = GenerateTypeScriptFile(nav, result);
 
+                // Write navigator file to navigator-specific folder
+                var fileName = $"nav_{navigatorId}.ts";
+                var filePath = Path.Combine(navigatorFolderPath, fileName);
                 File.WriteAllText(filePath, tsContent, Encoding.UTF8);
                 Console.WriteLine($"Generated file: {filePath}");
+
+                // Copy reports to navigator folder
+                foreach (var reportName in result.ReportImports)
+                {
+                    CopyReportToNavigatorFolder(reportName, navigatorFolderPath);
+                }
+
+                // Copy forms to navigator folder
+                foreach (var formName in result.FormImports)
+                {
+                    CopyFormToNavigatorFolder(formName, navigatorFolderPath);
+                }
+            }
+
+            // Clean up root forms and reports folders after copying to navigator folders
+            var rootFormsPath = Path.Combine(BasePath, "forms");
+            var rootReportsPath = Path.Combine(BasePath, "reports");
+            var oldNavigatorsPath = Path.Combine(BasePath, "navigators");
+            
+            if (Directory.Exists(rootFormsPath))
+            {
+                Directory.Delete(rootFormsPath, recursive: true);
+                Console.WriteLine($"Deleted root forms folder: {rootFormsPath}");
+            }
+            
+            if (Directory.Exists(rootReportsPath))
+            {
+                Directory.Delete(rootReportsPath, recursive: true);
+                Console.WriteLine($"Deleted root reports folder: {rootReportsPath}");
+            }
+            
+            // Clean up old navigators folder if it exists
+            if (Directory.Exists(oldNavigatorsPath))
+            {
+                Directory.Delete(oldNavigatorsPath, recursive: true);
+                Console.WriteLine($"Deleted old navigators folder: {oldNavigatorsPath}");
             }
         }
 
