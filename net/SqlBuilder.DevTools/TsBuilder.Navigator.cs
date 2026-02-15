@@ -178,13 +178,13 @@ namespace SqlBuilderLib.DevTools
         }
         private static string UpdateReportFileImports(string content)
         {
-            // Update utils imports: '../../utils' -> '../../../utils'
+            // Update utils imports: '../../utils' -> '@/system/sql-builder'
             // Match both single and double quotes
-            // Path: generated/nav_10/reports/report.ts -> generated/utils = ../../../utils (3 levels up)
+            // Path: generated/nav_10/reports/report.ts -> generated/utils = @/system/sql-builder (3 levels up)
             content = Regex.Replace(content, @"from\s+['""]\.\.\/\.\.\/utils['""]", m => 
             {
                 var quote = m.Value.Contains("'") ? "'" : "\"";
-                return $"from {quote}../../../utils{quote}";
+                return $"from {quote}@/system/sql-builder{quote}";
             });
             
             // Form imports stay '../forms/' - no change needed
@@ -194,13 +194,13 @@ namespace SqlBuilderLib.DevTools
 
         private static string UpdateFormFileImports(string content)
         {
-            // Update utils imports: '../../utils' -> '../../../utils'
+            // Update utils imports: '../../utils' -> '@/system/sql-builder'
             // Match both single and double quotes
-            // Path: generated/nav_10/forms/form.ts -> generated/utils = ../../../utils (3 levels up)
+            // Path: generated/nav_10/forms/form.ts -> generated/utils = @/system/sql-builder (3 levels up)
             content = Regex.Replace(content, @"from\s+['""]\.\.\/\.\.\/utils['""]", m => 
             {
                 var quote = m.Value.Contains("'") ? "'" : "\"";
-                return $"from {quote}../../../utils{quote}";
+                return $"from {quote}@/system/sql-builder{quote}";
             });
             
             return content;
