@@ -120,7 +120,8 @@ namespace SqlBuilderLib.DevTools
             sb.AppendLine($"import form_{formClearedName} from '../forms/form_{formClearedName}';");
             sb.AppendLine("import { FileViewer } from '@/system/reports/types/views/FileViewer';");
             sb.AppendLine("import { executeSqlbReport } from '../../utils';");
-            sb.AppendLine("import { buildFileId, saveFile } from '@/system/reports/utils/file';");
+            sb.AppendLine("import { buildFileId, downloadFile, saveFile } from '@/system/reports/utils/file';");
+            sb.AppendLine("import { postprocessExcel } from '@/system/sql-builder/excel-post-process';");
             sb.AppendLine();
             sb.AppendLine("export default new RegularReport({");
             sb.AppendLine("    definedIn: __filename,");
@@ -141,10 +142,15 @@ namespace SqlBuilderLib.DevTools
             sb.AppendLine("            fileId,");
             sb.AppendLine("        });");
             sb.AppendLine();
-            sb.AppendLine("        return new FileViewer({");
+            sb.AppendLine("        const file = await downloadFile(fileId);");
+            sb.AppendLine();
+            sb.AppendLine("        const fileInfo = await saveFile({");
             sb.AppendLine("            fileName,");
-            sb.AppendLine("            fileId,");
+            sb.AppendLine("            fileData: await postprocessExcel(file?.fileData),");
+            sb.AppendLine("            context,");
             sb.AppendLine("        });");
+            sb.AppendLine();
+            sb.AppendLine("        return new FileViewer(fileInfo);");
             sb.AppendLine("    },");
             sb.AppendLine("});");
 
