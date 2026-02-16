@@ -25,6 +25,24 @@ namespace Asuse.Ai.Reports.Controllers
         {
             try
             {
+            
+
+                foreach (var it in request.Parameters.ToArray())
+                {
+                    if (it.Value is bool)
+                    {
+                        request.Parameters.Remove(it.Key);
+                        var val = (bool)it.Value;
+                        if (val)
+                        {
+                            request.Parameters.Add(it.Key, 1m);
+                        }
+                        else
+                        {
+                            request.Parameters.Add(it.Key, 0m);
+                        }
+                    }
+                }
                 await _sqlBuilderService.ExecuteReport(
                     request.ReportName,
                     request.TemplateName,
