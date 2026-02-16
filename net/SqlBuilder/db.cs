@@ -18,12 +18,7 @@ namespace sql.builder
     {
         private static OracleConnection _connection;
         public static OracleConnection Connection {
-            get {
-                if (_connection == null) {
-                    _connection = Global.Connection;
-                }
-                return _connection;
-            }
+            get => Global.RequestConnection.Value != null ? Global.Connection : (_connection ?? Global.Connection);
             set { _connection = value; }
         }
 

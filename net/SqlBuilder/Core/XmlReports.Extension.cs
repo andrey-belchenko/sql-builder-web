@@ -127,7 +127,10 @@ namespace sql.builder
             else scheme = schemeName;
             if (customer != null) customerId = customer;
             else customer = customerId;
-            _environment = new VEnvironment(db.Connection);
+            if (Global.RequestConnection.Value != null)
+                RequestEnvironment.Value = new VEnvironment(db.Connection);
+            else
+                _environment = new VEnvironment(db.Connection);
             //_environment.Manager.LoadProjectIfNeed("common");
 
             Printing.templatesFolder = Path.Combine(GetCurrentContentFolder(), "printTemplate");

@@ -1,4 +1,5 @@
 using sql.builder.Clean;
+using Devart.Data.Oracle;
 using Npgsql;
 using Asuse.Ai.Reports.Settings;
 using Microsoft.Extensions.Options;
@@ -8,6 +9,8 @@ namespace Asuse.Ai.Reports.Services
 {
     public class SqlBuilderService
     {
+        private const string DefaultOracleConnectionString = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
+
         private readonly ILogger<SqlBuilderService> _logger;
         private readonly ReportingSettings _settings;
 
@@ -19,8 +22,12 @@ namespace Asuse.Ai.Reports.Services
 
         public async Task ExecuteReport(string reportName, string templateName, Dictionary<string, object> pars, string fileId, string fileName)
         {
-           var path =  CleanSqlBuilder.ExecuteReport(reportName, templateName, pars, new Dictionary<string, object>());
-           await WriteResultFile(fileId, fileName, path);
+            var connectionString = _settings.OracleConnectionString ?? DefaultOracleConnectionString;
+            using var conn = new OracleConnection(connectionString);
+            conn.Open();
+
+            var path = CleanSqlBuilder.ExecuteReport(reportName, templateName, pars, new Dictionary<string, object>(), connection: conn);
+            await WriteResultFile(fileId, fileName, path);
         }
 
         public async Task WriteResultFile(string fileId, string fileName, string filePath)

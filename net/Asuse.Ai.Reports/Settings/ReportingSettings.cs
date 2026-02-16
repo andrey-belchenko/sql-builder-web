@@ -5,5 +5,6 @@ namespace Asuse.Ai.Reports.Settings
         public string? MongoConnectionString { get; set; }
         public string? MongoTempDb { get; set; }
         public string? PgConnectionString { get; set; }
+        public string? OracleConnectionString { get; set; }
     }
 }

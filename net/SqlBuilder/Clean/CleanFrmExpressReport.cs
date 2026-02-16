@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
@@ -316,50 +316,47 @@ namespace sql.builder.WinForms
         #region  
         private VDataSet RefreshData(bool async = false)
         {
-            lock (lockObj)
+            decimal kod_log = 0M;
+            VDataSet ds = null;
+            try
             {
-                decimal kod_log = 0M;
-                VDataSet ds = null;
-                try
+                XElement rep_params = this.ParamValues ?? new XElement(EName.@params);
+                XElement rep_params2 = new XElement(EName.root);
+                Parser.SaveReportParamsToXml(rep_params2, GetUIForm());
+                kod_log = Logger.ReportStart(this._report_name, rep_params2);
+                //
+                ds = _report.Result(rep_params, 2, null, true, this._dataSet != null ? _dataSet.SchemePreset : null);
+                if (ds.Connection == null)
                 {
-                    XElement rep_params = this.ParamValues ?? new XElement(EName.@params);
-                    XElement rep_params2 = new XElement(EName.root);
-                    Parser.SaveReportParamsToXml(rep_params2, GetUIForm());
-                    kod_log = Logger.ReportStart(this._report_name, rep_params2);
-                    // 
-                    ds = _report.Result(rep_params, 2, null, true, this._dataSet != null ? _dataSet.SchemePreset : null);
-                    if (ds.Connection == null)
-                    {
-                        ds.Connection = XmlReports.Environment.Connection;
-                    }
-                    if (async)
-                    {
-                        ds.Connection = XmlReports.Environment.Connection.Clone();
-                        //ds.Connection.Open(useGlobalSettings: true);
-                        ds.Connection.Open();
-                    }
-                    if (this._report.IsSimpleParams)
-                    {
-                        ds.Refresh(rep_params);
-                    }
-                    else
-                    {
-                        ds.Refresh();
-                    }
-                    sql.builder.Controls.ucMainReports.CopyParsToResult(this.GetUIForm(), ds);
-                    Logger.ReportFinish(kod_log);
-                    return ds;
+                    ds.Connection = XmlReports.Environment.Connection;
                 }
-                catch (ThreadAbortException)
+                if (async)
                 {
-                    // 
-                    return null;
+                    ds.Connection = XmlReports.Environment.Connection.Clone();
+                    //ds.Connection.Open(useGlobalSettings: true);
+                    ds.Connection.Open();
                 }
-                catch (Exception ex)
+                if (this._report.IsSimpleParams)
                 {
-                    Logger.ReportError(kod_log, ex.Message, ex.StackTrace);
-                    throw;
+                    ds.Refresh(rep_params);
                 }
+                else
+                {
+                    ds.Refresh();
+                }
+                sql.builder.Controls.ucMainReports.CopyParsToResult(this.GetUIForm(), ds);
+                Logger.ReportFinish(kod_log);
+                return ds;
+            }
+            catch (ThreadAbortException)
+            {
+                //
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Logger.ReportError(kod_log, ex.Message, ex.StackTrace);
+                throw;
             }
         }
         private string PrintData(VDataSet ds, XmlNode template)

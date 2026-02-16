@@ -64,22 +64,49 @@ namespace sql.builder.Clean
             return xform;
         }
 
-        public static string ExecuteReport(string reportName,string templateName, Dictionary<string, object> pars, Dictionary<string, object> globPars)
+        public static string ExecuteReport(string reportName, string templateName, Dictionary<string, object> pars, Dictionary<string, object> globPars)
         {
-            
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
             var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
-
             ChangeConnectionString(conStr);
+            return ExecuteReport(reportName, templateName, pars, globPars, connection: null);
+        }
 
-            foreach (var globPar in globPars ){
-                XmlReports.SetGlobalParValue(globPar.Key, globPar.Value);
+        /// <summary>
+        /// Execute report with per-request connection for web/async context. When connection is provided, uses request-scoped isolation for concurrent execution.
+        /// </summary>
+        public static string ExecuteReport(string reportName, string templateName, Dictionary<string, object> pars, Dictionary<string, object> globPars, OracleConnection connection)
+        {
+            XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
+
+            if (connection != null)
+            {
+                Global.RequestConnection.Value = connection;
+                try
+                {
+                    XmlReports.Init(source_folder: null);
+                    foreach (var globPar in globPars)
+                    {
+                        XmlReports.SetGlobalParValue(globPar.Key, globPar.Value);
+                    }
+                    return ExecReportGetPath(reportName, pars, templateName);
+                }
+                finally
+                {
+                    Global.RequestConnection.Value = null;
+                    XmlReports.RequestEnvironment.Value = null;
+                }
             }
-         
-            var path = ExecReportGetPath( reportName, pars, templateName);
-
-            return path;
-     
+            else
+            {
+                var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
+                ChangeConnectionString(conStr);
+                foreach (var globPar in globPars)
+                {
+                    XmlReports.SetGlobalParValue(globPar.Key, globPar.Value);
+                }
+                return ExecReportGetPath(reportName, pars, templateName);
+            }
         }
     }
 

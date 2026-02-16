@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 ////using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
@@ -48,6 +49,12 @@ namespace sql.builder
         public static string TestName;
         public static bool? TestCompare;
         private static VEnvironment _environment;
+
+        /// <summary>
+        /// Per-request environment for web/async context. When set, Environment getter returns this instead of _environment.
+        /// </summary>
+        internal static readonly AsyncLocal<VEnvironment> RequestEnvironment = new AsyncLocal<VEnvironment>();
+
         public static VEnvironment Environment
         {
             set
@@ -56,6 +63,8 @@ namespace sql.builder
             }
             get
             {
+                if (RequestEnvironment.Value != null)
+                    return RequestEnvironment.Value;
                 if (_environment == null)
                 {
                     Init();
