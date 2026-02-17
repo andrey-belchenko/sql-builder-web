@@ -68,9 +68,6 @@ namespace Asuse.Ai.Reports.Services
             // Delete existing info documents
             await infoCollection.DeleteManyAsync(FilterDefinition<BsonDocument>.Empty);
 
-            const string specialCollectionPrefix = "__";
-            const string tableDataCollectionName = specialCollectionPrefix + "tableData";
-
             if (dataSet.Tables.Count == 1)
             {
                 // Single table case
@@ -107,15 +104,6 @@ namespace Asuse.Ai.Reports.Services
 
                     if (table.Rows.Count > 0)
                     {
-                        // Special handling for tableData collection - create indexes
-                        if (table.TableName == tableDataCollectionName)
-                        {
-                            var rowIdIndex = Builders<BsonDocument>.IndexKeys.Ascending("rowId");
-                            var parentRowIdIndex = Builders<BsonDocument>.IndexKeys.Ascending("parentRowId");
-                            await collection.Indexes.CreateOneAsync(new CreateIndexModel<BsonDocument>(rowIdIndex));
-                            await collection.Indexes.CreateOneAsync(new CreateIndexModel<BsonDocument>(parentRowIdIndex));
-                        }
-
                         var documents = ConvertDataTableToBsonDocuments(table);
                         await collection.InsertManyAsync(documents);
                     }

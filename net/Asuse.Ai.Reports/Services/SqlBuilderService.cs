@@ -14,11 +14,13 @@ namespace Asuse.Ai.Reports.Services
 
         private readonly ILogger<SqlBuilderService> _logger;
         private readonly ReportingSettings _settings;
+        private readonly TempDataService _tempDataService;
 
-        public SqlBuilderService(ILogger<SqlBuilderService> logger, IOptions<ReportingSettings> settings)
+        public SqlBuilderService(ILogger<SqlBuilderService> logger, IOptions<ReportingSettings> settings, TempDataService tempDataService)
         {
             _logger = logger;
             _settings = settings.Value;
+            _tempDataService = tempDataService;
         }
 
         public async Task ExecuteReport(string reportName, string templateName, Dictionary<string, object> pars, string fileId, string fileName)
@@ -31,13 +33,13 @@ namespace Asuse.Ai.Reports.Services
             await WriteResultFile(fileId, fileName, path);
         }
 
-        public async Task<VDataSet> ExecuteReportGetDs(string reportName, Dictionary<string, object> pars, string datasetId)
+        public async Task ExecuteReport(string reportName, Dictionary<string, object> pars, string datasetId)
         {
             var connectionString = _settings.OracleConnectionString ?? DefaultOracleConnectionString;
             using var conn = new OracleConnection(connectionString);
             conn.Open();
-
-            return CleanSqlBuilder.ExecuteReportGetDs(reportName, pars, new Dictionary<string, object>(), connection: conn);
+            var ds =  CleanSqlBuilder.ExecuteReportGetDs(reportName, pars, new Dictionary<string, object>(), connection: conn);
+            await _tempDataService.SaveDataSet(ds, datasetId);
         }
 
         public async Task WriteResultFile(string fileId, string fileName, string filePath)

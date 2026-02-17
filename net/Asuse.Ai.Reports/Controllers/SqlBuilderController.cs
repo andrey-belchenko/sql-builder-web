@@ -51,7 +51,7 @@ namespace Asuse.Ai.Reports.Controllers
             try
             {
                 PrepareParams(request.Parameters);
-                var ds = await _sqlBuilderService.ExecuteReportGetDs(
+                await _sqlBuilderService.ExecuteReport(
                     request.ReportName,
                     request.Parameters,
                     request.DataSetId
