@@ -18,6 +18,7 @@ builder.Services.AddControllersWithViews()
         options.JsonSerializerOptions.Converters.Add(new ObjectDictionaryJsonConverter());
     });
 builder.Services.AddFastReport();
+builder.Services.AddTransient<TempDataService>();
 builder.Services.AddTransient<ReportingService>();
 builder.Services.AddTransient<SqlBuilderService>();
 var app = builder.Build();

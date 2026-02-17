@@ -1,6 +1,6 @@
 namespace Asuse.Ai.Reports.Models
 {
-    public class ExecuteReportRequest
+    public class ExecuteExcelReportRequest
     {
         public string ReportName { get; set; } = string.Empty;
         public string TemplateName { get; set; } = string.Empty;

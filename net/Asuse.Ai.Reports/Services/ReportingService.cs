@@ -1,7 +1,5 @@
 using FastReport.Data;
 using FastReport;
-using MongoDB.Bson;
-using MongoDB.Driver;
 using Npgsql;
 using System.Data;
 using FastReport.Web;
@@ -15,12 +13,12 @@ namespace Asuse.Ai.Reports.Services
     {
         private readonly ILogger<ReportingService> _logger;
         private readonly ReportingSettings _settings;
-        private readonly MongoClient _mongoClient;
-        public ReportingService(ILogger<ReportingService> logger, IOptions<ReportingSettings> settings)
+        private readonly TempDataService _tempDataService;
+        public ReportingService(ILogger<ReportingService> logger, IOptions<ReportingSettings> settings, TempDataService tempDataService)
         {
             _logger = logger;
             _settings = settings.Value;
-            _mongoClient = new MongoClient(_settings.MongoConnectionString);
+            _tempDataService = tempDataService;
         }
 
         public async Task<WebReport> PrepareReport(string dataSetName, string templateId, bool isSingleTable)
@@ -29,7 +27,7 @@ namespace Asuse.Ai.Reports.Services
             var template = await ReadTemplate(templateId);
             webReport.Report.Load(template);
             var dataSet = ExtractDataSetStruct(webReport.Report);
-            await FillDataSet(dataSet, dataSetName, isSingleTable);
+            await _tempDataService.FillDataSet(dataSet, dataSetName, isSingleTable);
       
             foreach (DataTable dataTable in dataSet.Tables)
             {
@@ -38,45 +36,6 @@ namespace Asuse.Ai.Reports.Services
             return webReport;
         }
        
-        private async Task FillDataSet(DataSet dataSet, string tempDataSetName, bool isSingleTable)
-        {
-           
-            var mongoDb = _mongoClient.GetDatabase(_settings.MongoTempDb);
-            var collection = mongoDb.GetCollection<BsonDocument>(tempDataSetName);
-
-            foreach (DataTable table in dataSet.Tables)
-            {
-                var filter = new BsonDocument();
-                if (!isSingleTable)
-                {
-                    filter = Builders<BsonDocument>.Filter.Exists(table.TableName).ToBsonDocument();
-                }
-                using var cursor = await collection.FindAsync(filter);
-                while (await cursor.MoveNextAsync())
-                {
-                    var batch = cursor.Current;
-                    foreach (var document in batch)
-                    {
-                        var item = document;
-                        if (!isSingleTable)
-                        {
-                            item = (BsonDocument)document[table.TableName];
-                        }
-                        DataRow row = table.NewRow();
-                        foreach (DataColumn column in table.Columns)
-                        {
-                            object value = DBNull.Value;
-                            if (item.Contains(column.ColumnName))
-                            {
-                                value = BsonTypeMapper.MapToDotNetValue(item[column.ColumnName]) ?? DBNull.Value;
-                            }
-                            row[column.ColumnName] = value;
-                        }
-                        table.Rows.Add(row);
-                    }
-                }
-            }
-        }
         private async Task<Stream> ReadTemplate(string templateId)
         {
             await using var conn = new NpgsqlConnection(_settings.PgConnectionString);
