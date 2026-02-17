@@ -19,30 +19,14 @@ namespace Asuse.Ai.Reports.Controllers
             _sqlBuilderService = sqlBuilderService;
         }
 
-        [HttpPost("execute-report")]
+        [HttpPost("execute-excel-report")]
         [Consumes("application/json")]
-        public async Task<IActionResult> ExecuteReport(ExecuteReportRequest request)
+        public async Task<IActionResult> ExecuteExcelReport(ExecuteExcelReportRequest request)
         {
             try
             {
-            
 
-                foreach (var it in request.Parameters.ToArray())
-                {
-                    if (it.Value is bool)
-                    {
-                        request.Parameters.Remove(it.Key);
-                        var val = (bool)it.Value;
-                        if (val)
-                        {
-                            request.Parameters.Add(it.Key, 1m);
-                        }
-                        else
-                        {
-                            request.Parameters.Add(it.Key, 0m);
-                        }
-                    }
-                }
+                PrepareParams(request.Parameters);
                 await _sqlBuilderService.ExecuteReport(
                     request.ReportName,
                     request.TemplateName,
@@ -57,6 +41,48 @@ namespace Asuse.Ai.Reports.Controllers
             {
                 _logger.LogError(ex, "Error executing report: {ReportName}", request.ReportName);
                 return StatusCode(500, new { error = "An error occurred while executing the report", message = ex.Message });
+            }
+        }
+
+        [HttpPost("execute-report")]
+        [Consumes("application/json")]
+        public async Task<IActionResult> ExecuteReport(ExecuteReportRequest request)
+        {
+            try
+            {
+                PrepareParams(request.Parameters);
+                var ds = await _sqlBuilderService.ExecuteReportGetDs(
+                    request.ReportName,
+                    request.Parameters,
+                    request.DataSetId
+                );
+
+                return Ok(new { message = "Report executed successfully", dataSetId = request.DataSetId });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error executing report: {ReportName}", request.ReportName);
+                return StatusCode(500, new { error = "An error occurred while executing the report", message = ex.Message });
+            }
+        }
+
+        private static void PrepareParams(Dictionary<string, object> pars)
+        {
+            foreach (var it in pars.ToArray())
+            {
+                if (it.Value is bool)
+                {
+                    pars.Remove(it.Key);
+                    var val = (bool)it.Value;
+                    if (val)
+                    {
+                        pars.Add(it.Key, 1m);
+                    }
+                    else
+                    {
+                        pars.Add(it.Key, 0m);
+                    }
+                }
             }
         }
     }

@@ -4,6 +4,7 @@ using Npgsql;
 using Asuse.Ai.Reports.Settings;
 using Microsoft.Extensions.Options;
 using System.IO;
+using sql.builder.DataApi;
 
 namespace Asuse.Ai.Reports.Services
 {
@@ -28,6 +29,15 @@ namespace Asuse.Ai.Reports.Services
 
             var path = CleanSqlBuilder.ExecuteReport(reportName, templateName, pars, new Dictionary<string, object>(), connection: conn);
             await WriteResultFile(fileId, fileName, path);
+        }
+
+        public async Task<VDataSet> ExecuteReportGetDs(string reportName, Dictionary<string, object> pars, string datasetId)
+        {
+            var connectionString = _settings.OracleConnectionString ?? DefaultOracleConnectionString;
+            using var conn = new OracleConnection(connectionString);
+            conn.Open();
+
+            return CleanSqlBuilder.ExecuteReportGetDs(reportName, pars, new Dictionary<string, object>(), connection: conn);
         }
 
         public async Task WriteResultFile(string fileId, string fileName, string filePath)

@@ -511,6 +511,26 @@ namespace sql.builder.WinForms
             }
             return path;
         }
+
+        public VDataSet ExecuteReportGetDs()
+        {
+            
+            this.ShowMessages = false;
+            this.BeginForming();
+            string path = null;
+            try
+            {
+
+                VDataSet ds = this.RefreshData();
+                return ds;
+            }
+            finally
+            {
+                this.EndForming();
+            }
+        }
+
+
         public DataSet GetExecuteReportResult()
         {
             this.ShowMessages = false;

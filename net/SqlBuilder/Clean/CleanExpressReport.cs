@@ -3,6 +3,7 @@ using System.Xml;
 using ParamField = sql.builder.Controls.FormFields.ParamField;
 using sql.builder.WinForms;
 using System.Collections.Generic;
+using sql.builder.DataApi;
 
 namespace sql.builder
 {
@@ -72,6 +73,12 @@ namespace sql.builder
         {
             var templateInfo = _frm.GetTemplateInfo(templateName);
             return _frm.ExecuteReport(templateInfo);
+        }
+
+        public VDataSet ExecuteReportGetDs()
+        {
+          
+            return _frm.ExecuteReportGetDs();
         }
 
         void frm_ReportOpening(object sender, CleanExpressReportEventArgs e)

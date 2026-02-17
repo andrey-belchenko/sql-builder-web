@@ -33,6 +33,23 @@ namespace sql.builder.Clean
             rep.ExecuteReport(templateName);
             return path;
         }
+
+        public static VDataSet ExecReportGetDs(string repName, Dictionary<string, object> param)
+        {
+            var rep = new CleanExpressReport();
+            rep.OpenDocumentAfterPrint = false;
+            rep.Initialize(repName);
+            foreach (var p in param)
+            {
+                rep.GetParamField(p.Key).SetValue(p.Value);
+            }
+            string path = string.Empty;
+            rep.ReportOpening += (obj, sender) =>
+            {
+                path = sender.Path;
+            };
+            return rep.ExecuteReportGetDs();
+        }
         public static void ChangeConnection(OracleConnection con, string source_folder = null)
         {
             db.Connection = con;
@@ -108,6 +125,42 @@ namespace sql.builder.Clean
                 return ExecReportGetPath(reportName, pars, templateName);
             }
         }
+
+
+        public static VDataSet ExecuteReportGetDs(string reportName, Dictionary<string, object> pars, Dictionary<string, object> globPars, OracleConnection connection)
+        {
+            XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
+
+            if (connection != null)
+            {
+                Global.RequestConnection.Value = connection;
+                try
+                {
+                    XmlReports.Init(source_folder: null);
+                    foreach (var globPar in globPars)
+                    {
+                        XmlReports.SetGlobalParValue(globPar.Key, globPar.Value);
+                    }
+                    return ExecReportGetDs(reportName, pars);
+                }
+                finally
+                {
+                    Global.RequestConnection.Value = null;
+                    XmlReports.RequestEnvironment.Value = null;
+                }
+            }
+            else
+            {
+                var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
+                ChangeConnectionString(conStr);
+                foreach (var globPar in globPars)
+                {
+                    XmlReports.SetGlobalParValue(globPar.Key, globPar.Value);
+                }
+                return ExecReportGetDs(reportName, pars);
+            }
+        }
+
     }
 
 }
