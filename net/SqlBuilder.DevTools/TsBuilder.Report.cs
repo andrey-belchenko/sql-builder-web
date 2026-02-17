@@ -119,7 +119,7 @@ namespace SqlBuilderLib.DevTools
             sb.AppendLine();
             sb.AppendLine($"import form_{formClearedName} from '../forms/form_{formClearedName}';");
             sb.AppendLine("import { FileViewer } from '@/system/reports/types/views/FileViewer';");
-            sb.AppendLine("import { executeSqlbReport } from '../../utils';");
+            sb.AppendLine("import { executeSqlbExcelReport } from '../../utils';");
             sb.AppendLine("import { buildFileId, downloadFile, saveFile } from '@/system/reports/utils/file';");
             sb.AppendLine("import { postprocessExcel } from '@/system/sql-builder/excel-post-process';");
             sb.AppendLine();
@@ -134,7 +134,7 @@ namespace SqlBuilderLib.DevTools
             sb.AppendLine("    view: async context => {");
             sb.AppendLine($"        const fileName = '{escapedFileDisplayName}';");
             sb.AppendLine("        const fileId = buildFileId(context, fileName);");
-            sb.AppendLine("        await executeSqlbReport({");
+            sb.AppendLine("        await executeSqlbExcelReport({");
             sb.AppendLine($"            reportName: '{EscapeString(repFullName)}',");
             sb.AppendLine($"            templateName: '{EscapeString(templateName)}',");
             sb.AppendLine("            fileName,");
