@@ -129,7 +129,10 @@ namespace Asuse.Ai.Reports.Services
                     }
                     else
                     {
-                        doc[column.ColumnName] = BsonValue.Create(value);
+                        var val = value;
+                        if (val is decimal d)
+                            val = (double)d;
+                        doc[column.ColumnName] = BsonValue.Create(val);
                     }
                 }
                 documents.Add(doc);
