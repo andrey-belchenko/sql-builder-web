@@ -718,35 +718,35 @@ namespace sql.builder.UI
                 }
             }
             xParams = Parser.RepairParams(xParams, xroot.Element(EName.@params), this._xform, hide_new_fields);
-            VDataSet.FromXml(xParams, this.DataSource, clean_ds: false);
-            XElement xcontent = xParams.Element(EName.content);
-            if (xcontent == null) return;
-            foreach (XElement xitem in xcontent.Descendants())
-            {
-                if (xitem.Name == EName.field)
-                {
-                    bool visible = xitem.AttrOrDefault(AName.visible, true);
-                    var ctrl = this._controls[xitem.Attribute(AName.name).Value];
-                    // Емцов - загрузка видимости ломает поведение
-                    this.SetLayoutItemVisible(ctrl, visible);
-                }
-                else if (xitem.Name == EName.fieldgroup && this._useType != UseType.DataEditor)
-                {
-                    // левый узел
-                    if (xitem.Attribute(AName.title).Value == "Параметры отчёта" && EPredicate.IsContentOrForm(xitem.Parent)) continue;
-                    bool visible = xitem.AttrOrDefault(AName.visible, true);
-                    bool expanded = xitem.AttrOrDefault(AName.expanded, true);
-                    string title = xitem.Attribute(AName.title).Value;
-                    VLayoutGroupInfo group = Layout.GetAllGroups().First(g => g.GetText() == title);
-                    group.SetExpanded(expanded);
-                    // Емцов - загрузка видимости ломает поведение
-                    if (!this.WithBehavior)
-                    {
-                        group.SetVisibility(visible);
-                    }
-                }
-            }
-            this.ApplyVisibitlity();
+            //VDataSet.FromXml(xParams, this.DataSource, clean_ds: false);
+            //XElement xcontent = xParams.Element(EName.content);
+            //if (xcontent == null) return;
+            //foreach (XElement xitem in xcontent.Descendants())
+            //{
+            //    if (xitem.Name == EName.field)
+            //    {
+            //        bool visible = xitem.AttrOrDefault(AName.visible, true);
+            //        var ctrl = this._controls[xitem.Attribute(AName.name).Value];
+            //        // Емцов - загрузка видимости ломает поведение
+            //        this.SetLayoutItemVisible(ctrl, visible);
+            //    }
+            //    else if (xitem.Name == EName.fieldgroup && this._useType != UseType.DataEditor)
+            //    {
+            //        // левый узел
+            //        if (xitem.Attribute(AName.title).Value == "Параметры отчёта" && EPredicate.IsContentOrForm(xitem.Parent)) continue;
+            //        bool visible = xitem.AttrOrDefault(AName.visible, true);
+            //        bool expanded = xitem.AttrOrDefault(AName.expanded, true);
+            //        string title = xitem.Attribute(AName.title).Value;
+            //        VLayoutGroupInfo group = Layout.GetAllGroups().First(g => g.GetText() == title);
+            //        group.SetExpanded(expanded);
+            //        // Емцов - загрузка видимости ломает поведение
+            //        if (!this.WithBehavior)
+            //        {
+            //            group.SetVisibility(visible);
+            //        }
+            //    }
+            //}
+            //this.ApplyVisibitlity();
             // Емцов - иначе не прогружаются simple параметры в условиях поиска
         }
 

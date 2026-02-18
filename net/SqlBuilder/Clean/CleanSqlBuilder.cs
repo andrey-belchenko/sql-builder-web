@@ -66,9 +66,6 @@ namespace sql.builder.Clean
 
         public static void Init(){
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
-            var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
-            ChangeConnectionString(conStr);
-            Console.WriteLine(conStr);
             XmlReports.SetGlobalParValue("dep", 3580m);
         }
         public static XElement GetFormConfig(string reportName)
@@ -84,8 +81,6 @@ namespace sql.builder.Clean
         public static string ExecuteReport(string reportName, string templateName, Dictionary<string, object> pars, Dictionary<string, object> globPars)
         {
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
-            var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
-            ChangeConnectionString(conStr);
             return ExecuteReport(reportName, templateName, pars, globPars, connection: null);
         }
 
@@ -116,8 +111,6 @@ namespace sql.builder.Clean
             }
             else
             {
-                var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
-                ChangeConnectionString(conStr);
                 foreach (var globPar in globPars)
                 {
                     XmlReports.SetGlobalParValue(globPar.Key, globPar.Value);
@@ -151,8 +144,6 @@ namespace sql.builder.Clean
             }
             else
             {
-                var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
-                ChangeConnectionString(conStr);
                 foreach (var globPar in globPars)
                 {
                     XmlReports.SetGlobalParValue(globPar.Key, globPar.Value);
