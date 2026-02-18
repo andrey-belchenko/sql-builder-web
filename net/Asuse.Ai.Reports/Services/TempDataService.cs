@@ -135,26 +135,17 @@ namespace Asuse.Ai.Reports.Services
             if (element == null)
                 return new BsonDocument();
 
-            var doc = new BsonDocument();
+            var doc = new BsonDocument { ["_tag"] = element.Name.LocalName };
 
             foreach (var attr in element.Attributes())
             {
                 doc[attr.Name.LocalName] = attr.Value;
             }
 
-            var childGroups = element.Elements().GroupBy(e => e.Name);
-            foreach (var group in childGroups)
+            var children = element.Elements().ToList();
+            if (children.Count > 0)
             {
-                var children = group.ToList();
-                if (children.Count == 1)
-                {
-                    doc[group.Key.LocalName] = ConvertXElementToBsonDocument(children[0]);
-                }
-                else
-                {
-                    var array = new BsonArray(children.Select(ConvertXElementToBsonDocument));
-                    doc[group.Key.LocalName] = array;
-                }
+                doc["_children"] = new BsonArray(children.Select(c => (BsonValue)ConvertXElementToBsonDocument(c)));
             }
 
             return doc;
