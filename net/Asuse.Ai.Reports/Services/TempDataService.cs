@@ -68,49 +68,29 @@ namespace Asuse.Ai.Reports.Services
             // Delete existing info documents
             await infoCollection.DeleteManyAsync(FilterDefinition<BsonDocument>.Empty);
 
-            if (dataSet.Tables.Count == 1)
-            {
-                // Single table case
-                var infoDoc = new BsonDocument { { "multiple", false } };
-                await infoCollection.InsertOneAsync(infoDoc);
+            var infoDoc = new BsonDocument
+                {
+                    { "multiple", true },
+                    { "tables", new BsonDocument() }
+                };
+            var tablesDoc = infoDoc["tables"].AsBsonDocument;
 
-                var collection = mongoDb.GetCollection<BsonDocument>(dataSetId);
+            foreach (DataTable table in dataSet.Tables)
+            {
+                tablesDoc[table.TableName] = true;
+
+                var collectionName = dataSetId + "." + table.TableName;
+                var collection = mongoDb.GetCollection<BsonDocument>(collectionName);
                 await collection.DeleteManyAsync(FilterDefinition<BsonDocument>.Empty);
 
-                var table = dataSet.Tables[0];
                 if (table.Rows.Count > 0)
                 {
                     var documents = ConvertDataTableToBsonDocuments(table);
                     await collection.InsertManyAsync(documents);
                 }
             }
-            else
-            {
-                // Multiple tables case
-                var infoDoc = new BsonDocument
-                {
-                    { "multiple", true },
-                    { "tables", new BsonDocument() }
-                };
-                var tablesDoc = infoDoc["tables"].AsBsonDocument;
 
-                foreach (DataTable table in dataSet.Tables)
-                {
-                    tablesDoc[table.TableName] = true;
-
-                    var collectionName = dataSetId + "." + table.TableName;
-                    var collection = mongoDb.GetCollection<BsonDocument>(collectionName);
-                    await collection.DeleteManyAsync(FilterDefinition<BsonDocument>.Empty);
-
-                    if (table.Rows.Count > 0)
-                    {
-                        var documents = ConvertDataTableToBsonDocuments(table);
-                        await collection.InsertManyAsync(documents);
-                    }
-                }
-
-                await infoCollection.InsertOneAsync(infoDoc);
-            }
+            await infoCollection.InsertOneAsync(infoDoc);
         }
 
         private List<BsonDocument> ConvertDataTableToBsonDocuments(DataTable table)
