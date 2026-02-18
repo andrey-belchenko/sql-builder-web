@@ -2,8 +2,11 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Asuse.Ai.Reports.Settings;
 using Microsoft.Extensions.Options;
+using sql.builder.DataApi;
+using System.Xml.Linq;
 
 namespace Asuse.Ai.Reports.Services
 {
@@ -59,11 +62,12 @@ namespace Asuse.Ai.Reports.Services
             }
         }
 
-        public async Task SaveDataSet(DataSet dataSet, string dataSetId)
+        public async Task SaveDataSet(VDataSet dataSet, string dataSetId)
         {
             var mongoDb = _mongoClient.GetDatabase(_settings.MongoTempDb);
             var infoCollectionName = dataSetId + ":info";
             var infoCollection = mongoDb.GetCollection<BsonDocument>(infoCollectionName);
+            XElement scheme = dataSet.Scheme;
 
             // Delete existing info documents
             await infoCollection.DeleteManyAsync(FilterDefinition<BsonDocument>.Empty);
@@ -74,6 +78,11 @@ namespace Asuse.Ai.Reports.Services
                     { "tables", new BsonDocument() }
                 };
             var tablesDoc = infoDoc["tables"].AsBsonDocument;
+
+            if (scheme != null)
+            {
+                infoDoc["scheme"] = ConvertXElementToBsonDocument(scheme);
+            }
 
             foreach (DataTable table in dataSet.Tables)
             {
@@ -119,6 +128,36 @@ namespace Asuse.Ai.Reports.Services
             }
 
             return documents;
+        }
+
+        private static BsonDocument ConvertXElementToBsonDocument(XElement element)
+        {
+            if (element == null)
+                return new BsonDocument();
+
+            var doc = new BsonDocument();
+
+            foreach (var attr in element.Attributes())
+            {
+                doc[attr.Name.LocalName] = attr.Value;
+            }
+
+            var childGroups = element.Elements().GroupBy(e => e.Name);
+            foreach (var group in childGroups)
+            {
+                var children = group.ToList();
+                if (children.Count == 1)
+                {
+                    doc[group.Key.LocalName] = ConvertXElementToBsonDocument(children[0]);
+                }
+                else
+                {
+                    var array = new BsonArray(children.Select(ConvertXElementToBsonDocument));
+                    doc[group.Key.LocalName] = array;
+                }
+            }
+
+            return doc;
         }
     }
 }
