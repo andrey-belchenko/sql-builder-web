@@ -131,6 +131,7 @@ namespace SqlBuilderLib.DevTools
             sb.AppendLine($"        name: '{EscapeString(repFullName)}',");
             sb.AppendLine($"        template: '{EscapeString(templateName)}',");
             sb.AppendLine("    },");
+            sb.AppendLine("    isLegacy: true,");
             sb.AppendLine("    view: async context => {");
             sb.AppendLine($"        const fileName = '{escapedFileDisplayName}';");
             sb.AppendLine("        const fileId = buildFileId(context, fileName);");
@@ -188,6 +189,8 @@ namespace SqlBuilderLib.DevTools
             sb.AppendLine("    attrs: {");
             sb.AppendLine($"        name: '{EscapeString(repFullName)}',");
             sb.AppendLine("    },");
+            sb.AppendLine("    isTabular: true,");
+            sb.AppendLine("    isLegacy: true,");
             sb.AppendLine("    view: async context => {");
             sb.AppendLine("        const dataSetId = buildDataSetId(context);");
             sb.AppendLine("        await executeSqlbReport({");
