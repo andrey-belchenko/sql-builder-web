@@ -65,7 +65,7 @@ namespace SqlBuilderLib.DevTools
 
             if (report.P_NoGrid != "1")
             {
-                GenerateTableReportTypeScript(reportClearedName, formClearedName, reportTitle);
+                GenerateTableReportTypeScript(reportClearedName, formClearedName, reportTitle, repFullName);
                 // Table report uses the base name without suffix
                 generatedReportNames.Add(reportClearedName);
             }
@@ -161,7 +161,7 @@ namespace SqlBuilderLib.DevTools
             return $"{reportClearedName}{tsFileSuffix}";
         }
 
-        private static void GenerateTableReportTypeScript(string reportClearedName, string formClearedName, string reportTitle)
+        private static void GenerateTableReportTypeScript(string reportClearedName, string formClearedName, string reportTitle, string repFullName)
         {
             var reportsPath = Path.Combine(BasePath, "reports");
 
@@ -177,12 +177,31 @@ namespace SqlBuilderLib.DevTools
             var sb = new StringBuilder();
             sb.AppendLine("import { RegularReport } from '@/system/reports/types/reports/RegularReport';");
             sb.AppendLine($"import form_{formClearedName} from '../forms/form_{formClearedName}';");
+            sb.AppendLine("import { executeSqlbReport, prepareTableSettings } from '@/system/sql-builder';");
+            sb.AppendLine("import { buildDataSetId } from '@/system/reports/utils/mongo';");
+            sb.AppendLine("import { ReportTable } from '@/system/reports/types/views/ReportTable';");
             sb.AppendLine();
-            sb.AppendLine("// TODO: Implement table output");
             sb.AppendLine("export default new RegularReport({");
             sb.AppendLine("    definedIn: __filename,");
             sb.AppendLine($"    title: '{reportTitle}',");
             sb.AppendLine($"    paramsForm: form_{formClearedName},");
+            sb.AppendLine("    attrs: {");
+            sb.AppendLine($"        name: '{EscapeString(repFullName)}',");
+            sb.AppendLine("    },");
+            sb.AppendLine("    view: async context => {");
+            sb.AppendLine("        const dataSetId = buildDataSetId(context);");
+            sb.AppendLine("        await executeSqlbReport({");
+            sb.AppendLine($"            reportName: '{EscapeString(repFullName)}',");
+            sb.AppendLine("            dataSetId,");
+            sb.AppendLine("            parameters: context.formValues,");
+            sb.AppendLine("        });");
+            sb.AppendLine();
+            sb.AppendLine("        const tableSettings = await prepareTableSettings(dataSetId);");
+            sb.AppendLine();
+            sb.AppendLine("        return new ReportTable({");
+            sb.AppendLine("            ...tableSettings,");
+            sb.AppendLine("        });");
+            sb.AppendLine("    },");
             sb.AppendLine("});");
 
             File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
