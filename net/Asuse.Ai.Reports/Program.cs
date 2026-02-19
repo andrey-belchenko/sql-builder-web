@@ -21,6 +21,14 @@ builder.Services.AddFastReport();
 builder.Services.AddTransient<TempDataService>();
 builder.Services.AddTransient<ReportingService>();
 builder.Services.AddTransient<SqlBuilderService>();
+var requestTimeoutSeconds = builder.Configuration.GetValue("Reporting:RequestTimeoutSeconds", 3600);
+builder.Services.AddRequestTimeouts(options =>
+{
+    options.DefaultPolicy = new Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutPolicy
+    {
+        Timeout = TimeSpan.FromSeconds(requestTimeoutSeconds)
+    };
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,6 +37,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
 }
 app.UseStaticFiles();
+app.UseRequestTimeouts();
 
 app.UseRouting();
 
