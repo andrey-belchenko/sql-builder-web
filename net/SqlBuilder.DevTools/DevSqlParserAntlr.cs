@@ -104,7 +104,7 @@ namespace SqlBuilderLib.DevTools
         /// <param name="plsqlText">PL/SQL code string (can include anonymous blocks, procedures, packages, etc.)</param>
         /// <param name="procedureName">Optional procedure or function name. If specified, only extracts tables from that procedure/function.</param>
         /// <returns>HashSet of table names (schema-qualified names are preserved)</returns>
-        public static HashSet<string> GetSourceTables(string plsqlText, string procedureName = null)
+        public static HashSet<string> GetSourceTables(string plsqlText, string originalPlSqlText, string procedureName)
         {
             if (string.IsNullOrWhiteSpace(plsqlText))
                 return new HashSet<string>();
@@ -137,7 +137,7 @@ namespace SqlBuilderLib.DevTools
                                              trimmedText.StartsWith("WITH", StringComparison.OrdinalIgnoreCase);
             
             // Remove default error listeners and add a throwing error listener
-            var errorListener = new ThrowingErrorListener(textToParse);
+            var errorListener = new ThrowingErrorListener(textToParse, originalPlSqlText);
             lexer.RemoveErrorListeners();
             lexer.AddErrorListener(errorListener);
             parser.RemoveErrorListeners();
@@ -217,7 +217,7 @@ namespace SqlBuilderLib.DevTools
         /// <param name="plsqlText">PL/SQL code string (can include anonymous blocks, procedures, packages, etc.)</param>
         /// <param name="procedureName">Optional procedure or function name. If specified, only extracts procedures from that procedure/function.</param>
         /// <returns>HashSet of procedure names (package-qualified names are preserved, same-package calls are resolved)</returns>
-        public static HashSet<string> GetSourceProcedures(string plsqlText, string procedureName = null)
+        public static HashSet<string> GetSourceProcedures(string plsqlText, string originalPlSqlText, string procedureName)
         {
             if (string.IsNullOrWhiteSpace(plsqlText))
                 return new HashSet<string>();
@@ -238,7 +238,7 @@ namespace SqlBuilderLib.DevTools
             var parser = new PlSqlParser(tokens);
 
             // Remove default error listeners and add a throwing error listener
-            var errorListener = new ThrowingErrorListener(textToParse);
+            var errorListener = new ThrowingErrorListener(textToParse, originalPlSqlText);
             lexer.RemoveErrorListeners();
             lexer.AddErrorListener(errorListener);
             parser.RemoveErrorListeners();
@@ -358,14 +358,16 @@ namespace SqlBuilderLib.DevTools
         {
             private readonly List<string> _errors = new List<string>();
             private readonly string _plsqlText;
+            private readonly string _origPlSqlText;
 
             public bool HasErrors => _errors.Count > 0;
 
             public IReadOnlyList<string> Errors => _errors;
 
-            public ThrowingErrorListener(string plsqlText = null)
+            public ThrowingErrorListener(string plsqlText, string origPlSqlText)
             {
                 _plsqlText = plsqlText;
+                _origPlSqlText = origPlSqlText;
             }
 
             // Parser error handler (IToken)
@@ -439,6 +441,10 @@ namespace SqlBuilderLib.DevTools
                                 string fileName = $"plsql_error_{DateTime.Now:yyyyMMdd_HHmmss_fff}.sql";
                                 string filePath = Path.Combine(tempFolder, fileName);
                                 File.WriteAllText(filePath, _plsqlText, Encoding.UTF8);
+
+                                string fileNameOrig = $"plsql_error_{DateTime.Now:yyyyMMdd_HHmmss_fff}-orig.sql";
+                                string filePathOrig = Path.Combine(tempFolder, fileNameOrig);
+                                File.WriteAllText(filePathOrig, _origPlSqlText, Encoding.UTF8);
                             }
                         }
                         catch

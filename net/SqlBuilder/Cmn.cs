@@ -574,6 +574,62 @@ namespace sql.builder
             s = s.Replace('\r', ' ');
             return s;
         }
+        private static bool FindMatchingBraces(string s, int undefinedPos, out int startPos, out int endPos)
+        {
+            startPos = -1;
+            endPos = -1;
+            
+            // Find the last opening brace before undefinedString
+            int openBracePos = -1;
+            for (int i = undefinedPos - 1; i >= 0; i--) {
+                if (s[i] == '{') {
+                    openBracePos = i;
+                    break;
+                }
+            }
+            
+            if (openBracePos < 0) {
+                return false; // No opening brace found
+            }
+            
+            // Find the matching closing brace by counting nested braces
+            int braceCount = 1;
+            for (int i = openBracePos + 1; i < s.Length; i++) {
+                if (s[i] == '{') {
+                    braceCount++;
+                } else if (s[i] == '}') {
+                    braceCount--;
+                    if (braceCount == 0) {
+                        // Found matching closing brace
+                        startPos = openBracePos;
+                        endPos = i;
+                        return true;
+                    }
+                }
+            }
+            
+            return false; // No matching closing brace found
+        }
+        
+        public static string ClearUndef(string s)
+        {
+            s = s.Replace(undefNvluConst, "null");
+            int i1 = s.IndexOf(undefinedString);
+            while (i1 >= 0) {
+                if (!FindMatchingBraces(s, i1, out int i0, out int i2)) {
+                    return "";
+                }
+                s = s.Remove(i0, i2 - i0 + 1);
+                i1 = s.IndexOf(undefinedString);
+            }
+            s = s.Replace("{", "");
+            s = s.Replace("}", "");
+            //s = s.Replace(" and  (    )", " ");
+            //s = s.Replace(" or  (    )", " ");
+            s = s.Replace('\r', ' ');
+            return s;
+        }
+        
         public static string ClearUndefined(string s)
         {
             s = s.Replace(undefNvluConst, "null");

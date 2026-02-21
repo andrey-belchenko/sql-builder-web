@@ -60,6 +60,20 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_URLS": "http://localhost:5195"
       }
+    },
+    {
+      "name": ".NET Run - SqlBuilder.App",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "${workspaceFolder}/SqlBuilder.App/SqlBuilder.App.csproj"
+      ],
+      "cwd": "${workspaceFolder}/SqlBuilder.App",
+      "console": "externalTerminal",
+      "stopAtEntry": false
     }
   ]
 }

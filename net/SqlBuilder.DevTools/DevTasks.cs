@@ -53,13 +53,15 @@ namespace SqlBuilderLib.DevTools
 
             string plsqlText = File.ReadAllText(sqlFilePath, Encoding.UTF8);
 
+            string sql = plsqlText;
+
             // plsqlText  =    Regex.Replace(plsqlText, @"\bas\s+end(?![a-zA-Z0-9_])", "as \"end\"", RegexOptions.IgnoreCase);
             plsqlText = plsqlText.Replace("stragg_dist", "max");
             Console.WriteLine($"Reading SQL from: {sqlFilePath}");
             Console.WriteLine();
 
             // Extract tables
-            var tableNames = DevSqlParserAntlr.GetSourceTables(plsqlText, procedureName);
+            var tableNames = DevSqlParserAntlr.GetSourceTables(plsqlText,sql, procedureName);
             Console.WriteLine("Extracted source tables:");
             foreach (var tableName in tableNames.OrderBy(t => t))
             {

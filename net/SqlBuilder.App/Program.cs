@@ -15,13 +15,16 @@ namespace SqlBuilderApp
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
+
+            //AnalyzerStorage.SaveAllCollectionsToFiles();
             //DevUtils.TestReportsAnalysis();
-            DevTasks.AnalyzeReport();
+            //DevTasks.AnalyzeReport();
+            DevTasks.AnalyzeReports();
             //DevUtils.TestSqlParsing();
 
 
             // sql.builder.Program.Main(args);
-            // AnalyzerStorage.SaveAllCollectionsToFiles();
+
 
             //             DevAnalyzer.Initialize();
             //             string query = @"

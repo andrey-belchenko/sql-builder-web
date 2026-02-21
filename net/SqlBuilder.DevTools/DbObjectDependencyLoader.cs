@@ -336,22 +336,22 @@ namespace SqlBuilderLib.DevTools
                 HashSet<string> tableNames;
                 if (!string.IsNullOrEmpty(procedureName))
                 {
-                    tableNames = DevSqlParserAntlr.GetSourceTables(cleanSql, procedureName);
+                    tableNames = DevSqlParserAntlr.GetSourceTables(cleanSql, sql, procedureName);
                 }
                 else
                 {
-                    tableNames = DevSqlParserAntlr.GetSourceTables(cleanSql);
+                    tableNames = DevSqlParserAntlr.GetSourceTables(cleanSql, sql, null);
                 }
 
                 // Extract procedure names
                 HashSet<string> procNames;
                 if (!string.IsNullOrEmpty(procedureName))
                 {
-                    procNames = DevSqlParserAntlr.GetSourceProcedures(cleanSql, procedureName);
+                    procNames = DevSqlParserAntlr.GetSourceProcedures(cleanSql, sql, procedureName);
                 }
                 else
                 {
-                    procNames = DevSqlParserAntlr.GetSourceProcedures(cleanSql);
+                    procNames = DevSqlParserAntlr.GetSourceProcedures(cleanSql, sql, null);
                 }
 
                 // Create dependency records for tables/views

@@ -74,7 +74,7 @@ namespace SqlBuilderLib.DevTools
         {
             DevAnalyzer.Enabled = true;
             DevAnalyzer.PrepareOnly = true;
-            DevAnalyzer.DoSave = false;
+            DevAnalyzer.DoSave = true;
             DevAnalyzer.DoCheck = false;
             DevAnalyzer.ErrorOnMissing = false;
             DevAnalyzer.ClearTempFolder();
@@ -315,11 +315,11 @@ namespace SqlBuilderLib.DevTools
             if (ProcessedSql.Contains(sql)) return;
             ProcessedSql.Add(sql);
             if (!Enabled) return;
-            if (sql.Length > 2000)
-            {
+            //if (sql.Length > 20000)
+            //{
 
-            }
-            var cleanSql = Cmn.ClearUndefined(sql);
+            //}
+            var cleanSql = Cmn.ClearUndef(sql);
             // Replace "as end" alias when followed by non-alphanumeric character (or end of string)
             // This handles SQL columns named "end" which is a reserved word
             cleanSql = Regex.Replace(cleanSql, @"\bas\s+end(?![a-zA-Z0-9_])", "as \"end\"", RegexOptions.IgnoreCase);
@@ -327,10 +327,10 @@ namespace SqlBuilderLib.DevTools
             cleanSql = cleanSql.Replace("stragg_dist", "max");
             cleanSql = cleanSql.Replace("stragg", "max");
 
-            var tableNames = DevSqlParserAntlr.GetSourceTables(cleanSql);
+            var tableNames = DevSqlParserAntlr.GetSourceTables(cleanSql, sql, null);
             TableNames.UnionWith(tableNames);
 
-            var procNames = DevSqlParserAntlr.GetSourceProcedures(cleanSql);
+            var procNames = DevSqlParserAntlr.GetSourceProcedures(cleanSql, sql, null);
             ProcNames.UnionWith(procNames);
 
             // Validate DevSqlParserCustom extraction if checking is enabled
