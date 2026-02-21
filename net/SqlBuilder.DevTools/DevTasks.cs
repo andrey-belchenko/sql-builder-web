@@ -80,7 +80,7 @@ namespace SqlBuilderLib.DevTools
             // Console.WriteLine("done");
         }
 
-        public static void AnalyzeReport()
+        public static void AnalyzeReportDraft()
         {
             DevUtilsProvider.Instance = new DevUtilsProviderImpl();
             DevAnalyzer.Enabled = true;
@@ -127,6 +127,11 @@ namespace SqlBuilderLib.DevTools
         {
             DevAnalyzer.AnalyzeReports();
 
+        }
+
+        public static void AnalyzeReport()
+        {
+            DevAnalyzer.AnalyzeReports( "asuse2.24557");
         }
 
     }

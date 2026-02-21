@@ -59,9 +59,9 @@ namespace SqlBuilderLib.DevTools
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
             // var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
-            // var conStr = "User Id=asuse;Password=kl0pik;Server=REALKAZN;Pooling=False;Sid=REALKAZN;Port=1521";
+             var conStr = "User Id=asuse;Password=kl0pik;Server=REALKAZN;Pooling=False;Sid=REALKAZN;Port=1521";
             // TNS format connection string
-            var conStr = "User Id=asuse;Password=learning;Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.60.32.80)(PORT=1521)))(CONNECT_DATA=(SID=nata)))";
+            //var conStr = "User Id=asuse;Password=learning;Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.60.32.80)(PORT=1521)))(CONNECT_DATA=(SID=nata)))";
             CleanSqlBuilder.ChangeConnectionString(conStr);
             Console.WriteLine(conStr);
         }
@@ -70,12 +70,12 @@ namespace SqlBuilderLib.DevTools
         public static void GetReports(){
             
         }
-        public static void AnalyzeReports()
+        public static void AnalyzeReports(string repName = null)
         {
             DevAnalyzer.Enabled = true;
             DevAnalyzer.PrepareOnly = true;
             DevAnalyzer.DoSave = false;
-            DevAnalyzer.DoCheck = true;
+            DevAnalyzer.DoCheck = false;
             DevAnalyzer.ErrorOnMissing = false;
             DevAnalyzer.ClearTempFolder();
 
@@ -112,6 +112,8 @@ namespace SqlBuilderLib.DevTools
                         folder = folder.Parent as VFolder;
                     }
                     var fullName = $"{userep.P_Project}.{userep.P_Report}";
+
+                    if (repName!=null && repName!=fullName) continue;
 
                     if (SkipReports.Contains(fullName)) continue;
                     var info = new AnalyzerReportInfo()
@@ -394,7 +396,7 @@ namespace SqlBuilderLib.DevTools
                 }
             }
 
-            // LogSql(sql);
+             LogSql(sql);
         }
 
         private static string LogSql(string sql)

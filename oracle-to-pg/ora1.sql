@@ -1,0 +1,1 @@
+select 'm' as val from dual

@@ -4,6 +4,7 @@ using System.Text;
 using sql.builder;
 using sql.builder.Clean;
 using SqlBuilderLib.DevTools;
+
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static sql.builder.DataApi.VClientCalculations;
 
@@ -14,9 +15,11 @@ namespace SqlBuilderApp
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
-            // DevUtils.TestReportsAnalysis();
-            // DevTasks.AnalyzeReport();
-            // DevUtils.TestSqlParsing();
+            //DevUtils.TestReportsAnalysis();
+            DevTasks.AnalyzeReport();
+            //DevUtils.TestSqlParsing();
+
+
             // sql.builder.Program.Main(args);
             // AnalyzerStorage.SaveAllCollectionsToFiles();
 
@@ -51,9 +54,9 @@ namespace SqlBuilderApp
 
 
             //// Генерация форм
-            TsBuilder.DeleteGenerated();
-            TsBuilder.Initialize();
-            TsBuilder.BuildNavigators();
+            //TsBuilder.DeleteGenerated();
+            //TsBuilder.Initialize();
+            //TsBuilder.BuildNavigators();
 
 
             ////////////////
@@ -68,7 +71,7 @@ namespace SqlBuilderApp
             ////pars.Add("dep", 3580m);
 
             //CleanSqlBuilder.ExecuteReport("ryazan.76607", "76607.xlsx", pars, globPars);
-;
+            ;
         }
     }
 }
