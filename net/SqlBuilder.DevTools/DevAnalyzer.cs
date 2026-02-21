@@ -49,7 +49,10 @@ namespace SqlBuilderLib.DevTools
             "asuse2.ur_journal_sogl",
             "asuse2.ur_journal_isp",
             "asuse2.ur_journal_pretenz",
-            "asuse2.arbitrage_journal"
+            "asuse2.arbitrage_journal",
+            "ies_garant.61880_9_v3_ryaz_gp", // в навигаторе есть запись , но отчет отсутствует
+            "ryazan.72565", // ошибка - разобраться,
+            "ies_garant.61880_2_int_date" // ошибка - разобраться,
             };
 
 
@@ -58,8 +61,8 @@ namespace SqlBuilderLib.DevTools
             DevUtilsProvider.Instance =  new DevUtilsProviderImpl();
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
-            // var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
-             var conStr = "User Id=asuse;Password=kl0pik;Server=REALKAZN;Pooling=False;Sid=REALKAZN;Port=1521";
+            var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
+            //  var conStr = "User Id=asuse;Password=kl0pik;Server=REALKAZN;Pooling=False;Sid=REALKAZN;Port=1521";
             // TNS format connection string
             //var conStr = "User Id=asuse;Password=learning;Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.60.32.80)(PORT=1521)))(CONNECT_DATA=(SID=nata)))";
             CleanSqlBuilder.ChangeConnectionString(conStr);
@@ -84,8 +87,8 @@ namespace SqlBuilderLib.DevTools
 
             var navs = XmlReports.Environment.GetElements(TextConst.EName.Navigators).Cast<VNavigator>()
             .Where(it =>
-            //  it.P_IdName == "nav310"
-                it.P_IdName == "nav10"
+             it.P_IdName == "nav310"
+                // it.P_IdName == "nav10"
              //it.P_IdName == "nav101"
              )
             .ToList();
@@ -170,6 +173,8 @@ namespace SqlBuilderLib.DevTools
             rep.OpenDocumentAfterPrint = false;
             rep.Initialize(repInfo.Name);
 
+            //var pars = new Dictionary<string, object>();
+
             var fields = rep.GetParamFields().ToArray();
             foreach (var p in fields)
             {
@@ -251,9 +256,11 @@ namespace SqlBuilderLib.DevTools
                         }
                         break;
                 }
+                //pars.Add(p.Control.FieldName, value);
                 p.SetValue(value);
             }
 
+            //CleanSqlBuilder.ExecuteReportGetDs(repInfo.Name,pars, new Dictionary<string, object>(), null);
             rep.ExecuteReport();
 
 
