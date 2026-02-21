@@ -67,6 +67,10 @@ namespace SqlBuilderLib.DevTools
                 }
 
                 Console.WriteLine($"Iteration {iteration} complete: {processedCount} processed, {errorCount} errors.");
+                
+                // Fix schemas after each iteration
+                Console.WriteLine("Fixing schemas...");
+                AnalyzerStorage.FixSchemas();
             }
 
             Console.WriteLine("\nDependency loading finished.");

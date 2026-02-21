@@ -570,5 +570,59 @@ namespace SqlBuilderLib.DevTools
                 }
             }
         }
+
+        /// <summary>
+        /// Fixes schemas by removing 'asuse".' prefix from object names in db_objects and dependencies tables.
+        /// </summary>
+        public static void FixSchemas()
+        {
+            lock (_lockObject)
+            {
+                using (var connection = new NpgsqlConnection(ConnectionString))
+                {
+                    connection.Open();
+                    
+                    // Fix db_objects table
+                    using (var command = new NpgsqlCommand())
+                    {
+                        command.Connection = connection;
+                        command.CommandText = "UPDATE report_dev_sqlb.db_objects SET object_name = REPLACE(object_name, 'asuse\".', '') WHERE object_name LIKE 'asuse\".%'";
+                        int rowsAffected = command.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            Console.WriteLine($"  Fixed {rowsAffected} object names in db_objects");
+                        }
+                    }
+                    
+                    // Fix dependencies.object_name
+                    using (var command = new NpgsqlCommand())
+                    {
+                        command.Connection = connection;
+                        command.CommandText = "UPDATE report_dev_sqlb.dependencies SET object_name = REPLACE(object_name, 'asuse\".', '') WHERE object_name LIKE 'asuse\".%'";
+                        int rowsAffected = command.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            Console.WriteLine($"  Fixed {rowsAffected} object names in dependencies");
+                        }
+                    }
+                    
+                    // Fix dependencies.used_object_name
+                    using (var command = new NpgsqlCommand())
+                    {
+                        command.Connection = connection;
+                        command.CommandText = "UPDATE report_dev_sqlb.dependencies SET used_object_name = REPLACE(used_object_name, 'asuse\".', '') WHERE used_object_name LIKE 'asuse\".%'";
+                        int rowsAffected = command.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            Console.WriteLine($"  Fixed {rowsAffected} used_object_names in dependencies");
+                        }
+                    }
+                    
+                    // Reload caches to reflect changes
+                    LoadDbObjects();
+                    LoadDependencies();
+                }
+            }
+        }
     }
 }
