@@ -28,6 +28,7 @@ namespace SqlBuilderLib.DevTools
 
         private static FolderProcessResult ProcessFoldersRecursive(VSXElement parent, ref int folderIdCounter, int indentLevel = 0)
         {
+            var skip = new[] { "61880_9_v3_ryaz_gp" };
             var indent = new string(' ', indentLevel * 4);
             var allReportImports = new HashSet<string>();
             var allFormImports = new HashSet<string>();
@@ -61,7 +62,7 @@ namespace SqlBuilderLib.DevTools
                     folderCode += $"\n{childIndent}    title: '{folderTitle}',";
                     folderCode += $"\n{childIndent}    folderId: {folderId},";
                     folderCode += $"\n{childIndent}    items: [";
-                    
+
                     // Add child folders and reports in order (from childResult.FolderCode)
                     // Note: FolderCode already contains all items including direct reports in correct order
                     if (!string.IsNullOrWhiteSpace(childResult.FolderCode))
@@ -75,7 +76,7 @@ namespace SqlBuilderLib.DevTools
                     // Add folder to items in order
                     folderItems.Add(folderCode);
                 }
-                else if (item is VUseReport useReport)
+                else if (item is VUseReport useReport && !skip.Contains(useReport.P_Report))
                 {
                     var reportNames = ProcessReport(useReport);
                     if (reportNames != null && reportNames.Count > 0)
@@ -86,13 +87,13 @@ namespace SqlBuilderLib.DevTools
                             if (directReports.Add(reportName))
                             {
                                 allReportImports.Add(reportName);
-                                
+
                                 // Track form used by this report
                                 if (ReportToFormMap.TryGetValue(reportName, out var formName))
                                 {
                                     allFormImports.Add(formName);
                                 }
-                                
+
                                 // Add report to items in order (maintain source order)
                                 folderItems.Add($"{indent}report_{reportName}");
                             }
