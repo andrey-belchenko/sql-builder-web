@@ -10,6 +10,41 @@ using Antlr4.Runtime.Tree;
 namespace SqlBuilderLib.DevTools
 {
     /// <summary>
+    /// Character position information for a table reference in SQL text.
+    /// Positions are relative to the parsed text (plsqlText or extracted SELECT for materialized views).
+    /// </summary>
+    public struct PositionInfo
+    {
+        public int StartIndex { get; }
+        public int StopIndex { get; }
+        public int Line { get; }
+        public int Column { get; }
+
+        public PositionInfo(int startIndex, int stopIndex, int line, int column)
+        {
+            StartIndex = startIndex;
+            StopIndex = stopIndex;
+            Line = line;
+            Column = column;
+        }
+    }
+
+    /// <summary>
+    /// Result of extracting table names from PL/SQL with position details for each occurrence.
+    /// </summary>
+    public class GetSourceTablesResult
+    {
+        public HashSet<string> TableNames { get; }
+        public Dictionary<string, List<PositionInfo>> Details { get; }
+
+        public GetSourceTablesResult(HashSet<string> tableNames, Dictionary<string, List<PositionInfo>> details)
+        {
+            TableNames = tableNames ?? new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            Details = details ?? new Dictionary<string, List<PositionInfo>>(StringComparer.OrdinalIgnoreCase);
+        }
+    }
+
+    /// <summary>
     /// Antlr4-based PL/SQL parser for extracting database table names.
     /// Uses proper grammar parsing instead of regex-based approach.
     /// </summary>
@@ -102,14 +137,16 @@ namespace SqlBuilderLib.DevTools
         /// Extracts all database table names from PL/SQL code using Antlr4 parser.
         /// </summary>
         /// <param name="plsqlText">PL/SQL code string (can include anonymous blocks, procedures, packages, etc.)</param>
+        /// <param name="originalPlSqlText">Original PL/SQL text for error reporting</param>
         /// <param name="procedureName">Optional procedure or function name. If specified, only extracts tables from that procedure/function.</param>
-        /// <returns>HashSet of table names (schema-qualified names are preserved)</returns>
-        public static HashSet<string> GetSourceTables(string plsqlText, string originalPlSqlText, string procedureName)
+        /// <returns>GetSourceTablesResult with TableNames and Details (positions per table)</returns>
+        public static GetSourceTablesResult GetSourceTables(string plsqlText, string originalPlSqlText, string procedureName)
         {
             if (string.IsNullOrWhiteSpace(plsqlText))
-                return new HashSet<string>();
+                return new GetSourceTablesResult(new HashSet<string>(StringComparer.OrdinalIgnoreCase), new Dictionary<string, List<PositionInfo>>(StringComparer.OrdinalIgnoreCase));
 
-            var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var tableNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var details = new Dictionary<string, List<PositionInfo>>(StringComparer.OrdinalIgnoreCase);
 
             // Check if this is a materialized view DDL and extract SELECT statement
             // If it's a mat view, use the extracted SELECT; otherwise use original text
@@ -159,17 +196,7 @@ namespace SqlBuilderLib.DevTools
                         // Successfully parsed as standalone SELECT
                         visitor.VisitSelect_statement((PlSqlParser.Select_statementContext)tree);
                         
-                        // Get results
-                        foreach (var tableName in visitor.TableNames)
-                        {
-                            if (!string.IsNullOrWhiteSpace(tableName))
-                            {
-                                var normalized = NormalizeTableName(tableName);
-                                result.Add(normalized);
-                            }
-                        }
-                        
-                        return result;
+                        return BuildResult(visitor);
                     }
                 }
                 catch
@@ -189,7 +216,7 @@ namespace SqlBuilderLib.DevTools
             if (tree == null)
             {
                 errorListener.ThrowIfErrors();
-                return result;
+                return new GetSourceTablesResult(tableNames, details);
             }
 
             // Throw if any parsing errors occurred
@@ -198,17 +225,37 @@ namespace SqlBuilderLib.DevTools
             // Use visitor to extract table names
             visitor.Visit(tree);
 
-            // Get results
+            return BuildResult(visitor);
+        }
+
+        private static GetSourceTablesResult BuildResult(TableNameExtractorVisitor visitor)
+        {
+            var tableNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var details = new Dictionary<string, List<PositionInfo>>(StringComparer.OrdinalIgnoreCase);
+
             foreach (var tableName in visitor.TableNames)
             {
                 if (!string.IsNullOrWhiteSpace(tableName))
                 {
                     var normalized = NormalizeTableName(tableName);
-                    result.Add(normalized);
+                    tableNames.Add(normalized);
                 }
             }
 
-            return result;
+            foreach (var kvp in visitor.TableDetails)
+            {
+                var normalized = NormalizeTableName(kvp.Key);
+                if (string.IsNullOrWhiteSpace(normalized)) continue;
+
+                if (!details.TryGetValue(normalized, out var positions))
+                {
+                    positions = new List<PositionInfo>();
+                    details[normalized] = positions;
+                }
+                positions.AddRange(kvp.Value);
+            }
+
+            return new GetSourceTablesResult(tableNames, details);
         }
 
         /// <summary>
@@ -465,11 +512,13 @@ namespace SqlBuilderLib.DevTools
         private class TableNameExtractorVisitor : PlSqlParserBaseVisitor<object>
         {
             private readonly HashSet<string> _tableNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            private readonly Dictionary<string, List<PositionInfo>> _tableDetails = new Dictionary<string, List<PositionInfo>>(StringComparer.OrdinalIgnoreCase);
             private readonly HashSet<string> _cteNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             private readonly string _targetProcedureName;
             private string _currentProcedureName;
 
             public HashSet<string> TableNames => _tableNames;
+            public Dictionary<string, List<PositionInfo>> TableDetails => _tableDetails;
 
             public TableNameExtractorVisitor(string targetProcedureName = null)
             {
@@ -1421,7 +1470,7 @@ namespace SqlBuilderLib.DevTools
                                     // Only add table if we should extract tables (filtering by procedure name)
                                     if (ShouldExtractTables())
                                     {
-                                        _tableNames.Add(tableName);
+                                        AddTableWithPosition(tableName, context);
                                     }
                                 }
                             }
@@ -1430,12 +1479,32 @@ namespace SqlBuilderLib.DevTools
                                 // Only add table if we should extract tables (filtering by procedure name)
                                 if (ShouldExtractTables())
                                 {
-                                    _tableNames.Add(tableName);
+                                    AddTableWithPosition(tableName, context);
                                 }
                             }
                         }
                     }
                 }
+            }
+
+            private void AddTableWithPosition(string tableName, PlSqlParser.Tableview_nameContext context)
+            {
+                _tableNames.Add(tableName);
+
+                var startToken = context.Start;
+                var stopToken = context.Stop;
+                var positionInfo = new PositionInfo(
+                    startToken.StartIndex,
+                    stopToken.StopIndex + 1,
+                    startToken.Line,
+                    startToken.Column);
+
+                if (!_tableDetails.TryGetValue(tableName, out var positions))
+                {
+                    positions = new List<PositionInfo>();
+                    _tableDetails[tableName] = positions;
+                }
+                positions.Add(positionInfo);
             }
 
             // Helper to get text from identifier

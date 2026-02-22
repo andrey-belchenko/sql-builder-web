@@ -337,14 +337,14 @@ namespace SqlBuilderLib.DevTools
                 cleanSql = cleanSql.Replace("stragg", "max");
 
                 // Extract table names
-                HashSet<string> tableNames;
+                GetSourceTablesResult tableResult;
                 if (!string.IsNullOrEmpty(procedureName))
                 {
-                    tableNames = DevSqlParserAntlr.GetSourceTables(cleanSql, sql, procedureName);
+                    tableResult = DevSqlParserAntlr.GetSourceTables(cleanSql, sql, procedureName);
                 }
                 else
                 {
-                    tableNames = DevSqlParserAntlr.GetSourceTables(cleanSql, sql, null);
+                    tableResult = DevSqlParserAntlr.GetSourceTables(cleanSql, sql, null);
                 }
 
                 // Extract procedure names
@@ -359,7 +359,7 @@ namespace SqlBuilderLib.DevTools
                 }
 
                 // Create dependency records for tables/views
-                foreach (var tableName in tableNames)
+                foreach (var tableName in tableResult.TableNames)
                 {
                     dependencies.Add(new AnalyzerDependency
                     {

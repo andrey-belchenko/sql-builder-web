@@ -40,15 +40,21 @@ namespace SqlBuilderLib.DevTools
             Console.WriteLine();
 
             // Extract tables
-            var tableNames = DevSqlParserAntlr.GetSourceTables(plsqlText,sql, procedureName);
+            var result = DevSqlParserAntlr.GetSourceTables(plsqlText, sql, procedureName);
 
-            
             Console.WriteLine("Extracted source tables:");
-            foreach (var tableName in tableNames.OrderBy(t => t))
+            foreach (var tableName in result.TableNames.OrderBy(t => t))
             {
                 Console.WriteLine($"  - {tableName}");
+                if (result.Details.TryGetValue(tableName, out var positions))
+                {
+                    foreach (var pos in positions)
+                    {
+                        Console.WriteLine($"      Line {pos.Line}, Col {pos.Column} (index {pos.StartIndex}-{pos.StopIndex})");
+                    }
+                }
             }
-            Console.WriteLine($"Total: {tableNames.Count} tables");
+            Console.WriteLine($"Total: {result.TableNames.Count} tables");
             Console.WriteLine();
 
             // Extract procedures

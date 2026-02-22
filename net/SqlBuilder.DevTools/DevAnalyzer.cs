@@ -334,8 +334,8 @@ namespace SqlBuilderLib.DevTools
             cleanSql = cleanSql.Replace("stragg_dist", "max");
             cleanSql = cleanSql.Replace("stragg", "max");
 
-            var tableNames = DevSqlParserAntlr.GetSourceTables(cleanSql, sql, null);
-            TableNames.UnionWith(tableNames);
+            var tableResult = DevSqlParserAntlr.GetSourceTables(cleanSql, sql, null);
+            TableNames.UnionWith(tableResult.TableNames);
 
             var procNames = DevSqlParserAntlr.GetSourceProcedures(cleanSql, sql, null);
             ProcNames.UnionWith(procNames);
@@ -364,7 +364,7 @@ namespace SqlBuilderLib.DevTools
                 }
 
                 // Find missed table names
-                var missedTables = customTableNames.Except(tableNames).ToList();
+                var missedTables = customTableNames.Except(tableResult.TableNames).ToList();
                 // Find missed package names
                 var missedPackages = customPackageNames.Except(antlrPackageNames).ToList();
 
