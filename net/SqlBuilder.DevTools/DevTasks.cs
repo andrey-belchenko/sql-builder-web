@@ -18,7 +18,7 @@ namespace SqlBuilderLib.DevTools
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            var sqlFileName = "1.sql";
+            var sqlFileName = "2.sql";
             string procedureName = null;
 
             string sqlFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Sql",sqlFileName);
@@ -41,6 +41,8 @@ namespace SqlBuilderLib.DevTools
 
             // Extract tables
             var tableNames = DevSqlParserAntlr.GetSourceTables(plsqlText,sql, procedureName);
+
+            
             Console.WriteLine("Extracted source tables:");
             foreach (var tableName in tableNames.OrderBy(t => t))
             {
