@@ -20,36 +20,15 @@ namespace SqlBuilderLib.DevTools
 
             var sqlFileName = "1.sql";
             string procedureName = null;
-            // string procedureName = "dog_obj";
 
-            // Read SQL from file - try multiple possible paths
-            string sqlFilePath = null;
-            string[] possiblePaths = new[]
+            string sqlFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Sql",sqlFileName);
+           
+            if (!File.Exists(sqlFilePath))
             {
-                Path.Combine(Directory.GetCurrentDirectory(), "Sql", sqlFileName),
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Sql",sqlFileName),
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sql", sqlFileName),
-                Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "Sql", sqlFileName))
-            };
-
-            foreach (var path in possiblePaths)
-            {
-                if (File.Exists(path))
-                {
-                    sqlFilePath = path;
-                    break;
-                }
-            }
-
-            if (sqlFilePath == null || !File.Exists(sqlFilePath))
-            {
-                Console.WriteLine("Error: SQL file not found. Tried paths:");
-                foreach (var path in possiblePaths)
-                {
-                    Console.WriteLine($"  - {path}");
-                }
+                Console.WriteLine($"Error: SQL file not found: {sqlFilePath}");
                 return;
             }
+            Console.WriteLine($"Reading SQL from: {sqlFilePath}");
 
             string plsqlText = File.ReadAllText(sqlFilePath, Encoding.UTF8);
 
