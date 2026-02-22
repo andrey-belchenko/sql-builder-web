@@ -16,7 +16,8 @@ namespace SqlBuilderApp
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            DevTasks.AnalyzeSql();
+            // DevTasks.AnalyzeSql();
+            DevTasks.TestTableRename();
             //AnalyzerStorage.SaveAllCollectionsToFiles();
             //DevUtils.TestReportsAnalysis();
             //DevTasks.AnalyzeReport();

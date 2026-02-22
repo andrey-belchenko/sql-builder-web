@@ -69,6 +69,67 @@ namespace SqlBuilderLib.DevTools
             // Console.WriteLine("done");
         }
 
+        public static void TestTableRename()
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+
+            var sqlFileName = "2.sql";
+            string procedureName = null;
+
+            string sqlFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Sql", sqlFileName);
+
+            if (!File.Exists(sqlFilePath))
+            {
+                Console.WriteLine($"Error: SQL file not found: {sqlFilePath}");
+                return;
+            }
+            Console.WriteLine($"Reading SQL from: {sqlFilePath}");
+            Console.WriteLine();
+
+            string plsqlText = File.ReadAllText(sqlFilePath, Encoding.UTF8);
+            plsqlText = plsqlText.Replace("stragg_dist", "max");
+            string sql = plsqlText;
+
+            var result = DevSqlParserAntlr.GetSourceTables(plsqlText, sql, procedureName);
+
+            Console.WriteLine("Extracted source tables:");
+            foreach (var tableName in result.TableNames.OrderBy(t => t))
+            {
+                Console.WriteLine($"  - {tableName}");
+            }
+            Console.WriteLine($"Total: {result.TableNames.Count} tables");
+            Console.WriteLine();
+
+            var renameDict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["sr_recalc_sf"] = "fin_rec.sr_recalc_sf",
+                ["sr_facvip"] = "fin.sr_facvip",
+                ["sr_facras"] = "fin.sr_facras"
+            };
+
+            Console.WriteLine("Rename mapping:");
+            foreach (var kvp in renameDict)
+            {
+                Console.WriteLine($"  {kvp.Key} -> {kvp.Value}");
+            }
+            Console.WriteLine();
+
+            string renamedSql = DevTableRenamer.RenameTables(plsqlText, result.Details, renameDict);
+
+            string outputFileName = Path.GetFileNameWithoutExtension(sqlFileName) + "-processed" + Path.GetExtension(sqlFileName);
+            string outputFilePath = Path.Combine(Path.GetDirectoryName(sqlFilePath), outputFileName);
+            File.WriteAllText(outputFilePath, renamedSql, Encoding.UTF8);
+            Console.WriteLine($"Saved to: {outputFilePath}");
+
+            Console.WriteLine("--- Original SQL (first 500 chars) ---");
+            Console.WriteLine(plsqlText.Length > 500 ? plsqlText.Substring(0, 500) + "..." : plsqlText);
+            Console.WriteLine();
+            Console.WriteLine("--- Renamed SQL (first 500 chars) ---");
+            Console.WriteLine(renamedSql.Length > 500 ? renamedSql.Substring(0, 500) + "..." : renamedSql);
+            Console.WriteLine();
+            Console.WriteLine("done");
+        }
+
         public static void AnalyzeReportDraft()
         {
             DevUtilsProvider.Instance = new DevUtilsProviderImpl();
