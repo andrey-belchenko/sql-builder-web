@@ -89,10 +89,10 @@ IS
 
         FROM nr_ats_data r
              INNER JOIN nk_ats_data k ON r.kod_ats_data = k.kod_ats_data
-             INNER JOIN hs_gtp g ON r.kod_gtp = g.kod_gtp
-             LEFT JOIN hs_gtp g_gp ON g.kod_gtp_gp = g_gp.kod_gtp
-             LEFT JOIN kk_interval i ON g.kod_price_zone = i.kodinterval
-             LEFT JOIN adr_m m ON COALESCE(g.kod_rek, g_gp.kod_rek) = m.kod_m    -- Корректировка 26.12.2025 - Берем с ГТП и только если нет на ГТП берем с ГТП ГП.
+             INNER JOIN e_point.hs_gtp g ON r.kod_gtp = g.kod_gtp
+             LEFT JOIN e_point.hs_gtp g_gp ON g.kod_gtp_gp = g_gp.kod_gtp
+             LEFT JOIN tarif.kk_interval i ON g.kod_price_zone = i.kodinterval
+             LEFT JOIN address.adr_m m ON COALESCE(g.kod_rek, g_gp.kod_rek) = m.kod_m    -- Корректировка 26.12.2025 - Берем с ГТП и только если нет на ГТП берем с ГТП ГП.
        WHERE  r.ym between p_ym_beg AND p_ym_end
          AND ((cnt_kod_adr_m = 0) Or (cnt_kod_adr_m > 0
          AND COALESCE( g.kod_rek, g_gp.kod_rek) in (Select val From vr_number_array Where array_id = 'p_kod_adr_m')))  -- (добавлено 20.11.2025)
@@ -117,7 +117,7 @@ IS
  WITH
  pre as ( -- берем все телефоны по каждому сотруднику
   SELECT kodp, trim(REPLACE(e.tel || ',' || e.m_tel || ',' || e.p_tel,';',',')) tel
-    FROM kr_employee e
+    FROM payer.kr_employee e
     WHERE e.kodp = p_kodp
     )
  , pre2 as (
@@ -156,7 +156,7 @@ IS
  WITH
  pre as ( -- берем все телефоны по каждому сотруднику
   SELECT kodp, trim(REPLACE(e.e_mail,';',',')) as email
-    FROM kr_employee e
+    FROM payer.kr_employee e
     WHERE e.kodp = p_kodp
     )
  , pre2 as (
@@ -232,11 +232,11 @@ IS
                       MAX(CASE WHEN to_date(CONCAT('31.12.', year1),'dd.mm.yyyy') between dat_beg AND dat_end THEN COALESCE(rate1,0) ELSE 0 END) as part2_year1,
                       MAX(CASE WHEN to_date(CONCAT('30.06.', year2),'dd.mm.yyyy') between dat_beg AND dat_end THEN COALESCE(rate1,0) ELSE 0 END) as part1_year2,
                       MAX(CASE WHEN to_date(CONCAT('31.12.', year2),'dd.mm.yyyy') between dat_beg AND dat_end THEN COALESCE(rate1,0) ELSE 0 END) as part2_year2
-               FROM ks_tarif t
-                  INNER JOIN adr_m a ON t.prizn_selo = a.kod_m
-                  INNER JOIN k_fedo f ON a.kod_fo=f.kod_fo
-                  INNER JOIN kr_org p ON t.kodp = p.kodp
-                  INNER JOIN ks_tarif_rate tr ON t.tarif = tr.tarif
+               FROM tarif.ks_tarif t
+                  INNER JOIN address.adr_m a ON t.prizn_selo = a.kod_m
+                  INNER JOIN address.k_fedo f ON a.kod_fo=f.kod_fo
+                  INNER JOIN payer.kr_org p ON t.kodp = p.kodp
+                  INNER JOIN tarif.ks_tarif_rate tr ON t.tarif = tr.tarif
               WHERE tip_tarif_sost = 5
                   AND tarif_parent is not null
                   AND (val_from > 0 or val_to > 0)
@@ -313,7 +313,7 @@ IS
                      , p.kod_okved as kod_okved
                      , a.kod_numobj as kod_numobj
                      , a.ym  as ym
-                     , (SELECT pr_opt FROM hs_gtp  WHERE kod_gtp = hg_common.get_gtp (a.kod_numobj, ym)) as pr_opt
+                     , (SELECT pr_opt FROM e_point.hs_gtp  WHERE kod_gtp = hg_common.get_gtp (a.kod_numobj, ym)) as pr_opt
                      , a.edizm
                      , (CASE WHEN vol.voltage IS NULL THEN -9 ELSE vol.voltage END) as voltage
                      , nvl(vol.abbr,'-')  as volt_abbr
@@ -324,12 +324,12 @@ IS
                      , a.nachisl
                      , nvl(hg_dogr.get_pmax_numobj(a.kod_numobj, 2, kg.ym_first_day(a.ym), 0, a.voltage),0) AS pmax
                 FROM nv_account a
-                   INNER JOIN kr_dogovor d ON a.kod_dog = d.kod_dog
-                   INNER JOIN kr_dogovor dp ON d.kod_dog_fin = dp.kod_dog
-                   LEFT JOIN hk_voltage vol ON a.voltage = vol.voltage
-                   LEFT JOIN kr_numobj kr_n ON a.kod_numobj = kr_n.kod_numobj
-                   LEFT JOIN kr_object ob ON kr_n.kod_obj = ob.kod_obj
-                   LEFT JOIN kr_payer p ON a.kodp = p.kodp
+                   INNER JOIN dog.kr_dogovor d ON a.kod_dog = d.kod_dog
+                   INNER JOIN dog.kr_dogovor dp ON d.kod_dog_fin = dp.kod_dog
+                   LEFT JOIN ec_account.hk_voltage vol ON a.voltage = vol.voltage
+                   LEFT JOIN dog_object.kr_numobj kr_n ON a.kod_numobj = kr_n.kod_numobj
+                   LEFT JOIN dog_object.kr_object ob ON kr_n.kod_obj = ob.kod_obj
+                   LEFT JOIN payer.kr_payer p ON a.kodp = p.kodp
                    Cross Join pars
                Where ((cnt_dep = 0) Or (cnt_dep > 0 And dp.dep in (Select val From vr_number_array Where array_id = 'p_dep')))
                    AND ((cnt_kodp = 0) Or (cnt_kodp > 0 And p.kodp in (Select val From vr_number_array Where array_id = 'p_kodp')))
@@ -421,22 +421,22 @@ IS
                      , (SELECT (CASE WHEN p_add_rule_opt = 1 AND kod_price_zone in (63, 64) AND kod_gtp_gp is not null
                             THEN 1 ELSE pr_opt
                             END) pr_opt
-                         FROM hs_gtp  WHERE kod_gtp = hg_common.get_gtp_add_regl(a.kod_numobj, ym, p_kod_typevariant)) as pr_opt
+                         FROM e_point.hs_gtp  WHERE kod_gtp = hg_common.get_gtp_add_regl(a.kod_numobj, ym, p_kod_typevariant)) as pr_opt
                      , a.edizm
                      , (CASE WHEN vol.voltage IS NULL THEN -9 ELSE vol.voltage END) as voltage
                      , nvl(vol.abbr,'-')  as volt_abbr
                      , a.cust   -- натуральные показатели
                      , nvl(hg_dogr.get_pmax_numobj(a.kod_numobj, 2, kg.ym_first_day(a.ym), 0, a.voltage),0) AS pmax
                 FROM nv_account a
-                   inner join hr_reglament_pp r ON a.kod_reglament=r.kod_reglament
-                   inner join hr_calc_variant v ON v.kod_variant=r.kod_variant
+                   inner join dog_tplan.hr_reglament_pp r ON a.kod_reglament=r.kod_reglament
+                   inner join dog_tplan.hr_calc_variant v ON v.kod_variant=r.kod_variant
 
-                   INNER JOIN kr_dogovor d ON a.kod_dog = d.kod_dog
-                   INNER JOIN kr_dogovor dp ON d.kod_dog_fin = dp.kod_dog
-                   LEFT JOIN hk_voltage vol ON a.voltage = vol.voltage
-                   LEFT JOIN kr_numobj kr_n ON a.kod_numobj = kr_n.kod_numobj
-                   LEFT JOIN kr_object ob ON kr_n.kod_obj = ob.kod_obj
-                   LEFT JOIN kr_payer p ON a.kodp = p.kodp
+                   INNER JOIN dog.kr_dogovor d ON a.kod_dog = d.kod_dog
+                   INNER JOIN dog.kr_dogovor dp ON d.kod_dog_fin = dp.kod_dog
+                   LEFT JOIN ec_account.hk_voltage vol ON a.voltage = vol.voltage
+                   LEFT JOIN dog_object.kr_numobj kr_n ON a.kod_numobj = kr_n.kod_numobj
+                   LEFT JOIN dog_object.kr_object ob ON kr_n.kod_obj = ob.kod_obj
+                   LEFT JOIN payer.kr_payer p ON a.kodp = p.kodp
                    Cross Join pars
                Where ((cnt_dep = 0) Or (cnt_dep > 0 And dp.dep in (Select val From vr_number_array Where array_id = 'p_dep')))
                    AND ((cnt_kodp = 0) Or (cnt_kodp > 0 And p.kodp in (Select val From vr_number_array Where array_id = 'p_kodp')))
@@ -524,14 +524,14 @@ IS
                           , d.ndog as ndog
                           , a.kod_numobj
                           , d.kodp
-                          , (SELECT pr_opt FROM hs_gtp  WHERE kod_gtp = hg_common.get_gtp(a.kod_numobj, a.ym)) as pr_opt
+                          , (SELECT pr_opt FROM e_point.hs_gtp  WHERE kod_gtp = hg_common.get_gtp(a.kod_numobj, a.ym)) as pr_opt
                           , nvl(hg_dogr.get_pmax_numobj(a.kod_numobj, 2, kg.ym_first_day(a.ym), 0, a.voltage),0) AS pmax
                     FROM nv_account a
-                      INNER JOIN kr_dogovor d ON a.kod_dog_fin = d.kod_dog
-                      INNER JOIN ks_vdog vdog ON d.kod_vdog = vdog.kod_vdog
-                      LEFT JOIN kr_numobj kr_n ON a.kod_numobj = kr_n.kod_numobj
-                      LEFT JOIN kr_object ob ON kr_n.kod_obj = ob.kod_obj
-                      LEFT JOIN sk_nachisl n ON a.vid_t = n.vid_t
+                      INNER JOIN dog.kr_dogovor d ON a.kod_dog_fin = d.kod_dog
+                      INNER JOIN dog.ks_vdog vdog ON d.kod_vdog = vdog.kod_vdog
+                      LEFT JOIN dog_object.kr_numobj kr_n ON a.kod_numobj = kr_n.kod_numobj
+                      LEFT JOIN dog_object.kr_object ob ON kr_n.kod_obj = ob.kod_obj
+                      LEFT JOIN fin_doc.sk_nachisl n ON a.vid_t = n.vid_t
                       Cross Join pars
                    WHERE  n.vid_real = 2
                      AND a.ym BETWEEN pars.p_ym_beg AND pars.p_ym_end
@@ -588,21 +588,21 @@ IS
                                 , max (nal.price) as price /**/
                                 , round(sum(nal.nal),2) as nal
                                 , round(sum(nal.nachisl),2) as nachisl
-                           from  nr_account s
+                           from  ec_account.nr_account s
                                inner join nv_account_sost_nal nal ON s.kod_account = nal.kod_account
                                cross join pars
                           where  s.ym BETWEEN pars.p_ym_beg AND pars.p_ym_end
                              AND p_vid_calc in(0,2,3) AND nal.tip_tarif_sost = -2         -- перерасчеты
                           group by nal.kod_account--, nal.price
                       ) sost  ON a.kod_account = sost.kod_account
-             LEFT JOIN sr_facras_text frt ON a.kod_account = frt.kod_account   -- добавлено 12.12.2024 по SD: 72943(1)
-             LEFT JOIN fin.sr_facras fr ON frt.kod_ras = fr.kod_ras         -- добавлено 12.12.2024
-             LEFT join fin.sr_facvip fv ON fr.kod_sf = fv.kod_sf and a.kod_dog = fv.kod_dog and a.ym = fv.ym                -- добавлено 10.07.2025 (по рекомендации Александра Д.)
-             LEFT JOIN sr_facvip_text fvt ON fv.kod_sf = fvt.kod_sf         -- добавлено 10.07.2025 по SD: 72943(2)
+             LEFT JOIN fin_doc.sr_facras_text frt ON a.kod_account = frt.kod_account   -- добавлено 12.12.2024 по SD: 72943(1)
+             LEFT JOIN fin_doc.sr_facras fr ON frt.kod_ras = fr.kod_ras         -- добавлено 12.12.2024
+             LEFT join fin_doc.sr_facvip fv ON fr.kod_sf = fv.kod_sf and a.kod_dog = fv.kod_dog and a.ym = fv.ym                -- добавлено 10.07.2025 (по рекомендации Александра Д.)
+             LEFT JOIN fin_doc.sr_facvip_text fvt ON fv.kod_sf = fvt.kod_sf         -- добавлено 10.07.2025 по SD: 72943(2)
 
-             LEFT JOIN hk_voltage vol ON a.voltage = vol.voltage
-             LEFT JOIN kr_payer p ON pre.kodp = p.kodp
-             LEFT JOIN sk_nachisl n ON a.vid_t = n.vid_t
+             LEFT JOIN ec_account.hk_voltage vol ON a.voltage = vol.voltage
+             LEFT JOIN payer.kr_payer p ON pre.kodp = p.kodp
+             LEFT JOIN fin_doc.sk_nachisl n ON a.vid_t = n.vid_t
              Cross Join pars
          WHERE   n.vid_real = 2
             AND ((p_vid_calc in (0,3) AND a.rym is null )  -- факт или факт предыдущего месяца
@@ -667,10 +667,10 @@ IS
        , get_phone_all(p.kodp) as tel_all
        , get_email_all(p.kodp) as email_all
    FROM rr_rep_dog d   -- предварительно заполненная вр. таблица данными по договорам
-    INNER JOIN kr_payer p ON d.payer_id = p.kodp
-    LEFT JOIN kr_employee e ON  p.kodp=e.kodp  AND e.pr_active = 0
-    LEFT JOIN kk_dolzhfun dolzh ON e.kod_dolzhfun = dolzh.kod_dolzhfun
-    LEFT JOIN ks_namedolzh ndolzh ON e.kod_namedolzh = ndolzh.kod_namedolzh
+    INNER JOIN payer.kr_payer p ON d.payer_id = p.kodp
+    LEFT JOIN payer.kr_employee e ON  p.kodp=e.kodp  AND e.pr_active = 0
+    LEFT JOIN payer.kk_dolzhfun dolzh ON e.kod_dolzhfun = dolzh.kod_dolzhfun
+    LEFT JOIN payer.ks_namedolzh ndolzh ON e.kod_namedolzh = ndolzh.kod_namedolzh
     ;
 
  END payer_employee;
@@ -715,17 +715,17 @@ IS
            , round(sum(CASE WHEN nn.edizm in(4,23) THEN fr.nachisl - COALESCE(nal.nal,0) ELSE 0 END),2) as nach
            , round(sum(CASE WHEN nn.edizm in(3)    THEN fr.nachisl - COALESCE(nal.nal,0) ELSE 0 END),2) as nach_kvt
 
-     FROM kr_dogovor ds
-         INNER JOIN ks_vdog vdogs ON ds.kod_vdog = vdogs.kod_vdog
-         INNER JOIN kr_payer ps ON ds.kodp = ps.kodp
-         INNER JOIN fin.sr_facvip fv ON ds.kod_dog = fv.kod_dog
-         inner join fin.sr_facras fr ON fv.kod_sf = fr.kod_sf
-         INNER JOIN kr_numobj n ON fr.kod_numobj = n.kod_numobj
-         INNER JOIN kr_dogovor d ON TO_CHAR(n.num_obj,'FM000') = d.ndog
-         INNER JOIN ks_vdog vdog ON d.kod_vdog = vdog.kod_vdog
-         INNER JOIN kr_payer p ON d.kodp = p.kodp
-         INNER JOIN sk_nachisl nn ON fr.vid_t = nn.vid_t
-           LEFT JOIN (SELECT SUM(nvl(nal,0)) as nal, kod_ras FROM sr_facras_nal GROUP BY kod_ras) nal ON fr.kod_ras = nal.kod_ras
+     FROM dog.kr_dogovor ds
+         INNER JOIN dog.ks_vdog vdogs ON ds.kod_vdog = vdogs.kod_vdog
+         INNER JOIN payer.kr_payer ps ON ds.kodp = ps.kodp
+         INNER JOIN fin_doc.sr_facvip fv ON ds.kod_dog = fv.kod_dog
+         inner join fin_doc.sr_facras fr ON fv.kod_sf = fr.kod_sf
+         INNER JOIN dog_object.kr_numobj n ON fr.kod_numobj = n.kod_numobj
+         INNER JOIN dog.kr_dogovor d ON TO_CHAR(n.num_obj,'FM000') = d.ndog
+         INNER JOIN dog.ks_vdog vdog ON d.kod_vdog = vdog.kod_vdog
+         INNER JOIN payer.kr_payer p ON d.kodp = p.kodp
+         INNER JOIN fin_doc.sk_nachisl nn ON fr.vid_t = nn.vid_t
+           LEFT JOIN (SELECT SUM(nvl(nal,0)) as nal, kod_ras FROM fin_doc.sr_facras_nal GROUP BY kod_ras) nal ON fr.kod_ras = nal.kod_ras
     WHERE ds.dep = p_dep      AND d.dep =  p_dep
         AND vdogs.tep_el = 7 AND vdogs.kod_tipdog = 2 --AND vdogs.kod_vdoc = 25 -- AND ds.kod_vdog = 221
         AND fv.vid_real = 5

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Npgsql;
 using sql.builder;
 using sql.builder.Clean;
@@ -75,7 +76,8 @@ namespace SqlBuilderLib.DevTools
             Console.OutputEncoding = Encoding.UTF8;
 
             // var sqlFileName = "2.sql";
-            var sqlFileName = "ng_rep_other.sql";
+            // var sqlFileName = "ng_rep_other.sql";
+              var sqlFileName = "nv_account.sql";
             string procedureName = null;
 
             string sqlFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Sql", sqlFileName);
@@ -102,12 +104,7 @@ namespace SqlBuilderLib.DevTools
             Console.WriteLine($"Total: {result.TableNames.Count} tables");
             Console.WriteLine();
 
-            var renameDict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-            {
-                ["sr_recalc_sf"] = "fin_rec.sr_recalc_sf",
-                ["sr_facvip"] = "fin.sr_facvip",
-                ["sr_facras"] = "fin.sr_facras"
-            };
+            var renameDict = LoadRenameDictFromTableSchemas();
 
             Console.WriteLine("Rename mapping:");
             foreach (var kvp in renameDict)
@@ -184,6 +181,28 @@ namespace SqlBuilderLib.DevTools
         public static void AnalyzeReport()
         {
             DevAnalyzer.AnalyzeReports("asuse2.24557");
+        }
+
+        private static Dictionary<string, string> LoadRenameDictFromTableSchemas()
+        {
+            var schemaPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Data", "table-schemas.xml");
+            if (!File.Exists(schemaPath))
+            {
+                Console.WriteLine($"Warning: table-schemas.xml not found at {schemaPath}, using empty rename dict");
+                return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            }
+            var doc = XDocument.Load(schemaPath);
+            var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var record in doc.Root.Elements("DATA_RECORD"))
+            {
+                var tableName = record.Element("table_name")?.Value;
+                var fullName = record.Element("full_name")?.Value;
+                if (!string.IsNullOrEmpty(tableName) && !string.IsNullOrEmpty(fullName))
+                {
+                    dict[tableName] = fullName;
+                }
+            }
+            return dict;
         }
 
     }
