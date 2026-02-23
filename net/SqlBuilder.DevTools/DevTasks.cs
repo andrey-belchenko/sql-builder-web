@@ -77,7 +77,8 @@ namespace SqlBuilderLib.DevTools
 
             // var sqlFileName = "2.sql";
             // var sqlFileName = "ng_rep_other.sql";
-              var sqlFileName = "nv_account.sql";
+            //   var sqlFileName = "nv_account.sql";
+            var sqlFileName = "nv_account_sost_nal.sql";
             string procedureName = null;
 
             string sqlFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Sql", sqlFileName);
@@ -117,7 +118,7 @@ namespace SqlBuilderLib.DevTools
 
             string outputFileName = Path.GetFileNameWithoutExtension(sqlFileName) + "-processed" + Path.GetExtension(sqlFileName);
             string outputFilePath = Path.Combine(Path.GetDirectoryName(sqlFilePath), outputFileName);
-            File.WriteAllText(outputFilePath, renamedSql, Encoding.UTF8);
+            File.WriteAllText(outputFilePath, renamedSql, new UTF8Encoding(false));
             Console.WriteLine($"Saved to: {outputFilePath}");
 
             Console.WriteLine("--- Original SQL (first 500 chars) ---");
