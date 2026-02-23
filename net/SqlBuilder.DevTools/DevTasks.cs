@@ -18,11 +18,12 @@ namespace SqlBuilderLib.DevTools
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            var sqlFileName = "2.sql";
+            // var sqlFileName = ".sql";
+            var sqlFileName = "ng_rep_other.sql";
             string procedureName = null;
 
-            string sqlFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Sql",sqlFileName);
-           
+            string sqlFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Sql", sqlFileName);
+
             if (!File.Exists(sqlFilePath))
             {
                 Console.WriteLine($"Error: SQL file not found: {sqlFilePath}");
@@ -73,7 +74,8 @@ namespace SqlBuilderLib.DevTools
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            var sqlFileName = "2.sql";
+            // var sqlFileName = "2.sql";
+            var sqlFileName = "ng_rep_other.sql";
             string procedureName = null;
 
             string sqlFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Sql", sqlFileName);
@@ -181,7 +183,7 @@ namespace SqlBuilderLib.DevTools
 
         public static void AnalyzeReport()
         {
-            DevAnalyzer.AnalyzeReports( "asuse2.24557");
+            DevAnalyzer.AnalyzeReports("asuse2.24557");
         }
 
     }
