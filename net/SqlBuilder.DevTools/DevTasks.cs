@@ -76,9 +76,9 @@ namespace SqlBuilderLib.DevTools
             Console.OutputEncoding = Encoding.UTF8;
 
             // var sqlFileName = "2.sql";
-            // var sqlFileName = "ng_rep_other.sql";
+            var sqlFileName = "ng_rep_other.sql";
             //   var sqlFileName = "nv_account.sql";
-            var sqlFileName = "nv_account_sost_nal.sql";
+            // var sqlFileName = "nv_account_sost_nal.sql";
             string procedureName = null;
 
             string sqlFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Sql", sqlFileName);
@@ -203,6 +203,9 @@ namespace SqlBuilderLib.DevTools
                     dict[tableName] = fullName;
                 }
             }
+
+            dict["nv_account_sost_nal"] = "report_dev.nv_account_sost_nal";
+            dict["nv_account"] = "report_dev.nv_account";
             return dict;
         }
 

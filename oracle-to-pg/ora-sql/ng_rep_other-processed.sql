@@ -1,3 +1,194 @@
+CREATE OR REPLACE PACKAGE ng_rep_other
+IS
+-- Пакет для отчетов, не подходящих под стандарт dz_kz. Данные из отчета АТС, Полезный отпуск,...
+
+/*  Используется у заказчиков:
+     - Рязань              Отчеты:
+                   № 8.  "Сбытовые надбавки гарантирующих поставщиков".
+                   № 14. Ф46. (функция: get_tbl_ats_data)
+                   № 15. форма 39.
+                   № 16. Структура потребления электрической энергии. (74287)
+                   № 31. Полезный отпуск по ценам НЭСК. (функция: po_per_region_sost)
+                   № 32. Полезный отпуск электрической энергии НЭСК (функция: po_per_region).
+                   № 58. Фактическая покупка-продажа ООО "РГМЭК" электрической энергии и мощности.
+                   № 1073. Реестр договоров.
+                   № 1189.
+                   № 2004. Реестр договоров (functions: get_phone_all, get_email_all и procedure payer_employee).
+      - Гарант. Отчет Ф46  (функция: get_tbl_ats_data)
+*/
+
+
+/* -------------------------- */
+-- MODIFICATION HISTORY
+-- Person           Date       Comments
+------------    ----------  -------------
+-- Ирина М.     06.02.2026  (v). SD: 72956(3). В процедуру po_per_region добавлено условие нужно ли проверять отсутствие цены (p_no_check_price) для отчета № 32.
+-- Vera K       30.01.2026  SD: 76086(3) в процедуре po_per_region_regl переопределен вывод признака вида договора из поставщика.
+-- Ирина М.     26.01.2026  (-, +). Процедура po_per_region_regl заменена на po_on_retail.
+-- Ирина М.     26.12.2025  (v). SD: 72589(18). Функция get_tbl_ats_data. Код региона берем с ГТП и только если его нет с ГТП ГП.
+-- Ирина М.     21.12.2025  (v). SD: 77184. Процедура po_per_region_sost. Добавлен вывод полей gr_str_sf (Номер группы строки в СФ) и num_precision (Точность округления (число знаков после запятой))
+-- Vera K       27.11.2025  в функцию get_tbl_ats_data по продаже учитывается коэффициент с каким нужно выводить данные
+-- Ирина М.     20.11.2025  Актуализация функции get_tbl_ats_data согласно последним изменениям в отчете № 58
+--                          (Теперь неценовая зона во второй ЦЗ, и в нужных местах должны быть минусы: sell_rsv, sell_br; добавлен код региона ГТП ГП)
+--                          Дополнительно добавлен фильтр по региону ГТП ГП.
+-- Vera K       24.10.2025  в процедуру po_per_region_regl добавлена разбивка по kod_sbit и kod_dog_sbit
+-- Vera K       23.10.2025  в функцию get_tbl_ats_data добавлены поля и группировка по ym
+-- Vera K       21.10.2025  в процедуру po_per_region_regl добавлена разбивка по tip_tarif_sost и kod_gtp
+-- Vera K       17.10.2025  SD: 76085 добавлена процедура po_per_region_regl Заполняет временную таблицу rr_rep_po в разрезе регионов и допрегламентов
+-- Ирина М.     13.10.2025  SD: 76731. (v). po_per_region - добавлена обработка фильтра по договорам p_kod_dog.
+-- Ирина М.     19.09.2025  SD: 76585. (+,v,-). Удалена FUNCTION get_tbl_phone_mail_all. Добавлены 2 новые: get_phone_all, get_email_all.
+-- Ирина М.     28.08.2025  SD: 76389. (+). Добавлены: FUNCTION get_tbl_phone_mail_all и procedure payer_employee для отчета № 2004
+-- Ирина М.     12.08.2025  SD: 76222. (v). po_per_region - добавлен фильтр для активных договоров на дату отчета
+-- Ирина М.     10.07.2025  SD: 72943(2). (v) po_per_region_sost. Поле edizm 3 заменяем или не заменям на 4 в зависимости от СФ и где учитывать деньги (в мощности или э/э)
+--                                          Плюс добавлен параметр: is_dog - флаг. 1- добавляем фильтр по договорам из таблицы vr_number_array c array_id = 'p_kod_dog'
+-- Ирина М.     20.03.2025  SD: 72544(2). (v) get_rate_per_part_year. Добавлена обработка null.
+-- Ирина М.     02.02.2025  SD 74166(1). (v) В po_per_region_sost добавлено поле kod_numobj
+-- Ирина М.     28.01.2025  SD 74287(1). (+) Добавлена процедура po_per_region_add_regl: ПО по доп.регламентам в разрезе регионов.
+-- Ирина М.     24.12.2024  SD 72544(1). (+) Добавлена PROCEDURE get_rate_per_part_year для отчета № 8 в Рязани.
+--                                       Заполняет вр. таблицу rr_temp данными о сбытовых надбавках по полугодиям двух лет.
+-- Ирина М.     15.12.2024  SD 72943(1). (v) Функция po_per_region_sost. Добавлен фильтр по kod_tipdog,
+--                                       cust как в СФ (gr_cust = 0  -- если СФ схлопнутая, то начисления по мощности должны учитываться в э/э, а кол-во мощности не показываем)
+-- Ирина М.     28.10.2024  SD 73231. (v) Функция get_tbl_ats_data. Добавлен параметр p_is_positive_digit = 1 или -1, т.к. не во всех отчетах нужно выводить некоторые данные в отрицательном значении
+-- Ирина М.     14.10.2024  SD 72589(4). (v) Функция get_tbl_ats_data и тип rec. Добавлены поля: penalty_pwr_dvr_money, buy_pwr_kom_value, buy_pwr_kom_money.
+--                                       Поле money заменено на penalty для штрафов.
+-- Ирина М.     09.10.2024  SD 72589(3). (v) Новые вводные. Функция get_tbl_ats_data. Убран фильт по pr_opt.
+-- Ирина М.     08.10.2024  SD 72943. (+) Добавлена процедура po_rep_region_sost. Для отчета № 31 Рязань
+-- Ирина М.     02.10.2024  SD 72565(1). (v) Процедура po_rep_region. org_name => payer_name.
+--                                       Добавлено поле kodp, kod_okved и убрана группировка, добавлены фильтры по kodp и kod_adr_m (по потребителы и по субъекту РФ)
+-- Ирина М.     27.09.2024  SD 72956. (v) Теперь новый пакет: ng_rep_other (sg_rep_other удален). Добавлена процедура po_rep_region
+--                                    Заполняет временную таблицу rr_rep_po данными по полезному отпуску в разрезе регионов.
+-- Ирина М.     18.09.2024  SD 72589(1). (v) Рязань. Отчет 58. Добавлены поля для Раздела II (По неценовым зонам ОРЭМ) в первом листе (№2 Фактическая покупка НЭСК).
+-- Ирина М.     11.09.2024  SD 72589. (+) Создан пакет. Добавлена функция get_tbl_ats_data
+/*----------------------------*/
+
+   TYPE rec IS RECORD
+             ( kod_price_zone NUMBER  -- код ценовой зоны
+              , zone_name     VARCHAR2(30 BYTE)  -- ценовая зона (наименование)
+              , gtp_gp_name   VARCHAR2(200 BYTE) -- наименование ГТП ГП
+              , gtp_gp_kod_region  NUMBER              -- код региона Поставщика (ГТП ГП)   (добавлено 19.11.2025)
+              , gtp_gp_region_name VARCHAR2(200 BYTE)  -- наименование региона Поставщика   (добавлено 19.11.2025)
+              , kod_gtp         NUMBER
+              , kod_gtp_letter  VARCHAR2(250 BYTE)
+              , gtp_name        VARCHAR2(200 BYTE)
+              , date_admission  DATE
+              , ym NUMBER
+
+              , buy_rsv_value   NUMBER  -- kod_ats_data = 1
+              , buy_rsv_money   NUMBER
+              , sell_rsv_value  NUMBER  -- kod_ats_data = 2
+              , sell_rsv_money  NUMBER
+              , fine_pwr_money  NUMBER -- kod_ats_data = 3
+              , buy_pwr_value   NUMBER -- kod_ats_data = 4
+              , buy_pwr_money   NUMBER
+              , buy_pwr_frsvr_value  NUMBER -- kod_ats_data = 5
+              , buy_pwr_frsvr_money  NUMBER
+
+              , fine_pwr_not_ready_vr_money NUMBER -- kod_ats_data = 6
+              , penalty_pwr_dvr_money       NUMBER -- стоимость штрафов по генераторам для п. 4.2.4  (5+6)
+
+              , penalty_pwr_over_money    NUMBER -- kod_ats_data = 8
+              , fine_pwr_not_ready_money  NUMBER -- kod_ats_data = 21
+
+              , penalty_pwr_kom_money     NUMBER -- стоимость штрафов по генераторам для п. 4.2.5  (8+21)
+
+              , buy_pwr_over_value      NUMBER -- kod_ats_data = 7
+              , buy_pwr_trans_money    NUMBER -- kod_ats_data = 9
+              , buy_pwr_kom_value      NUMBER -- kod_ats_data= 7+9 for the value
+              , buy_pwr_kom_money      NUMBER -- kod_ats_data= 7+9 for money
+
+              , fine_pwr_kommod_money  NUMBER -- kod_ats_data = 12
+              , buy_pwr_kommod_value   NUMBER -- kod_ats_data = 13
+              , buy_pwr_kommod_money   NUMBER
+
+              , buy_pwr_con_value     NUMBER  -- kod_ats_data = 14
+              , buy_pwr_con_money     NUMBER
+              , fine_pwr_con_money    NUMBER  -- kod_ats_data = 15
+              , buy_pwr_dpm_value     NUMBER  -- kod_ats_data = 16
+              , buy_pwr_dpm_money     NUMBER
+              , buy_pwr_dpmga_value   NUMBER  -- kod_ats_data = 17
+              , buy_pwr_dpmga_money   NUMBER
+              , buy_br_value          NUMBER  -- kod_ats_data = 18
+              , buy_br_money          NUMBER
+              , sell_br_value         NUMBER  -- kod_ats_data = 19
+              , sell_br_money         NUMBER
+              , rd_value_e            NUMBER  -- kod_ats_data = 20
+              , rd_money_e            NUMBER
+              , rd_value_p            NUMBER -- kod_ats_data = 20 with value_type = 'P'
+              , rd_money_p            NUMBER
+              , upz_sell_energy_value_pe NUMBER  -- kod_atsd_data = 10 with value_type = 'PE'  (плановое значение)
+              , upz_sell_energy_value    NUMBER  -- kod_atsd_data = 10 with value_type = 'E'   (фактическое значение)
+              , upz_sell_energy_money    NUMBER
+              , upz_sell_power_value     NUMBER
+              , upz_sell_power_money     NUMBER
+
+              , fact_rd_dv_value_e  NUMBER
+              , fact_rd_dv_money_e  NUMBER
+              , rd_dv_value_p  NUMBER
+              , rd_dv_money_p  NUMBER
+              , likom_buy_value  NUMBER
+              , likom_buy_money  NUMBER
+              , buy_pwr_kommod_rd_value  NUMBER
+              , buy_pwr_kommod_rd_money  NUMBER
+              , upr_shrt_money  NUMBER
+             );
+   TYPE tblAts IS TABLE OF rec;
+
+   TYPE PhoneMail IS RECORD
+             ( kodp NUMBER  -- код потребителя
+              , phone_all   VARCHAR2(500 BYTE)  -- строка перечисления всех номеров телефон всех сотрудников потребителя
+              , mail_all    VARCHAR2(500 BYTE)  -- строка перечисления всех e-mail всех сотрудников потребителя
+              );
+   TYPE tblPhoneMail IS TABLE OF PhoneMail;
+
+    -- Возвращает таблицу с данными по ГТП из nr_ats_data
+   FUNCTION get_tbl_ats_data(p_ym_beg NUMBER, p_ym_end NUMBER, p_coeff NUMBER default -1) RETURN tblAts PIPELINED;
+
+   -- Возвращает строку всех уникальных телефонов всех сотрудников контрагента
+   -- Используется в отчетах 1073 и 20024 Рязань
+   FUNCTION get_phone_all(p_kodp NUMBER) RETURN VARCHAR2;
+
+   -- Возвращает строку всех уникальных e-mail всех сотрудников контрагента
+   -- Используется в отчетах 1073 и 20024 Рязань
+   FUNCTION get_email_all(p_kodp NUMBER) RETURN VARCHAR2;
+
+   -----------------------------
+
+   -- Используется в Рязани в отчете № 8 (72544.xml). Заполняет вр. таблицу rr_temp данными о сбытовых надбавках по полугодиям двух лет
+   PROCEDURE get_rate_per_part_year(p_year1 NUMBER, p_year2 NUMBER, p_kod_m NUMBER default -10000, p_kodp NUMBER default -10000);
+
+   -- Заполняет временную таблицу rr_rep_po данными по полезному отпуску в разрезе регионов по основному регламенту
+   -- Используется в отчете № 15, 32 у Рязани
+   PROCEDURE po_per_region(p_ym_beg NUMBER, p_ym_end NUMBER, p_is_only_active NUMBER default 0);
+
+   -- Заполняет временную таблицу rr_rep_po в разрезе регионов и доп.регламентов
+   -- Используется в отчете
+   PROCEDURE po_on_retail(p_ym_beg NUMBER, p_ym_end NUMBER, p_dep NUMBER);
+
+   -- Заполняет временную таблицу rr_rep_po данными по полезному отпуску в разрезе регионов по доп. регламентам
+   -- p_kod_typevariant - вариант расчета: 0 - продажа (факт); 1- покупка;  2 - цены ГП
+   -- p_add_rule_opt -- для ЦЗ (ценовых зон) все ГТП с установленным флажком "опт". Для НЦЗ (дальний восток и Коми) без анализа флажка и в случае наличия ГТП ГП.
+   -- Используется в отчете № 16 у Рязани
+   PROCEDURE po_per_region_add_regl(p_ym_beg NUMBER, p_ym_end NUMBER, p_kod_typevariant NUMBER default 1, p_add_rule_opt NUMBER default 0);
+
+   -- Заполняет временную таблицу rr_rep_po данными по полезному отпуску в разрезе регионов и составляющих начислений
+   -- is_clear (по умолчанию = 1): 0 - будем добавлять записи в таблицу rr_rep_po;   1 - нужно удалить записи из таблицы rr_per_po
+   -- p_vid_calc (вид расчета; по умолчанию = 0): 0 - факт; 1 - корректировка; 2 -  перерасчеты (договоры с составляющей = -2)
+   -- Используется в отчете № 31 у Рязани
+   PROCEDURE po_per_region_sost(p_ym_beg NUMBER, p_ym_end NUMBER, is_clear NUMBER := 1, p_vid_calc NUMBER := 0, is_dog NUMBER := 0);
+
+   -- Заполняет временную таблицу rr_rep_emp данными о сотрудниках потребителя
+   -- Используется в Рязани в отчете № 2004
+   PROCEDURE payer_employee;
+
+ END ng_rep_other;
+
+
+
+
+
+
+/
+
 CREATE OR REPLACE PACKAGE BODY ng_rep_other
 
 IS
