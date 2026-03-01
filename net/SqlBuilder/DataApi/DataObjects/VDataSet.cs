@@ -658,12 +658,8 @@ namespace sql.builder.DataApi
                             // Сортируем так, чтобы подстановка значений параметров прошла в правильном порядке (сначала kodd_flat, затем kodd, см. 71061 и 71118 в SD)
                             System.Array.Sort<string>(ProcParamNames, Cmn.DescComparsionByLength);
                             VDataTable.SetCommandParams(this, null, cmd, ProcParamNames);
-                            parsList = new VOracleParameter[cmd.Parameters.Count];
-                            cmd.Parameters.CopyTo(parsList, 0);
-                            for (index = cmd.Parameters.Count - 1; index >= 0; index--)
-                            {
-                                cmd.Parameters.RemoveAt(index);
-                            }
+                            parsList = cmd.Parameters.AsVOracleParameters().ToArray();
+                            cmd.Parameters.Clear();
                         }
                         else
                         {
