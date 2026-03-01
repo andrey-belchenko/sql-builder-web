@@ -36,7 +36,9 @@ namespace sql.builder.Clean
                 VOracleDbType.Blob => OracleDbType.Blob,
                 VOracleDbType.NClob => OracleDbType.NClob,
                 VOracleDbType.NVarChar => OracleDbType.NVarchar2,
-                VOracleDbType.Array => throw new System.NotSupportedException("OracleDbType.Array is not supported in ODP.NET Managed Driver. Use UDT custom types for nested tables."),
+                //VOracleDbType.Array => throw new System.NotSupportedException("OracleDbType.Array is not supported in ODP.NET Managed Driver. Use UDT custom types for nested tables."),
+
+                VOracleDbType.Array=> OracleDbType.Array,
                 VOracleDbType.IntervalDS => OracleDbType.IntervalDS,
                 VOracleDbType.Integer => OracleDbType.Int32,
                 _ => OracleDbType.Varchar2,

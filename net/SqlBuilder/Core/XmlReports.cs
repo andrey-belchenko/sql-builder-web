@@ -13,6 +13,7 @@ using System.Xml.Xsl;
 //using DevExpress.DashboardCommon.Native;
 //using DevExpress.XtraEditors;
 
+using infoenergo.core.Data;
 //using infoenergo.core.Extensions;
 //using infoenergo.framework.Extensions.Oracle;
 using sql.builder.Clean;
@@ -1586,7 +1587,7 @@ namespace sql.builder
                 command = new VOracleCommand(sql1, connection);
                 if (!Array.IsNullOrEmpty(pars))
                 {
-                    command.Parameters.AddRange(pars);
+                    command.Parameters.AddRange(DataHelper.ToOracleParameters(pars));
                 }
                 //var con = new OracleConnection();
                 //con.Server = "asuse_kg";

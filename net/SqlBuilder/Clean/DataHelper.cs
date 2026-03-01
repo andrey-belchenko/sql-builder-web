@@ -11,6 +11,7 @@ using System.Data.Common;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
+using Oracle.ManagedDataAccess.Client;
 using sql.builder.Clean;
 using SqlBuilderLib.DevTools;
 
@@ -19,6 +20,17 @@ namespace infoenergo.core.Data
 {
     public static class DataHelper
     {
+        /// <summary>
+        /// Unwraps VOracleParameter[] to OracleParameter[] for use with OracleCommand.Parameters.AddRange.
+        /// VOracleParameter uses composition (OracleParameter is sealed), so we must pass inner parameters.
+        /// </summary>
+        internal static OracleParameter[] ToOracleParameters(VOracleParameter[] parameters)
+        {
+            if (parameters == null || parameters.Length == 0)
+                return Array.Empty<OracleParameter>();
+            return Array.ConvertAll(parameters, p => p.Inner);
+        }
+
         public static object SqlGetValue(string sql, VOracleParameter[] parameters, VOracleConnection connection, bool analyze = true)
         {
             object result = null;
@@ -27,7 +39,7 @@ namespace infoenergo.core.Data
             {
                 if (parameters != null && parameters.Length != 0)
                 {
-                    ((DbParameterCollection)(object)oracleCommand.Parameters).AddRange((Array)parameters);
+                    oracleCommand.Parameters.AddRange(ToOracleParameters(parameters));
                 }
 
                 try
@@ -36,7 +48,7 @@ namespace infoenergo.core.Data
                     {
                         DevUtilsProvider.Instance.AnalyzeExecSql(sql);
                     }
-                    result = ((DbCommand)(object)oracleCommand).ExecuteScalar();
+                    result = oracleCommand.ExecuteScalar();
                 }
                 catch (VOracleException innerException)
                 {
@@ -44,12 +56,12 @@ namespace infoenergo.core.Data
                 }
                 finally
                 {
-                    ((DbParameterCollection)(object)oracleCommand.Parameters).Clear();
+                    oracleCommand.Parameters.Clear();
                 }
             }
             finally
             {
-                ((IDisposable)oracleCommand)?.Dispose();
+                oracleCommand?.Dispose();
             }
 
             return result;
@@ -77,7 +89,7 @@ namespace infoenergo.core.Data
                 if (parameters != null && parameters.Length != 0)
                 {
                     VOracleParameterCollection oracleParameterCollection = new VOracleParameterCollection();
-                    ((DbParameterCollection)(object)oracleParameterCollection).AddRange((Array)parameters);
+                    oracleParameterCollection.AddRange((Array)parameters);
                 }
 
                 throw new FormatException($"Запрос вернул не числовое значение:\"{obj}\" \r\n{ex.Message} \r\nSQL-запрос:\r\n{sql}");
@@ -123,7 +135,7 @@ namespace infoenergo.core.Data
             {
                 if (parameters != null && parameters.Length != 0)
                 {
-                    ((DbParameterCollection)(object)oracleCommand.Parameters).AddRange((Array)parameters);
+                    oracleCommand.Parameters.AddRange(ToOracleParameters(parameters));
                 }
 
                 try
@@ -131,11 +143,11 @@ namespace infoenergo.core.Data
                     DevUtilsProvider.Instance.AnalyzeExecSql(sql);
                     using (VOracleDataReader oracleDataReader = oracleCommand.ExecuteReaderWrapped())
                     {
-                        if (((DbDataReader)(object)oracleDataReader).Read())
+                        if (oracleDataReader.Read())
                         {
-                            if (!((DbDataReader)(object)oracleDataReader).IsDBNull(0))
+                            if (!oracleDataReader.IsDBNull(0))
                             {
-                                dateTime = ((DbDataReader)(object)oracleDataReader).GetDateTime(0);
+                                dateTime = oracleDataReader.GetDateTime(0);
                                 return dateTime;
                             }
 
@@ -153,12 +165,12 @@ namespace infoenergo.core.Data
                 }
                 finally
                 {
-                    ((DbParameterCollection)(object)oracleCommand.Parameters).Clear();
+                    oracleCommand.Parameters.Clear();
                 }
             }
             finally
             {
-                ((IDisposable)oracleCommand)?.Dispose();
+                oracleCommand?.Dispose();
             }
 
             return dateTime;
@@ -221,14 +233,14 @@ namespace infoenergo.core.Data
             {
                 if (parameters != null && parameters.Length != 0)
                 {
-                    ((DbParameterCollection)(object)oracleCommand.Parameters).AddRange((Array)parameters);
+                    oracleCommand.Parameters.AddRange(ToOracleParameters(parameters));
                 }
 
                 try
                 {
                     DevUtilsProvider.Instance.AnalyzeExecSql(sql);
                     VOracleDataReader oracleDataReader = oracleCommand.ExecuteReaderWrapped();
-                    if (((DbDataReader)(object)oracleDataReader).Read())
+                    if (oracleDataReader.Read())
                     {
                         result = oracleDataReader.GetOracleLob(0);
                     }
@@ -239,12 +251,12 @@ namespace infoenergo.core.Data
                 }
                 finally
                 {
-                    ((DbParameterCollection)(object)oracleCommand.Parameters).Clear();
+                    oracleCommand.Parameters.Clear();
                 }
             }
             finally
             {
-                ((IDisposable)oracleCommand)?.Dispose();
+                oracleCommand?.Dispose();
             }
 
             return result;
@@ -259,7 +271,7 @@ namespace infoenergo.core.Data
             {
                 if (parameters != null && parameters.Length != 0)
                 {
-                    ((DbParameterCollection)(object)oracleCommand.Parameters).AddRange((Array)parameters);
+                    oracleCommand.Parameters.AddRange(ToOracleParameters(parameters));
                 }
 
                 try
@@ -273,17 +285,17 @@ namespace infoenergo.core.Data
                     {
                         if (dataTable.Columns.Count == 0)
                         {
-                            for (int i = 0; i < ((DbDataReader)(object)oracleDataReader).FieldCount; i++)
+                            for (int i = 0; i < oracleDataReader.FieldCount; i++)
                             {
-                                dataTable.Columns.Add(((DbDataReader)(object)oracleDataReader).GetName(i), ConvertDataType(((DbDataReader)(object)oracleDataReader).GetFieldType(i)));
+                                dataTable.Columns.Add(oracleDataReader.GetName(i), ConvertDataType(oracleDataReader.GetFieldType(i)));
                             }
                         }
 
-                        while (((DbDataReader)(object)oracleDataReader).Read())
+                        while (oracleDataReader.Read())
                         {
-                            array = new object[((DbDataReader)(object)oracleDataReader).FieldCount];
-                            ((DbDataReader)(object)oracleDataReader).GetValues(array);
-                            object[] array2 = new object[((DbDataReader)(object)oracleDataReader).FieldCount];
+                            array = new object[oracleDataReader.FieldCount];
+                            oracleDataReader.GetValues(array);
+                            object[] array2 = new object[oracleDataReader.FieldCount];
                             for (int j = 0; j < array.Length; j++)
                             {
                                 if (array[j] == DBNull.Value)
@@ -312,12 +324,12 @@ namespace infoenergo.core.Data
                 }
                 finally
                 {
-                    ((DbParameterCollection)(object)oracleCommand.Parameters).Clear();
+                    oracleCommand.Parameters.Clear();
                 }
             }
             finally
             {
-                ((IDisposable)oracleCommand)?.Dispose();
+                oracleCommand?.Dispose();
             }
 
             return dataTable;
@@ -332,7 +344,7 @@ namespace infoenergo.core.Data
             {
                 if (parameters != null && parameters.Length != 0)
                 {
-                    ((DbParameterCollection)(object)oracleCommand.Parameters).AddRange((Array)parameters);
+                    oracleCommand.Parameters.AddRange(ToOracleParameters(parameters));
                 }
 
                 try
@@ -342,17 +354,17 @@ namespace infoenergo.core.Data
                     {
                         if (dataTable.Columns.Count == 0)
                         {
-                            for (int i = 0; i < ((DbDataReader)(object)oracleDataReader).FieldCount; i++)
+                            for (int i = 0; i < oracleDataReader.FieldCount; i++)
                             {
-                                dataTable.Columns.Add(((DbDataReader)(object)oracleDataReader).GetName(i), ConvertDataType(((DbDataReader)(object)oracleDataReader).GetFieldType(i)));
+                                dataTable.Columns.Add(oracleDataReader.GetName(i), ConvertDataType(oracleDataReader.GetFieldType(i)));
                             }
                         }
 
-                        while (((DbDataReader)(object)oracleDataReader).Read())
+                        while (oracleDataReader.Read())
                         {
-                            array = new object[((DbDataReader)(object)oracleDataReader).FieldCount];
-                            ((DbDataReader)(object)oracleDataReader).GetValues(array);
-                            object[] array2 = new object[((DbDataReader)(object)oracleDataReader).FieldCount];
+                            array = new object[oracleDataReader.FieldCount];
+                            oracleDataReader.GetValues(array);
+                            object[] array2 = new object[oracleDataReader.FieldCount];
                             for (int j = 0; j < array.Length; j++)
                             {
                                 if (array[j] == DBNull.Value)
@@ -381,12 +393,12 @@ namespace infoenergo.core.Data
                 }
                 finally
                 {
-                    ((DbParameterCollection)(object)oracleCommand.Parameters).Clear();
+                    oracleCommand.Parameters.Clear();
                 }
             }
             finally
             {
-                ((IDisposable)oracleCommand)?.Dispose();
+                oracleCommand?.Dispose();
             }
 
             return dataTable;
@@ -403,10 +415,10 @@ namespace infoenergo.core.Data
             VOracleCommand oracleCommand = connection.CreateCommand();
             try
             {
-                ((DbCommand)(object)oracleCommand).CommandText = sqlCommand;
+                oracleCommand.CommandText = sqlCommand;
                 if (parameters != null && parameters.Length != 0)
                 {
-                    ((DbParameterCollection)(object)oracleCommand.Parameters).AddRange((Array)parameters);
+                    oracleCommand.Parameters.AddRange(ToOracleParameters(parameters));
                 }
 
                 try
@@ -416,7 +428,7 @@ namespace infoenergo.core.Data
                         DevUtilsProvider.Instance.AnalyzeExecSql(sqlCommand);
                     }
 
-                    ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
+                    oracleCommand.ExecuteNonQuery();
                     result = true;
                 }
                 catch (VOracleException innerException)
@@ -425,12 +437,12 @@ namespace infoenergo.core.Data
                 }
                 finally
                 {
-                    ((DbParameterCollection)(object)oracleCommand.Parameters).Clear();
+                    oracleCommand.Parameters.Clear();
                 }
             }
             finally
             {
-                ((IDisposable)oracleCommand)?.Dispose();
+                oracleCommand?.Dispose();
             }
 
             return result;
@@ -442,8 +454,8 @@ namespace infoenergo.core.Data
             VOracleCommand oracleCommand = connection.CreateCommand();
             try
             {
-                ((DbCommand)(object)oracleCommand).CommandText = sqlCommand;
-                if (parameters != null && ((DbParameterCollection)(object)parameters).Count > 0)
+                oracleCommand.CommandText = sqlCommand;
+                if (parameters != null && parameters.Count > 0)
                 {
                     MoveParameters(parameters, oracleCommand.Parameters);
                 }
@@ -451,7 +463,7 @@ namespace infoenergo.core.Data
                 try
                 {
                     DevUtilsProvider.Instance.AnalyzeExecSql(sqlCommand);
-                    ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
+                    oracleCommand.ExecuteNonQuery();
                     result = true;
                 }
                 catch (VOracleException innerException)
@@ -465,7 +477,7 @@ namespace infoenergo.core.Data
             }
             finally
             {
-                ((IDisposable)oracleCommand)?.Dispose();
+                oracleCommand?.Dispose();
             }
 
             return result;
@@ -473,8 +485,8 @@ namespace infoenergo.core.Data
 
         private static void MoveParameters(DbParameterCollection sourceCollection, DbParameterCollection destinationCollection)
         {
-            DbParameter[] array = new DbParameter[((DbParameterCollection)(object)sourceCollection).Count];
-            for (int i = 0; i < ((DbParameterCollection)(object)sourceCollection).Count; i++)
+            DbParameter[] array = new DbParameter[sourceCollection.Count];
+            for (int i = 0; i < sourceCollection.Count; i++)
             {
                 array[i] = sourceCollection[i];
             }
@@ -482,7 +494,7 @@ namespace infoenergo.core.Data
             DbParameter[] array2 = array;
             foreach (DbParameter value in array2)
             {
-                ((DbParameterCollection)(object)sourceCollection).Remove((object)value);
+                sourceCollection.Remove(value);
                 destinationCollection.Add(value);
             }
         }
@@ -493,17 +505,17 @@ namespace infoenergo.core.Data
             VOracleCommand oracleCommand = connection.CreateCommand();
             try
             {
-                ((DbCommand)(object)oracleCommand).CommandText = sqlCommand;
-                ((DbCommand)(object)oracleCommand).CommandType = commandType;
+                oracleCommand.CommandText = sqlCommand;
+                oracleCommand.CommandType = commandType;
                 if (parameters != null && parameters.Length != 0)
                 {
-                    ((DbParameterCollection)(object)oracleCommand.Parameters).AddRange((Array)parameters);
+                    oracleCommand.Parameters.AddRange(ToOracleParameters(parameters));
                 }
 
                 try
                 {
                     DevUtilsProvider.Instance.AnalyzeExecSql(sqlCommand);
-                    ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
+                    oracleCommand.ExecuteNonQuery();
                     result = true;
                 }
                 catch (VOracleException innerException)
@@ -512,12 +524,12 @@ namespace infoenergo.core.Data
                 }
                 finally
                 {
-                    ((DbParameterCollection)(object)oracleCommand.Parameters).Clear();
+                    oracleCommand.Parameters.Clear();
                 }
             }
             finally
             {
-                ((IDisposable)oracleCommand)?.Dispose();
+                oracleCommand?.Dispose();
             }
 
             return result;
@@ -529,9 +541,9 @@ namespace infoenergo.core.Data
             VOracleCommand oracleCommand = connection.CreateCommand();
             try
             {
-                ((DbCommand)(object)oracleCommand).CommandText = sqlCommand;
-                ((DbCommand)(object)oracleCommand).CommandType = commandType;
-                if (parameters != null && ((DbParameterCollection)(object)parameters).Count > 0)
+                oracleCommand.CommandText = sqlCommand;
+                oracleCommand.CommandType = commandType;
+                if (parameters != null && parameters.Count > 0)
                 {
                     MoveParameters(parameters, oracleCommand.Parameters);
                 }
@@ -539,7 +551,7 @@ namespace infoenergo.core.Data
                 try
                 {
                     DevUtilsProvider.Instance.AnalyzeExecSql(sqlCommand);
-                    ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
+                    oracleCommand.ExecuteNonQuery();
                     result = true;
                 }
                 catch (VOracleException innerException)
@@ -553,7 +565,7 @@ namespace infoenergo.core.Data
             }
             finally
             {
-                ((IDisposable)oracleCommand)?.Dispose();
+                oracleCommand?.Dispose();
             }
 
             return result;
@@ -565,16 +577,16 @@ namespace infoenergo.core.Data
             VOracleCommand oracleCommand = new VOracleCommand(sqlCommand, transaction);
             try
             {
-                ((DbCommand)(object)oracleCommand).CommandType = commandType;
+                oracleCommand.CommandType = commandType;
                 if (parameters != null && parameters.Length != 0)
                 {
-                    ((DbParameterCollection)(object)oracleCommand.Parameters).AddRange((Array)parameters);
+                    oracleCommand.Parameters.AddRange(ToOracleParameters(parameters));
                 }
 
                 try
                 {
                     DevUtilsProvider.Instance.AnalyzeExecSql(sqlCommand);
-                    ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
+                    oracleCommand.ExecuteNonQuery();
                     result = true;
                 }
                 catch (VOracleException innerException)
@@ -583,12 +595,12 @@ namespace infoenergo.core.Data
                 }
                 finally
                 {
-                    ((DbParameterCollection)(object)oracleCommand.Parameters).Clear();
+                    oracleCommand.Parameters.Clear();
                 }
             }
             finally
             {
-                ((IDisposable)oracleCommand)?.Dispose();
+                oracleCommand?.Dispose();
             }
 
             return result;
@@ -625,16 +637,16 @@ namespace infoenergo.core.Data
             try
             {
                 DevUtilsProvider.Instance.AnalyzeExecSql(sqlCommand);
-                ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
+                oracleCommand.ExecuteNonQuery();
                 result = true;
             }
             catch (VOracleException innerException)
             {
-                throw new OracleSqlException(innerException, ((DbCommand)(object)oracleCommand).CommandText);
+                throw new OracleSqlException(innerException, oracleCommand.CommandText);
             }
             finally
             {
-                ((IDisposable)oracleCommand)?.Dispose();
+                oracleCommand?.Dispose();
             }
 
             return result;
@@ -810,33 +822,33 @@ namespace infoenergo.core.Data
                 DevUtilsProvider.Instance.AnalyzeExecSql(commandText);
                 using (VOracleDataReader oracleDataReader = oracleCommand.ExecuteReaderWrapped())
                 {
-                    if (((DbDataReader)(object)oracleDataReader).Read())
+                    if (oracleDataReader.Read())
                     {
-                        if (((DbDataReader)(object)oracleDataReader)["SID"] == DBNull.Value)
+                        if (oracleDataReader["SID"] == DBNull.Value)
                         {
                             sid = null;
                         }
                         else
                         {
-                            sid = Convert.ToDecimal(((DbDataReader)(object)oracleDataReader)["SID"]);
+                            sid = Convert.ToDecimal(oracleDataReader["SID"]);
                         }
 
-                        if (((DbDataReader)(object)oracleDataReader)["SERIAL#"] == DBNull.Value)
+                        if (oracleDataReader["SERIAL#"] == DBNull.Value)
                         {
                             serial = null;
                         }
                         else
                         {
-                            serial = Convert.ToDecimal(((DbDataReader)(object)oracleDataReader)["SERIAL#"]);
+                            serial = Convert.ToDecimal(oracleDataReader["SERIAL#"]);
                         }
 
-                        if (((DbDataReader)(object)oracleDataReader)["SPID"] == DBNull.Value)
+                        if (oracleDataReader["SPID"] == DBNull.Value)
                         {
                             spid = null;
                         }
                         else
                         {
-                            spid = Convert.ToDecimal(((DbDataReader)(object)oracleDataReader)["SPID"]);
+                            spid = Convert.ToDecimal(oracleDataReader["SPID"]);
                         }
 
                         result = true;
@@ -845,7 +857,7 @@ namespace infoenergo.core.Data
             }
             finally
             {
-                ((IDisposable)oracleCommand)?.Dispose();
+                oracleCommand?.Dispose();
             }
 
             return result;
@@ -929,9 +941,9 @@ namespace infoenergo.core.Data
                         string commandText = "ALTER USER " + user + " IDENTIFIED BY \"" + newPassword + "\"";
                         VOracleCommand oracleCommand = new VOracleCommand(commandText, connection);
                         DevUtilsProvider.Instance.AnalyzeExecSql(commandText);
-                        ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
+                        oracleCommand.ExecuteNonQuery();
                         result = true;
-                        ((Component)(object)oracleCommand).Dispose();
+                        oracleCommand.Dispose();
                     }
                 }
                 catch (VOracleException ex)
@@ -1256,14 +1268,14 @@ namespace infoenergo.core.Data
             {
                 if (SqlExecute("BEGIN DBMS_APPLICATION_INFO.READ_MODULE(:module, :action); END;", parameters, connection))
                 {
-                    if (((DbParameter)(object)oracleParameter).Value != DBNull.Value)
+                    if (oracleParameter.Value != DBNull.Value)
                     {
-                        module = Convert.ToString(((DbParameter)(object)oracleParameter).Value);
+                        module = Convert.ToString(oracleParameter.Value);
                     }
 
-                    if (((DbParameter)(object)oracleParameter2).Value != DBNull.Value)
+                    if (oracleParameter2.Value != DBNull.Value)
                     {
-                        action = Convert.ToString(((DbParameter)(object)oracleParameter2).Value);
+                        action = Convert.ToString(oracleParameter2.Value);
                     }
                 }
             }

@@ -210,7 +210,9 @@ namespace SqlBuilderLib.DevTools
         {
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
-            var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
+            //var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
+
+            var conStr = "User Id=asuse;Password=kl0pik;Data Source=REALRYAZ.WORLD;Tns_Admin=C:\\oracle\\instantclient_11_2\\network\\admin";
 
             CleanSqlBuilder.ChangeConnectionString(conStr);
             Console.WriteLine(conStr);

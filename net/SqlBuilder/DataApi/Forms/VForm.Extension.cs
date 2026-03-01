@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
+using infoenergo.core.Data;
 using sql.builder.Clean;
 //using DevExpress.XtraVerticalGrid;
 //using infoenergo.core.Extensions;
@@ -593,15 +594,15 @@ namespace sql.builder.DataApi
             // 09,01,08 Емцов, добавил ClearSql, тк падало при update с непонятной ошибкой
             var pars = getOracleParams(xparCols).ToArray();
             dataAdapter.UpdateCommand = new VOracleCommand(Cmn.ClearSql(ReadElementAsString(xtable, EName.update_text)));
-            dataAdapter.UpdateCommand.Parameters.AddRange(pars);
+            dataAdapter.UpdateCommand.Parameters.AddRange(DataHelper.ToOracleParameters(pars));
             //pars = getOracleParams(updatebleColumns, keyColumn.XName).ToArray();
             pars = getOracleParams(xupdatebleColumns, keyColName).ToArray();
             dataAdapter.InsertCommand = new VOracleCommand(Cmn.ClearSql(ReadElementAsString(xtable, EName.insert_text)));
-            dataAdapter.InsertCommand.Parameters.AddRange(pars);
+            dataAdapter.InsertCommand.Parameters.AddRange(DataHelper.ToOracleParameters(pars));
             //pars = getOracleParams(updatebleColumns.Where(e => e.IsKey).ToList()).ToArray();
             pars = getOracleParams(xkeyColumns).ToArray();
             dataAdapter.DeleteCommand = new VOracleCommand(Cmn.ClearSql(ReadElementAsString(xtable, EName.delete_text)));
-            dataAdapter.DeleteCommand.Parameters.AddRange(pars);
+            dataAdapter.DeleteCommand.Parameters.AddRange(DataHelper.ToOracleParameters(pars));
             pars = getOracleParams(xkeyColumns).ToArray();
             string cmdText = ReadElementAsString(xtable, EName.clear_temp_text);
             var par = new VOracleParameter(TextConst.Pfx.Param + TextConst.DBParams.FormId, VOracleDbType.VarChar);
@@ -624,7 +625,7 @@ namespace sql.builder.DataApi
             if (!string.IsNullOrEmpty(updateTempText))
             {
                 table.UpdateTempCommand = new VOracleCommand(updateTempText);
-                table.UpdateTempCommand.Parameters.AddRange(pars);
+                table.UpdateTempCommand.Parameters.AddRange(DataHelper.ToOracleParameters(pars));
             }
             //table.UpdateTempCommand = new OracleCommand(getUpdateTempText(table, queryCall, updatebleColumns, keyColumn));
             ////table.UpdateTempCommand.Parameters.AddRange(pars);

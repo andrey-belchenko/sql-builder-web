@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Xml.Linq;
+using infoenergo.core.Data;
 using sql.builder.Clean;
 using sql.builder.DataApi;
 using SqlBuilderLib.DevTools;
@@ -225,7 +226,7 @@ namespace sql.builder.XmlHelpers
                     new VOracleParameter("nwait"   , VOracleDbType.NVarChar) { Value = 0M },
                     new VOracleParameter("return"  , VOracleDbType.NVarChar) { Direction = ParameterDirection.ReturnValue}
                 };
-                cmd.Parameters.AddRange(parameters);
+                cmd.Parameters.AddRange(DataHelper.ToOracleParameters(parameters));
                 DevUtilsProvider.Instance.AnalyzeExecSql(cmd.CommandText);
                 cmd.ExecuteNonQuery();
 
@@ -256,7 +257,7 @@ namespace sql.builder.XmlHelpers
                     new VOracleParameter("s_pref"  , VOracleDbType.NVarChar) { Value = "sql.builder_" + rep_table},
                     new VOracleParameter("nkod_dog", VOracleDbType.Number)   { Value = 0M },
                 };
-                cmd.Parameters.AddRange(parameters);
+                cmd.Parameters.AddRange(DataHelper.ToOracleParameters(parameters));
                 DevUtilsProvider.Instance.AnalyzeExecSql(cmd.CommandText);
                 cmd.ExecuteNonQuery();
 
