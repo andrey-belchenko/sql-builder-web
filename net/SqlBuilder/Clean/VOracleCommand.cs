@@ -74,6 +74,14 @@ namespace sql.builder.Clean
         }
 
         /// <summary>
+        /// Executes ExecuteReader and wraps result in VOracleDataReader
+        /// </summary>
+        public VOracleDataReader ExecuteReaderWrapped()
+        {
+            return new VOracleDataReader((OracleDataReader)ExecuteReader());
+        }
+
+        /// <summary>
         /// Raises the CommandTextChanged event
         /// </summary>
         protected virtual void OnCommandTextChanged(string oldValue, string newValue)

@@ -1321,7 +1321,7 @@ namespace infoenergo.core.Data
             {
                 if (c == null)
                 {
-                    OracleError oracleError = new OracleError(-1, Code, Message, OracleObjectType.Unknown, null, null);
+                    OracleError oracleError = new OracleError(-1, Code, Message, sql.builder.Clean.OracleObjectType.Unknown, null, null);
                     oracleError.IsRecoverable = d;
                     c = new OracleErrorCollection(new OracleError[1] { oracleError });
                 }
@@ -1412,7 +1412,7 @@ namespace infoenergo.core.Data
 
         private string g;
 
-        private OracleObjectType h;
+        private sql.builder.Clean.OracleObjectType h;
 
         private bool i;
 
@@ -1494,7 +1494,7 @@ namespace infoenergo.core.Data
         //
         // Value:
         //     One of the Devart.Data.Oracle.OracleObjectType values.
-        public OracleObjectType ObjectType
+        public sql.builder.Clean.OracleObjectType ObjectType
         {
             get
             {
@@ -1550,7 +1550,7 @@ namespace infoenergo.core.Data
             }
         }
 
-        public OracleError(int A_0, int A_1, string A_2, OracleObjectType A_3, string A_4, string A_5)
+        public OracleError(int A_0, int A_1, string A_2, sql.builder.Clean.OracleObjectType A_3, string A_4, string A_5)
         {
             h = A_3;
             f = A_4;

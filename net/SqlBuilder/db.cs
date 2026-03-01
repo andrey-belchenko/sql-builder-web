@@ -5,7 +5,6 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using Devart.Data.Oracle;
-//using infoenergo.core.Data.Tables;
 using infoenergo.sys;
 using sql.builder.Core;
 using sql.builder.DataApi;

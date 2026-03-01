@@ -1909,18 +1909,6 @@ namespace sql.builder
                 }
             }
         }
-        public static bool TryGetParameter(this Devart.Data.Oracle.OracleParameterCollection parameters, string parameter_name, out Devart.Data.Oracle.OracleParameter parameter)
-        {
-            Contract.Assert(parameters != null);
-            int index = parameters.IndexOf(parameter_name);
-            if (index >= 0) {
-                parameter = parameters[index];
-                return true;
-            } else {
-                parameter = null;
-                return false;
-            }
-        }
         public static string[] GetParameterNames(DbParameterCollection parameters)
         {
             Contract.Assume(parameters != null);
