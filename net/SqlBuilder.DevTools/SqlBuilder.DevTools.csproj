@@ -31,8 +31,7 @@
   
   <!-- Error if DLL doesn't exist - user must build manually -->
   <Target Name="CheckGeneratedDllExists" BeforeTargets="ResolveAssemblyReferences">
-    <Error Condition="!Exists('..\Antlr.Oracle.Generated\bin\$(Configuration)\net8.0\Antlr.Oracle.Generated.dll')" 
-           Text="Antlr.Oracle.Generated.dll not found. Build it manually with: dotnet build Antlr.Oracle.Generated/Antlr.Oracle.Generated.csproj" />
+    <Error Condition="!Exists('..\Antlr.Oracle.Generated\bin\$(Configuration)\net8.0\Antlr.Oracle.Generated.dll')" Text="Antlr.Oracle.Generated.dll not found. Build it manually with: dotnet build Antlr.Oracle.Generated/Antlr.Oracle.Generated.csproj" />
   </Target>
 
 </Project>

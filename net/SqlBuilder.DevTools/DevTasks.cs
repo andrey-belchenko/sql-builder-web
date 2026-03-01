@@ -209,5 +209,30 @@ namespace SqlBuilderLib.DevTools
             return dict;
         }
 
+
+        public static void TestReport()
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+            XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
+            var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
+
+            CleanSqlBuilder.ChangeConnectionString(conStr);
+            Console.WriteLine(conStr);
+
+            XmlReports.SetGlobalParValue("dep", 3580m);
+            var pars = new Dictionary<string, object>();
+
+
+            pars.Add("p_dep", 3580m);
+            pars.Add("p_ym_beg", 2025.06m);
+
+            var path = CleanSqlBuilder.ExecReportGetPath("ryazan.76607", pars, "76607.xlsx");
+            // Output as file URI for VS Code debug console to recognize as clickable link
+            //var fileUri = new Uri(path).ToString();
+            Console.WriteLine(path);
+            Console.WriteLine("done");
+
+        }
+
     }
 }
