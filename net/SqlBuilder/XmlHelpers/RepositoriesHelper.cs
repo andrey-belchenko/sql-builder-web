@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
-
+using sql.builder.Clean;
 using sql.builder.DataApi;
 using SqlBuilderLib.DevTools;
 
@@ -221,10 +220,10 @@ namespace sql.builder.XmlHelpers
                 cmd.CommandText = "kg_common.lock_dog";
                 var parameters = new[]
                 {
-                    new OracleParameter("s_pref"  , OracleDbType.NVarChar) { Value = "sql.builder_" + rep_table},
-                    new OracleParameter("nkod_dog", OracleDbType.Number)   { Value = 0M },
-                    new OracleParameter("nwait"   , OracleDbType.NVarChar) { Value = 0M },
-                    new OracleParameter("return"  , OracleDbType.NVarChar) { Direction = ParameterDirection.ReturnValue}
+                    new VOracleParameter("s_pref"  , VOracleDbType.NVarChar) { Value = "sql.builder_" + rep_table},
+                    new VOracleParameter("nkod_dog", VOracleDbType.Number)   { Value = 0M },
+                    new VOracleParameter("nwait"   , VOracleDbType.NVarChar) { Value = 0M },
+                    new VOracleParameter("return"  , VOracleDbType.NVarChar) { Direction = ParameterDirection.ReturnValue}
                 };
                 cmd.Parameters.AddRange(parameters);
                 DevUtilsProvider.Instance.AnalyzeExecSql(cmd.CommandText);
@@ -254,8 +253,8 @@ namespace sql.builder.XmlHelpers
                 cmd.CommandText = "kg_common.unlock_dog";
                 var parameters = new[]
                 {
-                    new OracleParameter("s_pref"  , OracleDbType.NVarChar) { Value = "sql.builder_" + rep_table},
-                    new OracleParameter("nkod_dog", OracleDbType.Number)   { Value = 0M },
+                    new VOracleParameter("s_pref"  , VOracleDbType.NVarChar) { Value = "sql.builder_" + rep_table},
+                    new VOracleParameter("nkod_dog", VOracleDbType.Number)   { Value = 0M },
                 };
                 cmd.Parameters.AddRange(parameters);
                 DevUtilsProvider.Instance.AnalyzeExecSql(cmd.CommandText);

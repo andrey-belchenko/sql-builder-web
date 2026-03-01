@@ -6,7 +6,6 @@ using System.Globalization;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
 //using infoenergo.core.Extensions;
 //using infoenergo.ui.win;
 using sql.builder.asuse;
@@ -517,7 +516,7 @@ namespace sql.builder.DataApi
             if (repProc != null)
             {
                 //WaitUIHelper.LastUsedUIHelper.Show("Загрузка данных", WaitUIMode.WaitCursor);
-                OracleCommand procCmd = new VOracleCommand();
+                VOracleCommand procCmd = new VOracleCommand();
                 procCmd.Connection = this.GetConnection();
                 procCmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
                 procCmd.CommandText = repProc.Value;
@@ -1875,10 +1874,10 @@ namespace sql.builder.DataApi
 
     public class SaveResult
     {
-        Dictionary<DataRow, OracleException> _rowsExceptions = new Dictionary<DataRow, OracleException>();
+        Dictionary<DataRow, Exception> _rowsExceptions = new Dictionary<DataRow, Exception>();
         bool _success = true;
 
-        public Dictionary<DataRow, OracleException> RowsExceptions { get { return _rowsExceptions; } }
+        public Dictionary<DataRow, Exception> RowsExceptions { get { return _rowsExceptions; } }
         public bool Success { get { return _success; } }
 
         public void AppendResult(SaveResult result)
@@ -1890,7 +1889,7 @@ namespace sql.builder.DataApi
             if (!result.Success) _success = false;
         }
 
-        public void AddRowException(DataRow row, OracleException ex)
+        public void AddRowException(DataRow row, Exception ex)
         {
             _rowsExceptions.Add(row, ex);
             _success = false;

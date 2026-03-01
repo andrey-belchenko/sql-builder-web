@@ -55,7 +55,7 @@ namespace sql.builder.Clean
         public override bool IsDBNull(int ordinal) => _inner.IsDBNull(ordinal);
         public override IEnumerator GetEnumerator() => _inner.GetEnumerator();
 
-        public Devart.Data.Oracle.OracleLob GetOracleLob(int ordinal) => _inner.GetOracleLob(ordinal);
+        public VOracleLob GetOracleLob(int ordinal) => new VOracleLob(_inner.GetOracleLob(ordinal));
 
         protected override void Dispose(bool disposing)
         {

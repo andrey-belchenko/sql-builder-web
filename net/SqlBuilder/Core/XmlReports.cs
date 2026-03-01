@@ -10,7 +10,6 @@ using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
-using Devart.Data.Oracle;
 //using DevExpress.DashboardCommon.Native;
 //using DevExpress.XtraEditors;
 
@@ -1230,7 +1229,7 @@ namespace sql.builder
         }
         private static SortedList<string, XmlNode> namedQueryNodes = null;
         private static SortedList<string, int> namedColIndexes = null;
-        private static int executeReportQuery(XmlNode query, XmlNode report, XmlNode outputParent, string parentId, SortedList<string, string> sqlList, OracleConnection connection, DataTable dataTable, int rowIndex)
+        private static int executeReportQuery(XmlNode query, XmlNode report, XmlNode outputParent, string parentId, SortedList<string, string> sqlList, VOracleConnection connection, DataTable dataTable, int rowIndex)
         {
             // проверил работу на трехуровневой структуре report = temp-1 , по одному элементу на каждом уровне... работа при наличии 2-х и более дочерних таблиц не проверена (могут быть проблемы).
 
@@ -1581,7 +1580,7 @@ namespace sql.builder
             //sql = sql.Replace(TextConst.DBObjects.TempTable, "rr_temp11");
             //connection = XmlReports.Environment.Connection.Clone();
             //connection.Open(useGlobalSettings: true);
-            OracleCommand command = null;
+            VOracleCommand command = null;
             try
             {
                 command = new VOracleCommand(sql1, connection);

@@ -13,6 +13,12 @@ namespace sql.builder.Clean
             return (Devart.Data.Oracle.OracleDbType)(int)dbType;
         }
 
+        private static object UnwrapValue(object value)
+        {
+            var va = value as VOracleArray;
+            return va != null ? va.Inner : value;
+        }
+
         public VOracleParameter() : base()
         {
         }
@@ -29,7 +35,7 @@ namespace sql.builder.Clean
         {
         }
 
-        public VOracleParameter(string parameterName, VOracleDbType dbType, object value, ParameterDirection direction) : base(parameterName, ToDevart(dbType), value, direction)
+        public VOracleParameter(string parameterName, VOracleDbType dbType, object value, ParameterDirection direction) : base(parameterName, ToDevart(dbType), UnwrapValue(value), direction)
         {
         }
 

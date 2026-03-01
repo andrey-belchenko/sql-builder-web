@@ -1,7 +1,6 @@
 using System.Data;
 using System.Diagnostics;
 using System.Text;
-using Devart.Data.Oracle;
 using infoenergo.core.Data; // DataHelper, OracleSqlException
 using infoenergo.sys;
 using sql.builder.Clean;
@@ -16,16 +15,17 @@ namespace sql.builder.Core
         /// <summary>
         /// Тип ASUSETYPES.NUMBER$TABLE
         /// </summary>
-        private static OracleType _number_table_type;
+        private static VOracleType _number_table_type;
         /// <summary>
         /// Тип ASUSETYPES.VARCHAR2$TABLE
         /// </summary>
-        private static OracleType _varchar2_table_type;
-        private static bool TryGetOracleType(string type_name, ref OracleType type)
+        private static VOracleType _varchar2_table_type;
+        private static bool TryGetOracleType(string type_name, ref VOracleType type)
         {
-            //try {
-            type = OracleType.GetObjectType(type_name, db.Connection);
-            return true;
+            VOracleType t;
+            var result = VOracleType.TryGetObjectType(type_name, db.Connection, out t);
+            type = t;
+            return result;
         }
         static ArrayStorage()
         {
@@ -63,7 +63,7 @@ namespace sql.builder.Core
         {
             this._values = null;
             VOracleDbType data_type;
-            OracleType array_type;
+            VOracleType array_type;
             if (values[0] is string)
             {
                 this._value_column = "sval";
@@ -99,7 +99,7 @@ namespace sql.builder.Core
                                                 "END;", Global.Connection);
                         cmd.Parameters.Add(new VOracleParameter("array_id", VOracleDbType.NVarChar, this._id, ParameterDirection.Input));
                         cmd.Parameters.Add(new VOracleParameter("count", VOracleDbType.Integer, values.Length, ParameterDirection.Input));
-                        OracleArray array = new OracleArray(array_type, values);
+                        var array = VOracleArray.Create(array_type, values);
                         cmd.Parameters.Add(new VOracleParameter("value", VOracleDbType.Array, array, ParameterDirection.Input));
                         DevUtilsProvider.Instance.AnalyzeExecSql(cmd.CommandText);
                         cmd.ExecuteNonQuery();
@@ -126,9 +126,8 @@ namespace sql.builder.Core
                         }
                     }
                 }
-                catch (Devart.Data.Oracle.OracleException ex)
+                catch (VOracleException ex)
                 {
-
                     throw ex;
                     //throw new infoenergo.core.Data.OracleSqlException(ex, cmd.CommandText, cmd.Parameters);
                 }

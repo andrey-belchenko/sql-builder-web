@@ -1,3 +1,4 @@
+using System;
 using Devart.Data.Oracle;
 
 namespace sql.builder.Clean
@@ -29,6 +30,26 @@ namespace sql.builder.Clean
         public new VOracleConnection Clone()
         {
             return new VOracleConnection(this.ConnectionString);
+        }
+
+        /// <summary>
+        /// Begins a transaction and returns VOracleTransaction.
+        /// </summary>
+        public new VOracleTransaction BeginTransaction()
+        {
+            return new VOracleTransaction(base.BeginTransaction());
+        }
+
+        public override void Open()
+        {
+            try
+            {
+                base.Open();
+            }
+            catch (OracleException ex)
+            {
+                throw new VOracleException(ex);
+            }
         }
     }
 }

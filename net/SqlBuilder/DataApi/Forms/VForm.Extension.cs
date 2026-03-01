@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
 using sql.builder.Clean;
 //using DevExpress.XtraVerticalGrid;
 //using infoenergo.core.Extensions;
@@ -605,20 +604,20 @@ namespace sql.builder.DataApi
             dataAdapter.DeleteCommand.Parameters.AddRange(pars);
             pars = getOracleParams(xkeyColumns).ToArray();
             string cmdText = ReadElementAsString(xtable, EName.clear_temp_text);
-            var par = new OracleParameter(TextConst.Pfx.Param + TextConst.DBParams.FormId, OracleDbType.VarChar);
+            var par = new VOracleParameter(TextConst.Pfx.Param + TextConst.DBParams.FormId, VOracleDbType.VarChar);
             if (!string.IsNullOrEmpty(cmdText))
             {
                 table.ClearTempCommand = new VOracleCommand(cmdText);
                 table.ClearTempCommand.Parameters.Add(par);
             }
             var parsList = getOracleParams(xupdatebleColumnsExt);
-            par = new OracleParameter(TextConst.Pfx.Param + TextConst.DBParams.FormId, OracleDbType.VarChar);
+            par = new VOracleParameter(TextConst.Pfx.Param + TextConst.DBParams.FormId, VOracleDbType.VarChar);
             parsList.Add(par);
             if (!xkeyColumns.Any(c => c.Attribute(_AName.is_updateable) != null || c.Attribute(_AName.is_updateable_ext) != null))
             {
                 parsList.AddRange(pars);
             }
-            par = new OracleParameter(TextConst.Pfx.Param + TextConst.DBParams.RowStateId, OracleDbType.VarChar);
+            par = new VOracleParameter(TextConst.Pfx.Param + TextConst.DBParams.RowStateId, VOracleDbType.VarChar);
             parsList.Add(par);
             pars = parsList.ToArray();
             string updateTempText = ReadElementAsString(xtable, EName.update_temp_text);
@@ -1765,9 +1764,9 @@ namespace sql.builder.DataApi
             sql.AppendLine("end;");
             return sql.ToString();
         }
-        private static List<OracleParameter> getOracleParams(List<XElement> xcolumns, string retName = null)
+        private static List<VOracleParameter> getOracleParams(List<XElement> xcolumns, string retName = null)
         {
-            var list = new List<OracleParameter>(xcolumns.Count);
+            var list = new List<VOracleParameter>(xcolumns.Count);
             foreach (XElement xcol in xcolumns)
             {
                 string col_name = xcol.Attribute(_AName.name).Value;

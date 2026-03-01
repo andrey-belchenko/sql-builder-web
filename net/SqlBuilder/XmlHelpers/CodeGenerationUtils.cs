@@ -49,9 +49,9 @@ namespace sql.builder.XmlHelpers
 
             if (!isDelete)
             {
-                sb.AppendLine("var par = new OracleParameter();");
+                sb.AppendLine("var par = new VOracleParameter();");
                 sb.AppendLine(string.Format("par.ParameterName = \"{0}\";", TextConst.DBParams.PrimaryKeyParam));
-                sb.AppendLine("par.OracleDbType = OracleDbType.Number;");
+                sb.AppendLine("par.OracleDbType = VOracleDbType.Number;");
                 sb.AppendLine("par.Direction = ParameterDirection.Output;");
                 sb.AppendLine("cmd.Parameters.Add(par);");
             }
@@ -162,7 +162,7 @@ namespace sql.builder.XmlHelpers
             sb.AppendLine(string.Format("public  void {0} ({1} {2})", methodName, className, objName));
 
             sb.AppendLine("{");
-            sb.AppendLine("OracleParameter par =null;");
+            sb.AppendLine("VOracleParameter par =null;");
             sb.AppendLine("int idCounter = 0;");
             var tbl = ds.GetTable(rep.MainSource().P_Alias);
             var qry = rep.GetQuery(tbl.TableName);
@@ -276,9 +276,9 @@ namespace sql.builder.XmlHelpers
             foreach (var col in realColumns)
             {
                 var stype = queryCall.Query().SearchColumn(col.ColumnName).XDataType();
-                sb.AppendLine("par = new OracleParameter();");
+                sb.AppendLine("par = new VOracleParameter();");
                 sb.AppendLine(string.Format("par.ParameterName=\"{0}\";", GetParNameForColumn(col.ColumnName)));
-                sb.AppendLine(string.Format("par.OracleDbType=OracleDbType.{0};", Cmn.GetDBType(stype).ToString()));
+                sb.AppendLine(string.Format("par.OracleDbType=VOracleDbType.{0};", Cmn.GetDBType(stype).ToString()));
 
                 sb.AppendLine(string.Format("{0}.Parameters.Add(par);", cmdName));
                 sb.AppendLine();
@@ -587,7 +587,7 @@ namespace sql.builder.XmlHelpers
             if (ds.ProcedureText != null)
             {
                 result.AppendLine(@"            var cmdText = @""" + ds.ProcedureText + @""";");
-                result.AppendLine(@"            var cmd = new Devart.Data.Oracle.OracleCommand(cmdText, _Connection);");
+                result.AppendLine(@"            var cmd = new sql.builder.Clean.VOracleCommand(cmdText, _Connection);");
                 result.AppendLine("try {");
                 result.AppendLine();
                 result.AppendLine(GetCodeAddOraclePars(rep));
@@ -603,7 +603,7 @@ namespace sql.builder.XmlHelpers
             {
                 result.AppendLine(@"            var cmdText" + ParseToUpper(t.TableName) + @" = @""" + t.DataAdapter.SelectCommand.CommandText + @""";");
 
-                result.AppendLine(@"            var cmd" + ParseToUpper(t.TableName) + " = new Devart.Data.Oracle.OracleCommand(cmdText" + ParseToUpper(t.TableName) + ", _Connection);");
+                result.AppendLine(@"            var cmd" + ParseToUpper(t.TableName) + " = new sql.builder.Clean.VOracleCommand(cmdText" + ParseToUpper(t.TableName) + ", _Connection);");
                 if (ds.ProcedureText == null) result.AppendLine(GetCodeAddOraclePars(rep, ParseToUpper(t.TableName)));
                 result.AppendLine(@"            var dataReader" + ParseToUpper(t.TableName) + " = cmd" + ParseToUpper(t.TableName) + ".ExecuteReader();");
 
@@ -870,7 +870,7 @@ namespace sql.builder.XmlHelpers
             foreach (var xformalPar in rep.FormalParams())
             {
                 var p = new Cmn.VStringParamName(xformalPar.Attribute(TextConst.AName.Name).Value);
-                result.AppendLine(@"            cmd" + pfx + @".Parameters.Add(new OracleParameter(""" + p.ToString() + @""", " + ParseParam(p.ToString()) + "));");
+                result.AppendLine(@"            cmd" + pfx + @".Parameters.Add(new VOracleParameter(""" + p.ToString() + @""", " + ParseParam(p.ToString()) + "));");
             }
 
             return result.ToString();

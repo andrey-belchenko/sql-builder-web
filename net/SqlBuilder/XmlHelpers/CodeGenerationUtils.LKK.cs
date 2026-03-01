@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 
 
 namespace sql.builder.XmlHelpers
@@ -89,7 +89,7 @@ namespace lenenergo.lkk.svc.web
         public static string DataFileBegin()
         {
             return
-                @"using Devart.Data.Oracle;
+                @"using sql.builder.Clean;
 using System;
 using System.Data;
 using  System.Collections.Generic;

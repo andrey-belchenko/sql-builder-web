@@ -155,12 +155,12 @@ namespace sql.builder
                     new SqlArg("puser", "user", SqlDestination.Where, SqlType.Const),
 
                     new SqlArg("name", name, SqlDestination.Insert, SqlType.String),
-                    new SqlArg("data", data, SqlDestination.Insert, SqlType.Parameter, ParameterDirection.Input, VVOracleDbType.NClob.ToDevart()),
+                    new SqlArg("data", data, SqlDestination.Insert, SqlType.Parameter, ParameterDirection.Input, VOracleDbType.NClob.ToDevart()),
                     new SqlArg("puser", "user", SqlDestination.Insert, SqlType.Const),
 
 
                     new SqlArg("name", name, SqlDestination.Update, SqlType.String),
-                    new SqlArg("data", data, SqlDestination.Update, SqlType.Parameter, ParameterDirection.Input, VVOracleDbType.NClob.ToDevart()),
+                    new SqlArg("data", data, SqlDestination.Update, SqlType.Parameter, ParameterDirection.Input, VOracleDbType.NClob.ToDevart()),
                 };
             }
             else
@@ -260,7 +260,7 @@ BEGIN
   CLOSE cur;
   :p_avg_time := i_avg_time;
 END;", new VOracleParameter[2] { p_repname, p_avg_time }, Connection);
-            // Здесь p_avg_time.OracleValue is Devart.Data.Oracle.OracleIntervalDS
+            // Здесь p_avg_time.OracleValue is OracleIntervalDS
             object value = p_avg_time.Value;
             if (Cmn.IsNullOrDBNull(value))
             {

@@ -72,11 +72,63 @@ namespace sql.builder.Clean
         }
 
         /// <summary>
+        /// Constructor with command text and VOracleTransaction
+        /// </summary>
+        public VOracleCommand(string commandText, VOracleTransaction transaction)
+            : base(commandText, transaction.Inner.Connection, transaction.Inner)
+        {
+            OnCommandTextChanged(null, commandText);
+        }
+
+        /// <summary>
         /// Executes ExecuteReader and wraps result in VOracleDataReader
         /// </summary>
         public VOracleDataReader ExecuteReaderWrapped()
         {
-            return new VOracleDataReader((OracleDataReader)ExecuteReader());
+            try
+            {
+                return new VOracleDataReader((OracleDataReader)ExecuteReader());
+            }
+            catch (Devart.Data.Oracle.OracleException ex)
+            {
+                throw new VOracleException(ex);
+            }
+        }
+
+        public override object ExecuteScalar()
+        {
+            try
+            {
+                return base.ExecuteScalar();
+            }
+            catch (Devart.Data.Oracle.OracleException ex)
+            {
+                throw new VOracleException(ex);
+            }
+        }
+
+        public override int ExecuteNonQuery()
+        {
+            try
+            {
+                return base.ExecuteNonQuery();
+            }
+            catch (Devart.Data.Oracle.OracleException ex)
+            {
+                throw new VOracleException(ex);
+            }
+        }
+
+        protected override System.Data.Common.DbDataReader ExecuteDbDataReader(System.Data.CommandBehavior behavior)
+        {
+            try
+            {
+                return base.ExecuteDbDataReader(behavior);
+            }
+            catch (Devart.Data.Oracle.OracleException ex)
+            {
+                throw new VOracleException(ex);
+            }
         }
 
         /// <summary>

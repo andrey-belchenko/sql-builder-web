@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
+using sql.builder.Clean;
 using sql.builder.DataApi;
 //using DevExpress.XtraEditors;
 //using DevExpress.XtraEditors.Controls;
@@ -750,7 +750,7 @@ namespace sql.builder.UI
                 else  // listquery описан на уровне класса (запроса)
                 {
 
-                    foreach (OracleParameter par in this.data_set_list.InputParams.Values)
+                    foreach (VOracleParameter par in this.data_set_list.InputParams.Values)
                     {
                         if (!string.IsNullOrEmpty(par.SourceColumn))
                         {

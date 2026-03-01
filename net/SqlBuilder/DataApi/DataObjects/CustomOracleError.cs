@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 ////using System.Windows.Forms;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
+using infoenergo.core.Data;
+using sql.builder.Clean;
 //using DevExpress.XtraEditors;
 //using infoenergo.ui.win.Forms;
 
@@ -14,20 +16,27 @@ namespace sql.builder.DataApi.DataObjects
     {
         public static readonly int[] Codes = { 2292 };
 
-        public static void HandleIfNeed(DataRow row, OracleException ex)
+        public static void HandleIfNeed(DataRow row, Exception ex)
         {
-            switch (ex.Code)
+            int code = GetCode(ex);
+            switch (code)
             {
                 case 2292:
                     Handle2292(row, ex);
                     break;
             }
         }
-        private static void Handle2292(DataRow row, OracleException ex)
+        private static int GetCode(Exception ex)
+        {
+            if (ex is VOracleException vex) return vex.Code;
+            if (ex is OracleException oex) return oex.Code;
+            return 0;
+        }
+        private static void Handle2292(DataRow row, Exception ex)
         {
             // парсим сообщение, типа такого
             // ORA-02292: integrity constraint (ASUSE.UR_GRAF_OPL_UR_GRAF) violated - child record found
-            Match result = Regex.Match(ex.Message, @".*\((([a-zA-Z_]*)\.([a-zA-Z_]*))\).*");
+            Match result = Regex.Match(ex?.Message ?? "", @".*\((([a-zA-Z_]*)\.([a-zA-Z_]*))\).*");
             if (result.Groups.Count != 4) return;
 
             string schema_name = result.Groups[2].Value;
