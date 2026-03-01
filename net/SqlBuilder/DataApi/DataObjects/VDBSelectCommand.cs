@@ -240,46 +240,37 @@ namespace sql.builder.DataApi
             try
             {
                 cmd = new VOracleCommand();
-                cmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
                 cmd.CommandText = command_text;
-                // DevAnalyzer.AnalyzePrepSql(command_text);
-                // Устанавливаем параметры
-                for (int index = 0; index < cmd.Parameters.Count; index++)
+                cmd.BindByName = true;
+                string[] paramNames = Cmn.ExtractParameterNamesFromSQL(command_text);
+                foreach (string param_name in paramNames)
                 {
-                    VOracleParameter param = new VOracleParameter((OracleParameter)cmd.Parameters[index]);
-                    Contract.Assert(param.Direction == ParameterDirection.Input);
-                    string param_name = param.ParameterName;
-                    //if (param_name.StartsWith(TextConst.Pfx.GlobParam)) {
-                    //    string global_param_name = param_name.Substring(TextConst.Pfx.GlobParam.Length);
-                    //    param.OracleDbType = OracleDbType.Number; // Пока все глобальные параметры числовые
-                    //    param.Value = XmlReports.GetGlobalParValue(global_param_name); // !!!временно. нужно изменить чтобы устанавливался во время выполнения
-                    //} else {
                     XElement query_param = query_params.SearchByAttribute(AName.name, param_name);
+                    VOracleParameter param;
                     if (query_param != null)
                     {
-
                         if (!DevUtilsProvider.Instance.IsBuildingTs())
                         {
                             Contract.Assert(query_param.Attribute(AName.type) != null);
                         }
 
-                        string datatype = query_param.Attribute(AName.type)?.Value;
-                        if (datatype != null)
+                        string datatype = query_param.Attribute(AName.type)?.Value ?? "Varchar2";
+                        param = CreateDBParameter(param_name, datatype);
+                        if (query_param.Attribute(AName.is_ret) != null)
                         {
-                            param.OracleDbType = Cmn.GetDBType(datatype);
-                            if (query_param.Attribute(AName.is_ret) != null)
-                            {
-                                param.Direction = ParameterDirection.InputOutput;
-                            }
-                            XAttribute attr = query_param.Attribute(AName.column);
-                            if (attr != null)
-                            {
-                                param.SourceColumn = attr.Value;
-                            }
+                            param.Direction = ParameterDirection.InputOutput;
                         }
-
+                        XAttribute attr = query_param.Attribute(AName.column);
+                        if (attr != null)
+                        {
+                            param.SourceColumn = attr.Value;
+                        }
                     }
-                    //}
+                    else
+                    {
+                        param = CreateDBParameter(param_name, "Varchar2");
+                    }
+                    cmd.Parameters.Add(param);
                 }
             }
             catch (Exception)

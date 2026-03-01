@@ -1587,6 +1587,7 @@ namespace sql.builder
                 command = new VOracleCommand(sql1, connection);
                 if (!Array.IsNullOrEmpty(pars))
                 {
+                    command.BindByName = true;
                     command.Parameters.AddRange(DataHelper.ToOracleParameters(pars));
                 }
                 //var con = new OracleConnection();

@@ -135,15 +135,6 @@ namespace sql.builder.Clean
         }
 
         /// <summary>
-        /// When true, Parameters collection is populated when CommandText is set (ODP.NET BindByName behavior).
-        /// </summary>
-        public bool ParameterCheck
-        {
-            get => BindByName;
-            set => BindByName = value;
-        }
-
-        /// <summary>
         /// Raises the CommandTextChanged event
         /// </summary>
         protected virtual void OnCommandTextChanged(string oldValue, string newValue)

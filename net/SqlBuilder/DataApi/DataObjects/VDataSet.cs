@@ -518,13 +518,11 @@ namespace sql.builder.DataApi
                 //WaitUIHelper.LastUsedUIHelper.Show("Загрузка данных", WaitUIMode.WaitCursor);
                 VOracleCommand procCmd = new VOracleCommand();
                 procCmd.Connection = this.GetConnection();
-                procCmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
                 procCmd.CommandText = repProc.Value;
-                string[] ParamNames = Cmn.GetParameterNames(procCmd.Parameters);
-                procCmd.ParameterCheck = false;
-                procCmd.Parameters.Clear();
+                string[] ParamNames = Cmn.ExtractParameterNamesFromSQL(procCmd.CommandText);
                 if (this.Report.IsSimpleParams)
                 {
+                    procCmd.BindByName = true;
                     VDataTable.SetCommandParams(this, null, procCmd, ParamNames);
                 }
                 else
@@ -653,11 +651,8 @@ namespace sql.builder.DataApi
                         //IEnumerable<string> ProcParamNames = VReport.ExtractParamsFromSqlText(this.ProcedureText).OrderByDescending(Cmn.LengthOfString);
                         VOracleParameter[] parsList;
                         VOracleCommand cmd = new VOracleCommand();
-                        cmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
                         cmd.CommandText = this.ProcedureText;
-                        string[] ProcParamNames = Cmn.GetParameterNames(cmd.Parameters);
-                        cmd.ParameterCheck = false;
-                        cmd.Parameters.Clear();
+                        string[] ProcParamNames = Cmn.ExtractParameterNamesFromSQL(cmd.CommandText);
                         if (ProcParamNames.Length != 0)
                         {
                             // Сортируем так, чтобы подстановка значений параметров прошла в правильном порядке (сначала kodd_flat, затем kodd, см. 71061 и 71118 в SD)
