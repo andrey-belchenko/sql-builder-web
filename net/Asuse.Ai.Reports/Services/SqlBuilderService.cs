@@ -1,5 +1,4 @@
 using Asuse.Ai.Reports.Settings;
-using Devart.Data.Oracle;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using sql.builder.Clean;
@@ -24,7 +23,7 @@ namespace Asuse.Ai.Reports.Services
         public async Task ExecuteReport(string reportName, string templateName, Dictionary<string, object> pars, string fileId, string fileName)
         {
             var connectionString = _settings.OracleConnectionString ?? DefaultOracleConnectionString;
-            using var conn = new OracleConnection(connectionString);
+            using var conn = new VOracleConnection(connectionString);
             conn.Open();
 
             var path = CleanSqlBuilder.ExecuteReport(reportName, templateName, pars, new Dictionary<string, object>(), connection: conn);
@@ -34,7 +33,7 @@ namespace Asuse.Ai.Reports.Services
         public async Task ExecuteReport(string reportName, Dictionary<string, object> pars, string datasetId)
         {
             var connectionString = _settings.OracleConnectionString ?? DefaultOracleConnectionString;
-            using var conn = new OracleConnection(connectionString);
+            using var conn = new VOracleConnection(connectionString);
             conn.Open();
             var ds = CleanSqlBuilder.ExecuteReportGetDs(reportName, pars, new Dictionary<string, object>(), connection: conn);
             await _tempDataService.SaveDataSet(ds, datasetId);

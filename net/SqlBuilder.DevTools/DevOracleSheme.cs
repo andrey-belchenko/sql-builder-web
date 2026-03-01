@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Devart.Data.Oracle;
+using sql.builder.Clean;
 using sql.builder;
 using DataHelper = infoenergo.core.Data.DataHelper;
 
@@ -130,9 +130,9 @@ namespace SqlBuilderLib.DevTools
         /// </summary>
         private static TableInfo QueryTableInfo(string objectName)
         {
-            OracleParameter[] parameters = new OracleParameter[]
+            VOracleParameter[] parameters = new VOracleParameter[]
             {
-                new OracleParameter("object_name", OracleDbType.VarChar, objectName, ParameterDirection.Input)
+                new VOracleParameter("object_name", VOracleDbType.VarChar, objectName, ParameterDirection.Input)
             };
 
             // Check if it's a materialized view first
@@ -192,10 +192,10 @@ namespace SqlBuilderLib.DevTools
             bool isTempTable = false;
             if (objectType == "TABLE")
             {
-                OracleParameter[] tempParams = new OracleParameter[]
+                VOracleParameter[] tempParams = new VOracleParameter[]
                 {
-                    new OracleParameter("object_name", OracleDbType.VarChar, actualObjectName, ParameterDirection.Input),
-                    new OracleParameter("owner", OracleDbType.VarChar, owner, ParameterDirection.Input)
+                    new VOracleParameter("object_name", VOracleDbType.VarChar, actualObjectName, ParameterDirection.Input),
+                    new VOracleParameter("owner", VOracleDbType.VarChar, owner, ParameterDirection.Input)
                 };
 
                 string tempCheckSql = @"
@@ -235,10 +235,10 @@ namespace SqlBuilderLib.DevTools
             string ddl = null;
             if (type == DbObjectType.View || type == DbObjectType.MatView)
             {
-                OracleParameter[] ddlParameters = new OracleParameter[]
+                VOracleParameter[] ddlParameters = new VOracleParameter[]
                 {
-                    new OracleParameter("object_name", OracleDbType.VarChar, actualObjectName, ParameterDirection.Input),
-                    new OracleParameter("owner", OracleDbType.VarChar, owner, ParameterDirection.Input)
+                    new VOracleParameter("object_name", VOracleDbType.VarChar, actualObjectName, ParameterDirection.Input),
+                    new VOracleParameter("owner", VOracleDbType.VarChar, owner, ParameterDirection.Input)
                 };
 
                 string ddlType = type == DbObjectType.MatView ? "MATERIALIZED_VIEW" : "VIEW";
@@ -260,9 +260,9 @@ namespace SqlBuilderLib.DevTools
         private static PackageInfo QueryPackageInfo(string packageName)
         {
             // Query all_objects to verify package exists and get owner
-            OracleParameter[] parameters = new OracleParameter[]
+            VOracleParameter[] parameters = new VOracleParameter[]
             {
-                new OracleParameter("package_name", OracleDbType.VarChar, packageName, ParameterDirection.Input)
+                new VOracleParameter("package_name", VOracleDbType.VarChar, packageName, ParameterDirection.Input)
             };
 
             string sql = @"
@@ -284,10 +284,10 @@ namespace SqlBuilderLib.DevTools
             string actualPackageName = row.Field<string>("object_name"); // Get actual package name from DB
 
             // Get PACKAGE BODY DDL
-            OracleParameter[] ddlParameters = new OracleParameter[]
+            VOracleParameter[] ddlParameters = new VOracleParameter[]
             {
-                new OracleParameter("package_name", OracleDbType.VarChar, actualPackageName, ParameterDirection.Input),
-                new OracleParameter("owner", OracleDbType.VarChar, owner, ParameterDirection.Input)
+                new VOracleParameter("package_name", VOracleDbType.VarChar, actualPackageName, ParameterDirection.Input),
+                new VOracleParameter("owner", VOracleDbType.VarChar, owner, ParameterDirection.Input)
             };
 
             string ddlSql = "SELECT DBMS_METADATA.GET_DDL('PACKAGE_BODY', :package_name, :owner) FROM DUAL";
@@ -348,9 +348,9 @@ namespace SqlBuilderLib.DevTools
         private static PackageInfo QueryProcedureInfo(string procedureName)
         {
             // Query all_objects to verify procedure exists and get owner
-            OracleParameter[] parameters = new OracleParameter[]
+            VOracleParameter[] parameters = new VOracleParameter[]
             {
-                new OracleParameter("procedure_name", OracleDbType.VarChar, procedureName, ParameterDirection.Input)
+                new VOracleParameter("procedure_name", VOracleDbType.VarChar, procedureName, ParameterDirection.Input)
             };
 
             string sql = @"
@@ -372,10 +372,10 @@ namespace SqlBuilderLib.DevTools
             string actualProcedureName = row.Field<string>("object_name"); // Get actual procedure name from DB
 
             // Get PROCEDURE DDL
-            OracleParameter[] ddlParameters = new OracleParameter[]
+            VOracleParameter[] ddlParameters = new VOracleParameter[]
             {
-                new OracleParameter("procedure_name", OracleDbType.VarChar, actualProcedureName, ParameterDirection.Input),
-                new OracleParameter("owner", OracleDbType.VarChar, owner, ParameterDirection.Input)
+                new VOracleParameter("procedure_name", VOracleDbType.VarChar, actualProcedureName, ParameterDirection.Input),
+                new VOracleParameter("owner", VOracleDbType.VarChar, owner, ParameterDirection.Input)
             };
 
             string ddlSql = "SELECT DBMS_METADATA.GET_DDL('PROCEDURE', :procedure_name, :owner) FROM DUAL";
