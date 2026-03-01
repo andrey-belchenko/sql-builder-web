@@ -52,6 +52,12 @@ namespace sql.builder.Clean
             _inner = inner ?? throw new ArgumentNullException(nameof(inner));
         }
 
+        public DbParameter GetDbParameter()
+        {
+            return _inner;
+
+        }
+
         public string ParameterName { get => _inner.ParameterName; set => _inner.ParameterName = value; }
         public object Value { get => _inner.Value; set => _inner.Value = value; }
         public ParameterDirection Direction { get => _inner.Direction; set => _inner.Direction = value; }
@@ -77,6 +83,7 @@ namespace sql.builder.Clean
                 case Oracle.ManagedDataAccess.Client.OracleDbType.NVarchar2: return VOracleDbType.NVarChar;
                 case Oracle.ManagedDataAccess.Client.OracleDbType.IntervalDS: return VOracleDbType.IntervalDS;
                 case Oracle.ManagedDataAccess.Client.OracleDbType.Int32: return VOracleDbType.Integer;
+                case Oracle.ManagedDataAccess.Client.OracleDbType.Array: return VOracleDbType.Array;
                 default: return VOracleDbType.VarChar;
             }
         }

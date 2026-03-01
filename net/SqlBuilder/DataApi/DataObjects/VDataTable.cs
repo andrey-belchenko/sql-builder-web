@@ -1000,6 +1000,10 @@ namespace sql.builder.DataApi
         }
         public static void SetCommandParams(VDataSet ds, VDataTable dt, DbCommand command, IEnumerable<string> paramNames)
         {
+            if (command.CommandText.Contains(":p_dep"))
+            {
+
+            }
             command.Parameters.Clear();
             DataRelation rel;
             VDataTable parentTable;
@@ -1049,13 +1053,14 @@ namespace sql.builder.DataApi
                         dbPar = ds.GetParamAsOracleParametr(param_name);
                     }
                 }
+
                 if (dbPar.OracleDbType == VOracleDbType.Array || Cmn.undefinedString.Equals(dbPar.Value))
                 {
                     command.CommandText = command.CommandText.Replace(":" + param_name, dbPar.Value.ToString());
                 }
                 else
                 {
-                    command.Parameters.Add(dbPar);
+                    command.Parameters.Add(dbPar.GetDbParameter());
                 }
             }
         }

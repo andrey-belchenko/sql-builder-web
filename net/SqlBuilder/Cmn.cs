@@ -2100,20 +2100,112 @@ namespace sql.builder
             return param_names;
         }
         /// <summary>
-        /// Парсит текст запроса <paramref name="sql"/> и возвращает имена использованных в нём bind-переменных
+        /// Парсит текст запроса <paramref name="sql"/> и возвращает имена использованных в нём bind-переменных.
+        /// Oracle.ManagedDataAccess не заполняет Parameters при установке CommandText (в отличие от Devart),
+        /// поэтому извлекаем имена напрямую из SQL. Используется stateful-парсер (не regex) для надёжности:
+        /// игнорируются :param внутри строковых литералов ('...', "...") и комментариев (--, /* */).
         /// </summary>
         /// <param name="sql">текст запроса</param>
         /// <returns>массив bind-переменных в запросе <paramref name="sql"/></returns>
         public static string[] ExtractParameterNamesFromSQL(string sql)
         {
-            string[] param_names;
-            using (VOracleCommand cmd = new VOracleCommand())
+            if (string.IsNullOrEmpty(sql))
+                return Array.Empty<string>();
+
+            var paramNames = new List<string>();
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            int i = 0;
+            int len = sql.Length;
+            bool inSingleQuote = false, inDoubleQuote = false;
+            bool inLineComment = false, inBlockComment = false;
+
+            while (i < len)
             {
-                cmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
-                cmd.CommandText = sql;
-                param_names = Cmn.GetParameterNames(cmd.Parameters);
+                if (inBlockComment)
+                {
+                    if (i + 1 < len && sql[i] == '*' && sql[i + 1] == '/')
+                    {
+                        inBlockComment = false;
+                        i += 2;
+                    }
+                    else
+                        i++;
+                    continue;
+                }
+
+                if (inLineComment)
+                {
+                    if (sql[i] == '\n' || sql[i] == '\r')
+                        inLineComment = false;
+                    i++;
+                    continue;
+                }
+
+                if (inSingleQuote)
+                {
+                    if (sql[i] == '\'' && (i + 1 >= len || sql[i + 1] != '\''))
+                        inSingleQuote = false;
+                    else if (sql[i] == '\'' && i + 1 < len && sql[i + 1] == '\'')
+                        i++; // escaped quote
+                    i++;
+                    continue;
+                }
+
+                if (inDoubleQuote)
+                {
+                    if (sql[i] == '"')
+                        inDoubleQuote = false;
+                    i++;
+                    continue;
+                }
+
+                // Not in string/comment - check for comment start or bind variable
+                if (i + 1 < len && sql[i] == '/' && sql[i + 1] == '*')
+                {
+                    inBlockComment = true;
+                    i += 2;
+                    continue;
+                }
+                if (i + 1 < len && sql[i] == '-' && sql[i + 1] == '-')
+                {
+                    inLineComment = true;
+                    i += 2;
+                    continue;
+                }
+                if (sql[i] == '\'')
+                {
+                    inSingleQuote = true;
+                    i++;
+                    continue;
+                }
+                if (sql[i] == '"')
+                {
+                    inDoubleQuote = true;
+                    i++;
+                    continue;
+                }
+
+                // Look for :param_name (letter/underscore + alphanumeric/underscore)
+                if (sql[i] == ':' && i + 1 < len)
+                {
+                    int start = i + 1;
+                    char c = sql[start];
+                    if (c == '_' || char.IsLetter(c))
+                    {
+                        int j = start + 1;
+                        while (j < len && (sql[j] == '_' || char.IsLetterOrDigit(sql[j])))
+                            j++;
+                        string name = sql.Substring(start, j - start);
+                        if (seen.Add(name))
+                            paramNames.Add(name);
+                        i = j;
+                        continue;
+                    }
+                }
+                i++;
             }
-            return param_names;
+
+            return paramNames.ToArray();
         }
         #region Для использования в качестве аргумента Select() и SelectAsArray()
         public static string GetDataColumnName(DataColumn col)
