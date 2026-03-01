@@ -94,9 +94,8 @@ namespace sql.builder.DataApi
             s += " where ";
             s += FileIdColumnName + "=";
             s += TextConst.Pfx.Param + TextConst.DBParams.FileId;
-            var cmd = new VOracleCommand(s, (OracleConnection)GetTable().GetConnection());
-            var par = new OracleParameter(TextConst.DBParams.FileId, fileId);
-            par.OracleDbType = OracleDbType.Number;
+            var cmd = new VOracleCommand(s, GetTable().GetConnection());
+            var par = new VOracleParameter(TextConst.DBParams.FileId, VOracleDbType.Number, fileId, ParameterDirection.Input);
             cmd.Parameters.Add(par);
             DevUtilsProvider.Instance.AnalyzeExecSql(s);
             byte[] _buf = (byte[])cmd.ExecuteScalar();
@@ -145,19 +144,16 @@ namespace sql.builder.DataApi
 
 
                 s += " end; ";
-                var cmd = new VOracleCommand(s, (OracleConnection)GetTable().GetConnection());
+                var cmd = new VOracleCommand(s, GetTable().GetConnection());
 
-                var par = new OracleParameter(TextConst.DBParams.FileId, fileId);
-                par.OracleDbType = OracleDbType.Number;
-                par.Direction = ParameterDirection.Output;
+                var par = new VOracleParameter(TextConst.DBParams.FileId, VOracleDbType.Number, ParameterDirection.Output);
+                par.Value = fileId;
                 cmd.Parameters.Add(par);
 
-                par = new OracleParameter(TextConst.DBParams.FileName, FileGetter.Name());
-                par.OracleDbType = OracleDbType.VarChar;
+                par = new VOracleParameter(TextConst.DBParams.FileName, VOracleDbType.VarChar, FileGetter.Name(), ParameterDirection.Input);
                 cmd.Parameters.Add(par);
 
-                par = new OracleParameter(TextConst.DBParams.FileSize, _buf.Length);
-                par.OracleDbType = OracleDbType.VarChar;
+                par = new VOracleParameter(TextConst.DBParams.FileSize, VOracleDbType.VarChar, _buf.Length, ParameterDirection.Input);
                 cmd.Parameters.Add(par);
 
                 DevUtilsProvider.Instance.AnalyzeExecSql(s);
@@ -177,13 +173,12 @@ namespace sql.builder.DataApi
                 s += TextConst.Pfx.Param + TextConst.DBParams.FileId;
 
 
-                cmd = new VOracleCommand(s, (OracleConnection)GetTable().GetConnection());
+                cmd = new VOracleCommand(s, GetTable().GetConnection());
 
-                par = new OracleParameter(TextConst.DBParams.FileId, fileId);
-                par.OracleDbType = OracleDbType.Number;
+                par = new VOracleParameter(TextConst.DBParams.FileId, VOracleDbType.Number, fileId, ParameterDirection.Input);
                 cmd.Parameters.Add(par);
 
-                par = cmd.Parameters.Add(TextConst.DBParams.FileData, OracleDbType.Blob);
+                par = new VOracleParameter(TextConst.DBParams.FileData, VOracleDbType.Blob);
                 par.Value = _buf;
                 DevUtilsProvider.Instance.AnalyzeExecSql(s);
                 cmd.ExecuteNonQuery();
@@ -218,7 +213,7 @@ namespace sql.builder.DataApi
             }
             s += " end; ";
             var cmd = new VOracleCommand(s, this.GetTable().GetConnection());
-            cmd.Parameters.Add(TextConst.DBParams.FileId, OracleDbType.Number, fileId, ParameterDirection.InputOutput);
+            cmd.Parameters.Add(new VOracleParameter(TextConst.DBParams.FileId, VOracleDbType.Number, fileId, ParameterDirection.InputOutput));
 
 
             var rid = row[GetTable().PrimaryKey[0]];

@@ -1749,33 +1749,33 @@ namespace sql.builder
                 .GroupBy(x => x.inx / maxItems)
                 .Select(g => g.Select(x => x.item));
         }*/
-        public static Devart.Data.Oracle.OracleDbType GetDBType(string type)
+        public static sql.builder.Clean.VOracleDbType GetDBType(string type)
         {
             switch (type) {
                 case "number":
-                    return Devart.Data.Oracle.OracleDbType.Number;
+                    return sql.builder.Clean.VOracleDbType.Number;
                 case "bool":
-                    return Devart.Data.Oracle.OracleDbType.Number;
+                    return sql.builder.Clean.VOracleDbType.Number;
                 case "date":
-                    return Devart.Data.Oracle.OracleDbType.Date;
+                    return sql.builder.Clean.VOracleDbType.Date;
                 case "array":
-                    return Devart.Data.Oracle.OracleDbType.Array;
+                    return sql.builder.Clean.VOracleDbType.Array;
                 case "clob":
-                    return Devart.Data.Oracle.OracleDbType.Clob;
+                    return sql.builder.Clean.VOracleDbType.Clob;
 				case "blob":
-					return Devart.Data.Oracle.OracleDbType.Blob;
+					return sql.builder.Clean.VOracleDbType.Blob;
 				default:
-                    return Devart.Data.Oracle.OracleDbType.VarChar;
+                    return sql.builder.Clean.VOracleDbType.VarChar;
             }
         }
-        public static Devart.Data.Oracle.OracleDbType GetDBType(Type type)
+        public static sql.builder.Clean.VOracleDbType GetDBType(Type type)
         {
             if (type == typeof(Decimal)) {
-                return Devart.Data.Oracle.OracleDbType.Number;
+                return sql.builder.Clean.VOracleDbType.Number;
             } else if (type == typeof(DateTime)) {
-                return Devart.Data.Oracle.OracleDbType.Date;
+                return sql.builder.Clean.VOracleDbType.Date;
             } else {
-                return Devart.Data.Oracle.OracleDbType.VarChar;
+                return sql.builder.Clean.VOracleDbType.VarChar;
             }
         }
         public static string writeScriptFile(string name, string data)
@@ -1948,7 +1948,7 @@ namespace sql.builder
         public static string[] ExtractParameterNamesFromSQL(string sql)
         {
             string[] param_names;
-            using (Devart.Data.Oracle.OracleCommand cmd = new VOracleCommand()) {
+            using (VOracleCommand cmd = new VOracleCommand()) {
                 cmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
                 cmd.CommandText = sql;
                 param_names = Cmn.GetParameterNames(cmd.Parameters);

@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
 
 using infoenergo.core.Data;
 //using infoenergo.core.Extensions;
@@ -38,9 +37,9 @@ namespace sql.builder.DataApi
         public event EventHandler TableCommited;
         public event DataRowChangeEventHandler CurrentRowChanged;
         public event DataRowChangeEventHandler CurrentRowRefreshed;
-        public OracleDataAdapter DataAdapter;
-        public OracleCommand UpdateTempCommand;
-        public OracleCommand ClearTempCommand;
+        public VOracleDataAdapter DataAdapter;
+        public VOracleCommand UpdateTempCommand;
+        public VOracleCommand ClearTempCommand;
         public bool HasControls;
         public XElement Scheme;
         public string QueryName;
@@ -188,7 +187,7 @@ namespace sql.builder.DataApi
             : base()
         {
             this.CaseSensitive = true;
-            this.DataAdapter = new OracleDataAdapter();
+            this.DataAdapter = new VOracleDataAdapter();
             this.DataAdapter.SelectCommand = new VOracleCommand();
             this.Scheme = null;
             this.attachEvents(withExtraEvents);
@@ -198,7 +197,7 @@ namespace sql.builder.DataApi
             : base(table_name)
         {
             this.CaseSensitive = true;
-            this.DataAdapter = new OracleDataAdapter();
+            this.DataAdapter = new VOracleDataAdapter();
             this.DataAdapter.SelectCommand = new VOracleCommand();
             this.Scheme = scheme;
             this.EditableOld = false;
@@ -610,7 +609,7 @@ namespace sql.builder.DataApi
         //    DataRowChangeEventArgs e = new DataRowChangeEventArgs(row, DataRowAction.Nothing);
         //    changed(this, e);
         //}
-        public OracleDataReader Reader; // для печати
+        public VOracleDataReader Reader; // для печати
         public bool UseDeferredFetch;
         public bool IsDeferredFetch()
         {
@@ -911,7 +910,7 @@ namespace sql.builder.DataApi
                 WaitUIHelper.LastUsedUIHelper.Hide();
             }
         }
-        public OracleCommand cmd;
+        public VOracleCommand cmd;
         #region IsDependantRefresh
         private bool is_dependant_refresh;
         public void SetDependantRefresh(bool value)
@@ -991,7 +990,7 @@ namespace sql.builder.DataApi
         }
 
 
-        public OracleCommand ProcedureCommand = null;
+        public VOracleCommand ProcedureCommand = null;
         //public OracleCommand UpdateTempCommand = null;
         //public XElement XQuery = null;
         public string GetFKColName()
@@ -1024,12 +1023,12 @@ namespace sql.builder.DataApi
             }
             foreach (string param_name in paramNames)
             {
-                OracleParameter dbPar;
+                VOracleParameter dbPar;
                 if (!VDBSelectCommand.TryGetGlobalDbParam(param_name, out dbPar))
                 {
                     if (param_name == fkName)
                     {
-                        dbPar = new OracleParameter(fkName, Cmn.GetDBType(rel.ChildColumns[0].DataType));
+                        dbPar = new VOracleParameter(fkName, Cmn.GetDBType(rel.ChildColumns[0].DataType));
                         if (parentTable.CurrentRow != null)
                         {
                             if (parentTable.CurrentRow.RowState == DataRowState.Added)
@@ -1044,10 +1043,10 @@ namespace sql.builder.DataApi
                     }
                     if (dbPar == null && ds.InputParams != null)
                     {
-                        OracleParameter input_param;
+                        VOracleParameter input_param;
                         if (ds.InputParams.TryGetValue(param_name, out input_param))
                         {
-                            dbPar = new OracleParameter(input_param.ParameterName, input_param.OracleDbType, input_param.Value, ParameterDirection.Input);
+                            dbPar = new VOracleParameter(input_param.ParameterName, input_param.OracleDbType, input_param.Value, ParameterDirection.Input);
                         }
                     }
                     if (dbPar == null)
@@ -1055,7 +1054,7 @@ namespace sql.builder.DataApi
                         dbPar = ds.GetParamAsOracleParametr(param_name);
                     }
                 }
-                if (dbPar.OracleDbType == OracleDbType.Array || Cmn.undefinedString.Equals(dbPar.Value))
+                if (dbPar.OracleDbType == VOracleDbType.Array || Cmn.undefinedString.Equals(dbPar.Value))
                 {
                     command.CommandText = command.CommandText.Replace(":" + param_name, dbPar.Value.ToString());
                 }
@@ -1317,12 +1316,12 @@ namespace sql.builder.DataApi
                     }
                 }
             }
-            OracleCommand sel_cmd = this.DataAdapter.SelectCommand;
+            VOracleCommand sel_cmd = (VOracleCommand)this.DataAdapter.SelectCommand;
             sel_cmd.CommandText = Cmn.ClearUndefined(sel_cmd.CommandText);
             if (sel_cmd.CommandText != string.Empty || this.IsNonDb)
             { //Бельченко 01082015 убрал, посмотрим что получится // вернул
                 // Убираем неиспользуемые параметры
-                OracleParameterCollection parameters = sel_cmd.Parameters;
+                var parameters = sel_cmd.Parameters;
                 for (int index = parameters.Count - 1; index >= 0; index--)
                 {
                     if (!sel_cmd.CommandText.Contains(":" + parameters[index].ParameterName))
@@ -1342,7 +1341,7 @@ namespace sql.builder.DataApi
                     bool done = false;
                     if (this.AsyncLoad)
                     {
-                        OracleCommand command = VDBSelectCommand.CopyCommand(sel_cmd);
+                        VOracleCommand command = VDBSelectCommand.CopyCommand(sel_cmd);
                         this.AsyncExecuteReader(command);
                         done = true;
                     }
@@ -1355,12 +1354,12 @@ namespace sql.builder.DataApi
                     {
                         // значит заполняем read для построчного чтения
                         this.IsReader = true; // по идее, нужно где-то раньше заполнять и потом везде на этот признак ориентироваться, пока так
-                        this.cmd = VDBSelectCommand.CopyCommand(this.DataAdapter.SelectCommand);
+                        this.cmd = VDBSelectCommand.CopyCommand((VOracleCommand)this.DataAdapter.SelectCommand);
                         this.cmd.FetchSize = 100;
                         this.fetchedRowsCount = 0;
                         WaitUIHelper.LastUsedUIHelper.SetDescription("Выполнение запроса к БД...");
                         DevUtilsProvider.Instance.AnalyzeExecSql(this.cmd.CommandText);
-                        this.Reader = this.cmd.ExecuteReader();// !!! выполняется при печати тут наверное не нужно, проверить/убрать
+                        this.Reader = this.cmd.ExecuteReaderWrapped();// !!! выполняется при печати тут наверное не нужно, проверить/убрать
                         WaitUIHelper.LastUsedUIHelper.SetDescription(WaitUIHelper.DESCRIPTION_DEFAULT);
                         //Теперь нужно, при !UseTempTable см. PrintTableReferense.cs 408
                         done = true;
@@ -1377,7 +1376,7 @@ namespace sql.builder.DataApi
                             if (this.IsDeferredFetch())
                             {
                                 DevUtilsProvider.Instance.AnalyzeExecSql(this.DataAdapter.SelectCommand.CommandText);
-                                this.otherReader = this.DataAdapter.SelectCommand.ExecuteReader();
+                                this.otherReader = ((VOracleCommand)this.DataAdapter.SelectCommand).ExecuteReaderWrapped();
                                 this.fetchedRowsCount = 0;
                                 if (this.defaultFetch > 0)
                                 {
@@ -1438,7 +1437,7 @@ namespace sql.builder.DataApi
             #endif
             //this.DataAdapter.Fill(this);
             int col_count;
-            using (OracleDataReader reader = this.DataAdapter.SelectCommand.ExecuteReader()) {
+            using (VOracleDataReader reader = ((VOracleCommand)this.DataAdapter.SelectCommand).ExecuteReaderWrapped()) {
                 col_count = reader.FieldCount;
                 int index;
                 //int[] col_indexes = new int[col_count];
@@ -2041,8 +2040,8 @@ namespace sql.builder.DataApi
                         }
 
                         SaveFiles(row);
-                        OracleParameter retPar = ApplyRowValuesToParams(row,
-                            DataAdapter.InsertCommand.Parameters.Cast<OracleParameter>().ToList(), true);
+                        VOracleParameter retPar = ApplyRowValuesToParams(row,
+                            DataAdapter.InsertCommand.Parameters.Cast<VOracleParameter>().ToList(), true);
 
                         if (!IsNonDb)
                         {
@@ -2096,7 +2095,7 @@ namespace sql.builder.DataApi
 
                             SaveFiles(row);
                             ApplyRowValuesToParams(row,
-                                DataAdapter.UpdateCommand.Parameters.Cast<OracleParameter>().ToList(), true);
+                                DataAdapter.UpdateCommand.Parameters.Cast<VOracleParameter>().ToList(), true);
 
                             if (!IsNonDb)
                             {
@@ -2136,7 +2135,7 @@ namespace sql.builder.DataApi
                         if (!InsteadDelete(row))
                         {
                             ApplyRowValuesToParams(row,
-                                DataAdapter.DeleteCommand.Parameters.Cast<OracleParameter>().ToList(), true);
+                                DataAdapter.DeleteCommand.Parameters.Cast<VOracleParameter>().ToList(), true);
                             if (!IsNonDb)
                             {
                                 DevUtilsProvider.Instance.AnalyzeExecSql(DataAdapter.DeleteCommand.CommandText);
@@ -2189,7 +2188,7 @@ namespace sql.builder.DataApi
              || (TableName == "ur_kazn" && KeyDimension == "kod_kazn")
              || (TableName == "ur_inkasso" && KeyDimension == "kod_inkasso"))
             {
-                ((OracleConnection)GetConnection()).Commit();
+                GetConnection().Commit();
             }
 
             bool refreshAllNewRows = false;
@@ -2267,7 +2266,7 @@ namespace sql.builder.DataApi
             //    RaiseCurrentRowChanged();
             //}
 
-            if (!(DataSet as VDataSet).IsVertica) ((OracleConnection)GetConnection()).Commit();
+            if (!(DataSet as VDataSet).IsVertica) GetConnection().Commit();
             if (result.Success)
             {
                 IsChangeAccepting = true;
@@ -2336,10 +2335,10 @@ namespace sql.builder.DataApi
         }
 
 
-        public OracleParameter ApplyRowValuesToParams(DataRow row, List<OracleParameter> pars, bool nullKeyForNewRows)
+        public VOracleParameter ApplyRowValuesToParams(DataRow row, List<VOracleParameter> pars, bool nullKeyForNewRows)
         {
-            OracleParameter retParam = null;
-            foreach (OracleParameter par in pars)
+            VOracleParameter retParam = null;
+            foreach (VOracleParameter par in pars)
             {
                 if (row.RowState == DataRowState.Added && par.SourceColumn == row.Table.PrimaryKey[0].ColumnName && nullKeyForNewRows)
                 {
@@ -2371,7 +2370,7 @@ namespace sql.builder.DataApi
 
         }
 
-        public OracleConnection GetConnection()
+        public VOracleConnection GetConnection()
         {
             return ((VDataSet)this.DataSet).GetConnection();
         }
@@ -2482,7 +2481,7 @@ namespace sql.builder.DataApi
         private AsyncLoadInfo executedTaskInfo;
         private AsyncLoadInfo queuedTaskInfo;
         private const int SLEEP_TIME = 100;
-        public void AsyncExecuteReader(OracleCommand command)
+        public void AsyncExecuteReader(VOracleCommand command)
         {
             this.CancelAsyncExecuteReader(); // отмена предыдущего асинхронного чтения
             this.queuedTaskInfo = new AsyncLoadInfo(this, command);
@@ -2557,11 +2556,11 @@ namespace sql.builder.DataApi
         {
             private VDataTable parent;
             private CancellationTokenSource cancellation;
-            private OracleCommand command;
+            private VOracleCommand command;
             private int rows_to_fetch;
             private IDataReader reader;
             private Task<DataTable> task;
-            public AsyncLoadInfo(VDataTable parent, OracleCommand сommand)
+            public AsyncLoadInfo(VDataTable parent, VOracleCommand сommand)
             {
                 this.parent = parent;
                 this.cancellation = new CancellationTokenSource();

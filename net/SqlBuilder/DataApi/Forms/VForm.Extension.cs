@@ -553,7 +553,7 @@ namespace sql.builder.DataApi
         }
         private static void createDataAtapter(VDataTable table, /*VQueryCall queryCall1, VColumn returnIntoColumn1, List<VColumn> columns1,*/ XElement xtable/*, SortedList<string,VQueryCall> queryCalls*/)
         {
-            OracleDataAdapter dataAdapter = new OracleDataAdapter();
+            VOracleDataAdapter dataAdapter = new VOracleDataAdapter();
             //XElement qry = createTableQuery(queryCall, columns, false);
             foreach (XElement xtrakey in xtable.Elements(EName.extra_key))
             {
@@ -1789,15 +1789,15 @@ namespace sql.builder.DataApi
                 {
                     par_direction = ParameterDirection.Input;
                 }
-                OracleParameter par = new OracleParameter(TextConst.Pfx.Param + col_name, Cmn.GetDBType(xcol.Attribute(_AName.type).Value), par_direction);
+                VOracleParameter par = new VOracleParameter(TextConst.Pfx.Param + col_name, Cmn.GetDBType(xcol.Attribute(_AName.type).Value), par_direction);
                 par.SourceColumn = col_name;
                 list.Add(par);
             }
             return list;
         }
-        private List<OracleParameter> getOracleParams(List<VColumn> columns, string retName = null)
+        private List<VOracleParameter> getOracleParams(List<VColumn> columns, string retName = null)
         {
-            var list = new List<OracleParameter>(columns.Count);
+            var list = new List<VOracleParameter>(columns.Count);
             foreach (VColumn col in columns)
             {
                 ParameterDirection par_direction;
@@ -1809,7 +1809,7 @@ namespace sql.builder.DataApi
                 {
                     par_direction = ParameterDirection.Input;
                 }
-                OracleParameter par = new OracleParameter(TextConst.Pfx.Param + col.XName, Cmn.GetDBType(col.XDataType()), par_direction);
+                VOracleParameter par = new VOracleParameter(TextConst.Pfx.Param + col.XName, Cmn.GetDBType(col.XDataType()), par_direction);
                 par.SourceColumn = col.XName;
                 list.Add(par);
             }

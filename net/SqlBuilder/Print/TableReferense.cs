@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using sql.builder.DataApi;
-using Devart.Data.Oracle;
+using sql.builder.Clean;
 using System.Xml;
 using System.Xml.Linq;
 using sql.builder.Print.Xlsx;
@@ -278,7 +278,7 @@ namespace sql.builder
             }
         }
         private List<DataRow> rows = null;
-        public OracleDataReader reader = null;
+        public VOracleDataReader reader = null;
         private string parentId=null;
         private bool isNew = true;
         private bool isImputedRow=true;
@@ -352,7 +352,7 @@ namespace sql.builder
                     if (!done) {
                         vdt.cmd.FetchSize = 10;
                         DevUtilsProvider.Instance.AnalyzeExecSql(vdt.cmd.CommandText);
-                        reader = vdt.cmd.ExecuteReader();
+                        reader = vdt.cmd.ExecuteReaderWrapped();
                     }
                     //bufferTable = new DataTable();
                     //if (bufferTable.Columns.Count == 0)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using System.Xml.Xsl;
 using System.Xml.XPath;
 using System.IO;
 ////using System.Windows.Forms;
-using Devart.Data.Oracle;
+using sql.builder.Clean;
 using sql.builder.WinForms;
 using sql.builder.XmlHelpers;
 using sql.builder.UI;
@@ -101,7 +101,7 @@ namespace sql.builder.DataApi
         private void executeClientRefill(VDataSet dataSet, List<object> pars)
         {
             VDBSelectCommand cmd = this.Action().CalledQuery().GetSelectCommand(true);
-            var valTbl = cmd.ExecuteDataTable(pars, (OracleConnection)dataSet.GetConnection());
+            var valTbl = cmd.ExecuteDataTable(pars, dataSet.GetConnection());
             var targTbl = (VDataTable)dataSet.Tables[P_CalledObject];
             targTbl.DeleteRows(targTbl.Rows.ToArray());
             targTbl.AddNewRowsWithValues(valTbl.Rows.ToArray());
@@ -146,7 +146,7 @@ namespace sql.builder.DataApi
                 //pars.AddRange(VDBSelectCommand.CreateForegnKeyDBParameter(tbl, row));
                 //  pars.AddRange(col.ValueRefreshCommand.CreateCurValDBParameters(row));
                 pars1.Add(dataSet.CreateFormIdParametr());
-                var valTbl = cmd.ExecuteDataTable(pars1.ToArray(), (OracleConnection)dataSet.GetConnection());
+                var valTbl = cmd.ExecuteDataTable(pars1.ToArray(), dataSet.GetConnection());
                 foreach (DataColumn col in valTbl.Columns) {
                     if (targTbl.Columns.Contains(col.ColumnName)) {
                         if (valTbl.Rows.Count > 0) {
@@ -197,7 +197,7 @@ namespace sql.builder.DataApi
                 target.Rows.Add(values.Values.ToArray());
             }
         }
-        private static OracleConnection GetConnection(VDataSet ds)
+        private static VOracleConnection GetConnection(VDataSet ds)
         {
             if (ds != null) {
                 return ds.GetConnection();

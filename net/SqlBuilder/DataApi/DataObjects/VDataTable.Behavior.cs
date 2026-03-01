@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
+using sql.builder.Clean;
 using sql.builder.UI;// !!! перенести используемые классы и убрать
 using System.Threading;
 using System.ComponentModel;
@@ -2000,7 +2000,7 @@ namespace sql.builder.DataApi
             }
 
 
-            List<OracleParameter> pars;
+            List<VOracleParameter> pars;
             var tbl = this;
             var ds = tbl.GetDataSet();
 
@@ -2010,7 +2010,7 @@ namespace sql.builder.DataApi
             }
             else
             {
-                pars = new List<OracleParameter>();
+                pars = new List<VOracleParameter>();
 
 
 
@@ -2065,11 +2065,11 @@ namespace sql.builder.DataApi
 
         }
 
-        private object RefreshRows_DoWork(VDBSelectCommand cmd, List<OracleParameter> pars, DataRow[] rows)
+        private object RefreshRows_DoWork(VDBSelectCommand cmd, List<VOracleParameter> pars, DataRow[] rows)
         {
             return new Tuple<DataRow[], DataTable>(
                     rows,
-                    cmd.ExecuteDataTable(pars.ToArray(), (OracleConnection)GetDataSet().GetConnection())
+                    cmd.ExecuteDataTable(pars.ToArray(), GetDataSet().GetConnection())
                     );
         }
 
@@ -2138,7 +2138,7 @@ namespace sql.builder.DataApi
 
             }
 
-            List<OracleParameter> pars;
+            List<VOracleParameter> pars;
             var tbl = this;
             var ds = tbl.GetDataSet();
 
@@ -2148,7 +2148,7 @@ namespace sql.builder.DataApi
             }
             else
             {
-                pars = new List<OracleParameter>();
+                pars = new List<VOracleParameter>();
 
 
 
@@ -2208,7 +2208,7 @@ namespace sql.builder.DataApi
 
 
 
-        private object RefreshRow_DoWork(VDBSelectCommand cmd, List<OracleParameter> pars, DataRow row)
+        private object RefreshRow_DoWork(VDBSelectCommand cmd, List<VOracleParameter> pars, DataRow row)
         {
             if (IsNonDb)
             {
@@ -2216,7 +2216,7 @@ namespace sql.builder.DataApi
             }
             return new Tuple<DataRow, DataTable>(
                     row,
-                    cmd.ExecuteDataTable(pars.ToArray(), (OracleConnection)GetDataSet().GetConnection())
+                    cmd.ExecuteDataTable(pars.ToArray(), GetDataSet().GetConnection())
                     );
         }
         private void RefreshRow_Complete(object result, VDataColumn changingColumn = null, bool withQueue = true)
@@ -2400,9 +2400,9 @@ namespace sql.builder.DataApi
                 }
             }
 
-            UpdateTempCommand.Connection = (OracleConnection)GetConnection();
+            UpdateTempCommand.Connection = GetConnection();
 
-            ApplyRowValuesToParams(row, UpdateTempCommand.Parameters.Cast<OracleParameter>().Where(p => p.SourceColumn != "").ToList(), false);
+            ApplyRowValuesToParams(row, UpdateTempCommand.Parameters.Cast<VOracleParameter>().Where(p => p.SourceColumn != "").ToList(), false);
             UpdateTempCommand.Parameters[TextConst.DBParams.FormId].Value = GetDataSet().GetFormId();
             UpdateTempCommand.Parameters[TextConst.DBParams.RowStateId].Value = rowSatate;
 
@@ -2611,7 +2611,7 @@ namespace sql.builder.DataApi
         {
             if (ClearTempCommand != null && hasTemp)
             {
-                ClearTempCommand.Connection = (OracleConnection)GetConnection();
+                ClearTempCommand.Connection = GetConnection();
                 ClearTempCommand.Parameters[TextConst.DBParams.FormId].Value = GetDataSet().GetFormId();
                 DevUtilsProvider.Instance.AnalyzeExecSql(ClearTempCommand.CommandText);
                 ClearTempCommand.ExecuteNonQuery();

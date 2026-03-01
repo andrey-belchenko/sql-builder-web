@@ -1578,7 +1578,7 @@ namespace sql.builder
                 col.SetAttrValue(TextConst.AName.Visible, TextConst.AVBool.False);
             }
         }
-        public static void executeNonQuery(string sql, OracleConnection connection, OracleParameter[] pars = null, bool analyze = true)
+        public static void executeNonQuery(string sql, VOracleConnection connection, VOracleParameter[] pars = null, bool analyze = true)
         {
             string sql1 = Cmn.ClearUndefined(sql);
             // для пск

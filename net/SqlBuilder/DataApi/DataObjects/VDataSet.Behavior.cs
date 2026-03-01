@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,7 +11,7 @@ using System.Xml.Linq;
 using System.Xml.Xsl;
 using System.Xml.XPath;
 using System.Threading;
-using Devart.Data.Oracle;
+using sql.builder.Clean;
 using sql.builder.UI;
 namespace sql.builder.DataApi
 {
@@ -127,7 +127,7 @@ namespace sql.builder.DataApi
         public void RaiseChangeCompleted()
         {
             ChangesNotCompleted = false;
-            ((OracleConnection)GetConnection()).Commit();// !!! Не уверен что здесь это корректно
+            GetConnection().Commit();// !!! Не уверен что здесь это корректно
             if (ChangeCompleted != null)
             {
                 ChangeCompleted(this, null);
@@ -308,9 +308,9 @@ namespace sql.builder.DataApi
 
             return id;
         }
-        public OracleParameter CreateFormIdParametr()
+        public VOracleParameter CreateFormIdParametr()
         {
-            return new OracleParameter(TextConst.DBParams.FormId, OracleDbType.Number, (object)this.GetFormId(), ParameterDirection.Input);
+            return new VOracleParameter(TextConst.DBParams.FormId, VOracleDbType.Number, (object)this.GetFormId(), ParameterDirection.Input);
         }
     }
 }

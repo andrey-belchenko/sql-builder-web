@@ -68,7 +68,7 @@ namespace sql.builder.DataApi
         private SortedList<string, XElement> formInfoFieldsTextNodes;  // инициализируется в методе GetParamsAsXml()
         public XmlDocument CompiledReport;
         public VDataColumn OwnerColumn;
-        public Dictionary<string, OracleParameter> InputParams;
+        public Dictionary<string, VOracleParameter> InputParams;
         public SortedList<string, object> InputParamsValues;
         public string KeyParamName;
         public SortedList<int, string> InputParamsNames;
@@ -93,7 +93,7 @@ namespace sql.builder.DataApi
         }
         public FCustomRefresh CustomRefresh;
         public bool IsVertica { get; set; }
-        public OracleConnection Connection = null;
+        public VOracleConnection Connection = null;
         public event EventHandler Changed;
         public event EventHandler SchemeChanged; // вызывается вручную , для обновления списка с изменением состава колонок см. VConst
         public event EventHandler TopTableRefreshed;
@@ -355,7 +355,7 @@ namespace sql.builder.DataApi
         {
             Refresh(null, useRepository);
         }
-        public OracleConnection GetConnection()
+        public VOracleConnection GetConnection()
         {
             if (this.Connection == null)
             {
@@ -421,11 +421,11 @@ namespace sql.builder.DataApi
             this.InputParams = null;
             this.InputParamsNames = null;
         }
-        public void AddInputParam(string name, OracleParameter dbPar, object value)
+        public void AddInputParam(string name, VOracleParameter dbPar, object value)
         {
             if (this.InputParams == null)
             {
-                this.InputParams = new Dictionary<string, OracleParameter>();
+                this.InputParams = new Dictionary<string, VOracleParameter>();
                 this.InputParamsNames = new SortedList<int, string>();
                 this.InputParamsValues = new SortedList<string, object>();
             }
@@ -433,7 +433,7 @@ namespace sql.builder.DataApi
             this.InputParamsValues.Add(name, value);
             this.InputParamsNames.Add(this.InputParamsNames.Count, name);
         }
-        private OracleParameter GetInputParam(int index)
+        private VOracleParameter GetInputParam(int index)
         {
             string name = this.InputParamsNames[index];
             return this.InputParams[name];
@@ -447,8 +447,8 @@ namespace sql.builder.DataApi
             for (int index = 0; index < values.Count; index++)
             {
                 object val = values[index];
-                OracleParameter par = this.GetInputParam(index);
-                if (par.OracleDbType == OracleDbType.Array)
+                VOracleParameter par = this.GetInputParam(index);
+                if (par.GetOracleDbType() == VOracleDbType.Array)
                 {
                     ArrayStorage arrayStorage = new ArrayStorage(par.ParameterName);
                     arrayStorage.SetValues(val as object[]);
@@ -460,7 +460,7 @@ namespace sql.builder.DataApi
         private void SetParams(XElement pars)
         {
             object val;
-            foreach (OracleParameter dbPar in this.InputParams.Values)
+            foreach (VOracleParameter dbPar in this.InputParams.Values)
             {
                 XElement factParam = pars.Elements().SearchByAttribute(AName.name, dbPar.ParameterName);
                 // ищем параметр среди глобальных
@@ -486,7 +486,7 @@ namespace sql.builder.DataApi
                         }
                         else
                         {
-                            if (dbPar.OracleDbType == OracleDbType.Array)
+                            if (dbPar.OracleDbType == VOracleDbType.Array)
                             {
                                 object[] arrVal = ArrayParamXElementContentToObjectArray(factParam.Elements().First());
                                 ArrayStorage arrayStorage = new ArrayStorage(factParam.Attribute(AName.name).Value);
@@ -495,11 +495,11 @@ namespace sql.builder.DataApi
                             }
                             else
                             {
-                                if (dbPar.OracleDbType == OracleDbType.Date)
+                                if (dbPar.OracleDbType == VOracleDbType.Date)
                                 {
                                     val = Cmn.ExtractDateFromOracleToDateString(factParam.Value);
                                 }
-                                else if (dbPar.OracleDbType == OracleDbType.VarChar)
+                                else if (dbPar.OracleDbType == VOracleDbType.VarChar)
                                 {
                                     val = Cmn.ExtractStringFromOracleString(factParam.Value);
                                 }
@@ -652,11 +652,11 @@ namespace sql.builder.DataApi
                             {
                                 namesToClear = namesToClear + ",'" + this.MatQueriesNames[index] + "'";
                             }
-                            XmlReports.executeNonQuery("delete from rr_temp where skod in (" + namesToClear + ")", (OracleConnection)GetConnection(), null, false);
+                            XmlReports.executeNonQuery("delete from rr_temp where skod in (" + namesToClear + ")", GetConnection(), null, false);
                         }
                         //IEnumerable<string> ProcParamNames = VReport.ExtractParamsFromSqlText(this.ProcedureText).OrderByDescending(Cmn.LengthOfString);
-                        OracleParameter[] parsList;
-                        OracleCommand cmd = new VOracleCommand();
+                        VOracleParameter[] parsList;
+                        VOracleCommand cmd = new VOracleCommand();
                         cmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
                         cmd.CommandText = this.ProcedureText;
                         string[] ProcParamNames = Cmn.GetParameterNames(cmd.Parameters);
@@ -667,7 +667,7 @@ namespace sql.builder.DataApi
                             // Сортируем так, чтобы подстановка значений параметров прошла в правильном порядке (сначала kodd_flat, затем kodd, см. 71061 и 71118 в SD)
                             System.Array.Sort<string>(ProcParamNames, Cmn.DescComparsionByLength);
                             VDataTable.SetCommandParams(this, null, cmd, ProcParamNames);
-                            parsList = new OracleParameter[cmd.Parameters.Count];
+                            parsList = new VOracleParameter[cmd.Parameters.Count];
                             cmd.Parameters.CopyTo(parsList, 0);
                             for (index = cmd.Parameters.Count - 1; index >= 0; index--)
                             {
@@ -688,7 +688,7 @@ namespace sql.builder.DataApi
                             // DevAnalyzer.AnalyzeSuppressedSql(cmd.CommandText);
                             if (!DevUtilsProvider.Instance.IsPrepareOnly())
                             {
-                                XmlReports.executeNonQuery(cmd.CommandText, (OracleConnection)GetConnection(), parsList);
+                                XmlReports.executeNonQuery(cmd.CommandText, GetConnection(), parsList);
                             }
                         }
                         if (this.UpdateTempTable)
@@ -698,11 +698,11 @@ namespace sql.builder.DataApi
                             VDataColumn col_kodp = tbl.GetColumn("kodp");
                             if (col_dog != null)
                             {
-                                SqlUslPoisk.FillDogovorDataByt(col_dog.TempColumnName, tbl.QueryName, (OracleConnection)GetConnection());
+                                SqlUslPoisk.FillDogovorDataByt(col_dog.TempColumnName, tbl.QueryName, GetConnection());
                             }
                             else if (col_kodp != null)
                             {
-                                SqlUslPoisk.FillAbonentDataByt(col_kodp.TempColumnName, tbl.QueryName, (OracleConnection)GetConnection());
+                                SqlUslPoisk.FillAbonentDataByt(col_kodp.TempColumnName, tbl.QueryName, GetConnection());
                             }
                         }
                         if (!onlyGetSql)
@@ -719,7 +719,7 @@ namespace sql.builder.DataApi
                             table.DataAdapter.SelectCommand.Dispose();
                             table.DataAdapter.SelectCommand = null;
                             Cmn.DisposeAndSetNull(ref table.DataAdapter);
-                            table.DataAdapter = new OracleDataAdapter();
+                            table.DataAdapter = new VOracleDataAdapter();
                             table.DataAdapter.SelectCommand = new VOracleCommand(cmd_text);
                             // DevAnalyzer.AnalyzePrepSql(cmd_text);
                         }
@@ -1205,7 +1205,7 @@ namespace sql.builder.DataApi
             }
             if (this.InputParams != null)
             {
-                foreach (OracleParameter par in this.InputParams.Values)
+                foreach (VOracleParameter par in this.InputParams.Values)
                 {
                     if (fieldNames.Contains(par.ParameterName))
                     {
@@ -1315,10 +1315,10 @@ namespace sql.builder.DataApi
         {
             if (this.InputParams != null)
             {
-                OracleParameter param;
+                VOracleParameter param;
                 if (this.InputParams.TryGetValue(paramName, out param))
                 {
-                    if (param.OracleDbType == OracleDbType.Array)
+                    if (param.GetOracleDbType() == VOracleDbType.Array)
                     { // может что то словмать, пока оставлю только для array
                         return this.InputParamsValues[paramName];
                     }
@@ -1380,9 +1380,9 @@ namespace sql.builder.DataApi
             }
             return null;
         }
-        public OracleParameter GetParamAsOracleParametr(string paramName)
+        public VOracleParameter GetParamAsOracleParametr(string paramName)
         {
-            OracleParameter dbPar;
+            VOracleParameter dbPar;
             if (!VDBSelectCommand.TryGetGlobalDbParam(paramName, out dbPar))
             {
                 VDataTable paramsTable = this.ParamsTable;
@@ -1391,7 +1391,7 @@ namespace sql.builder.DataApi
                     VDataTable paramTable = (paramsTable.DataSet as VDataSet).ArrayValueTable(paramName);
                     if (paramTable != null)
                     {
-                        dbPar = new OracleParameter(paramName, OracleDbType.Array);
+                        dbPar = new VOracleParameter(paramName, VOracleDbType.Array);
                         if (paramTable.ParamUsed)
                         {
                             object[] arrVal = ArrayTableParamValueToObjectArray(paramTable);
@@ -1409,7 +1409,7 @@ namespace sql.builder.DataApi
                     {
                         VDataColumn parCol = this.GetVariableColumn(paramName);
                         //var parCol = (VDataColumn)paramsTable.Columns[paramName];
-                        dbPar = new OracleParameter(paramName, Cmn.GetDBType(parCol.DataType));
+                        dbPar = new VOracleParameter(paramName, Cmn.GetDBType(parCol.DataType));
                         if (paramsTable.Columns.Contains(paramName))
                         {
                             if (parCol.ParamUsed || TextConst.AVParamArray.FormExtPars.Contains(paramName) || TextConst.AVParamArray.TableExtPars.Contains(paramName))
@@ -1417,7 +1417,7 @@ namespace sql.builder.DataApi
                                 object val = paramsTable.CurrentRow[parCol];
                                 if (VDataColumn.HasBoundControl(parCol) && parCol.BoundControls[0].IsStringToArray())
                                 {
-                                    dbPar.OracleDbType = OracleDbType.Array;
+                                    dbPar.OracleDbType = VOracleDbType.Array;
                                     if (Cmn.IsNullOrDBNull(val))
                                     {
                                         val = string.Empty;

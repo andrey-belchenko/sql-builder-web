@@ -9,7 +9,7 @@ namespace sql.builder.Clean
     /// </summary>
     public static class VOracleParameterCollectionExtensions
     {
-        public static bool TryGetParameter(this OracleParameterCollection parameters, string parameter_name, out OracleParameter parameter)
+        public static bool TryGetParameter(this OracleParameterCollection parameters, string parameter_name, out VOracleParameter parameter)
         {
             if (parameters == null)
             {
@@ -19,11 +19,16 @@ namespace sql.builder.Clean
             int index = parameters.IndexOf(parameter_name);
             if (index >= 0)
             {
-                parameter = parameters[index];
-                return true;
+                parameter = parameters[index] as VOracleParameter;
+                return parameter != null;
             }
             parameter = null;
             return false;
+        }
+
+        public static bool TryGetParameter(this VOracleCommand cmd, string parameter_name, out VOracleParameter parameter)
+        {
+            return cmd.Parameters.TryGetParameter(parameter_name, out parameter);
         }
 
         public static VOracleDbType GetOracleDbType(this DbParameter parameter)

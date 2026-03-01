@@ -4,10 +4,10 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
-using Devart.Data.Oracle;
 using infoenergo.sys;
 using sql.builder.Core;
 using sql.builder.DataApi;
+using sql.builder.Clean;
 using DataHelper = infoenergo.core.Data.DataHelper;
 using SqlBuilderLib.DevTools;
 
@@ -15,8 +15,8 @@ namespace sql.builder
 {
     public static class db
     {
-        private static OracleConnection _connection;
-        public static OracleConnection Connection {
+        private static VOracleConnection _connection;
+        public static VOracleConnection Connection {
             get => Global.RequestConnection.Value != null ? Global.Connection : (_connection ?? Global.Connection);
             set { _connection = value; }
         }
@@ -51,16 +51,16 @@ namespace sql.builder
         }*/
         public static string SelectSettingData(decimal kod_gs)
         {
-            OracleParameter[] parameters = new OracleParameter[1] { new OracleParameter("kod_gs", OracleDbType.Number, kod_gs, ParameterDirection.Input) };
+            VOracleParameter[] parameters = new VOracleParameter[1] { new VOracleParameter("kod_gs", VOracleDbType.Number, kod_gs, ParameterDirection.Input) };
             return DataHelper.SqlGetString("SELECT data FROM vr_grid_settings WHERE kod_gs = :kod_gs", parameters, Connection);
         }
         public static decimal InsertReportSetting(string repname, string name, string data)
         {
-            OracleParameter kod_gs = new OracleParameter("kod_gs", OracleDbType.Number, null, ParameterDirection.Output);
-            OracleParameter[] parameters = new OracleParameter[4] {
-                new OracleParameter("repname", OracleDbType.VarChar, repname, ParameterDirection.Input),
-                new OracleParameter("name",    OracleDbType.VarChar, name, ParameterDirection.Input),
-                new OracleParameter("data",    OracleDbType.Clob, data, ParameterDirection.Input),
+            VOracleParameter kod_gs = new VOracleParameter("kod_gs", VOracleDbType.Number, null, ParameterDirection.Output);
+            VOracleParameter[] parameters = new VOracleParameter[4] {
+                new VOracleParameter("repname", VOracleDbType.VarChar, repname, ParameterDirection.Input),
+                new VOracleParameter("name",    VOracleDbType.VarChar, name, ParameterDirection.Input),
+                new VOracleParameter("data",    VOracleDbType.Clob, data, ParameterDirection.Input),
                 kod_gs
             };
             DataHelper.SqlExecute("INSERT INTO vr_grid_settings (repname, name, data) VALUES (:repname, :name, :data) RETURNING kod_gs INTO :kod_gs", parameters, Connection);
@@ -69,31 +69,31 @@ namespace sql.builder
         }
         public static void UpdateReportSettingData(decimal kod_gs, string data)
         {
-            OracleParameter[] parameters = new OracleParameter[2] {
-                new OracleParameter("kod_gs", OracleDbType.Number, (object)kod_gs, ParameterDirection.Input),
-                new OracleParameter("data",   OracleDbType.Clob, data, ParameterDirection.Input)
+            VOracleParameter[] parameters = new VOracleParameter[2] {
+                new VOracleParameter("kod_gs", VOracleDbType.Number, (object)kod_gs, ParameterDirection.Input),
+                new VOracleParameter("data",   VOracleDbType.Clob, data, ParameterDirection.Input)
             };
             DataHelper.SqlExecute("UPDATE vr_grid_settings SET data = :data WHERE kod_gs = :kod_gs", parameters, Connection);
             Connection.Commit();
         }
         public static void UpdateReportSettingName(decimal kod_gs, string name)
         {
-            OracleParameter[] parameters = new OracleParameter[2] {
-                new OracleParameter("kod_gs", OracleDbType.Number, (object)kod_gs, ParameterDirection.Input),
-                new OracleParameter("name",   OracleDbType.VarChar, name, ParameterDirection.Input)
+            VOracleParameter[] parameters = new VOracleParameter[2] {
+                new VOracleParameter("kod_gs", VOracleDbType.Number, (object)kod_gs, ParameterDirection.Input),
+                new VOracleParameter("name",   VOracleDbType.VarChar, name, ParameterDirection.Input)
             };
             DataHelper.SqlExecute("UPDATE vr_grid_settings SET name = :name WHERE kod_gs = :kod_gs", parameters, Connection);
             Connection.Commit();
         }
         public static void DeleteReportSetting(decimal kod_gs)
         {
-            OracleParameter[] parameters = new OracleParameter[1] { new OracleParameter("kod_gs", OracleDbType.Number, (object)kod_gs, ParameterDirection.Input) };
+            VOracleParameter[] parameters = new VOracleParameter[1] { new VOracleParameter("kod_gs", VOracleDbType.Number, (object)kod_gs, ParameterDirection.Input) };
             DataHelper.SqlExecute("DELETE FROM vr_grid_settings WHERE kod_gs = :kod_gs", parameters, Connection);
             Connection.Commit();
         }
         public static string SelectDefaultSettingData(string repname)
         {
-            OracleParameter[] parameters = new OracleParameter[1] { new OracleParameter("repname", OracleDbType.VarChar, repname, ParameterDirection.Input) };
+            VOracleParameter[] parameters = new VOracleParameter[1] { new VOracleParameter("repname", VOracleDbType.VarChar, repname, ParameterDirection.Input) };
             DataTable dt = DataHelper.SqlGetTable("SELECT data FROM vr_grid_settings WHERE repname = :repname AND name = 'default' AND visible = 0 AND u_m = USER", parameters, Connection, false);
             if (dt.Rows.Count == 0) {
                 return null;
@@ -103,16 +103,16 @@ namespace sql.builder
         }
         public static void MergeDefaultReportSetting(string repname, string data)
         {
-            OracleParameter[] parameters = new OracleParameter[2] {
-                new OracleParameter("repname", OracleDbType.VarChar, repname, ParameterDirection.Input),
-                new OracleParameter("data",    OracleDbType.NClob,   data,    ParameterDirection.Input)
+            VOracleParameter[] parameters = new VOracleParameter[2] {
+                new VOracleParameter("repname", VOracleDbType.VarChar, repname, ParameterDirection.Input),
+                new VOracleParameter("data",    VOracleDbType.NClob,   data,    ParameterDirection.Input)
             };
             DataHelper.SqlExecute("MERGE INTO vr_grid_settings USING dual ON (repname = :repname AND name = 'default' AND visible = 0 AND u_m = USER) WHEN MATCHED THEN UPDATE SET data = :data WHEN NOT MATCHED THEN INSERT (repname, name, visible, data) VALUES(:repname, 'default', 0, :data)", parameters, Connection); 
             Connection.Commit();
         }
         public static void DeleteDefaultReportSetting(string repname)
         {
-            OracleParameter[] parameters = new OracleParameter[1] { new OracleParameter("repname", OracleDbType.VarChar, repname, ParameterDirection.Input) };
+            VOracleParameter[] parameters = new VOracleParameter[1] { new VOracleParameter("repname", VOracleDbType.VarChar, repname, ParameterDirection.Input) };
             DataHelper.SqlExecute("DELETE FROM vr_grid_settings WHERE repname = :repname AND name = 'default' AND visible = 0 AND u_m = USER", parameters, Connection);
             Connection.Commit();
         }
@@ -154,12 +154,12 @@ namespace sql.builder
                     new SqlArg("puser", "user", SqlDestination.Where, SqlType.Const),
 
                     new SqlArg("name", name, SqlDestination.Insert, SqlType.String),
-                    new SqlArg("data", data, SqlDestination.Insert, SqlType.Parameter, ParameterDirection.Input, OracleDbType.NClob),
+                    new SqlArg("data", data, SqlDestination.Insert, SqlType.Parameter, ParameterDirection.Input, VVOracleDbType.NClob.ToDevart()),
                     new SqlArg("puser", "user", SqlDestination.Insert, SqlType.Const),
 
 
                     new SqlArg("name", name, SqlDestination.Update, SqlType.String),
-                    new SqlArg("data", data, SqlDestination.Update, SqlType.Parameter, ParameterDirection.Input, OracleDbType.NClob),
+                    new SqlArg("data", data, SqlDestination.Update, SqlType.Parameter, ParameterDirection.Input, VVOracleDbType.NClob.ToDevart()),
                 };
             }
             else
@@ -204,10 +204,10 @@ namespace sql.builder
         }*/
         public static decimal InsertReportLog(string repname, string report_params)
         {
-            OracleParameter kod_log = new OracleParameter("kod_log", OracleDbType.Number, null, ParameterDirection.Output);
-            OracleParameter[] parameters = new OracleParameter[3] {
-                new OracleParameter("repname", OracleDbType.VarChar, repname, ParameterDirection.Input),
-                new OracleParameter("params", OracleDbType.NClob, report_params, ParameterDirection.Input),
+            VOracleParameter kod_log = new VOracleParameter("kod_log", VOracleDbType.Number, null, ParameterDirection.Output);
+            VOracleParameter[] parameters = new VOracleParameter[3] {
+                new VOracleParameter("repname", VOracleDbType.VarChar, repname, ParameterDirection.Input),
+                new VOracleParameter("params", VOracleDbType.NClob, report_params, ParameterDirection.Input),
                 kod_log
             };
             DataHelper.SqlExecute("INSERT INTO vr_reports_log (repname, params) VALUES (:repname, :params) RETURNING kod_log INTO :kod_log", parameters, Connection,false);
@@ -216,18 +216,18 @@ namespace sql.builder
         }
         public static void UpdateReportLog(decimal kod_log, string error_text, string stack_text)
         {
-            OracleParameter[] parameters = new OracleParameter[3] {
-                new OracleParameter("error_text", OracleDbType.VarChar, error_text, ParameterDirection.Input),
-                new OracleParameter("stack_text", OracleDbType.VarChar, stack_text, ParameterDirection.Input),
-                new OracleParameter("kod_log", OracleDbType.Number, (object)kod_log, ParameterDirection.Input)
+            VOracleParameter[] parameters = new VOracleParameter[3] {
+                new VOracleParameter("error_text", VOracleDbType.VarChar, error_text, ParameterDirection.Input),
+                new VOracleParameter("stack_text", VOracleDbType.VarChar, stack_text, ParameterDirection.Input),
+                new VOracleParameter("kod_log", VOracleDbType.Number, (object)kod_log, ParameterDirection.Input)
             };
             DataHelper.SqlExecute("UPDATE vr_reports_log SET error_text = :error_text, stack_text = :stack_text WHERE kod_log = :kod_log", parameters, Connection, false);
             Connection.Commit();
         }
         public static TimeSpan? AverageReportFormingTime(string report_name)
         {
-            OracleParameter p_repname  = new OracleParameter("p_repname", OracleDbType.VarChar, report_name, ParameterDirection.Input);
-            OracleParameter p_avg_time = new OracleParameter("p_avg_time", OracleDbType.IntervalDS, ParameterDirection.Output);
+            VOracleParameter p_repname  = new VOracleParameter("p_repname", VOracleDbType.VarChar, report_name, ParameterDirection.Input);
+            VOracleParameter p_avg_time = new VOracleParameter("p_avg_time", VOracleDbType.IntervalDS, ParameterDirection.Output);
             DataHelper.SqlExecute(@"DECLARE
   p_repname     vr_reports_log.repname%type;
   n_count       PLS_INTEGER;
@@ -258,7 +258,7 @@ BEGIN
   END IF; 
   CLOSE cur;
   :p_avg_time := i_avg_time;
-END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
+END;", new VOracleParameter[2] { p_repname, p_avg_time }, Connection);
             // Здесь p_avg_time.OracleValue is Devart.Data.Oracle.OracleIntervalDS
             object value = p_avg_time.Value;
             if (Cmn.IsNullOrDBNull(value)) {
@@ -270,9 +270,9 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
         #endregion
         public static DataTable SelectConstraintTableColumns(string schema_name, string constraint_name)
         {
-            OracleParameter[] parameters = new OracleParameter[2] {
-                new OracleParameter("schema", OracleDbType.VarChar, schema_name, ParameterDirection.Input),
-                new OracleParameter("constraint_name", OracleDbType.VarChar, constraint_name, ParameterDirection.Input)
+            VOracleParameter[] parameters = new VOracleParameter[2] {
+                new VOracleParameter("schema", VOracleDbType.VarChar, schema_name, ParameterDirection.Input),
+                new VOracleParameter("constraint_name", VOracleDbType.VarChar, constraint_name, ParameterDirection.Input)
             };
             return DataHelper.SqlGetTable("SELECT table_name, column_name FROM all_cons_columns WHERE owner = :schema AND constraint_name = :constraint_name", parameters, Connection);
         }
@@ -308,7 +308,7 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
                    
                     reader = cmd.ExecuteReader();
                 }
-                catch (OracleException e)
+                catch (DbException e)
                 {
                     //throw new infoenergo.core.Data.OracleSqlException(e, sql);
                     throw e;
@@ -351,7 +351,7 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
                 {
                     foreach (var par in pars)
                     {
-                        var dbpar = new OracleParameter(par.Key, par.Value);
+                        var dbpar = new VOracleParameter(par.Key, par.Value);
                         cmd.Parameters.Add(dbpar);
                     }
                     
@@ -427,7 +427,7 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
 
                 sb.AppendLine(")");
 
-                var par = new OracleParameter("array_id", OracleDbType.NVarChar) { Value = array_id };
+                var par = new VOracleParameter("array_id", VOracleDbType.NVarChar) { Value = array_id };
                 DataHelper.SqlExecute(sb.ToString(), new[] { par }, _connection);   
             }
         }
@@ -436,7 +436,7 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
             var sb = new StringBuilder();
             sb.AppendLine("delete from vr_array_storage where array_id = :array_id");
 
-            var par = new OracleParameter("array_id", OracleDbType.NVarChar) { Value = array_id };
+            var par = new VOracleParameter("array_id", VOracleDbType.NVarChar) { Value = array_id };
             DataHelper.SqlExecute(sb.ToString(), new[] { par }, _connection);
         }
         public static DataTable GetFromArrayStorage(string array_id, string datatype = "number")
@@ -445,7 +445,7 @@ END;", new OracleParameter[2] { p_repname, p_avg_time }, Connection);
             sb.AppendFormat("select {0} from vr_array_storage where array_id = :array_id", ArrayStorage.DataColumnName(datatype));
             sb.AppendLine();
 
-            var par = new OracleParameter("array_id", OracleDbType.NVarChar) { Value = array_id };
+            var par = new VOracleParameter("array_id", VOracleDbType.NVarChar) { Value = array_id };
             var dt = DataHelper.SqlGetTable(sb.ToString(), new[] { par }, _connection);
 
             return dt;

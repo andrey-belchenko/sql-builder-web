@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Data;
-using Devart.Data.Oracle;
 using System;
+using sql.builder.Clean;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
@@ -915,7 +915,7 @@ namespace sql.builder.DataApi
 
 
 
-                List<OracleParameter> pars;
+                List<VOracleParameter> pars;
                 var tbl = GetTable();
                 var ds = tbl.GetDataSet();
 
@@ -925,7 +925,7 @@ namespace sql.builder.DataApi
                 }
                 else
                 {
-                    pars = new List<OracleParameter>();
+                    pars = new List<VOracleParameter>();
                 }
                 BackgroundWorker bw = new BackgroundWorker();
                 bw.WorkerSupportsCancellation = true;
@@ -960,7 +960,7 @@ namespace sql.builder.DataApi
                         }
                         else
                         {
-                            args.Result = col.ValueRefreshCommand.ExecuteDataTable(pars.ToArray(), (OracleConnection)ds.GetConnection());
+                            args.Result = col.ValueRefreshCommand.ExecuteDataTable(pars.ToArray(), ds.GetConnection());
                         }
 
                         if (bw.CancellationPending == true)
@@ -999,7 +999,7 @@ namespace sql.builder.DataApi
                 else
                 {
                     RefreshCalulatedValue_AddParams(pars, ds, tbl, row, col);
-                    var valTbl = col.ValueRefreshCommand.ExecuteDataTable(pars.ToArray(), (OracleConnection)ds.GetConnection());
+                    var valTbl = col.ValueRefreshCommand.ExecuteDataTable(pars.ToArray(), ds.GetConnection());
                     RefreshCalulatedValue_UseVal(valTbl, col, row);
                     RefreshCalulatedValue_Complete(bw, ri, col);
                 }
@@ -1028,20 +1028,20 @@ namespace sql.builder.DataApi
         public void RefreshCalulatedValueNewSimple(DataRow row)
         {
             if (this.ValueRefreshCommand != null) {
-                List<OracleParameter> pars;
+                List<VOracleParameter> pars;
                 VDataTable tbl = this.GetTable();
                 VDataSet ds = tbl.GetDataSet();
                 if (ds.InputParams != null) {
-                    pars = ds.InputParams.Values.ToList<OracleParameter>();
+                    pars = ds.InputParams.Values.ToList();
                 } else {
-                    pars = new List<OracleParameter>(0);
+                    pars = new List<VOracleParameter>(0);
                 }
                 RefreshCalulatedValue_AddParams(pars, ds, tbl, row, this);
-                var valTbl = this.ValueRefreshCommand.ExecuteDataTable(pars.ToArray(), (OracleConnection)ds.GetConnection());
+                var valTbl = this.ValueRefreshCommand.ExecuteDataTable(pars.ToArray(), ds.GetConnection());
                 RefreshCalulatedValue_UseVal(valTbl, this, row);
             }
         }
-        private void RefreshCalulatedValue_AddParams(List<OracleParameter> pars, VDataSet ds, VDataTable tbl, DataRow row, VDataColumn col)
+        private void RefreshCalulatedValue_AddParams(List<VOracleParameter> pars, VDataSet ds, VDataTable tbl, DataRow row, VDataColumn col)
         {
             pars.Add(VDBSelectCommand.CreateKeyDBParameter(tbl, row));
             pars.AddRange(VDBSelectCommand.CreateExtensionKeysDBParameters(tbl, row));

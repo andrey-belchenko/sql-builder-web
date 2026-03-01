@@ -1,11 +1,11 @@
-﻿using Devart.Data.Oracle;
+using sql.builder.Clean;
 using sql.builder.DataApi;
 
 namespace sql.builder.asuse
 {
     public static class SqlUslPoisk
     {
-        public static void FillDogovorDataByt(string kod_dog_column, string query_name, OracleConnection con)
+        public static void FillDogovorDataByt(string kod_dog_column, string query_name, VOracleConnection con)
         {
             var sql = "delete from tmp_objfilter where kod_refobject = 2";
             XmlReports.executeNonQuery(sql, con);
@@ -20,7 +20,7 @@ namespace sql.builder.asuse
             XmlReports.executeNonQuery(sql, con);
         }
 
-        public static void FillAbonentDataByt(string kodp_column, string query_name, OracleConnection con)
+        public static void FillAbonentDataByt(string kodp_column, string query_name, VOracleConnection con)
         {
             var sql = "delete from tmp_objfilter where kod_refobject = 1";
             XmlReports.executeNonQuery(sql, con);
@@ -33,7 +33,7 @@ namespace sql.builder.asuse
             XmlReports.executeNonQuery(sql, con);
         }
 
-        public static void FillPointDataByt(string kod_dog_column, string query_name, OracleConnection con)
+        public static void FillPointDataByt(string kod_dog_column, string query_name, VOracleConnection con)
         {
             var sql = "delete from tmp_objfilter where kod_refobject = 4";
             XmlReports.executeNonQuery(sql, con);

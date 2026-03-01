@@ -17,5 +17,14 @@ namespace sql.builder.Clean
         NVarChar = Devart.Data.Oracle.OracleDbType.NVarChar,
         Array = Devart.Data.Oracle.OracleDbType.Array,
         IntervalDS = Devart.Data.Oracle.OracleDbType.IntervalDS,
+        Integer = Devart.Data.Oracle.OracleDbType.Integer,
+    }
+
+    /// <summary>
+    /// Conversion for interop with external code that requires Devart OracleDbType (e.g. SqlArg).
+    /// </summary>
+    public static class VOracleDbTypeExtensions
+    {
+        public static Devart.Data.Oracle.OracleDbType ToDevart(this VOracleDbType dbType) => (Devart.Data.Oracle.OracleDbType)(int)dbType;
     }
 }

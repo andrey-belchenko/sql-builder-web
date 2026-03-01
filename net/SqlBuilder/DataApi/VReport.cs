@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
 using System.Data;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
+using sql.builder.Clean;
 using sql.builder.Core;
 using sql.builder.XmlHelpers;
 using AName_ = sql.builder.DataApi.AName;
@@ -312,7 +312,7 @@ namespace sql.builder.DataApi
             {
                 string par_name = par.Attribute(AName_.name).Value;
                 string par_mode = par.AttrOrDefault(AName_.mode, TextConst.AVArrayParamModes.Auto);
-                OracleParameter dbPar = new OracleParameter();
+                VOracleParameter dbPar = new VOracleParameter();
                 dbPar.ParameterName = par_name;
                 string parType = par.AttrOrEmpty(AName_.type);
                 if (string.IsNullOrEmpty(parType) && par.Attribute(AName_.class_type) != null)
@@ -835,15 +835,15 @@ namespace sql.builder.DataApi
             }
             return dataSet;
         }
-        public static string GetStringType(OracleDbType type)
+        public static string GetStringType(VOracleDbType type)
         {
             switch (type)
             {
-                case OracleDbType.Number:
+                case VOracleDbType.Number:
                     return TextConst.AVDataType.Number;
-                case OracleDbType.Date:
+                case VOracleDbType.Date:
                     return TextConst.AVDataType.Date;
-                case OracleDbType.Array:
+                case VOracleDbType.Array:
                     return TextConst.AVDataType.Array;
                 default:
                     return TextConst.AVDataType.String;

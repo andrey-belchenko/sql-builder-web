@@ -21,10 +21,10 @@ namespace infoenergo.core.Data
 {
     public static class DataHelper
     {
-        public static object SqlGetValue(string sql, OracleParameter[] parameters, OracleConnection connection, bool analyze = true)
+        public static object SqlGetValue(string sql, VOracleParameter[] parameters, VOracleConnection connection, bool analyze = true)
         {
             object result = null;
-            OracleCommand oracleCommand = new VOracleCommand(sql, connection);
+            VOracleCommand oracleCommand = new VOracleCommand(sql, connection);
             try
             {
                 if (parameters != null && parameters.Length != 0)
@@ -40,7 +40,7 @@ namespace infoenergo.core.Data
                     }
                     result = ((DbCommand)(object)oracleCommand).ExecuteScalar();
                 }
-                catch (OracleException innerException)
+                catch (Devart.Data.Oracle.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sql, oracleCommand.Parameters);
                 }
@@ -57,12 +57,12 @@ namespace infoenergo.core.Data
             return result;
         }
 
-        public static object SqlGetValue1(string sql, OracleParameter parameter, OracleConnection connection)
+        public static object SqlGetValue1(string sql, VOracleParameter parameter, VOracleConnection connection)
         {
-            return SqlGetValue(sql, new OracleParameter[1] { parameter }, connection);
+            return SqlGetValue(sql, new VOracleParameter[1] { parameter }, connection);
         }
 
-        public static decimal? SqlGetDecimal(string sql, OracleParameter[] parameters, OracleConnection connection)
+        public static decimal? SqlGetDecimal(string sql, VOracleParameter[] parameters, VOracleConnection connection)
         {
             object obj = SqlGetValue(sql, parameters, connection);
             try
@@ -78,7 +78,7 @@ namespace infoenergo.core.Data
             {
                 if (parameters != null && parameters.Length != 0)
                 {
-                    OracleParameterCollection oracleParameterCollection = new OracleParameterCollection();
+                    VOracleParameterCollection oracleParameterCollection = new VOracleParameterCollection();
                     ((DbParameterCollection)(object)oracleParameterCollection).AddRange((Array)parameters);
                 }
 
@@ -86,17 +86,17 @@ namespace infoenergo.core.Data
             }
         }
 
-        public static decimal? SqlGetDecimal(string sql, OracleConnection connection, OracleParameter parameter)
+        public static decimal? SqlGetDecimal(string sql, VOracleConnection connection, VOracleParameter parameter)
         {
-            return SqlGetDecimal(sql, new OracleParameter[1] { parameter }, connection);
+            return SqlGetDecimal(sql, new VOracleParameter[1] { parameter }, connection);
         }
 
-        public static decimal? SqlGetDecimal(string sql, OracleConnection connection)
+        public static decimal? SqlGetDecimal(string sql, VOracleConnection connection)
         {
-            return SqlGetDecimal(sql, new OracleParameter[0], connection);
+            return SqlGetDecimal(sql, new VOracleParameter[0], connection);
         }
 
-        public static string SqlGetString(string sql, OracleParameter[] parameters, OracleConnection connection, bool analyze = true)
+        public static string SqlGetString(string sql, VOracleParameter[] parameters, VOracleConnection connection, bool analyze = true)
         {
             object obj = SqlGetValue(sql, parameters, connection, analyze);
             if ((obj == null) | (obj == DBNull.Value))
@@ -107,20 +107,20 @@ namespace infoenergo.core.Data
             return (obj != null) ? obj.ToString() : string.Empty;
         }
 
-        public static string SqlGetString(string sql, OracleConnection connection, OracleParameter parameter, bool analyze = true)
+        public static string SqlGetString(string sql, VOracleConnection connection, VOracleParameter parameter, bool analyze = true)
         {
-            return SqlGetString(sql, new OracleParameter[1] { parameter }, connection, analyze);
+            return SqlGetString(sql, new VOracleParameter[1] { parameter }, connection, analyze);
         }
 
-        public static string SqlGetString(string sql, OracleConnection connection, bool analyze = true)
+        public static string SqlGetString(string sql, VOracleConnection connection, bool analyze = true)
         {
-            return SqlGetString(sql, new OracleParameter[0], connection, analyze);
+            return SqlGetString(sql, new VOracleParameter[0], connection, analyze);
         }
 
-        public static DateTime? SqlGetDate(string sql, OracleParameter[] parameters, OracleConnection connection)
+        public static DateTime? SqlGetDate(string sql, VOracleParameter[] parameters, VOracleConnection connection)
         {
             DateTime? dateTime = null;
-            OracleCommand oracleCommand = new VOracleCommand(sql, connection);
+            VOracleCommand oracleCommand = new VOracleCommand(sql, connection);
             try
             {
                 if (parameters != null && parameters.Length != 0)
@@ -131,7 +131,7 @@ namespace infoenergo.core.Data
                 try
                 {
                     DevUtilsProvider.Instance.AnalyzeExecSql(sql);
-                    using (OracleDataReader oracleDataReader = oracleCommand.ExecuteReader())
+                    using (VOracleDataReader oracleDataReader = oracleCommand.ExecuteReaderWrapped())
                     {
                         if (((DbDataReader)(object)oracleDataReader).Read())
                         {
@@ -145,7 +145,7 @@ namespace infoenergo.core.Data
                         }
                     }
                 }
-                catch (OracleException innerException)
+                catch (Devart.Data.Oracle.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sql, oracleCommand.Parameters);
                 }
@@ -166,37 +166,18 @@ namespace infoenergo.core.Data
             return dateTime;
         }
 
-        public static DateTime? SqlGetDate(string sql, OracleConnection connection, OracleParameter parameter)
+        public static DateTime? SqlGetDate(string sql, VOracleConnection connection, VOracleParameter parameter)
         {
-            return SqlGetDate(sql, new OracleParameter[1] { parameter }, connection);
+            return SqlGetDate(sql, new VOracleParameter[1] { parameter }, connection);
         }
 
-        public static DateTime? SqlGetDate(string sql, OracleConnection connection)
+        public static DateTime? SqlGetDate(string sql, VOracleConnection connection)
         {
-            OracleParameter[] array = new OracleParameter[0];
-            return SqlGetDate(sql, new OracleParameter[0], connection);
+            VOracleParameter[] array = new VOracleParameter[0];
+            return SqlGetDate(sql, new VOracleParameter[0], connection);
         }
 
-        public static OracleArray ConvertDecimalArrayToOracle(decimal[] array, OracleConnection connection, string oracleArrayTypeName = "ASUSETYPES.NUMBER$TABLE", bool forceEmptyArray = false)
-        {
-            if (!forceEmptyArray && array == null)
-            {
-                return null;
-            }
-
-            OracleArray oracleArray = new OracleArray(oracleArrayTypeName, connection);
-            if (array != null)
-            {
-                for (int i = 0; i < array.Length; i++)
-                {
-                    oracleArray.Add(array[i]);
-                }
-            }
-
-            return oracleArray;
-        }
-
-        public static OracleArray ConvertStringArrayToOracle(string[] array, OracleConnection connection, string oracleArrayTypeName = "ASUSETYPES.VARCHAR2$TABLE", bool forceEmptyArray = false)
+        public static OracleArray ConvertDecimalArrayToOracle(decimal[] array, VOracleConnection connection, string oracleArrayTypeName = "ASUSETYPES.NUMBER$TABLE", bool forceEmptyArray = false)
         {
             if (!forceEmptyArray && array == null)
             {
@@ -215,10 +196,29 @@ namespace infoenergo.core.Data
             return oracleArray;
         }
 
-        public static OracleLob SqlGetLob(string sql, OracleParameter[] parameters, OracleConnection connection)
+        public static OracleArray ConvertStringArrayToOracle(string[] array, VOracleConnection connection, string oracleArrayTypeName = "ASUSETYPES.VARCHAR2$TABLE", bool forceEmptyArray = false)
+        {
+            if (!forceEmptyArray && array == null)
+            {
+                return null;
+            }
+
+            OracleArray oracleArray = new OracleArray(oracleArrayTypeName, connection);
+            if (array != null)
+            {
+                for (int i = 0; i < array.Length; i++)
+                {
+                    oracleArray.Add(array[i]);
+                }
+            }
+
+            return oracleArray;
+        }
+
+        public static OracleLob SqlGetLob(string sql, VOracleParameter[] parameters, VOracleConnection connection)
         {
             OracleLob result = null;
-            OracleCommand oracleCommand = new VOracleCommand(sql, connection);
+            VOracleCommand oracleCommand = new VOracleCommand(sql, connection);
             try
             {
                 if (parameters != null && parameters.Length != 0)
@@ -229,13 +229,13 @@ namespace infoenergo.core.Data
                 try
                 {
                     DevUtilsProvider.Instance.AnalyzeExecSql(sql);
-                    OracleDataReader oracleDataReader = oracleCommand.ExecuteReader();
+                    VOracleDataReader oracleDataReader = oracleCommand.ExecuteReaderWrapped();
                     if (((DbDataReader)(object)oracleDataReader).Read())
                     {
                         result = oracleDataReader.GetOracleLob(0);
                     }
                 }
-                catch (OracleException innerException)
+                catch (Devart.Data.Oracle.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sql, oracleCommand.Parameters);
                 }
@@ -252,11 +252,11 @@ namespace infoenergo.core.Data
             return result;
         }
 
-        public static DataTable SqlGetTable(string sql, OracleParameter[] parameters, OracleConnection connection, bool analyze = true)
+        public static DataTable SqlGetTable(string sql, VOracleParameter[] parameters, VOracleConnection connection, bool analyze = true)
         {
             DataTable dataTable = new DataTable();
             object[] array = null;
-            OracleCommand oracleCommand = new VOracleCommand(sql, connection);
+            VOracleCommand oracleCommand = new VOracleCommand(sql, connection);
             try
             {
                 if (parameters != null && parameters.Length != 0)
@@ -271,7 +271,7 @@ namespace infoenergo.core.Data
                         DevUtilsProvider.Instance.AnalyzeExecSql(sql);
                     }
 
-                    using (OracleDataReader oracleDataReader = oracleCommand.ExecuteReader())
+                    using (VOracleDataReader oracleDataReader = oracleCommand.ExecuteReaderWrapped())
                     {
                         if (dataTable.Columns.Count == 0)
                         {
@@ -308,7 +308,7 @@ namespace infoenergo.core.Data
                         dataTable.AcceptChanges();
                     }
                 }
-                catch (OracleException innerException)
+                catch (Devart.Data.Oracle.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sql, oracleCommand.Parameters);
                 }
@@ -325,11 +325,11 @@ namespace infoenergo.core.Data
             return dataTable;
         }
 
-        public static DataTable SqlGetTable(string sql, OracleParameter[] parameters, OracleTransaction transaction)
+        public static DataTable SqlGetTable(string sql, VOracleParameter[] parameters, OracleTransaction transaction)
         {
             DataTable dataTable = new DataTable();
             object[] array = null;
-            OracleCommand oracleCommand = new VOracleCommand(sql, transaction);
+            VOracleCommand oracleCommand = new VOracleCommand(sql, transaction);
             try
             {
                 if (parameters != null && parameters.Length != 0)
@@ -340,7 +340,7 @@ namespace infoenergo.core.Data
                 try
                 {
                     DevUtilsProvider.Instance.AnalyzeExecSql(sql);
-                    using (OracleDataReader oracleDataReader = oracleCommand.ExecuteReader())
+                    using (VOracleDataReader oracleDataReader = oracleCommand.ExecuteReaderWrapped())
                     {
                         if (dataTable.Columns.Count == 0)
                         {
@@ -377,7 +377,7 @@ namespace infoenergo.core.Data
                         dataTable.AcceptChanges();
                     }
                 }
-                catch (OracleException innerException)
+                catch (Devart.Data.Oracle.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sql, oracleCommand.Parameters);
                 }
@@ -394,16 +394,15 @@ namespace infoenergo.core.Data
             return dataTable;
         }
 
-        public static DataTable SqlGetTable(string sql, OracleConnection connection, bool analyze = true)
+        public static DataTable SqlGetTable(string sql, VOracleConnection connection, bool analyze = true)
         {
-            OracleParameter[] array = new OracleParameter[0];
             return SqlGetTable(sql, null, connection, analyze);
         }
 
-        public static bool SqlExecute(string sqlCommand, OracleParameter[] parameters, OracleConnection connection, bool analyze = true)
+        public static bool SqlExecute(string sqlCommand, VOracleParameter[] parameters, VOracleConnection connection, bool analyze = true)
         {
             bool result = false;
-            OracleCommand oracleCommand = connection.CreateCommand();
+            VOracleCommand oracleCommand = connection.CreateCommand();
             try
             {
                 ((DbCommand)(object)oracleCommand).CommandText = sqlCommand;
@@ -422,7 +421,7 @@ namespace infoenergo.core.Data
                     ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                     result = true;
                 }
-                catch (OracleException innerException)
+                catch (Devart.Data.Oracle.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sqlCommand, oracleCommand.Parameters);
                 }
@@ -439,10 +438,10 @@ namespace infoenergo.core.Data
             return result;
         }
 
-        public static bool SqlExecute(string sqlCommand, OracleParameterCollection parameters, OracleConnection connection)
+        public static bool SqlExecute(string sqlCommand, OracleParameterCollection parameters, VOracleConnection connection)
         {
             bool result = false;
-            OracleCommand oracleCommand = connection.CreateCommand();
+            VOracleCommand oracleCommand = connection.CreateCommand();
             try
             {
                 ((DbCommand)(object)oracleCommand).CommandText = sqlCommand;
@@ -457,7 +456,7 @@ namespace infoenergo.core.Data
                     ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                     result = true;
                 }
-                catch (OracleException innerException)
+                catch (Devart.Data.Oracle.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sqlCommand, oracleCommand.Parameters);
                 }
@@ -476,24 +475,24 @@ namespace infoenergo.core.Data
 
         private static void MoveParameters(OracleParameterCollection sourceCollection, OracleParameterCollection destinationCollection)
         {
-            OracleParameter[] array = new OracleParameter[((DbParameterCollection)(object)sourceCollection).Count];
+            DbParameter[] array = new DbParameter[((DbParameterCollection)(object)sourceCollection).Count];
             for (int i = 0; i < ((DbParameterCollection)(object)sourceCollection).Count; i++)
             {
                 array[i] = sourceCollection[i];
             }
 
-            OracleParameter[] array2 = array;
-            foreach (OracleParameter value in array2)
+            DbParameter[] array2 = array;
+            foreach (DbParameter value in array2)
             {
                 ((DbParameterCollection)(object)sourceCollection).Remove((object)value);
                 destinationCollection.Add(value);
             }
         }
 
-        public static bool SqlExecute(string sqlCommand, OracleParameter[] parameters, CommandType commandType, OracleConnection connection)
+        public static bool SqlExecute(string sqlCommand, VOracleParameter[] parameters, CommandType commandType, VOracleConnection connection)
         {
             bool result = false;
-            OracleCommand oracleCommand = connection.CreateCommand();
+            VOracleCommand oracleCommand = connection.CreateCommand();
             try
             {
                 ((DbCommand)(object)oracleCommand).CommandText = sqlCommand;
@@ -509,7 +508,7 @@ namespace infoenergo.core.Data
                     ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                     result = true;
                 }
-                catch (OracleException innerException)
+                catch (Devart.Data.Oracle.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sqlCommand, oracleCommand.Parameters);
                 }
@@ -526,10 +525,10 @@ namespace infoenergo.core.Data
             return result;
         }
 
-        public static bool SqlExecute(string sqlCommand, OracleParameterCollection parameters, CommandType commandType, OracleConnection connection)
+        public static bool SqlExecute(string sqlCommand, OracleParameterCollection parameters, CommandType commandType, VOracleConnection connection)
         {
             bool result = false;
-            OracleCommand oracleCommand = connection.CreateCommand();
+            VOracleCommand oracleCommand = connection.CreateCommand();
             try
             {
                 ((DbCommand)(object)oracleCommand).CommandText = sqlCommand;
@@ -545,7 +544,7 @@ namespace infoenergo.core.Data
                     ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                     result = true;
                 }
-                catch (OracleException innerException)
+                catch (Devart.Data.Oracle.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sqlCommand, oracleCommand.Parameters);
                 }
@@ -562,10 +561,10 @@ namespace infoenergo.core.Data
             return result;
         }
 
-        public static bool SqlExecute(string sqlCommand, OracleParameter[] parameters, CommandType commandType, OracleTransaction transaction)
+        public static bool SqlExecute(string sqlCommand, VOracleParameter[] parameters, CommandType commandType, OracleTransaction transaction)
         {
             bool result = false;
-            OracleCommand oracleCommand = transaction.Connection.CreateCommand();
+            OracleCommand oracleCommand = (OracleCommand)transaction.Connection.CreateCommand();
             try
             {
                 oracleCommand.Transaction = transaction;
@@ -582,7 +581,7 @@ namespace infoenergo.core.Data
                     ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                     result = true;
                 }
-                catch (OracleException innerException)
+                catch (Devart.Data.Oracle.OracleException innerException)
                 {
                     throw new OracleSqlException(innerException, sqlCommand, oracleCommand.Parameters);
                 }
@@ -599,25 +598,25 @@ namespace infoenergo.core.Data
             return result;
         }
 
-        public static void SqlExecute(string sqlCommand, OracleConnection connection)
+        public static void SqlExecute(string sqlCommand, VOracleConnection connection)
         {
-            OracleParameter[] parameters = new OracleParameter[0];
+            VOracleParameter[] parameters = new VOracleParameter[0];
             SqlExecute(sqlCommand, parameters, connection);
         }
 
-        public static void SqlExecutePLSQL(string sqlCommand, OracleParameter[] parameters, OracleConnection connection)
+        public static void SqlExecutePLSQL(string sqlCommand, VOracleParameter[] parameters, VOracleConnection connection)
         {
             string sqlCommand2 = (Regex.IsMatch(sqlCommand, "^\\s*(DECLARE|BEGIN|UPDATE|INSERT|DELETE|ALTER)", RegexOptions.IgnoreCase) ? sqlCommand : ("BEGIN " + sqlCommand + (Regex.IsMatch(sqlCommand, "\\;\\s*$", RegexOptions.IgnoreCase) ? "" : ";") + " END;"));
             SqlExecute(sqlCommand2, parameters, connection);
         }
 
-        public static void SqlExecutePLSQL(string sqlCommand, OracleConnection connection)
+        public static void SqlExecutePLSQL(string sqlCommand, VOracleConnection connection)
         {
-            OracleParameter[] parameters = new OracleParameter[0];
+            VOracleParameter[] parameters = new VOracleParameter[0];
             SqlExecutePLSQL(sqlCommand, parameters, connection);
         }
 
-        public static bool SetCurrentSchema(string schema, OracleConnection connection)
+        public static bool SetCurrentSchema(string schema, VOracleConnection connection)
         {
             bool result = false;
             if (!Regex.IsMatch(schema, "^\\w+$") || schema.Length <= 0)
@@ -626,14 +625,14 @@ namespace infoenergo.core.Data
             }
 
             string sqlCommand = "ALTER SESSION SET current_schema=" + schema;
-            OracleCommand oracleCommand = new VOracleCommand(sqlCommand, connection);
+            VOracleCommand oracleCommand = new VOracleCommand(sqlCommand, connection);
             try
             {
                 DevUtilsProvider.Instance.AnalyzeExecSql(sqlCommand);
                 ((DbCommand)(object)oracleCommand).ExecuteNonQuery();
                 result = true;
             }
-            catch (OracleException innerException)
+            catch (Devart.Data.Oracle.OracleException innerException)
             {
                 throw new OracleSqlException(innerException, ((DbCommand)(object)oracleCommand).CommandText);
             }
@@ -658,9 +657,9 @@ namespace infoenergo.core.Data
         public static string TranslateOracleException(Exception e)
         {
             string empty = string.Empty;
-            if (e is OracleException)
+            if (e is Devart.Data.Oracle.OracleException oraEx)
             {
-                switch ((e as OracleException).Code)
+                switch (oraEx.Code)
                 {
                     case 1:
                         return "Значение должно быть уникальным для данного поля!";
@@ -708,7 +707,7 @@ namespace infoenergo.core.Data
                     case 1438:
                         return "Данные не помещаются в базу";
                     default:
-                        return (e as OracleException).Message;
+                        return oraEx.Message;
                 }
             }
 
@@ -771,7 +770,7 @@ namespace infoenergo.core.Data
             return result;
         }
 
-        public static string TranslateConnectionErrorMessage(OracleException ex, string dataSource, OracleConnection connection = null)
+        public static string TranslateConnectionErrorMessage(Devart.Data.Oracle.OracleException ex, string dataSource, VOracleConnection connection = null)
         {
             string empty = string.Empty;
             if (connection != null)
@@ -802,7 +801,7 @@ namespace infoenergo.core.Data
             }
         }
 
-        public static bool GetSessionInfo(out decimal? sid, out decimal? serial, out decimal? spid, OracleConnection connection)
+        public static bool GetSessionInfo(out decimal? sid, out decimal? serial, out decimal? spid, VOracleConnection connection)
         {
             bool result = false;
             sid = null;
@@ -856,7 +855,7 @@ namespace infoenergo.core.Data
             return result;
         }
 
-        public static bool TraceSession(bool startTrace, decimal? sid, decimal? serial, OracleConnection connection)
+        public static bool TraceSession(bool startTrace, decimal? sid, decimal? serial, VOracleConnection connection)
         {
             bool result = false;
             if (sid.HasValue && serial.HasValue)
@@ -882,9 +881,9 @@ namespace infoenergo.core.Data
                             SqlExecute(text, connection);
                             result = true;
                         }
-                        catch (OracleException innerException)
+                        catch (Devart.Data.Oracle.OracleException innerException)
                         {
-                            throw new OracleSqlException(innerException, text);
+                            throw new OracleSqlException((Devart.Data.Oracle.OracleException)innerException, text);
                         }
                     }
                 }
@@ -893,7 +892,7 @@ namespace infoenergo.core.Data
             return result;
         }
 
-        public static bool ChangePassword(string newPassword, OracleConnection connection)
+        public static bool ChangePassword(string newPassword, VOracleConnection connection)
         {
             bool result = false;
             if (newPassword != null && newPassword.Length > 0)
@@ -917,7 +916,7 @@ namespace infoenergo.core.Data
             return result;
         }
 
-        public static bool ChangePassword(string user, string newPassword, OracleConnection connection)
+        public static bool ChangePassword(string user, string newPassword, VOracleConnection connection)
         {
             bool result = false;
             if (user != null && user.Length > 0 && newPassword != null && newPassword.Length > 0)
@@ -1080,7 +1079,7 @@ namespace infoenergo.core.Data
             return false;
         }
 
-        public static bool IsAccountLocked(string user, OracleConnection connection)
+        public static bool IsAccountLocked(string user, VOracleConnection connection)
         {
             bool result = false;
             if (user != null && user.Length > 0)
@@ -1099,7 +1098,7 @@ namespace infoenergo.core.Data
                         result = false;
                     }
                 }
-                catch (OracleException innerException)
+                catch (Devart.Data.Oracle.OracleException innerException)
                 {
                     throw new OracleSqlException($"Не удалось определить, заблокирован пользователь {user} или нет", innerException);
                 }
@@ -1108,7 +1107,7 @@ namespace infoenergo.core.Data
             return result;
         }
 
-        public static DateTime? GetAccountLockDate(string user, OracleConnection connection)
+        public static DateTime? GetAccountLockDate(string user, VOracleConnection connection)
         {
             DateTime? result = null;
             try
@@ -1119,7 +1118,7 @@ namespace infoenergo.core.Data
                     return dateTime.Value;
                 }
             }
-            catch (OracleException innerException)
+            catch (Devart.Data.Oracle.OracleException innerException)
             {
                 throw new OracleSqlException("Не удалось определить дату блокирования пользователя " + user, innerException);
             }
@@ -1127,7 +1126,7 @@ namespace infoenergo.core.Data
             return result;
         }
 
-        public static bool LockAccount(string user, bool lockAccount, OracleConnection connection)
+        public static bool LockAccount(string user, bool lockAccount, VOracleConnection connection)
         {
             bool flag = false;
             try
@@ -1135,13 +1134,13 @@ namespace infoenergo.core.Data
                 SqlExecute(string.Format("ALTER USER {0} ACCOUNT {1}", user, lockAccount ? "LOCK" : "UNLOCK"), connection);
                 return true;
             }
-            catch (OracleException innerException)
+            catch (Devart.Data.Oracle.OracleException innerException)
             {
                 throw new OracleSqlException(string.Format("Не удалось {0} пользователя {1}", lockAccount ? "заблокировать" : "разблокировать", user), innerException);
             }
         }
 
-        public static bool HasAlterUserPrivilege(OracleConnection connection)
+        public static bool HasAlterUserPrivilege(VOracleConnection connection)
         {
             bool flag = false;
             try
@@ -1156,7 +1155,7 @@ namespace infoenergo.core.Data
 
                 return false;
             }
-            catch (OracleException innerException)
+            catch (Devart.Data.Oracle.OracleException innerException)
             {
                 throw new OracleSqlException($"Не удалось определить, может ли пользователь {connection.UserId} менять параметры других пользователей.", innerException);
             }
@@ -1190,7 +1189,7 @@ namespace infoenergo.core.Data
             return num + 1;
         }
 
-        public static string GetConnectionString(OracleConnection connection)
+        public static string GetConnectionString(VOracleConnection connection)
         {
             if (connection == null)
             {
@@ -1233,30 +1232,30 @@ namespace infoenergo.core.Data
             return ((DbConnectionStringBuilder)(object)oracleConnectionStringBuilder).ConnectionString;
         }
 
-        public static void SetSessionModuleAndAction(OracleConnection connection, string module, string action)
+        public static void SetSessionModuleAndAction(VOracleConnection connection, string module, string action)
         {
-            OracleParameter[] parameters = new OracleParameter[2]
+            VOracleParameter[] parameters = new VOracleParameter[2]
             {
-            new OracleParameter("module", module),
-            new OracleParameter("action", action)
+            new VOracleParameter("module", module),
+            new VOracleParameter("action", action)
             };
             try
             {
                 SqlExecute("BEGIN DBMS_APPLICATION_INFO.SET_MODULE(:module, :action); END;", parameters, connection);
             }
-            catch (OracleException innerException)
+            catch (Devart.Data.Oracle.OracleException innerException)
             {
                 throw new OracleSqlException("Не удалось установить параметры module и action в сессии oracle", innerException);
             }
         }
 
-        public static void GetSessionModuleAndAction(OracleConnection connection, out string module, out string action)
+        public static void GetSessionModuleAndAction(VOracleConnection connection, out string module, out string action)
         {
             module = null;
             action = null;
-            OracleParameter oracleParameter = new OracleParameter("module", OracleDbType.VarChar, ParameterDirection.Output);
-            OracleParameter oracleParameter2 = new OracleParameter("action", OracleDbType.VarChar, ParameterDirection.Output);
-            OracleParameter[] parameters = new OracleParameter[2] { oracleParameter, oracleParameter2 };
+            VOracleParameter oracleParameter = new VOracleParameter("module", VOracleDbType.VarChar, ParameterDirection.Output);
+            VOracleParameter oracleParameter2 = new VOracleParameter("action", VOracleDbType.VarChar, ParameterDirection.Output);
+            VOracleParameter[] parameters = new VOracleParameter[2] { oracleParameter, oracleParameter2 };
             try
             {
                 if (SqlExecute("BEGIN DBMS_APPLICATION_INFO.READ_MODULE(:module, :action); END;", parameters, connection))
@@ -1272,7 +1271,7 @@ namespace infoenergo.core.Data
                     }
                 }
             }
-            catch (OracleException innerException)
+            catch (Devart.Data.Oracle.OracleException innerException)
             {
                 throw new OracleSqlException("Не удалось прочитать параметры module и action в сессии oracle", innerException);
             }
@@ -1718,6 +1717,16 @@ namespace infoenergo.core.Data
         {
         }
 
+        public OracleSqlException(Devart.Data.Oracle.OracleException innerException, string sql, OracleParameterCollection parameters)
+            : this(innerException.Message + Environment.NewLine + Environment.NewLine + formatParameters(parameters), innerException, sql)
+        {
+        }
+
+        public OracleSqlException(Devart.Data.Oracle.OracleException innerException, string sql)
+            : this(innerException.Message, innerException, sql)
+        {
+        }
+
         public OracleSqlException(string message, string sql, OracleParameterCollection parameters)
             : this(message + Environment.NewLine + Environment.NewLine + formatParameters(parameters), null, sql)
         {
@@ -1745,11 +1754,12 @@ namespace infoenergo.core.Data
 
             if (parameters != null)
             {
-                foreach (OracleParameter item in (DbParameterCollection)(object)parameters)
+                foreach (DbParameter item in (DbParameterCollection)(object)parameters)
                 {
                     if (item != null)
                     {
-                        stringBuilder.AppendLine(string.Concat(str2: (((DbParameter)(object)item).Value == null) ? "" : ((((DbParameter)(object)item).Value == DBNull.Value) ? ((DbParameter)(object)item).Value.ToString() : ((item.OracleDbType == OracleDbType.Blob) ? ("[BLOB length=" + ((OracleBinary)((DbParameter)(object)item).Value).Length + "]") : ((item.OracleDbType != OracleDbType.Clob) ? ((DbParameter)(object)item).Value.ToString() : "[CLOB]"))), str0: ((DbParameter)(object)item).ParameterName, str1: "="));
+                        var dbType = item.GetOracleDbType();
+                        stringBuilder.AppendLine(string.Concat(str2: (((DbParameter)(object)item).Value == null) ? "" : ((((DbParameter)(object)item).Value == DBNull.Value) ? ((DbParameter)(object)item).Value.ToString() : ((dbType == VOracleDbType.Blob) ? ("[BLOB length=" + ((OracleBinary)((DbParameter)(object)item).Value).Length + "]") : ((dbType != VOracleDbType.Clob) ? ((DbParameter)(object)item).Value.ToString() : "[CLOB]"))), str0: ((DbParameter)(object)item).ParameterName, str1: "="));
                     }
                 }
             }

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
 using infoenergo.sys;
 using sql.builder.DataApi;
 using sql.builder.UI;
@@ -50,7 +49,7 @@ namespace sql.builder.Clean
             };
             return rep.ExecuteReportGetDs();
         }
-        public static void ChangeConnection(OracleConnection con, string source_folder = null)
+        public static void ChangeConnection(VOracleConnection con, string source_folder = null)
         {
             db.Connection = con;
             Global.Connection = con;
@@ -59,7 +58,7 @@ namespace sql.builder.Clean
 
         public static void ChangeConnectionString(string connectionString)
         {
-            var connection = new OracleConnection(connectionString);
+            var connection = new VOracleConnection(connectionString);
             connection.Open();
             ChangeConnection(connection);
         }
@@ -87,7 +86,7 @@ namespace sql.builder.Clean
         /// <summary>
         /// Execute report with per-request connection for web/async context. When connection is provided, uses request-scoped isolation for concurrent execution.
         /// </summary>
-        public static string ExecuteReport(string reportName, string templateName, Dictionary<string, object> pars, Dictionary<string, object> globPars, OracleConnection connection)
+        public static string ExecuteReport(string reportName, string templateName, Dictionary<string, object> pars, Dictionary<string, object> globPars, VOracleConnection connection)
         {
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
 
@@ -120,7 +119,7 @@ namespace sql.builder.Clean
         }
 
 
-        public static VDataSet ExecuteReportGetDs(string reportName, Dictionary<string, object> pars, Dictionary<string, object> globPars, OracleConnection connection)
+        public static VDataSet ExecuteReportGetDs(string reportName, Dictionary<string, object> pars, Dictionary<string, object> globPars, VOracleConnection connection)
         {
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
 

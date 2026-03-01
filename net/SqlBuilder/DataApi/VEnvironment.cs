@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using System.Reflection;
-using Devart.Data.Oracle;
+using sql.builder.Clean;
 //using Vertica.Data.VerticaClient;
 using sql.builder.Core;
 //using sql.builder.WebReports;
@@ -13,15 +13,15 @@ namespace sql.builder.DataApi
     public partial class VEnvironment
     {
         private ProjectManager manager;
-        private OracleConnection сonnection;
+        private VOracleConnection сonnection;
         private SortedList<string, VReport> reportsCash;
-        public VEnvironment(OracleConnection connection)
+        public VEnvironment(VOracleConnection connection)
         {
             this.manager = new ProjectManager();
             this.сonnection = connection;
             this.reportsCash = new SortedList<string, VReport>();
         }
-        public OracleConnection Connection { get { return this.сonnection; } }
+        public VOracleConnection Connection { get { return this.сonnection; } }
         public ProjectManager Manager { get { return this.manager; } }
         /*public VSXElement ForAdd(IEnumerable<VSXElement> scheme)
         {

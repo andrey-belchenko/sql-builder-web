@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -283,7 +283,7 @@ namespace sql.builder.DataApi
             return dimValId;
         }
 
-        private static object readRowOrReaderVal(DataRow row, Devart.Data.Oracle.OracleDataReader tr, string columnName)
+        private static object readRowOrReaderVal(DataRow row, IDataRecord tr, string columnName)
         {
             if (row != null)
             {
@@ -307,7 +307,7 @@ namespace sql.builder.DataApi
             }
         }
 
-        private static string addDimValFromRow(GrsetData grset, DataRow row, string keyColumnName, List<string> otherCols,Devart.Data.Oracle.OracleDataReader tr)
+        private static string addDimValFromRow(GrsetData grset, DataRow row, string keyColumnName, List<string> otherCols, IDataRecord tr)
         {
             if (grset.DimValues == null)
             {

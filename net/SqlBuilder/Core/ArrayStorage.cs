@@ -36,8 +36,8 @@ namespace sql.builder.Core
         }
         public static void ClearStoredValues(string id)
         {
-            OracleParameter par = new OracleParameter("array_id", OracleDbType.VarChar, id, ParameterDirection.Input);
-            DataHelper.SqlExecute("DELETE FROM vr_array_storage WHERE array_id = :array_id", new OracleParameter[1] { par }, Global.Connection);
+            VOracleParameter par = new VOracleParameter("array_id", VOracleDbType.VarChar, id, ParameterDirection.Input);
+            DataHelper.SqlExecute("DELETE FROM vr_array_storage WHERE array_id = :array_id", new VOracleParameter[1] { par }, Global.Connection);
         }
         #endregion
         private string _id;
@@ -64,22 +64,22 @@ namespace sql.builder.Core
         private void SetStoredValues(object[] values)
         {
                 this._values = null;
-                OracleDbType data_type;
+                VOracleDbType data_type;
                 OracleType array_type;
                 if (values[0] is string) {
                     this._value_column = "sval";
-                    data_type = OracleDbType.NVarChar;
+                    data_type = VOracleDbType.NVarChar;
                     array_type = _varchar2_table_type;
                 } else {
                     this._value_column = "nval";
-                    data_type = OracleDbType.Number;
+                    data_type = VOracleDbType.Number;
                     array_type = _number_table_type;
                 }
                 #if DEBUG
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
                 #endif
-                OracleCommand cmd = null;
+                VOracleCommand cmd = null;
                 try {
                 try
                 {
@@ -95,17 +95,17 @@ namespace sql.builder.Core
                                                 "    INSERT INTO vr_array_storage (array_id, " + this._value_column + ")\n" +
                                                 "      VALUES (s_array_id, :value(i));\n" +
                                                 "END;", Global.Connection);
-                        cmd.Parameters.Add(new OracleParameter("array_id", OracleDbType.NVarChar, this._id, ParameterDirection.Input));
-                        cmd.Parameters.Add(new OracleParameter("count", OracleDbType.Integer, values.Length, ParameterDirection.Input));
+                        cmd.Parameters.Add(new VOracleParameter("array_id", VOracleDbType.NVarChar, this._id, ParameterDirection.Input));
+                        cmd.Parameters.Add(new VOracleParameter("count", VOracleDbType.Integer, values.Length, ParameterDirection.Input));
                         OracleArray array = new OracleArray(array_type, values);
-                        cmd.Parameters.Add(new OracleParameter("value", OracleDbType.Array, array, ParameterDirection.Input));
+                        cmd.Parameters.Add(new VOracleParameter("value", VOracleDbType.Array, array, ParameterDirection.Input));
                         DevUtilsProvider.Instance.AnalyzeExecSql(cmd.CommandText);
                         cmd.ExecuteNonQuery();
                     }
                     else
                     {
                         cmd = new VOracleCommand("delete from vr_array_storage where array_id = :array_id", Global.Connection);
-                        OracleParameter par_array_id = new OracleParameter("array_id", OracleDbType.NVarChar, this._id, ParameterDirection.Input);
+                        VOracleParameter par_array_id = new VOracleParameter("array_id", VOracleDbType.NVarChar, this._id, ParameterDirection.Input);
                         cmd.Parameters.Add(par_array_id);
                         DevUtilsProvider.Instance.AnalyzeExecSql(cmd.CommandText);
                         cmd.ExecuteNonQuery();
@@ -113,7 +113,7 @@ namespace sql.builder.Core
                         cmd.CommandText = "insert into vr_array_storage (array_id, " + this._value_column + ") values (:array_id, :value)";
                         cmd.Parameters.Clear();
                         cmd.Parameters.Add(par_array_id);
-                        OracleParameter par_value = new OracleParameter("value", data_type, null, ParameterDirection.Input);
+                        VOracleParameter par_value = new VOracleParameter("value", data_type, null, ParameterDirection.Input);
                         cmd.Parameters.Add(par_value);
                         cmd.Prepare();
                         DevUtilsProvider.Instance.AnalyzeExecSql(cmd.CommandText);
