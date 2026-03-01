@@ -5,4 +5,5 @@
   <Project Path="SqlBuilder/SqlBuilder.csproj" />
   <Project Path="SqlBuilder.DevTools/SqlBuilder.DevTools.csproj" />
   <Project Path="Asuse.Ai.Reports/Asuse.Ai.Reports.csproj" />
+  <Project Path="SqlBuilder.Sandbox/SqlBuilder.Sandbox.csproj" />
 </Solution>
