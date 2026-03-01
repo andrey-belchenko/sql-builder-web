@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Xml.Linq;
+using Oracle.ManagedDataAccess.Client;
 using sql.builder.Clean;
 ////using System.Windows.Forms;
 //using DevExpress.XtraVerticalGrid;
@@ -153,7 +154,7 @@ namespace sql.builder.DataApi
                 {
                     if (this.mainCommand.TryGetParameter(paramName, out dbPar))
                     {
-                        dbPar = (VOracleParameter)mainCommand.Parameters[paramName];
+                        dbPar = new VOracleParameter((OracleParameter)mainCommand.Parameters[paramName]);
                         isSel = true;
                     }
                     VForm.WriteAttrAsElem(xselect, EName.query, this.mainCommand.CommandText);
@@ -245,7 +246,7 @@ namespace sql.builder.DataApi
                 // Устанавливаем параметры
                 for (int index = 0; index < cmd.Parameters.Count; index++)
                 {
-                    VOracleParameter param = (VOracleParameter)cmd.Parameters[index];
+                    VOracleParameter param = new VOracleParameter((OracleParameter)cmd.Parameters[index]);
                     Contract.Assert(param.Direction == ParameterDirection.Input);
                     string param_name = param.ParameterName;
                     //if (param_name.StartsWith(TextConst.Pfx.GlobParam)) {
@@ -315,7 +316,7 @@ namespace sql.builder.DataApi
         }*/
         private void setCommandParamsValues(VOracleCommand command, VOracleParameter[] pars)
         {
-            foreach (VOracleParameter par in command.Parameters)
+            foreach (VOracleParameter par in command.Parameters.AsVOracleParameters())
             {
                 VOracleParameter srcPar = pars.Where(p => p.ParameterName == par.ParameterName).First();
                 par.Value = srcPar.Value;
@@ -403,7 +404,7 @@ namespace sql.builder.DataApi
             {
                 DevUtilsProvider.Instance.AnalyzeExecSql(command.CommandText);
                 command.ExecuteNonQuery();
-                foreach (VOracleParameter par in command.Parameters)
+                foreach (VOracleParameter par in command.Parameters.AsVOracleParameters())
                 {
                     if (par.Direction == ParameterDirection.Output || par.Direction == ParameterDirection.InputOutput)
                     {
@@ -421,7 +422,7 @@ namespace sql.builder.DataApi
         {
             VOracleCommand newCmd = null;
             newCmd = CopyCommand(command);
-            foreach (VOracleParameter par in command.Parameters)
+            foreach (VOracleParameter par in command.Parameters.AsVOracleParameters())
             {
                 if (par.Value is string)
                 {
@@ -440,7 +441,7 @@ namespace sql.builder.DataApi
             var newCmd = new VOracleCommand(other.CommandText, (VOracleConnection)other.Connection);
             for (int index = 0; index < other.Parameters.Count; index++)
             {
-                VOracleParameter param = (VOracleParameter)other.Parameters[index];
+                VOracleParameter param = new VOracleParameter((OracleParameter)other.Parameters[index]);
                 newCmd.Parameters.Add(new VOracleParameter(param.ParameterName, param.OracleDbType, param.Value, param.Direction));
             }
             return newCmd;
@@ -538,7 +539,7 @@ namespace sql.builder.DataApi
         public IList<VOracleParameter> CreateCurValDBParameters(DataRow row)
         {
             var pars = new SortedList<string, VOracleParameter>();
-            foreach (VOracleParameter par in mainCommand.Parameters)
+            foreach (VOracleParameter par in mainCommand.Parameters.AsVOracleParameters())
             {
                 if (!string.IsNullOrEmpty(par.SourceColumn))
                 {
@@ -557,7 +558,7 @@ namespace sql.builder.DataApi
             }
             if (procedureCommand != null)
             {
-                foreach (VOracleParameter par in procedureCommand.Parameters)
+                foreach (VOracleParameter par in procedureCommand.Parameters.AsVOracleParameters())
                 {
                     if (!string.IsNullOrEmpty(par.SourceColumn))
                     {
@@ -649,7 +650,9 @@ namespace sql.builder.DataApi
                 return string.Empty;
             }
             string s = cmd.CommandText;
-            foreach (VOracleParameter par in cmd.Parameters.Cast<VOracleParameter>().OrderByDescending(Cmn.GetParameterName).ToArray())
+            var oraCmd = cmd as OracleCommand;
+            var parameters = oraCmd != null ? oraCmd.Parameters.AsVOracleParameters() : Enumerable.Empty<VOracleParameter>();
+            foreach (VOracleParameter par in parameters.OrderByDescending(p => p.ParameterName).ToArray())
             {
                 string sval = Cmn.ToOracleString(par.Value);
                 s = s.Replace(TextConst.Pfx.Param + par.ParameterName, sval);

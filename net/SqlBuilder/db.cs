@@ -155,12 +155,12 @@ namespace sql.builder
                     new SqlArg("puser", "user", SqlDestination.Where, SqlType.Const),
 
                     new SqlArg("name", name, SqlDestination.Insert, SqlType.String),
-                    new SqlArg("data", data, SqlDestination.Insert, SqlType.Parameter, ParameterDirection.Input, VOracleDbType.NClob.ToDevart()),
+                    new SqlArg("data", data, SqlDestination.Insert, SqlType.Parameter, ParameterDirection.Input, VOracleDbType.NClob.ToOracle()),
                     new SqlArg("puser", "user", SqlDestination.Insert, SqlType.Const),
 
 
                     new SqlArg("name", name, SqlDestination.Update, SqlType.String),
-                    new SqlArg("data", data, SqlDestination.Update, SqlType.Parameter, ParameterDirection.Input, VOracleDbType.NClob.ToDevart()),
+                    new SqlArg("data", data, SqlDestination.Update, SqlType.Parameter, ParameterDirection.Input, VOracleDbType.NClob.ToOracle()),
                 };
             }
             else

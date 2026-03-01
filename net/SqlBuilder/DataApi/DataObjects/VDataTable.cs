@@ -2036,7 +2036,7 @@ namespace sql.builder.DataApi
 
                         SaveFiles(row);
                         VOracleParameter retPar = ApplyRowValuesToParams(row,
-                            DataAdapter.InsertCommand.Parameters.Cast<VOracleParameter>().ToList(), true);
+                            DataAdapter.InsertCommand.Parameters.AsVOracleParameters().ToList(), true);
 
                         if (!IsNonDb)
                         {
@@ -2090,7 +2090,7 @@ namespace sql.builder.DataApi
 
                             SaveFiles(row);
                             ApplyRowValuesToParams(row,
-                                DataAdapter.UpdateCommand.Parameters.Cast<VOracleParameter>().ToList(), true);
+                                DataAdapter.UpdateCommand.Parameters.AsVOracleParameters().ToList(), true);
 
                             if (!IsNonDb)
                             {
@@ -2130,7 +2130,7 @@ namespace sql.builder.DataApi
                         if (!InsteadDelete(row))
                         {
                             ApplyRowValuesToParams(row,
-                                DataAdapter.DeleteCommand.Parameters.Cast<VOracleParameter>().ToList(), true);
+                                DataAdapter.DeleteCommand.Parameters.AsVOracleParameters().ToList(), true);
                             if (!IsNonDb)
                             {
                                 DevUtilsProvider.Instance.AnalyzeExecSql(DataAdapter.DeleteCommand.CommandText);
@@ -2607,24 +2607,17 @@ namespace sql.builder.DataApi
                 DataTable dt = null;
                 try
                 {
-                    // 1. Выполнение запроса
+                    // 1. Выполнение запроса (ODP.NET Core: use synchronous ExecuteReader; BeginExecuteReader/EndExecuteReader not available)
                     DevUtilsProvider.Instance.AnalyzeExecSql(this.command.CommandText);
-                    IAsyncResult result = this.command.BeginExecuteReader(CommandBehavior.SingleResult);
-                    while (!result.IsCompleted)
-                    {
-                        token.ThrowIfCancellationRequested();
-                        Thread.Sleep(VDataTable.SLEEP_TIME);
-                    }
-                    this.reader = this.command.EndExecuteReader(result);
+                    this.reader = this.command.ExecuteReader(CommandBehavior.SingleResult);
                     token.ThrowIfCancellationRequested();
-                    result = null;
                     // 2. Создание DataTable
                     dt = new DataTable();
-                    int field_count = reader.FieldCount;
+                    int field_count = this.reader.FieldCount;
                     for (int field = 0; field < field_count; field++)
                     {
-                        string field_name = reader.GetName(field);
-                        Type data_type = reader.GetFieldType(field);
+                        string field_name = this.reader.GetName(field);
+                        Type data_type = this.reader.GetFieldType(field);
                         dt.Columns.Add(field_name, data_type);
                         //DataColumn col = this.parent.Columns[field_name];
                         //Contract.Assume(col != null);
@@ -2639,11 +2632,11 @@ namespace sql.builder.DataApi
                     for (int row = 0; row <= this.rows_to_fetch; row++)
                     {
                         token.ThrowIfCancellationRequested();
-                        if (!reader.Read())
+                        if (!this.reader.Read())
                         {
                             break;
                         }
-                        reader.GetValues(values);
+                        this.reader.GetValues(values);
                         DataRow r = dt.Rows.Add(values);
                         r.AcceptChanges();
                     }

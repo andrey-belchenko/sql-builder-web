@@ -2402,7 +2402,7 @@ namespace sql.builder.DataApi
 
             UpdateTempCommand.Connection = GetConnection();
 
-            ApplyRowValuesToParams(row, UpdateTempCommand.Parameters.Cast<VOracleParameter>().Where(p => p.SourceColumn != "").ToList(), false);
+            ApplyRowValuesToParams(row, UpdateTempCommand.Parameters.AsVOracleParameters().Where(p => p.SourceColumn != "").ToList(), false);
             UpdateTempCommand.Parameters[TextConst.DBParams.FormId].Value = GetDataSet().GetFormId();
             UpdateTempCommand.Parameters[TextConst.DBParams.RowStateId].Value = rowSatate;
 

@@ -1,17 +1,19 @@
+using System;
 using System.Data;
-using Devart.Data.Oracle;
+using System.Data.Common;
+using Oracle.ManagedDataAccess.Client;
 
 namespace sql.builder.Clean
 {
     /// <summary>
-    /// Wrapper class for OracleParameter - isolates Devart dependency
+    /// Wrapper class for OracleParameter - isolates Oracle.ManagedDataAccess dependency.
+    /// Uses composition since OracleParameter is sealed in ODP.NET.
     /// </summary>
-    public class VOracleParameter : OracleParameter
+    public class VOracleParameter
     {
-        private static Devart.Data.Oracle.OracleDbType ToDevart(VOracleDbType dbType)
-        {
-            return (Devart.Data.Oracle.OracleDbType)(int)dbType;
-        }
+        private readonly OracleParameter _inner;
+
+        internal OracleParameter Inner => _inner;
 
         private static object UnwrapValue(object value)
         {
@@ -19,30 +21,64 @@ namespace sql.builder.Clean
             return va != null ? va.Inner : value;
         }
 
-        public VOracleParameter() : base()
+        public VOracleParameter()
         {
+            _inner = new OracleParameter();
         }
 
-        public VOracleParameter(string parameterName, object value) : base(parameterName, value)
+        public VOracleParameter(string parameterName, object value)
         {
+            _inner = new OracleParameter(parameterName, value);
         }
 
-        public VOracleParameter(string parameterName, VOracleDbType dbType) : base(parameterName, ToDevart(dbType))
+        public VOracleParameter(string parameterName, VOracleDbType dbType)
         {
+            _inner = new OracleParameter(parameterName, dbType.ToOracle());
         }
 
-        public VOracleParameter(string parameterName, VOracleDbType dbType, ParameterDirection direction) : base(parameterName, ToDevart(dbType), direction)
+        public VOracleParameter(string parameterName, VOracleDbType dbType, ParameterDirection direction)
         {
+            _inner = new OracleParameter(parameterName, dbType.ToOracle(), 0, direction);
         }
 
-        public VOracleParameter(string parameterName, VOracleDbType dbType, object value, ParameterDirection direction) : base(parameterName, ToDevart(dbType), UnwrapValue(value), direction)
+        public VOracleParameter(string parameterName, VOracleDbType dbType, object value, ParameterDirection direction)
         {
+            _inner = new OracleParameter(parameterName, dbType.ToOracle(), 0, direction);
+            _inner.Value = UnwrapValue(value);
         }
 
-        public new VOracleDbType OracleDbType
+        internal VOracleParameter(OracleParameter inner)
         {
-            get => (VOracleDbType)(int)base.OracleDbType;
-            set => base.OracleDbType = ToDevart(value);
+            _inner = inner ?? throw new ArgumentNullException(nameof(inner));
+        }
+
+        public string ParameterName { get => _inner.ParameterName; set => _inner.ParameterName = value; }
+        public object Value { get => _inner.Value; set => _inner.Value = value; }
+        public ParameterDirection Direction { get => _inner.Direction; set => _inner.Direction = value; }
+        public string SourceColumn { get => _inner.SourceColumn; set => _inner.SourceColumn = value; }
+        public DbType DbType { get => _inner.DbType; set => _inner.DbType = value; }
+
+        public VOracleDbType OracleDbType
+        {
+            get => MapFromOracle(_inner.OracleDbType);
+            set => _inner.OracleDbType = value.ToOracle();
+        }
+
+        private static VOracleDbType MapFromOracle(Oracle.ManagedDataAccess.Client.OracleDbType oraType)
+        {
+            switch (oraType)
+            {
+                case Oracle.ManagedDataAccess.Client.OracleDbType.Decimal: return VOracleDbType.Number;
+                case Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2: return VOracleDbType.VarChar;
+                case Oracle.ManagedDataAccess.Client.OracleDbType.Date: return VOracleDbType.Date;
+                case Oracle.ManagedDataAccess.Client.OracleDbType.Clob: return VOracleDbType.Clob;
+                case Oracle.ManagedDataAccess.Client.OracleDbType.Blob: return VOracleDbType.Blob;
+                case Oracle.ManagedDataAccess.Client.OracleDbType.NClob: return VOracleDbType.NClob;
+                case Oracle.ManagedDataAccess.Client.OracleDbType.NVarchar2: return VOracleDbType.NVarChar;
+                case Oracle.ManagedDataAccess.Client.OracleDbType.IntervalDS: return VOracleDbType.IntervalDS;
+                case Oracle.ManagedDataAccess.Client.OracleDbType.Int32: return VOracleDbType.Integer;
+                default: return VOracleDbType.VarChar;
+            }
         }
     }
 }

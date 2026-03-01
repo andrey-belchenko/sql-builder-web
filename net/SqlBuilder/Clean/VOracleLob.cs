@@ -1,19 +1,38 @@
-using Devart.Data.Oracle;
+using System;
+using Oracle.ManagedDataAccess.Types;
 
 namespace sql.builder.Clean
 {
     /// <summary>
-    /// Wrapper for OracleLob - isolates Devart dependency in wrapper layer.
+    /// Wrapper for Oracle LOB - isolates Oracle.ManagedDataAccess dependency in wrapper layer.
+    /// Wraps OracleBlob or OracleClob (ODP.NET has separate types).
     /// </summary>
     public class VOracleLob
     {
-        private readonly OracleLob _inner;
+        private readonly object _inner;
 
-        internal VOracleLob(OracleLob devartLob)
+        internal VOracleLob(OracleBlob blob)
         {
-            _inner = devartLob;
+            _inner = blob;
         }
 
-        internal OracleLob Inner => _inner;
+        internal VOracleLob(OracleClob clob)
+        {
+            _inner = clob;
+        }
+
+        internal object Inner => _inner;
+
+        public long Length
+        {
+            get
+            {
+                if (_inner is OracleBlob blob)
+                    return blob.Length;
+                if (_inner is OracleClob clob)
+                    return clob.Length;
+                return 0;
+            }
+        }
     }
 }

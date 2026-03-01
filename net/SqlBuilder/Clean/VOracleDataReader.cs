@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
 using System.Data.Common;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 
 namespace sql.builder.Clean
 {
     /// <summary>
-    /// Wrapper class for OracleDataReader - isolates Devart dependency.
+    /// Wrapper class for OracleDataReader - isolates Oracle.ManagedDataAccess dependency.
     /// Uses composition since OracleDataReader is created by ExecuteReader().
     /// </summary>
     public class VOracleDataReader : DbDataReader
@@ -55,7 +55,15 @@ namespace sql.builder.Clean
         public override bool IsDBNull(int ordinal) => _inner.IsDBNull(ordinal);
         public override IEnumerator GetEnumerator() => _inner.GetEnumerator();
 
-        public VOracleLob GetOracleLob(int ordinal) => new VOracleLob(_inner.GetOracleLob(ordinal));
+        public VOracleLob GetOracleLob(int ordinal)
+        {
+            if (_inner.IsDBNull(ordinal))
+                return null;
+            var typeName = _inner.GetDataTypeName(ordinal);
+            if (typeName != null && typeName.IndexOf("BLOB", StringComparison.OrdinalIgnoreCase) >= 0)
+                return new VOracleLob(_inner.GetOracleBlob(ordinal));
+            return new VOracleLob(_inner.GetOracleClob(ordinal));
+        }
 
         protected override void Dispose(bool disposing)
         {

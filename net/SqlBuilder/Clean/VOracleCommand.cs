@@ -1,5 +1,5 @@
 using System;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 using SqlBuilderLib.DevTools;
 
 namespace sql.builder.Clean
@@ -57,8 +57,9 @@ namespace sql.builder.Clean
         /// Constructor with command text, connection, and transaction
         /// </summary>
         public VOracleCommand(string commandText, OracleConnection connection, OracleTransaction transaction)
-            : base(commandText, connection, transaction)
+            : base(commandText, connection)
         {
+            Transaction = transaction;
             OnCommandTextChanged(null, commandText);
         }
 
@@ -66,8 +67,9 @@ namespace sql.builder.Clean
         /// Constructor with command text and transaction (uses transaction.Connection)
         /// </summary>
         public VOracleCommand(string commandText, OracleTransaction transaction)
-            : base(commandText, transaction.Connection, transaction)
+            : base(commandText, transaction.Connection)
         {
+            Transaction = transaction;
             OnCommandTextChanged(null, commandText);
         }
 
@@ -75,8 +77,9 @@ namespace sql.builder.Clean
         /// Constructor with command text and VOracleTransaction
         /// </summary>
         public VOracleCommand(string commandText, VOracleTransaction transaction)
-            : base(commandText, transaction.Inner.Connection, transaction.Inner)
+            : base(commandText, transaction.Inner.Connection)
         {
+            Transaction = transaction.Inner;
             OnCommandTextChanged(null, commandText);
         }
 
@@ -89,7 +92,7 @@ namespace sql.builder.Clean
             {
                 return new VOracleDataReader((OracleDataReader)ExecuteReader());
             }
-            catch (Devart.Data.Oracle.OracleException ex)
+            catch (OracleException ex)
             {
                 throw new VOracleException(ex);
             }
@@ -101,7 +104,7 @@ namespace sql.builder.Clean
             {
                 return base.ExecuteScalar();
             }
-            catch (Devart.Data.Oracle.OracleException ex)
+            catch (OracleException ex)
             {
                 throw new VOracleException(ex);
             }
@@ -113,7 +116,7 @@ namespace sql.builder.Clean
             {
                 return base.ExecuteNonQuery();
             }
-            catch (Devart.Data.Oracle.OracleException ex)
+            catch (OracleException ex)
             {
                 throw new VOracleException(ex);
             }
@@ -125,10 +128,19 @@ namespace sql.builder.Clean
             {
                 return base.ExecuteDbDataReader(behavior);
             }
-            catch (Devart.Data.Oracle.OracleException ex)
+            catch (OracleException ex)
             {
                 throw new VOracleException(ex);
             }
+        }
+
+        /// <summary>
+        /// When true, Parameters collection is populated when CommandText is set (ODP.NET BindByName behavior).
+        /// </summary>
+        public bool ParameterCheck
+        {
+            get => BindByName;
+            set => BindByName = value;
         }
 
         /// <summary>

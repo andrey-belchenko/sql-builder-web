@@ -2079,6 +2079,26 @@ namespace sql.builder
             }
             return param_names;
         }
+
+        public static string[] GetParameterNames(IList<VOracleParameter> parameters)
+        {
+            Contract.Assume(parameters != null);
+            string[] param_names;
+            int pаram_count = parameters.Count;
+            if (pаram_count == 0)
+            {
+                param_names = Array.Empty<string>();
+            }
+            else
+            {
+                param_names = new string[pаram_count];
+                for (int index = 0; index < pаram_count; index++)
+                {
+                    param_names[index] = parameters[index].ParameterName;
+                }
+            }
+            return param_names;
+        }
         /// <summary>
         /// Парсит текст запроса <paramref name="sql"/> и возвращает имена использованных в нём bind-переменных
         /// </summary>
@@ -2103,6 +2123,11 @@ namespace sql.builder
         public static string GetParameterName(DbParameter col)
         {
             return col.ParameterName;
+        }
+
+        public static string GetParameterName(VOracleParameter col)
+        {
+            return col?.ParameterName ?? "";
         }
         #endregion
         public static bool HasPrimaryKey(this DataTable dt)

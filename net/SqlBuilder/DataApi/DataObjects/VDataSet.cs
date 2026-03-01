@@ -961,7 +961,7 @@ namespace sql.builder.DataApi
             var ss = new List<string>();
             if (InputParams != null)
             {
-                ss.AddRange(InputParams.Values.Select(Cmn.GetParameterName).Distinct());
+                ss.AddRange(InputParams.Values.Select(p => p.ParameterName).Distinct());
             }
             return ss;
         }

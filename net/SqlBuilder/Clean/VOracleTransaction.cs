@@ -1,18 +1,18 @@
 using System.Data.Common;
-using Devart.Data.Oracle;
+using Oracle.ManagedDataAccess.Client;
 
 namespace sql.builder.Clean
 {
     /// <summary>
-    /// Wrapper for OracleTransaction - isolates Devart dependency in wrapper layer.
+    /// Wrapper for OracleTransaction - isolates Oracle.ManagedDataAccess dependency in wrapper layer.
     /// </summary>
     public class VOracleTransaction : DbTransaction
     {
         private readonly OracleTransaction _inner;
 
-        internal VOracleTransaction(OracleTransaction devartTransaction)
+        internal VOracleTransaction(OracleTransaction oraTransaction)
         {
-            _inner = devartTransaction;
+            _inner = oraTransaction;
         }
 
         public override void Commit() => _inner.Commit();
