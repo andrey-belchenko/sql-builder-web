@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using infoenergo.sys;
+using Oracle.ManagedDataAccess.Types;
 using sql.builder.Clean;
 using sql.builder.DataApi;
 using SqlBuilderLib.DevTools;
@@ -213,7 +214,7 @@ namespace sql.builder
             };
             DataHelper.SqlExecute("INSERT INTO vr_reports_log (repname, params) VALUES (:repname, :params) RETURNING kod_log INTO :kod_log", parameters, Connection, false);
             Connection.Commit();
-            return Convert.ToDecimal(kod_log.Value);
+            return kod_log.Value is OracleDecimal od ? od.Value : Convert.ToDecimal(kod_log.Value);
         }
         public static void UpdateReportLog(decimal kod_log, string error_text, string stack_text)
         {
