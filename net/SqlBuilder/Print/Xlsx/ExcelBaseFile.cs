@@ -11,9 +11,12 @@ namespace sql.builder.Print.Xlsx
         #endregion
         #region ��������
         public string FilePath { get { return this.file_path; } }
-        public XDocument XmlChanged {
-            get {
-                if (this._xmlChanged == null) {
+        public XDocument XmlChanged
+        {
+            get
+            {
+                if (this._xmlChanged == null)
+                {
                     this._xmlChanged = new XDocument(this.xml);
                 }
                 return this._xmlChanged;
@@ -27,7 +30,8 @@ namespace sql.builder.Print.Xlsx
         }
         public virtual void Save()
         {
-            if (this._xmlChanged != null) {
+            if (this._xmlChanged != null)
+            {
                 this._xmlChanged.Save(this.file_path);
             }
         }

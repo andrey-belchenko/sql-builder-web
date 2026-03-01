@@ -1,26 +1,23 @@
 using System;
-using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Linq;
 using Devart.Data.Oracle;
-
 //using infoenergo.core.Extensions;
 //using infoenergo.ui.win;
 using sql.builder.asuse;
+using sql.builder.Clean;
 using sql.builder.Core;
 //using sql.builder.Test;
 using sql.builder.UI;
 using sql.builder.XmlHelpers;
 //using Vertica.Data.VerticaClient;
 using SqlBuilderLib.DevTools;
-using sql.builder.Clean;
+using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.DataApi
 {

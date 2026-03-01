@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -23,13 +22,13 @@ namespace SqlBuilderLib.DevTools
                 return new HashSet<string>();
 
             var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            
+
             // Remove comments first to avoid false matches
             string cleanedSql = RemoveComments(plsqlText);
-            
+
             // Extract all SELECT statements from PL/SQL
             var selectStatements = ExtractSelectStatements(cleanedSql);
-            
+
             foreach (var selectSql in selectStatements)
             {
                 var tables = ExtractTablesFromSelect(selectSql);
@@ -41,7 +40,7 @@ namespace SqlBuilderLib.DevTools
                     }
                 }
             }
-            
+
             return result;
         }
 
@@ -51,7 +50,7 @@ namespace SqlBuilderLib.DevTools
         private static List<string> ExtractSelectStatements(string plsql)
         {
             var statements = new List<string>();
-            
+
             if (string.IsNullOrWhiteSpace(plsql))
                 return statements;
 
@@ -70,7 +69,7 @@ namespace SqlBuilderLib.DevTools
             // Find all SELECT statements
             var matches = selectPattern.Matches(plsql);
             var processedIndices = new HashSet<int>();
-            
+
             foreach (Match match in matches)
             {
                 // Skip if we've already processed this SELECT (might be part of a larger statement)
@@ -143,7 +142,7 @@ namespace SqlBuilderLib.DevTools
                     else if (depth == 0)
                     {
                         // Check for FROM keyword
-                        if (i + 4 < sql.Length && 
+                        if (i + 4 < sql.Length &&
                             sql.Substring(i, 5).Equals("FROM ", StringComparison.OrdinalIgnoreCase))
                         {
                             return i;
@@ -213,7 +212,7 @@ namespace SqlBuilderLib.DevTools
                             break;
                     }
                     // Check for end of statement (semicolon, UNION, or end of SQL block)
-                    else if (depth == 0 && (c == ';' || 
+                    else if (depth == 0 && (c == ';' ||
                         (i + 5 < sql.Length && sql.Substring(i, 6).Equals("UNION ", StringComparison.OrdinalIgnoreCase)) ||
                         (i + 9 < sql.Length && sql.Substring(i, 10).Equals("UNION ALL ", StringComparison.OrdinalIgnoreCase))))
                     {
@@ -238,7 +237,7 @@ namespace SqlBuilderLib.DevTools
         private static List<string> ExtractSqlFromExecuteImmediate(string plsql)
         {
             var statements = new List<string>();
-            
+
             // Pattern to match EXECUTE IMMEDIATE 'sql_string' or EXECUTE IMMEDIATE sql_variable
             var pattern = new Regex(
                 @"EXECUTE\s+IMMEDIATE\s+('(?:''|[^'])*'|""(?:""""|[^""])*""|\w+)",
@@ -259,7 +258,7 @@ namespace SqlBuilderLib.DevTools
                         // Unescape quotes
                         sqlValue = sqlValue.Replace("''", "'").Replace("\"\"", "\"");
                     }
-                    
+
                     // Check if it contains SELECT
                     if (sqlValue.IndexOf("SELECT", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
@@ -277,7 +276,7 @@ namespace SqlBuilderLib.DevTools
         private static HashSet<string> ExtractTablesFromSelect(string selectSql)
         {
             var tables = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            
+
             if (string.IsNullOrWhiteSpace(selectSql))
                 return tables;
 
@@ -286,7 +285,7 @@ namespace SqlBuilderLib.DevTools
 
             // Handle UNION statements - process each SELECT separately
             var unionParts = SplitUnionStatements(selectSql);
-            
+
             foreach (var part in unionParts)
             {
                 // Extract CTE names from this UNION part as well (CTEs can appear in each part)
@@ -296,26 +295,26 @@ namespace SqlBuilderLib.DevTools
                 {
                     cteNames.Add(cteName);
                 }
-                
+
                 // Remove CTE clause if present (we already extracted CTE names)
                 string sqlWithoutCte = RemoveCteClause(part);
-                
+
                 // Extract tables from FROM and JOIN clauses
                 var fromTables = ExtractTablesFromFromClause(sqlWithoutCte);
                 var joinTables = ExtractTablesFromJoinClause(sqlWithoutCte);
-                
+
                 foreach (var table in fromTables)
                 {
                     if (IsValidTableName(table, cteNames))
                         tables.Add(table);
                 }
-                
+
                 foreach (var table in joinTables)
                 {
                     if (IsValidTableName(table, cteNames))
                         tables.Add(table);
                 }
-                
+
                 // Extract tables from subqueries in SELECT, WHERE, HAVING clauses
                 var subqueryTables = ExtractTablesFromSubqueries(sqlWithoutCte, cteNames);
                 foreach (var table in subqueryTables)
@@ -334,7 +333,7 @@ namespace SqlBuilderLib.DevTools
         private static HashSet<string> ExtractTablesFromSubqueries(string sql, HashSet<string> cteNames)
         {
             var tables = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            
+
             if (string.IsNullOrWhiteSpace(sql))
                 return tables;
 
@@ -356,7 +355,7 @@ namespace SqlBuilderLib.DevTools
                     {
                         subquery = subquery.Substring(1, subquery.Length - 2).Trim();
                     }
-                    
+
                     // Recursively extract tables from subquery
                     var subqueryTables = ExtractTablesFromSelect(subquery);
                     foreach (var table in subqueryTables)
@@ -432,7 +431,7 @@ namespace SqlBuilderLib.DevTools
         private static List<string> SplitUnionStatements(string sql)
         {
             var parts = new List<string>();
-            
+
             // Pattern to match UNION or UNION ALL (case insensitive)
             var unionPattern = new Regex(
                 @"\bUNION\s+(?:ALL\s+)?",
@@ -455,7 +454,7 @@ namespace SqlBuilderLib.DevTools
                 }
                 lastIndex = match.Index + match.Length;
             }
-            
+
             // Add the last part
             if (lastIndex < sql.Length)
             {
@@ -472,7 +471,7 @@ namespace SqlBuilderLib.DevTools
         private static HashSet<string> ExtractCteNames(string sql)
         {
             var cteNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            
+
             if (string.IsNullOrWhiteSpace(sql))
                 return cteNames;
 
@@ -483,30 +482,30 @@ namespace SqlBuilderLib.DevTools
             );
 
             var withMatches = withClausePattern.Matches(sql);
-            
+
             foreach (Match withMatch in withMatches)
             {
                 int startIndex = withMatch.Index + withMatch.Length;
-                
+
                 // Find the SELECT keyword after the WITH clause
                 int selectIndex = FindSelectAfterWith(sql, startIndex);
                 if (selectIndex < 0)
                     continue;
-                
+
                 // Extract the CTE section (between WITH and SELECT)
                 string cteSection = sql.Substring(startIndex, selectIndex - startIndex);
-                
+
                 // Normalize whitespace in CTE section to handle multi-line CTEs
                 // Replace all whitespace (including newlines) with single space for pattern matching
                 string normalizedCteSection = Regex.Replace(cteSection, @"\s+", " ", RegexOptions.Multiline);
-                
+
                 // Parse CTE names from the normalized section
                 // Pattern: cte_name [optional column list] AS (
                 var cteNamePattern = new Regex(
                     @"(\w+)\s*(?:\([^)]*\))?\s+AS\s*\(",
                     RegexOptions.IgnoreCase
                 );
-                
+
                 // Match CTE names in the normalized section
                 var cteMatches = cteNamePattern.Matches(normalizedCteSection);
                 foreach (Match cteMatch in cteMatches)
@@ -595,7 +594,7 @@ namespace SqlBuilderLib.DevTools
                                 int selectPos = i;
                                 while (selectPos < sql.Length && char.IsWhiteSpace(sql[selectPos]))
                                     selectPos++;
-                                
+
                                 if (selectPos + 6 < sql.Length &&
                                     sql.Substring(selectPos, 7).Equals("SELECT ", StringComparison.OrdinalIgnoreCase))
                                 {
@@ -612,7 +611,7 @@ namespace SqlBuilderLib.DevTools
                         int checkPos = i;
                         while (checkPos < sql.Length && char.IsWhiteSpace(sql[checkPos]))
                             checkPos++;
-                        
+
                         if (checkPos + 6 < sql.Length &&
                             sql.Substring(checkPos, 7).Equals("SELECT ", StringComparison.OrdinalIgnoreCase))
                         {
@@ -637,17 +636,17 @@ namespace SqlBuilderLib.DevTools
                 @"\bWITH\s+\w+\s+AS\s*\([^)]+\)\s*,",
                 RegexOptions.IgnoreCase | RegexOptions.Singleline
             );
-            
+
             sql = withPattern.Replace(sql, string.Empty);
-            
+
             // Handle the last CTE (no trailing comma)
             var lastCtePattern = new Regex(
                 @"\bWITH\s+\w+\s+AS\s*\([^)]+\)\s+SELECT",
                 RegexOptions.IgnoreCase | RegexOptions.Singleline
             );
-            
+
             sql = lastCtePattern.Replace(sql, "SELECT");
-            
+
             return sql.Trim();
         }
 
@@ -657,14 +656,14 @@ namespace SqlBuilderLib.DevTools
         private static HashSet<string> ExtractTablesFromFromClause(string sql)
         {
             var tables = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            
+
             // Find FROM clause
             var fromMatch = Regex.Match(sql, @"\bFROM\s+", RegexOptions.IgnoreCase);
             if (!fromMatch.Success)
                 return tables;
 
             int fromIndex = fromMatch.Index + fromMatch.Length;
-            
+
             // Extract everything after FROM until WHERE, GROUP BY, ORDER BY, HAVING, or end
             var endPattern = new Regex(
                 @"\b(WHERE|GROUP\s+BY|ORDER\s+BY|HAVING|UNION|$)",
@@ -673,12 +672,12 @@ namespace SqlBuilderLib.DevTools
 
             var endMatch = endPattern.Match(sql, fromIndex);
             int endIndex = endMatch.Success ? endMatch.Index : sql.Length;
-            
+
             string fromClause = sql.Substring(fromIndex, endIndex - fromIndex).Trim();
-            
+
             // Parse table names from FROM clause (handles joins, subqueries, etc.)
             tables.UnionWith(ParseTableNamesFromClause(fromClause));
-            
+
             return tables;
         }
 
@@ -688,7 +687,7 @@ namespace SqlBuilderLib.DevTools
         private static HashSet<string> ExtractTablesFromJoinClause(string sql)
         {
             var tables = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            
+
             // Pattern to match various JOIN types
             var joinPattern = new Regex(
                 @"\b(?:INNER\s+|LEFT\s+|RIGHT\s+|FULL\s+)?(?:OUTER\s+)?JOIN\s+",
@@ -699,7 +698,7 @@ namespace SqlBuilderLib.DevTools
             foreach (Match match in matches)
             {
                 int joinIndex = match.Index + match.Length;
-                
+
                 // Extract table name after JOIN until ON, WHERE, or next JOIN
                 var endPattern = new Regex(
                     @"\b(ON|WHERE|GROUP\s+BY|ORDER\s+BY|HAVING|(?:INNER\s+|LEFT\s+|RIGHT\s+|FULL\s+)?(?:OUTER\s+)?JOIN|$)",
@@ -708,9 +707,9 @@ namespace SqlBuilderLib.DevTools
 
                 var endMatch = endPattern.Match(sql, joinIndex);
                 int endIndex = endMatch.Success ? endMatch.Index : sql.Length;
-                
+
                 string joinClause = sql.Substring(joinIndex, endIndex - joinIndex).Trim();
-                
+
                 // Parse table name (may include alias)
                 tables.UnionWith(ParseTableNamesFromClause(joinClause));
             }
@@ -724,24 +723,24 @@ namespace SqlBuilderLib.DevTools
         private static HashSet<string> ParseTableNamesFromClause(string clause)
         {
             var tables = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            
+
             if (string.IsNullOrWhiteSpace(clause))
                 return tables;
 
             // Remove leading/trailing whitespace
             clause = clause.Trim();
-            
+
             // Skip if it's a subquery (starts with '(')
             if (clause.StartsWith("("))
                 return tables;
 
             // Handle comma-separated table list
             var parts = SplitTableList(clause);
-            
+
             foreach (var part in parts)
             {
                 string tablePart = part.Trim();
-                
+
                 // Skip empty parts
                 if (string.IsNullOrWhiteSpace(tablePart))
                     continue;
@@ -753,7 +752,7 @@ namespace SqlBuilderLib.DevTools
 
                 // Extract table name (handle schema.table, table@dblink, table alias)
                 string tableName = ExtractTableNameFromPart(tablePart);
-                
+
                 if (!string.IsNullOrWhiteSpace(tableName))
                 {
                     tables.Add(tableName);
@@ -772,7 +771,7 @@ namespace SqlBuilderLib.DevTools
                 return false;
 
             tablePart = tablePart.Trim();
-            
+
             // Must start with opening parenthesis
             if (!tablePart.StartsWith("("))
                 return false;
@@ -781,7 +780,7 @@ namespace SqlBuilderLib.DevTools
             int depth = 0;
             bool inString = false;
             char stringChar = '\0';
-            
+
             for (int i = 0; i < tablePart.Length; i++)
             {
                 char c = tablePart[i];
@@ -831,7 +830,7 @@ namespace SqlBuilderLib.DevTools
         private static List<string> SplitTableList(string clause)
         {
             var parts = new List<string>();
-            
+
             if (string.IsNullOrWhiteSpace(clause))
                 return parts;
 
@@ -895,18 +894,18 @@ namespace SqlBuilderLib.DevTools
                 return string.Empty;
 
             part = part.Trim();
-            
+
             // Handle quoted identifiers first
-            bool isQuoted = (part.StartsWith("\"") && part.EndsWith("\"")) || 
+            bool isQuoted = (part.StartsWith("\"") && part.EndsWith("\"")) ||
                            (part.StartsWith("'") && part.EndsWith("'"));
-            
+
             // Remove quotes temporarily for processing, we'll add them back if needed
             string unquotedPart = part;
             if (isQuoted)
             {
                 unquotedPart = part.Substring(1, part.Length - 2);
             }
-            
+
             // Pattern to match SQL keywords that indicate end of table name
             // This includes: AS (for explicit alias), ON, USING, WHERE, JOIN keywords, etc.
             var keywordPattern = new Regex(
@@ -928,19 +927,19 @@ namespace SqlBuilderLib.DevTools
                     @"^(.+?)\s+([a-zA-Z_][a-zA-Z0-9_]*)$",
                     RegexOptions.IgnoreCase
                 );
-                
+
                 var implicitMatch = implicitAliasPattern.Match(unquotedPart);
                 if (implicitMatch.Success && implicitMatch.Groups.Count >= 3)
                 {
                     string potentialTable = implicitMatch.Groups[1].Value.Trim();
                     string potentialAlias = implicitMatch.Groups[2].Value.Trim();
-                    
+
                     // Only treat as alias if:
                     // 1. It's not a SQL keyword
                     // 2. The table part doesn't end with a dot (which would indicate schema.table format)
                     // 3. The potential alias doesn't contain dots (schema.table.alias is invalid)
-                    if (!IsSqlKeyword(potentialAlias) && 
-                        !potentialTable.EndsWith(".") && 
+                    if (!IsSqlKeyword(potentialAlias) &&
+                        !potentialTable.EndsWith(".") &&
                         !potentialAlias.Contains("."))
                     {
                         unquotedPart = potentialTable;
@@ -957,7 +956,7 @@ namespace SqlBuilderLib.DevTools
 
             // Remove any remaining quotes
             unquotedPart = unquotedPart.Trim('"', '\'');
-            
+
             // Return normalized table name (preserve schema.table format)
             return unquotedPart.Trim();
         }
@@ -1032,7 +1031,7 @@ namespace SqlBuilderLib.DevTools
             {
                 baseName = normalized.Substring(dotIndex + 1);
             }
-            
+
             // Remove @dblink if present
             int atIndex = baseName.IndexOf('@');
             if (atIndex > 0)
@@ -1060,10 +1059,10 @@ namespace SqlBuilderLib.DevTools
 
             // Remove surrounding quotes
             tableName = tableName.Trim().Trim('"', '\'');
-            
+
             // Trim whitespace
             tableName = tableName.Trim();
-            
+
             return tableName;
         }
 

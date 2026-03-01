@@ -9,7 +9,7 @@ namespace sql.builder.DataApi
     {
         public VDBSelectCommand GetRepInsertCommand()
         {
-            string procText = sql.builder.XmlHelpers.SqlReportPkg.Generate(this.P_IdName, true,true,false);
+            string procText = sql.builder.XmlHelpers.SqlReportPkg.Generate(this.P_IdName, true, true, false);
             var cmd = new VDBSelectCommand(procText, this);
             cmd.CreateRetParam();
             return cmd;
@@ -25,9 +25,11 @@ namespace sql.builder.DataApi
         public VQueryCall GetQuery(string name)
         {
             IList<VQueryCall> queries = this.Queries();
-            for (int index = 0; index < queries.Count; index++) {
+            for (int index = 0; index < queries.Count; index++)
+            {
                 VQueryCall query = queries[index];
-                if (query.XName == name) {
+                if (query.XName == name)
+                {
                     return query;
                 }
             }
@@ -40,9 +42,12 @@ namespace sql.builder.DataApi
         public VReportProc GetReportProc()
         {
             IList<VSXElement> list = this.GetElementsP(EName.procedure);
-            if (list.Count == 0) {
+            if (list.Count == 0)
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return (VReportProc)list[0];
             }
         }
@@ -52,11 +57,14 @@ namespace sql.builder.DataApi
             return child_nodes;
         }
         #region IdName
-        public override string P_IdName {
-            get {
+        public override string P_IdName
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.name);
             }
-            set {
+            set
+            {
                 this.SetIdName(AName_.name, value);
             }
         }
@@ -144,11 +152,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region MultiSelect
-        public override string P_MultiSelect {
-            get {
+        public override string P_MultiSelect
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.multi_select);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.multi_select, value);
             }
         }

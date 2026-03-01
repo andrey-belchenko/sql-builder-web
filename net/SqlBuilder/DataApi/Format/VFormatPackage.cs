@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
@@ -17,9 +15,11 @@ namespace sql.builder.DataApi
         public VFormat GetFormat(string name)
         {
             IList<VSXElement> formats = this.GetElementsP();
-            for (int index = 0; index < formats.Count; index++) {
+            for (int index = 0; index < formats.Count; index++)
+            {
                 VSXElement format = formats[index];
-                if (format.P_Name == name) {
+                if (format.P_Name == name)
+                {
                     return (VFormat)format;
                 }
             }
@@ -31,11 +31,14 @@ namespace sql.builder.DataApi
             return child_nodes;
         }
         #region IdName
-        public override string P_IdName {
-            get {
+        public override string P_IdName
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.name);
             }
-            set {
+            set
+            {
                 this.SetIdName(AName_.name, value);
             }
         }

@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Xml.Linq;
-using System.Text;
-using sql.builder;
-using System.Data;
 namespace sql.builder.DataApi
 {
     public partial class VDataTable : DataTable
     {
         public bool HasClientCalculations;
-      
+
         public void DoClientCalculationsForRow(VClientCalculations.DataAccessor dataAccessor)
         {
             if (!HasClientCalculations) return;
@@ -24,7 +22,7 @@ namespace sql.builder.DataApi
 
         public void DoClientCalculations()
         {
-           
+
             if (!HasClientCalculations) return;
             var lastRowsOfGrset = new SortedList<string, DataRow>();
 
@@ -38,7 +36,7 @@ namespace sql.builder.DataApi
                 }
                 DoClientCalculationsForRow(dataAccessor);
 
-                if (dataAccessor.LastRowsOfGrset!=null)
+                if (dataAccessor.LastRowsOfGrset != null)
                 {
                     lastRowsOfGrset[row[TextConst.AVSpecColumnGrset.GrSetName].ToString()] = row;
                 }
@@ -46,7 +44,7 @@ namespace sql.builder.DataApi
 
         }
 
-       
+
     }
 
     public interface IClientCalculationCall
@@ -54,7 +52,7 @@ namespace sql.builder.DataApi
         object Evaluate(VClientCalculations.DataAccessor dataAccessor);
     }
 
-   
+
     public static partial class VClientCalculations
     {
         public enum Errors { NeedDataAccessor };
@@ -63,14 +61,17 @@ namespace sql.builder.DataApi
             FactParam ret = null;
             switch (xexpression.Name.LocalName)
             {
-                case TextConst.EName.Call: ret=ParseCall(xexpression);
+                case TextConst.EName.Call:
+                    ret = ParseCall(xexpression);
                     break;
-                case TextConst.EName.Const: ret=ParseConst(xexpression);
+                case TextConst.EName.Const:
+                    ret = ParseConst(xexpression);
                     break;
-                case TextConst.EName.Column: ret= ParseColumn(xexpression);
+                case TextConst.EName.Column:
+                    ret = ParseColumn(xexpression);
                     break;
             }
-            
+
             return ret;
         }
 
@@ -171,11 +172,11 @@ namespace sql.builder.DataApi
         {
             var rslist = rowSelectorExpr.Split('.');
             var rowSelectorList = new List<RowSelector>();
-            
+
             foreach (var rs in rslist)
             {
                 var ss = rs.Split(new char[] { '(', ')' });
-              
+
                 var rowSelector = new RowSelector();
                 rowSelector.Name = ss[0];
                 if (ss.Length > 1)
@@ -184,7 +185,7 @@ namespace sql.builder.DataApi
                 }
 
                 rowSelectorList.Add(rowSelector);
-               
+
             }
             return rowSelectorList;
         }
@@ -197,20 +198,20 @@ namespace sql.builder.DataApi
                 return null;
             }
             public object Evaluate()
-            {                
+            {
                 return Evaluate(this.dataAccessor);
             }
             protected DataAccessor ApplySelector(DataAccessor dataAccessor)
             {
                 if (RowSelector != null)
                 {
-                 
+
                     foreach (var rs in RowSelector)
                     {
-                        dataAccessor=rs.Evaluate(dataAccessor);
+                        dataAccessor = rs.Evaluate(dataAccessor);
                         if (!dataAccessor.HasSource()) break;
                     }
-                   
+
                 }
                 return dataAccessor;
             }
@@ -225,9 +226,9 @@ namespace sql.builder.DataApi
             public List<FactParam> Pars = new List<FactParam>();
             public override object Evaluate(DataAccessor dataAccessor)
             {
-                
 
-                ApplySelector( dataAccessor);
+
+                ApplySelector(dataAccessor);
 
 
 
@@ -251,8 +252,8 @@ namespace sql.builder.DataApi
             }
         }
 
-       
-       
+
+
 
         public class FactParamColumn : FactParam
         {
@@ -260,19 +261,19 @@ namespace sql.builder.DataApi
 
             public override object Evaluate(DataAccessor dataAccessor)
             {
-                
-               dataAccessor= ApplySelector( dataAccessor);
 
-               if (dataAccessor == null)
-               {
-                   return Errors.NeedDataAccessor;
-               }
+                dataAccessor = ApplySelector(dataAccessor);
+
+                if (dataAccessor == null)
+                {
+                    return Errors.NeedDataAccessor;
+                }
 
                 if (!dataAccessor.HasSource())
                 {
                     return null;
                 }
-               
+
                 var name = Name;
                 if (dataAccessor.DimensionName != null)
                 {
@@ -289,9 +290,9 @@ namespace sql.builder.DataApi
                     name = tbl.TransposeStructure.GetColumnNameForForDimValue(name, dataAccessor.DimensionValue);
                 }
                 object val = dataAccessor.GetValue(name);
-                
+
                 return val;
-                
+
             }
         }
 
@@ -308,46 +309,46 @@ namespace sql.builder.DataApi
         {
             public string DimensionName = null;
             public string DimensionValue = null;
-           public DataRow Row = null;
-           public TableReference TableReference = null;
-           public SortedList<string, DataRow> LastRowsOfGrset = null;
-           public DataAccessor Copy()
-           {
-               var da = new DataAccessor();
-               da.DimensionValue = DimensionValue;
-               da.DimensionName = DimensionName;
-               da.Row = Row;
-               da.TableReference = TableReference;
-               da.LastRowsOfGrset = LastRowsOfGrset;
-               da.isPrevious = isPrevious;
-               return da;
-           }
+            public DataRow Row = null;
+            public TableReference TableReference = null;
+            public SortedList<string, DataRow> LastRowsOfGrset = null;
+            public DataAccessor Copy()
+            {
+                var da = new DataAccessor();
+                da.DimensionValue = DimensionValue;
+                da.DimensionName = DimensionName;
+                da.Row = Row;
+                da.TableReference = TableReference;
+                da.LastRowsOfGrset = LastRowsOfGrset;
+                da.isPrevious = isPrevious;
+                return da;
+            }
 
-           public bool IsColumnExists(string columnName)
-           {
-               if (Row != null)
-               {
-                   return Row.Table.Columns.Contains(columnName);
-               }
-               else
-               {
-                   return TableReference.IsCurrentRowValueExists(columnName);
-               }
-           }
+            public bool IsColumnExists(string columnName)
+            {
+                if (Row != null)
+                {
+                    return Row.Table.Columns.Contains(columnName);
+                }
+                else
+                {
+                    return TableReference.IsCurrentRowValueExists(columnName);
+                }
+            }
             public object GetValue(string columnName)
             {
                 object val = null;
                 if (Row != null)
                 {
-                    val= Row[columnName];
+                    val = Row[columnName];
                 }
                 else
                 {
-                    
+
                     if (isPrevious)
                     {
                         val = TableReference.GetPrevRowValue(columnName);
-                       
+
                     }
                     else
                     {
@@ -375,15 +376,15 @@ namespace sql.builder.DataApi
             }
 
 
-            public void SetValue(string columnName,object value)
+            public void SetValue(string columnName, object value)
             {
                 if (Row != null)
                 {
-                     Row[columnName]=value;
+                    Row[columnName] = value;
                 }
                 else
                 {
-                     TableReference.SetCurrentRowValue(columnName,value);
+                    TableReference.SetCurrentRowValue(columnName, value);
                 }
             }
             public void ClearSource()
@@ -432,13 +433,13 @@ namespace sql.builder.DataApi
                             TableReference = null;
                         }
                     }
-                    
+
                 }
 
             }
             public void MoveToPreviousSibling()
             {
-                string parentId=null;
+                string parentId = null;
                 if (IsColumnExists(TextConst.AVSpecColumnGrset.GrSetName))
                 {
                     parentId = GetValue(TextConst.AVSpecColumnGrset.ParentGrRowId).ToString();
@@ -508,13 +509,13 @@ namespace sql.builder.DataApi
                     case TextConst.AVRowSelector.PrevRow: return FindRowUsingRowSelector_PrevRow(dataAccessor); break;
                     default: throw new NotImplementedException();
                 }
-             
-               
+
+
             }
         }
-       
-        
 
-        
+
+
+
     }
 }

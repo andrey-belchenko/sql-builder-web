@@ -1,17 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml.Linq;
-using Devart.Data.Oracle;
 using sql.builder;
 using sql.builder.Clean;
-using sql.builder.Clean.Extensions;
 using sql.builder.DataApi;
 using sql.builder.UI;
 
@@ -58,7 +54,7 @@ namespace SqlBuilderLib.DevTools
 
         public static void Initialize()
         {
-            DevUtilsProvider.Instance =  new DevUtilsProviderImpl();
+            DevUtilsProvider.Instance = new DevUtilsProviderImpl();
             Console.OutputEncoding = Encoding.UTF8;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
             var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
@@ -70,8 +66,9 @@ namespace SqlBuilderLib.DevTools
         }
 
 
-        public static void GetReports(){
-            
+        public static void GetReports()
+        {
+
         }
         public static void AnalyzeReports(string repName = null)
         {
@@ -88,7 +85,7 @@ namespace SqlBuilderLib.DevTools
             var navs = XmlReports.Environment.GetElements(TextConst.EName.Navigators).Cast<VNavigator>()
             .Where(it =>
              it.P_IdName == "nav310"
-                // it.P_IdName == "nav10"
+             // it.P_IdName == "nav10"
              //it.P_IdName == "nav101"
              )
             .ToList();
@@ -116,7 +113,7 @@ namespace SqlBuilderLib.DevTools
                     }
                     var fullName = $"{userep.P_Project}.{userep.P_Report}";
 
-                    if (repName!=null && repName!=fullName) continue;
+                    if (repName != null && repName != fullName) continue;
 
                     if (SkipReports.Contains(fullName)) continue;
                     var info = new AnalyzerReportInfo()
@@ -403,7 +400,7 @@ namespace SqlBuilderLib.DevTools
                 }
             }
 
-             LogSql(sql);
+            LogSql(sql);
         }
 
         private static string LogSql(string sql)

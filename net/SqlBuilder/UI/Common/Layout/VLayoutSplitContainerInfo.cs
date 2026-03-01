@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace sql.builder.UI
 {
     public class VLayoutSplitContainerInfo : VLayoutContainerInfo
     {
         public VLayoutSplitContainerInfo(VLayout controller, VLayoutGroupInfo parentGroup)
-            :base(controller,parentGroup)
+            : base(controller, parentGroup)
         {
             IsFiller = true;
-            
+
         }
 
 
@@ -31,10 +28,10 @@ namespace sql.builder.UI
         public override void AddChild(VLayoutNodeInfo node)
         {
             base.AddChild(node);
-            
+
             node.sizePercent = 1;
             node.IsFiller = true;
-            
+
         }
 
         public decimal GetAllSize()
@@ -48,7 +45,7 @@ namespace sql.builder.UI
             return size;
         }
 
-       
+
         public bool IsVertical = false;
 
 
@@ -83,14 +80,14 @@ namespace sql.builder.UI
             return 0;
         }
 
-        private  void processCollapsed()
+        private void processCollapsed()
         {
         }
         public override void ResetAndCalculateChilds()
         {
-            
-            var allSize=(decimal)GetAllSize();
-            var clientSize=GetClientSize();
+
+            var allSize = (decimal)GetAllSize();
+            var clientSize = GetClientSize();
             int valItog = 0;
             foreach (VLayoutGroupInfo node in Nodes)
             {
@@ -101,22 +98,22 @@ namespace sql.builder.UI
             processCollapsed();
             foreach (VLayoutGroupInfo node in Nodes)
             {
-                int val = Convert.ToInt32( node.sizeTemp);
+                int val = Convert.ToInt32(node.sizeTemp);
                 valItog += val;
 
                 if (node.GetNext() == null)
                 {
                     val += (clientSize - valItog);
                 }
-               
-                
+
+
                 node.left = node.GetMarginLeft();
                 node.top = node.GetMarginTop();
                 if (IsVertical)
                 {
-                   
-                    node.width =  val-node.GetMarginLeft()-node.GetMarginRight();
-                    node.height = GetClientHeight()-node.GetMarginTop()-node.GetMarginBottom();
+
+                    node.width = val - node.GetMarginLeft() - node.GetMarginRight();
+                    node.height = GetClientHeight() - node.GetMarginTop() - node.GetMarginBottom();
                 }
                 else
                 {
@@ -126,15 +123,15 @@ namespace sql.builder.UI
                 //не учтен magrin групп находящихся в nodes
                 node.ResetAndCalculateChilds();
             }
-           // GetTypedControl().SetSizes(sizes.ToArray());
+            // GetTypedControl().SetSizes(sizes.ToArray());
         }
 
-        
-       
-        public void SplitSizeChanged() 
+
+
+        public void SplitSizeChanged()
         {
         }
     }
-    
-    
+
+
 }

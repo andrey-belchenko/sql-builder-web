@@ -1,33 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
-using System.Diagnostics;
-using Contract = System.Diagnostics.Contracts.Contract;
 //using DevExpress.XtraEditors;
 //using DevExpress.XtraGrid.Views.Grid;
 //using infoenergo.ui.win.Grid;
 //using Microsoft.Office.Interop.Excel;
 //using Microsoft.Vbe.Interop;
 using sql.builder.DataApi;
-using sql.builder.ExcelApi;  
+using sql.builder.ExcelApi;
+using Contract = System.Diagnostics.Contracts.Contract;
 //using DevExpress.Spreadsheet;
 //using FlexCel.Core;
 //using FlexCel.XlsAdapter;
 //
 //using reports.word.XmlPrint;
-using sql.builder.Print.Xlsx;
 //using sql.builder.Test;
-using sql.builder.WinForms;
-using sql.builder.XmlHelpers;
 using DataTable = System.Data.DataTable;
 //using Application = Microsoft.Office.Interop.Excel.Application;
 //using Workbook = Microsoft.Office.Interop.Excel.Workbook;
@@ -45,15 +37,21 @@ namespace sql.builder
         public static string templatesFolder;
         private static string _outputFolder;
 
-        public static string outputFolder {
-            get {
-                if (string.IsNullOrEmpty(_outputFolder)) {
-                    return sql.builder.Clean.Settings. GetInstance().TempPath;
-                } else {
+        public static string outputFolder
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_outputFolder))
+                {
+                    return sql.builder.Clean.Settings.GetInstance().TempPath;
+                }
+                else
+                {
                     return _outputFolder;
                 }
             }
-            set {
+            set
+            {
                 _outputFolder = value;
             }
         }
@@ -72,18 +70,21 @@ namespace sql.builder
             //Wait.Show("Формирование файла", over: true);
             string templateType = temlplateInfo.ParentNode.Name;
             string templatePath = Path.Combine(templatesFolder, templateType, temlplateInfo.Attributes[TextConst.AName.Name].Value);
-            #if DEBUG
+#if DEBUG
             // в режиме отладки добавляем шаблон в проект sql.builder.templates и ТФС
             //if (XmlReports.IsDeveloperMode()) {
             //    ExcelPrintDocument.ReloadExcelTemplate(templatePath, templateType);
             //}
-            #endif
+#endif
             string title = temlplateInfo.Attributes[TextConst.AName.Title].Value;
             string fileName;
-            if (templateType == "word") {
+            if (templateType == "word")
+            {
                 throw new NotImplementedException();
                 //fileName = PrintWord(dataSet, templatePath, title, temlplateInfo);
-            } else {
+            }
+            else
+            {
                 fileName = printExcel(data, dataSet, templatePath, title, temlplateInfo, xTemplate, show_messages);
             }
             WaitUIHelper.LastUsedUIHelper.Hide();
@@ -103,16 +104,25 @@ namespace sql.builder
             bool print_big_data = ((dataSet.Tables[0] is VDataTable) && (dataSet.Tables[0] as VDataTable).Reader != null);
             bool convertToOpenXml;
             XmlAttribute attr = templateInfo.Attributes[TextConst.AName.ConvertToOpenXml];
-            if (print_big_data) {
-                if (attr != null && attr.Value == TextConst.AVBool.False) {
+            if (print_big_data)
+            {
+                if (attr != null && attr.Value == TextConst.AVBool.False)
+                {
                     convertToOpenXml = false;
-                } else {
+                }
+                else
+                {
                     convertToOpenXml = true;
                 }
-            } else {
-                if (attr != null && attr.Value == TextConst.AVBool.True) {
+            }
+            else
+            {
+                if (attr != null && attr.Value == TextConst.AVBool.True)
+                {
                     convertToOpenXml = true;
-                } else {
+                }
+                else
+                {
                     convertToOpenXml = false;
                 }
             }
@@ -123,55 +133,74 @@ namespace sql.builder
             bool multipage = templateInfo.AttrOrDefault("multipage", false);
             //
             XDocument xTemplate;
-			if (Template != null) {
-				xTemplate = Template;
-			} else {
-                using (FileStream templateStream = File.Open(templatePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
+            if (Template != null)
+            {
+                xTemplate = Template;
+            }
+            else
+            {
+                using (FileStream templateStream = File.Open(templatePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
                     xTemplate = XDocument.Load(templateStream);
                     templateStream.Close();
-                }                
-			}
+                }
+            }
             xTemplate = colsProcessing(data, xTemplate);
-            if (templateInfo.AttrOrDefault(TextConst.AName.DelCols, false)) { // Пока удаление колонок только для нового варианта, а колонки по измерениям только для старого
+            if (templateInfo.AttrOrDefault(TextConst.AName.DelCols, false))
+            { // Пока удаление колонок только для нового варианта, а колонки по измерениям только для старого
                 xTemplate = delUnused(dataSet, xTemplate);
             }
             //
             XmlAttribute output_format_attr = templateInfo.Attributes["output-format"];
             string output_format;
-            if (output_format_attr == null) {
+            if (output_format_attr == null)
+            {
                 output_format = "xlsx";
-            } else {
+            }
+            else
+            {
                 output_format = output_format_attr.Value;
-                if (output_format != "pdf") {
+                if (output_format != "pdf")
+                {
                     output_format = "xlsx";
                 }
             }
             string format;
-            if (convertToOpenXml /*|| ExcelPrintDocument.autoConvert*/) {
+            if (convertToOpenXml /*|| ExcelPrintDocument.autoConvert*/)
+            {
                 format = "xlsx";
-            } else {
+            }
+            else
+            {
                 format = "xml";
             }
             string fileName = GetFreeName(outputFolder, title, output_format);
             string fileNameX = GetFreeName(outputFolder, title, format);
             ExcelPrintDocument.ExcelPrintErrors err = ExcelPrintDocument.ExcelPrintErrors.None;
             sql.builder.Print.XML.ExcelPrintDocument doc = null;
-            if (isNewProc) {
+            if (isNewProc)
+            {
                 doc = new sql.builder.Print.XML.ExcelPrintDocument(xTemplate);
                 xTemplate = null;
-                if (convertToOpenXml) {
+                if (convertToOpenXml)
+                {
                     ExcelEnvironment.BeginPrintBigData();
                     err = doc.Print(null, dataSet, print_big_data, true);
                     ExcelEnvironment.EndPrintBigData(fileName);
-                } else {
+                }
+                else
+                {
                     err = doc.Print(fileNameX, dataSet, print_big_data, false);
                     doc = null;
                 }
-            } else {
+            }
+            else
+            {
                 XmlDocument template = new XmlDocument();
                 template.PreserveWhitespace = true;
                 template.Load(templatePath);
-                using (MemoryStream xmlStream = new MemoryStream()) {
+                using (MemoryStream xmlStream = new MemoryStream())
+                {
                     xTemplate.Save(xmlStream);
                     xmlStream.Flush();
                     xmlStream.Position = 0;
@@ -183,14 +212,17 @@ namespace sql.builder
                 // sheet.SelectSingleNode(".//*[name()='Table']").Attributes["ss:ExpandedColumnCount"].Value = (getLastColumn(sheet)+1).ToString();
                 applySource(sheet, 1, data.SelectSingleNode(".//data"), "", null, multipage, new SortedList<string, SortedList<string, Tuple<int, XmlNode>>>());
                 XmlNodeList sheets = template.SelectNodes(".//*[name()='ss:Worksheet']");
-                foreach (XmlNode sheet1 in sheets) {
+                foreach (XmlNode sheet1 in sheets)
+                {
                     XmlNodeList rows = sheet1.SelectSingleNode(".//*[name()='ss:Table']").SelectNodes(".//*[name()='ss:Row']");
-                    foreach (XmlNode row in rows) {
+                    foreach (XmlNode row in rows)
+                    {
                         row.RemoveAttribute("ss:Index");
                     }
                     sheet1.SelectSingleNode(".//*[name()='ss:Table']").Attributes["ss:ExpandedRowCount"].Value = (rows.Count + 1).ToString();
                 }
-                if (sheets.Count < 1) {
+                if (sheets.Count < 1)
+                {
                     return string.Empty;
                 }
                 /* XmlNodeList markers = template.SelectNodes("//*[name()='Data' and contains(.,'begin:')]");
@@ -200,16 +232,20 @@ namespace sql.builder
                  */
                 template.Save(fileNameX);
             }
-            if (err == ExcelPrintDocument.ExcelPrintErrors.NoData) {
+            if (err == ExcelPrintDocument.ExcelPrintErrors.NoData)
+            {
                 //if (show_empty_message) XtraMessageBox.Show("По заданным условиям нет данных для печати");
                 // зачем этот файл сохраняется??
                 if (File.Exists(fileNameX)) File.Delete(fileNameX);
                 return string.Empty;
             }
-            if (convertToOpenXml) {
+            if (convertToOpenXml)
+            {
                 bool xlsb = (output_format_attr != null && output_format_attr.Value == "xlsb");
                 fileName = ExcelPrintDocument.PostProcessBigData(fileNameX, templatePath, xlsb);
-            } else {
+            }
+            else
+            {
                 fileName = ExcelPrintDocument.PostProcess(fileNameX, output_format, fileName, null);
             }
             return fileName;
@@ -244,7 +280,8 @@ namespace sql.builder
                     string alias = table.TableName;
                     List<VExcelCell> cells = sheet.FindCells("[:" + alias + ".");
                     indexesForDelete.Clear();
-                    foreach (VExcelCell cell in cells) {
+                    foreach (VExcelCell cell in cells)
+                    {
                         //if (cell.Value.ToString() == "[:a.i.pow_cnt_proch_wait]")
                         //{
                         //}
@@ -262,7 +299,8 @@ namespace sql.builder
                             if (!table.Columns.Contains(colName))
                             {
                                 int i = cell.Index;
-                                if (!indexesForDelete.Contains(i)) {
+                                if (!indexesForDelete.Contains(i))
+                                {
                                     indexesForDelete.Add(i);
                                 }
                                 break;
@@ -397,13 +435,16 @@ namespace sql.builder
             // xmlStream.Flush();
             // xmlStream.Position = 0;
             VExcelWorkbook wb = new VExcelWorkbook(template);
-            for (int sheetIndex = 0; sheetIndex < wb.SheetsCount(); sheetIndex++) {
+            for (int sheetIndex = 0; sheetIndex < wb.SheetsCount(); sheetIndex++)
+            {
                 VExcelSheet sheet = wb.Sheet(sheetIndex);
                 VExcelCell cell1 = sheet.FindCell("cbegin");
-                while (cell1 != null) {
+                while (cell1 != null)
+                {
                     string tableName = cell1.Value.Split(' ')[0].Split(':')[1];
                     VExcelCell cell2 = sheet.FindCell("cend:" + tableName, cell1.Index);
-                    if (cell2 == null) {
+                    if (cell2 == null)
+                    {
                         // template.Load(wb.SaveToStream());
                         //template.Save(@"C:\tfs\all\sql.builder\sql.builder\printTemplate\excel\25499-test3.xml");
                         cell2 = sheet.FindCell("cend:" + tableName, cell1.Index);
@@ -415,10 +456,13 @@ namespace sql.builder
                     VExcelRange newRange = range;
                     int i = 0;
                     XmlNode dimsNode = data.SelectSingleNode("root/scheme//table/dimension-values[@table='" + tableName + "']");
-                    if (dimsNode != null) { // null может быть при исключении колонок через colset
+                    if (dimsNode != null)
+                    { // null может быть при исключении колонок через colset
                         XmlNodeList dims = dimsNode.SelectNodes(".//val");
-                        foreach (XmlNode dim in dims) {
-                            if (i < dims.Count - 1) {
+                        foreach (XmlNode dim in dims)
+                        {
+                            if (i < dims.Count - 1)
+                            {
                                 VExcelCell tagCell = newRange.FirstCell.Row.Cell(newRange.LastCell.Index + 1, ref ret);
                                 newRange = tagCell.Insert(range);
                             }
@@ -428,9 +472,11 @@ namespace sql.builder
                         newRange = range;
                         VExcelCell cell11 = cell1;
                         VExcelCell cell22 = cell2;
-                        foreach (XmlNode dim in dims) {
+                        foreach (XmlNode dim in dims)
+                        {
                             newRange.Replace("[" + tableName + ".title]", dim.Attributes["title"].Value);
-                            if (dim.Attributes["columnpref"] != null) {
+                            if (dim.Attributes["columnpref"] != null)
+                            {
                                 newRange.Replace("[" + tableName + ".columnpref]", dim.Attributes["columnpref"].Value);
                             }
                             newRange.Replace("[" + tableName + ".pfx]", "_" + dim.Attributes["value"].Value.Replace("-", "_").Replace(".", "_").Replace(",", "_"));
@@ -455,13 +501,17 @@ namespace sql.builder
         public static bool applySource(XmlNode templatePart, int sourceIndex, XmlNode data, string parentName, XmlNode rootData, bool multipage, SortedList<string, SortedList<string, Tuple<int, XmlNode>>> columnsInfo)
         {
             string tableName = null;
-            if (rootData == null) {
+            if (rootData == null)
+            {
                 rootData = data.SelectSingleNode("//root/data");
             }
             XmlNode beginMarker = null;
-            if (sourceIndex == 1) {
+            if (sourceIndex == 1)
+            {
                 beginMarker = templatePart.SelectSingleNode(".//*[name()='ss:Data' and starts-with(.,'begin:')]");
-            } else {
+            }
+            else
+            {
                 beginMarker = templatePart.SelectSingleNode(".//*[name()='ss:Data' and contains(.,'" + parentName + ".begin:')]");
             }
             XmlNode endMarker;
@@ -540,15 +590,19 @@ namespace sql.builder
             //SortedList<string, int> columnsIndexes;
             //SortedList<string, XmlNode> columnsInfo;
             SortedList<string, Tuple<int, XmlNode>> columns;
-            if (columnsInfo.TryGetValue(tableName, out columns)) {
+            if (columnsInfo.TryGetValue(tableName, out columns))
+            {
                 //columnsIndexes = columnsIndexesList[tableName];
                 //columnsInfo = columnsInfoList[tableName];
-            } else {
+            }
+            else
+            {
                 //columnsIndexes = new SortedList<string, int>();
                 //columnsInfo = new SortedList<string, XmlNode>();
                 columns = new SortedList<string, Tuple<int, XmlNode>>();
                 int i = 0;
-                foreach (XmlNode dataColumn in data.SelectNodes("//scheme//table[@as='" + tableName + "']/columns/column")) {
+                foreach (XmlNode dataColumn in data.SelectNodes("//scheme//table[@as='" + tableName + "']/columns/column"))
+                {
                     string column_name = dataColumn.Attributes["name"].Value;
                     columns.Add(column_name, new Tuple<int, XmlNode>(i, dataColumn));
                     //columnsIndexes.Add(column_name, i);
@@ -572,7 +626,8 @@ namespace sql.builder
 
                 while (applySource(workBuffer, sourceIndex + 1, nextData, tableName, rootData, multipage, columnsInfo))
                 {
-                };
+                }
+                ;
                 while (workBuffer.ChildNodes.Count > 0)
                 {
                     if (last != null)
@@ -597,12 +652,14 @@ namespace sql.builder
         {
             XmlNodeList values = templatePart.SelectNodes(".//*[name()='ss:Data' and contains(.,'value:" + tableName + ".')] | .//*[name()='ss:Cell' and contains(@ss:Formula,'value:" + tableName + ".')] ", excelNamespaseManager);
             XmlNode cells = row.SelectSingleNode("cells");
-            if (templatePart.FirstChild.Attributes["ss:Name"] != null) {
+            if (templatePart.FirstChild.Attributes["ss:Name"] != null)
+            {
                 //<NamedRange ss:Name="Print_Titles" ss:RefersTo="='прил 5'!R6:R8"/>
                 string oldSheetName = templatePart.FirstChild.Attributes["ss:Name"].Value;
                 string newSheetName = cells.ChildNodes[columns["sid"].Item1].InnerText.Split('|')[1];//в качестве имени листа берется часть id строки, не крсиво - желательно переделать
                 templatePart.FirstChild.Attributes["ss:Name"].Value = newSheetName;
-                foreach (XmlNode namedRange in templatePart.SelectNodes(".//*[name()='ss:NamedRange']")) {
+                foreach (XmlNode namedRange in templatePart.SelectNodes(".//*[name()='ss:NamedRange']"))
+                {
                     namedRange.Attributes["ss:RefersTo"].Value = namedRange.Attributes["ss:RefersTo"].Value.Replace(oldSheetName, newSheetName);
                 }
             }
@@ -639,8 +696,10 @@ namespace sql.builder
                     string columnName = sVal.Split(' ')[0].Split(':')[1].Split('.')[1];
                     Tuple<int, XmlNode> col_info = columns[columnName];
                     string value = cells.ChildNodes[col_info.Item1].InnerText;
-                    if (valBeg == 0 & valEnd == sData.Length) {
-                        switch (col_info.Item2.Attributes["type"].Value) {
+                    if (valBeg == 0 & valEnd == sData.Length)
+                    {
+                        switch (col_info.Item2.Attributes["type"].Value)
+                        {
                             case "number":
                                 type = "Number";
                                 value = value.Replace(",", ".");
@@ -655,7 +714,8 @@ namespace sql.builder
                                 {
                                     DateTime dat = Convert.ToDateTime(value);
                                     DateTime minExcelDate = new DateTime(1901, 1, 1);
-                                    if (dat < minExcelDate) {
+                                    if (dat < minExcelDate)
+                                    {
                                         dat = minExcelDate;
                                     }
                                     value = dat.ToString("yyyy-MM-dd");//+"T00:00:00.000";
@@ -663,22 +723,30 @@ namespace sql.builder
                                 break;
                         }
                     }
-                    if (val.Name != "ss:Data") {
-                        if (value == "") {
+                    if (val.Name != "ss:Data")
+                    {
+                        if (value == "")
+                        {
                             value = "R1C1000";  // !!! предполагается что это пустая ячейка
                         }
                     }
                     sData = sData.Replace(sVal, value);
                     valBeg = sData.IndexOf("value:" + tableName + ".");
                 }
-                if (val.Name == "ss:Data") {
+                if (val.Name == "ss:Data")
+                {
                     val.Attributes["ss:Type"].Value = type;
-                    if (!sData.Equals("")) {
+                    if (!sData.Equals(""))
+                    {
                         val.InnerText = sData;
-                    } else {
+                    }
+                    else
+                    {
                         val.ParentNode.RemoveChild(val);
                     }
-                } else {
+                }
+                else
+                {
                     val.Attributes["ss:Formula"].Value = sData;
                 }
             }
@@ -739,14 +807,15 @@ namespace sql.builder
                 ext = "." + ext;
             }
 
-        // корректировка xx.06.2021 YShmyreva
-        // длина имени выходного файла не должна превышать ограничения Windows[260]/MsOffice[218]
+            // корректировка xx.06.2021 YShmyreva
+            // длина имени выходного файла не должна превышать ограничения Windows[260]/MsOffice[218]
             int max_lenFileName = 200;
             int name_maxLen = max_lenFileName - path.Length - 1;
             if (name.Length > name_maxLen)
             {
                 name = name.Substring(0, name_maxLen);
-            };
+            }
+            ;
 
             string newName = name + ext;
             while (File.Exists(Path.Combine(path, newName)) || Directory.Exists(Path.Combine(path, newName)))

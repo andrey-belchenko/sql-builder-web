@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
 using System.Reflection;
 namespace sql.builder.DataApi
 {
@@ -29,7 +27,7 @@ namespace sql.builder.DataApi
                                 //if (el2.GetMainParent().P_IdName == "sr_opl_bank_ext")
                                 //{
                                 //}
-                                list.Add(new ElementUse(this,el2, TextConst.AName.Name));
+                                list.Add(new ElementUse(this, el2, TextConst.AName.Name));
                                 if (el2.XName == el2.P_CalledQuery)
                                 {
                                     if (el2.P_Alias != "")
@@ -44,7 +42,7 @@ namespace sql.builder.DataApi
                     }
                 }
 
-                
+
             }
 
             var d = GetDimension();
@@ -86,10 +84,10 @@ namespace sql.builder.DataApi
                             }
                         }
                     }
-                       
-                    
+
+
                 }
-               
+
             }
 
             if (this.EntityType != null)
@@ -97,7 +95,7 @@ namespace sql.builder.DataApi
 
                 foreach (var rel in this.EntityType.ParentLinks())
                 {
-                    if (rel.P_DName != "" && rel.P_DName==P_IdName)
+                    if (rel.P_DName != "" && rel.P_DName == P_IdName)
                     {
                         list.Add(new ElementUse(this, rel, TextConst.AName.DName));
                     }
@@ -116,8 +114,8 @@ namespace sql.builder.DataApi
         public static List<ElementUse> SearchFactUses(VSXElement fact)
         {
             var list = new List<ElementUse>();
-            var list1 =  XmlReports.Environment.GetSourcedElements();
-            
+            var list1 = XmlReports.Environment.GetSourcedElements();
+
 
             var fn = fact.P_Fact;
             if (fn != "")
@@ -154,17 +152,17 @@ namespace sql.builder.DataApi
                     }
                 }
             }
-           
+
             return list;
         }
 
-        public  List<ElementUse> SearchColumnUses(VSXElement column)
+        public List<ElementUse> SearchColumnUses(VSXElement column)
         {
             var list = new List<ElementUse>();
             var list1 = XmlReports.Environment.GetSourcedElements();
             var d = this.GetDimension();
 
-          
+
 
             foreach (var el1 in list1)
             {
@@ -177,17 +175,17 @@ namespace sql.builder.DataApi
                         var qry = el2 as VQueryCall;
                         //if (qry != null)
                         //{
-                            if (qry.P_IdName == this.P_IdName)
-                            {
+                        if (qry.P_IdName == this.P_IdName)
+                        {
 
-                                foreach (VColumn col in qry.UsedColumns())
+                            foreach (VColumn col in qry.UsedColumns())
+                            {
+                                if (col.P_Column == column.XName)
                                 {
-                                    if (col.P_Column == column.XName)
-                                    {
-                                        list.Add(new ElementUse(column, col, TextConst.AName.Column));
-                                    }
+                                    list.Add(new ElementUse(column, col, TextConst.AName.Column));
                                 }
                             }
+                        }
                         //}
                     }
                 }
@@ -196,7 +194,7 @@ namespace sql.builder.DataApi
                 {
                     if (col.P_Column == column.XName)
                     {
-                        list.Add(new ElementUse(column, col, TextConst.AName.Column));                         
+                        list.Add(new ElementUse(column, col, TextConst.AName.Column));
                     }
                 }
 
@@ -205,38 +203,38 @@ namespace sql.builder.DataApi
                 {
                     foreach (var exp in el1.Expressions())
                     {
-                         
 
-                            foreach (var col in exp.GetDescedantsP(EName.column))
-                            {
-                                if (col.P_Table == d.P_Name && col.P_Column == this.P_Fact)
-                                {
-                                    list.Add(new ElementUse(column, col, TextConst.AName.Column));
-                                }
-                            }
-                        
-                    }
-                }
-
-                
-
-
-            }
-
-            if (d != null )
-            {
-                foreach (var exp in XmlReports.Environment.GetExpressions())
-                {
-                    
 
                         foreach (var col in exp.GetDescedantsP(EName.column))
                         {
-                            if (col.P_Table == d.P_Name && col.P_Column == column.XName)
+                            if (col.P_Table == d.P_Name && col.P_Column == this.P_Fact)
                             {
                                 list.Add(new ElementUse(column, col, TextConst.AName.Column));
                             }
                         }
-                    
+
+                    }
+                }
+
+
+
+
+            }
+
+            if (d != null)
+            {
+                foreach (var exp in XmlReports.Environment.GetExpressions())
+                {
+
+
+                    foreach (var col in exp.GetDescedantsP(EName.column))
+                    {
+                        if (col.P_Table == d.P_Name && col.P_Column == column.XName)
+                        {
+                            list.Add(new ElementUse(column, col, TextConst.AName.Column));
+                        }
+                    }
+
                 }
             }
             var uses = SearchFactUses(column);
@@ -258,7 +256,7 @@ namespace sql.builder.DataApi
         }
 
 
-        public List<VSXElement>  Uses_QueryFrom()
+        public List<VSXElement> Uses_QueryFrom()
         {
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
             {
@@ -269,7 +267,7 @@ namespace sql.builder.DataApi
             var main = GetMainE();
 
             var queries = XmlReports.Environment.GetElements(TextConst.EName.Queries);
-            
+
 
             foreach (VQuery query in queries)
             {
@@ -283,7 +281,7 @@ namespace sql.builder.DataApi
                             list.Add(qryCall);
                         }
                     }
-                } 
+                }
             }
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), null);
             return list;

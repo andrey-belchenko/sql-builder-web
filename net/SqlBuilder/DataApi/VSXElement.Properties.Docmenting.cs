@@ -1,20 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Xsl;
-using System.Xml.XPath;
-using System.IO;
+﻿using System.Collections.Generic;
 //using System.Windows.Forms;
-using Devart.Data.Oracle;
-using sql.builder.FieldInfo;
-using System.Reflection;
-using sql.builder.UI;
 
 namespace sql.builder.DataApi
 {
@@ -30,9 +15,9 @@ namespace sql.builder.DataApi
             return false;
         }
 
-        public  string MakeMultidefinedPropertyValue(List<string> strings)
+        public string MakeMultidefinedPropertyValue(List<string> strings)
         {
-            string s="";
+            string s = "";
             foreach (string s1 in strings)
             {
                 if (s != "")
@@ -61,7 +46,7 @@ namespace sql.builder.DataApi
 
 
 
-   
+
 
 
 

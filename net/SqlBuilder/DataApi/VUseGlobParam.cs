@@ -1,6 +1,5 @@
-﻿using System;
+﻿using System.Data;
 using System.Xml.Linq;
-using System.Data;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
@@ -38,7 +37,8 @@ namespace sql.builder.DataApi
         public void P_UsedParName_ListRefresh(VDataTable table)
         {
             table.Rows.Clear();
-            foreach (VSXElement el in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.globalparams).Elements(EName.param)) {
+            foreach (VSXElement el in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.globalparams).Elements(EName.param))
+            {
                 table.AddRow(el.AttrOrEmpty(AName_.name));
             }
         }

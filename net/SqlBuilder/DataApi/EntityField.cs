@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace sql.builder.DataApi
+﻿namespace sql.builder.DataApi
 {
     public class VEntityField
     {
-        
+
     }
 }

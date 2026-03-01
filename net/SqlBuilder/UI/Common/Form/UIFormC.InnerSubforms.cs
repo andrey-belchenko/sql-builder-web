@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Xml.Linq;
 //using System.Windows.Forms;
 using System.Collections.Generic;
-using System.Linq;
 //using DevExpress.XtraLayout;
 //using DevExpress.XtraLayout.Utils;
 //using infoenergo.core.Extensions;
-using sql.builder.DataApi;
-using sql.builder.WinForms;
 //using sql.builder.Test;
 
 namespace sql.builder.UI

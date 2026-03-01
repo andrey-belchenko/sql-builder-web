@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 
 namespace sql.builder.Clean

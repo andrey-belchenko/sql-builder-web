@@ -1,5 +1,4 @@
 using System;
-using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -8,15 +7,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-
-using infoenergo.core.Data;
+using sql.builder.Clean;
 //using infoenergo.core.Extensions;
-using sql.builder.DataApi.DataObjects;
 using sql.builder.FieldInfo;
 using sql.builder.UI;
-using sql.builder.XmlHelpers;
 using SqlBuilderLib.DevTools;
-using sql.builder.Clean;
 
 namespace sql.builder.DataApi
 {

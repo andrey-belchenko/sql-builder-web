@@ -4,12 +4,11 @@ using System.Linq;
 //using System.Windows.Forms; // Cursor, Cursors
 //using DevExpress.XtraEditors.Controls;
 //using DevExpress.XtraWaitForm;
-using Point = System.Drawing.Point;
 //using WaitForm = infoenergo.ui.win.WaitForm;
 
 namespace sql.builder
 {
-    public static class Wait 
+    public static class Wait
     {
         private class WaitUIInfo
         {
@@ -31,10 +30,14 @@ namespace sql.builder
         }
         public static void Check()
         {
-            lock (_lock) {
-                if (_current != null) {
-                    if (_current.Delayed) {
-                        if (_current.Start < DateTime.Now) {
+            lock (_lock)
+            {
+                if (_current != null)
+                {
+                    if (_current.Delayed)
+                    {
+                        if (_current.Start < DateTime.Now)
+                        {
                             _current.Delayed = false;
                             _current.IsCursor = false;
                             hideCursor();
@@ -46,8 +49,10 @@ namespace sql.builder
         }
         public static int ShowPanel(string capition, bool overlap, int delayMilliseconds, string description = null)
         {
-            lock (_lock) {
-                if (description == null) {
+            lock (_lock)
+            {
+                if (description == null)
+                {
                     description = "Пожалуйста, подождите...";
                 }
                 var info = new WaitUIInfo();
@@ -75,10 +80,12 @@ namespace sql.builder
         }*/
         public static void Hide(int id)
         {
-            lock (_lock) {
+            lock (_lock)
+            {
                 _stack.Remove(id);
                 WaitUIInfo info = _stack.Values.LastOrDefault();
-                if (info == null || info.Overlaped) {
+                if (info == null || info.Overlaped)
+                {
                     change(info);
                 }
             }
@@ -86,9 +93,12 @@ namespace sql.builder
         private static void show(int id, WaitUIInfo nextInfo)
         {
             _stack.Add(id, nextInfo);
-            if (_current == null || !_current.Overlap) {
+            if (_current == null || !_current.Overlap)
+            {
                 change(nextInfo);
-            } else {
+            }
+            else
+            {
                 nextInfo.Overlaped = true;
             }
         }
@@ -96,31 +106,51 @@ namespace sql.builder
         {
             WaitUIInfo oldInfo = _current;
             if (oldInfo == newInfo) return;
-            if (newInfo == null) {
-                if (oldInfo != null) {
-                    if (oldInfo.IsCursor) {
+            if (newInfo == null)
+            {
+                if (oldInfo != null)
+                {
+                    if (oldInfo.IsCursor)
+                    {
                         hideCursor();
-                    } else {
+                    }
+                    else
+                    {
                         hidePanel();
                     }
                 }
-            } else {
-                if (oldInfo == null) {
-                    if (newInfo.IsCursor) {
+            }
+            else
+            {
+                if (oldInfo == null)
+                {
+                    if (newInfo.IsCursor)
+                    {
                         showCursor();
-                    } else {
+                    }
+                    else
+                    {
                         showPanel(newInfo);
                     }
-                } else {
-                    if (oldInfo.IsCursor) {
-                        if (!newInfo.IsCursor) {
+                }
+                else
+                {
+                    if (oldInfo.IsCursor)
+                    {
+                        if (!newInfo.IsCursor)
+                        {
                             hideCursor();
                             showPanel(newInfo);
                         }
-                    } else {
-                        if (!newInfo.IsCursor) {
+                    }
+                    else
+                    {
+                        if (!newInfo.IsCursor)
+                        {
                             showPanel(newInfo);
-                        } else { //панель на курсор не меняем
+                        }
+                        else
+                        { //панель на курсор не меняем
                             newInfo.Overlaped = true;
                             newInfo = oldInfo;
                         }
@@ -131,7 +161,7 @@ namespace sql.builder
         }
         private static void showCursor()
         {
-             //Cursor.Current = Cursors.WaitCursor;
+            //Cursor.Current = Cursors.WaitCursor;
         }
         private static void hideCursor()
         {

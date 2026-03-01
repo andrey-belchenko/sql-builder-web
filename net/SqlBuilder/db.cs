@@ -2,21 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
 using infoenergo.sys;
-using sql.builder.Core;
-using sql.builder.DataApi;
 using sql.builder.Clean;
-using DataHelper = infoenergo.core.Data.DataHelper;
+using sql.builder.DataApi;
 using SqlBuilderLib.DevTools;
+using DataHelper = infoenergo.core.Data.DataHelper;
 
 namespace sql.builder
 {
     public static class db
     {
         private static VOracleConnection _connection;
-        public static VOracleConnection Connection {
+        public static VOracleConnection Connection
+        {
             get => Global.RequestConnection.Value != null ? Global.Connection : (_connection ?? Global.Connection);
             set { _connection = value; }
         }
@@ -95,9 +93,12 @@ namespace sql.builder
         {
             VOracleParameter[] parameters = new VOracleParameter[1] { new VOracleParameter("repname", VOracleDbType.VarChar, repname, ParameterDirection.Input) };
             DataTable dt = DataHelper.SqlGetTable("SELECT data FROM vr_grid_settings WHERE repname = :repname AND name = 'default' AND visible = 0 AND u_m = USER", parameters, Connection, false);
-            if (dt.Rows.Count == 0) {
+            if (dt.Rows.Count == 0)
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return dt.Rows[0]["data"].ToString();
             }
         }
@@ -107,7 +108,7 @@ namespace sql.builder
                 new VOracleParameter("repname", VOracleDbType.VarChar, repname, ParameterDirection.Input),
                 new VOracleParameter("data",    VOracleDbType.NClob,   data,    ParameterDirection.Input)
             };
-            DataHelper.SqlExecute("MERGE INTO vr_grid_settings USING dual ON (repname = :repname AND name = 'default' AND visible = 0 AND u_m = USER) WHEN MATCHED THEN UPDATE SET data = :data WHEN NOT MATCHED THEN INSERT (repname, name, visible, data) VALUES(:repname, 'default', 0, :data)", parameters, Connection); 
+            DataHelper.SqlExecute("MERGE INTO vr_grid_settings USING dual ON (repname = :repname AND name = 'default' AND visible = 0 AND u_m = USER) WHEN MATCHED THEN UPDATE SET data = :data WHEN NOT MATCHED THEN INSERT (repname, name, visible, data) VALUES(:repname, 'default', 0, :data)", parameters, Connection);
             Connection.Commit();
         }
         public static void DeleteDefaultReportSetting(string repname)
@@ -210,7 +211,7 @@ namespace sql.builder
                 new VOracleParameter("params", VOracleDbType.NClob, report_params, ParameterDirection.Input),
                 kod_log
             };
-            DataHelper.SqlExecute("INSERT INTO vr_reports_log (repname, params) VALUES (:repname, :params) RETURNING kod_log INTO :kod_log", parameters, Connection,false);
+            DataHelper.SqlExecute("INSERT INTO vr_reports_log (repname, params) VALUES (:repname, :params) RETURNING kod_log INTO :kod_log", parameters, Connection, false);
             Connection.Commit();
             return Convert.ToDecimal(kod_log.Value);
         }
@@ -226,7 +227,7 @@ namespace sql.builder
         }
         public static TimeSpan? AverageReportFormingTime(string report_name)
         {
-            VOracleParameter p_repname  = new VOracleParameter("p_repname", VOracleDbType.VarChar, report_name, ParameterDirection.Input);
+            VOracleParameter p_repname = new VOracleParameter("p_repname", VOracleDbType.VarChar, report_name, ParameterDirection.Input);
             VOracleParameter p_avg_time = new VOracleParameter("p_avg_time", VOracleDbType.IntervalDS, ParameterDirection.Output);
             DataHelper.SqlExecute(@"DECLARE
   p_repname     vr_reports_log.repname%type;
@@ -261,9 +262,12 @@ BEGIN
 END;", new VOracleParameter[2] { p_repname, p_avg_time }, Connection);
             // Здесь p_avg_time.OracleValue is Devart.Data.Oracle.OracleIntervalDS
             object value = p_avg_time.Value;
-            if (Cmn.IsNullOrDBNull(value)) {
+            if (Cmn.IsNullOrDBNull(value))
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return (TimeSpan)value;
             }
         }
@@ -290,7 +294,7 @@ END;", new VOracleParameter[2] { p_repname, p_avg_time }, Connection);
             return (cnt > 0);
         }
         #region Вспомогательные функции
-        public static DataTable ExecuteDataTable(string sql, DbConnection conn = null,bool analyze=true)
+        public static DataTable ExecuteDataTable(string sql, DbConnection conn = null, bool analyze = true)
         {
             conn = conn ?? Connection;
 
@@ -298,14 +302,15 @@ END;", new VOracleParameter[2] { p_repname, p_avg_time }, Connection);
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = sql;
-             
+
                 DbDataReader reader = null;
                 try
                 {
-                    if (analyze){
+                    if (analyze)
+                    {
                         DevUtilsProvider.Instance.AnalyzeExecSql(sql);
                     }
-                   
+
                     reader = cmd.ExecuteReader();
                 }
                 catch (DbException e)
@@ -335,13 +340,13 @@ END;", new VOracleParameter[2] { p_repname, p_avg_time }, Connection);
             //return DataHelper.SqlGetTable(sql, conn);
         }
 
-        public static object ExecuteObject(string sql, DbConnection conn = null, Dictionary<string,object> pars =null)
+        public static object ExecuteObject(string sql, DbConnection conn = null, Dictionary<string, object> pars = null)
         {
             conn = conn ?? Connection;
 
             var dt = new DataTable();
 
-         
+
 
 
             using (var cmd = conn.CreateCommand())
@@ -354,9 +359,9 @@ END;", new VOracleParameter[2] { p_repname, p_avg_time }, Connection);
                         var dbpar = new VOracleParameter(par.Key, par.Value);
                         cmd.Parameters.Add(dbpar);
                     }
-                    
+
                 }
-                
+
                 DevUtilsProvider.Instance.AnalyzeExecSql(sql);
                 var reader = cmd.ExecuteReader();
                 dt.Load(reader);
@@ -369,7 +374,7 @@ END;", new VOracleParameter[2] { p_repname, p_avg_time }, Connection);
             //return DataHelper.SqlGetTable(sql, conn);
         }
 
-     
+
         public static int ExecuteNonQuery(string sql, DbConnection conn = null)
         {
             conn = conn ?? Connection;
@@ -379,10 +384,10 @@ END;", new VOracleParameter[2] { p_repname, p_avg_time }, Connection);
             {
                 cmd.CommandText = sql;
                 DevUtilsProvider.Instance.AnalyzeExecSql(sql);
-               return cmd.ExecuteNonQuery();
-             
+                return cmd.ExecuteNonQuery();
+
             }
-        
+
             //return DataHelper.SqlGetTable(sql, conn);
         }
         #endregion

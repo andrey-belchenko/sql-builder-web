@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml.Linq;
@@ -48,21 +46,27 @@ namespace sql.builder.Print.Xlsx
             this._printers = new List<WorksheetPrint>();
             this._files = new List<ExcelBaseFile>();
             // чтобы не падало если файл уже открыт в Excel
-            if (options.CopyTemplate) {
+            if (options.CopyTemplate)
+            {
                 string template_path_new = Printing.GetFreeName(Printing.outputFolder, Path.GetFileNameWithoutExtension(template_path) + "-template", ".xlsx");
                 File.Copy(template_path, template_path_new);
                 template_path = template_path_new;
             }
             // загрузка базового xlsx и распаковка во временную дирректорию
-            using (ZipArchive xlsx = ZipFile.OpenRead(template_path)) {
-                foreach (ZipArchiveEntry entry in xlsx.Entries) {
+            using (ZipArchive xlsx = ZipFile.OpenRead(template_path))
+            {
+                foreach (ZipArchiveEntry entry in xlsx.Entries)
+                {
                     string destinationPath = Path.GetFullPath(Path.Combine(_print_directory, entry.FullName));
-                    if (destinationPath.StartsWith(_print_directory, StringComparison.Ordinal)) {
+                    if (destinationPath.StartsWith(_print_directory, StringComparison.Ordinal))
+                    {
                         string directory = Path.GetDirectoryName(destinationPath);
-                        if (!Directory.Exists(directory)) {
+                        if (!Directory.Exists(directory))
+                        {
                             Directory.CreateDirectory(directory);
                         }
-                        if (!string.IsNullOrEmpty(entry.Name)) {
+                        if (!string.IsNullOrEmpty(entry.Name))
+                        {
                             entry.ExtractToFile(destinationPath, overwrite: true);
                         }
                     }
@@ -86,19 +90,22 @@ namespace sql.builder.Print.Xlsx
             //
             string[] file_names = Directory.GetFiles(Path.Combine(_print_directory, "xl", "worksheets"));
             this.worksheets = new List<ExcelWorksheet>(file_names.Length);
-            for (int index = 0; index < file_names.Length; index++) {
+            for (int index = 0; index < file_names.Length; index++)
+            {
                 ExcelWorksheet worksheet = new ExcelWorksheet(file_names[index], this);
                 this.worksheets.Add(worksheet);
                 // разворачиваем формулы
                 worksheet.ExpandRefFormulas();
                 worksheet.ProcessPivotColumns(data, options.PivotColumn_WidthSource);
-                if (options.DeleteUnusedColumns) {
+                if (options.DeleteUnusedColumns)
+                {
                     worksheet.DeleteUnusedColumns(options.UsedVariables);
                 }
             }
             // необязательный файл - проще удалить, чем генерировать ручками
             string path = Path.Combine(_print_directory, "xl", "calcChain.xml");
-            if (File.Exists(path)) {
+            if (File.Exists(path))
+            {
                 File.Delete(path);
             }
             this._files.AddRange(this.worksheets);
@@ -125,20 +132,25 @@ namespace sql.builder.Print.Xlsx
             string rid = null;
             string filename = null;
             WorksheetPrint printerLast = this._printers.LastOrDefault(p => p.Worksheet.NativeSheetRID == worksheet.NativeSheetRID);
-            if (printerLast != null) {
+            if (printerLast != null)
+            {
                 // печать листа больше одного раза
                 this.workbook_rels.CreateWorksheetRel(worksheet, out rid, out filename);
                 // чтобы размноженные листы не были выделены все сразу
-                foreach (XElement sv in worksheet.XmlChanged.Element(ns.Main.worksheet).Element(ns.Main.sheetViews).Elements(ns.Main.sheetView)) {
+                foreach (XElement sv in worksheet.XmlChanged.Element(ns.Main.worksheet).Element(ns.Main.sheetViews).Elements(ns.Main.sheetView))
+                {
                     sv.RemoveAttribute(ns.None.tabSelected);
                 }
                 this.content_types.AddWorksheet(filename);
                 this.workbook.AddWorksheet(rid, name, printerLast.RID);
-            } else {
+            }
+            else
+            {
                 // печать листа первый раз
                 rid = worksheet.NativeSheetRID;
                 filename = worksheet.NativeSheetFileName;
-                if (name != null) {
+                if (name != null)
+                {
                     this.workbook.ChangeNativeWorksheetName(rid, name);
                 }
             }
@@ -152,7 +164,8 @@ namespace sql.builder.Print.Xlsx
             // колонки печатаются в шапке
             // если нет описания колонок - родительский узел тоже не нужен
             XElement xcols = pi.Cols.GetXml();
-            if (xcols.HasElements) {
+            if (xcols.HasElements)
+            {
                 xsheet.Element(ns.Main.sheetData).AddBeforeSelf(xcols);
             }
 
@@ -193,9 +206,11 @@ namespace sql.builder.Print.Xlsx
             XElement rowXml = new XElement(ns.Main.row);
             Cmn.copyAttributes(row.Xml, rowXml);
             rowXml.Attribute("r").SetValue(pi.LastPrintedRowID);
-            for (int index = 0; index < row.Cells.Count; index++) {
+            for (int index = 0; index < row.Cells.Count; index++)
+            {
                 ExcelCell cell = row.Cells[index];
-                if (cell.HasSharedString) {
+                if (cell.HasSharedString)
+                {
                     if (cell.Text.Contains("begin:") || cell.Text.Contains("end:")) continue;
                 }
                 XElement cellXml = new XElement(cell.Xml);
@@ -205,35 +220,44 @@ namespace sql.builder.Print.Xlsx
                 values.TryGetValue(cell, out value);
                 var formula = value as ExcelPrintFormula;
                 // вместо значения подставляем формулу
-                if (formula != null) {
+                if (formula != null)
+                {
                     cellXml.Elements(ns.Main.v).Remove();
                     XElement xf = cellXml.Element(ns.Main.f);
-                    if (xf == null) {
+                    if (xf == null)
+                    {
                         xf = new XElement(ns.Main.f);
                         cellXml.Add(xf);
                     }
                     xf.SetValue(formula.Formula);
-                } else {
+                }
+                else
+                {
                     ExcelStyle style = this.styles.GetStyle(cell.StyleID);
                     bool isNumeric = (style != null) && style.IsNumeric;
                     // если decimal - проверять не нужно
-                    if (isNumeric && !(value is decimal)) {
+                    if (isNumeric && !(value is decimal))
+                    {
                         // сделал через маску, тк decimal.TryParse возвращает true для строк типа "14-" или "02 03"
                         string text = (value != null) ? value.ToString() : cell.Text;
                         // проверяем что значение валидное число либо отсутствует
-                        if (!string.IsNullOrEmpty(text) && !Regex.IsMatch(text, _numericMask)) {
+                        if (!string.IsNullOrEmpty(text) && !Regex.IsMatch(text, _numericMask))
+                        {
                             isNumeric = false;
                         }
                     }
-                    if (value != null) {
+                    if (value != null)
+                    {
                         this.ProcessCellValue(cellXml, cell, value, isNumeric);
                     }
-                    if (cell.HasFormula) {
+                    if (cell.HasFormula)
+                    {
                         ProcessCellFormula(cellXml, cell, pi.LastPrintedRowID - int.Parse(row.ID));
                     }
                 }
                 string target;
-                if (hyperlinkTargets.TryGetValue(cell, out target)) {
+                if (hyperlinkTargets.TryGetValue(cell, out target))
+                {
                     pi.AddHyperlink(cellName, target);
                 }
                 rowXml.Add(cellXml);
@@ -242,13 +266,15 @@ namespace sql.builder.Print.Xlsx
         }
         public static void EndPrint(WorksheetPrint pi)
         {
-            foreach (ExcelRow row in pi.NotPrintedRows) {
+            foreach (ExcelRow row in pi.NotPrintedRows)
+            {
                 pi.RemoveRowMerge(row);
                 //pi.RemoveRowBreak(row);
             }
             var xsheet = new XElement(pi.Worksheet.XmlChanged.Root);
             var xpart = pi.GetHyperlinksXml();
-            if (xpart != null) {
+            if (xpart != null)
+            {
                 // порядок важен
                 XElement x = xsheet.Element(ns.Main.dataValidations) ?? xsheet.Elements(ns.Main.conditionalFormatting).LastOrDefault()
                         ?? xsheet.Element(ns.Main.autoFilter) ?? xsheet.Element(ns.Main.sheetData);
@@ -256,7 +282,8 @@ namespace sql.builder.Print.Xlsx
             }
             xpart = pi.GetMergesXml();
             // excel крашится если есть этот узел, но мержей нет
-            if (xpart.HasElements) {
+            if (xpart.HasElements)
+            {
                 // порядок важен
                 XElement x = xsheet.Element(ns.Main.autoFilter) ?? xsheet.Element(ns.Main.sheetData);
                 x.AddAfterSelf(xpart);
@@ -275,13 +302,15 @@ namespace sql.builder.Print.Xlsx
         {
             string svalue = value.ToString();
             // пустые значения можно не хранить
-            if (svalue == "") {
+            if (svalue == "")
+            {
                 cellXml.RemoveAttribute(ns.None.t);
                 cellXml.Elements(ns.Main.v).Remove();
                 return;
             }
             // внутри excel десятичный разделитель всегда точка, независимо от настроек ОС!
-            if (isNumeric) {
+            if (isNumeric)
+            {
                 svalue = svalue.Replace(',', '.');
             }
             if (cell.HasSharedString)
@@ -297,7 +326,8 @@ namespace sql.builder.Print.Xlsx
             }
 
             XElement xv = cellXml.Element(ns.Main.v);
-            if (xv == null) {
+            if (xv == null)
+            {
                 xv = new XElement(ns.Main.v);
                 cellXml.Add(xv);
             }
@@ -308,10 +338,12 @@ namespace sql.builder.Print.Xlsx
         {
             // удаляем сообщение об ошибке в формуле
             XAttribute at = cellXml.Attribute(ns.None.t);
-            if (at != null && at.Value == "e") {
+            if (at != null && at.Value == "e")
+            {
                 at.Remove();
                 XElement xv = cellXml.Element(ns.Main.v);
-                if (xv != null) {
+                if (xv != null)
+                {
                     xv.Value = "";
                 }
             }
@@ -328,10 +360,12 @@ namespace sql.builder.Print.Xlsx
         }
         public void Save(string output_path)
         {
-            for (int index = 0; index < this._files.Count; index++) {
+            for (int index = 0; index < this._files.Count; index++)
+            {
                 this._files[index].Save();
             }
-            if (File.Exists(output_path)) {
+            if (File.Exists(output_path))
+            {
                 File.Delete(output_path);
             }
             ZipFile.CreateFromDirectory(_print_directory, output_path);
@@ -339,9 +373,12 @@ namespace sql.builder.Print.Xlsx
         // для отладки - посмотреть что получилось после размазывания колонок и т.д.
         public void SaveTemplate(string output_path)
         {
-            foreach (ExcelWorksheet excelWorksheet in this.worksheets) {
-                using (WorksheetPrint pi = this.BeginPrint(excelWorksheet)) {
-                    foreach (ExcelRow excelRow in excelWorksheet.Rows) {
+            foreach (ExcelWorksheet excelWorksheet in this.worksheets)
+            {
+                using (WorksheetPrint pi = this.BeginPrint(excelWorksheet))
+                {
+                    foreach (ExcelRow excelRow in excelWorksheet.Rows)
+                    {
                         pi.PrintRow(excelRow, excelRow.Xml);
                     }
                     EndPrint(pi);
@@ -352,14 +389,20 @@ namespace sql.builder.Print.Xlsx
         public void Dispose()
         {
             bool success = false;
-            for (int i = 0; i < 3; i++) {
-                try {
-                    if (Directory.Exists(_print_directory)) {
+            for (int i = 0; i < 3; i++)
+            {
+                try
+                {
+                    if (Directory.Exists(_print_directory))
+                    {
                         Directory.Delete(_print_directory, true);
                     }
                     success = true;
-                } catch (IOException) {
-                    foreach (var p in _printers) {
+                }
+                catch (IOException)
+                {
+                    foreach (var p in _printers)
+                    {
                         p.Dispose();
                     }
                     // мы честно пытались

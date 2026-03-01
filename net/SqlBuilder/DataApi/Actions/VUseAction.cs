@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -18,31 +17,40 @@ namespace sql.builder.DataApi
         public override string CalledControlX()
         {
             string control = this.P_Control;
-            if (control != string.Empty) {
+            if (control != string.Empty)
+            {
                 return control;
             }
             VAction act = this.Action();
-            if (act != null) {
+            if (act != null)
+            {
                 return act.P_Control;
-            } else {
+            }
+            else
+            {
                 return string.Empty;
             }
         }
         public override bool IsWithFormX()
         {
             VAction act = this.ActionOrSelf();
-            if (act != null) {
+            if (act != null)
+            {
                 return act.IsWithForm();
-            } else {
+            }
+            else
+            {
                 return false;
             }
         }
         public override VForm CalledFormX()
         {
             VForm frm = this.CalledForm();
-            if (frm == null) {
+            if (frm == null)
+            {
                 VAction act = this.Action();
-                if (act != null) {
+                if (act != null)
+                {
                     frm = act.CalledFormX();
                 }
             }
@@ -51,18 +59,26 @@ namespace sql.builder.DataApi
         public override VAction Action()
         {
             string name = this.AName();
-            if (this.P_CalledObject == string.Empty) {
-                if (name == string.Empty) {
+            if (this.P_CalledObject == string.Empty)
+            {
+                if (name == string.Empty)
+                {
                     return null;
-                } else {
+                }
+                else
+                {
                     //return (VAction)XmlReports.Environment.GetElement(TextConst.EName.Actions, name);
                     return XmlReports.Environment.GetAction(name);
                 }
-            } else {
+            }
+            else
+            {
                 VQueryCall obj = this.GetObject();
-                if (obj != null) {
+                if (obj != null)
+                {
                     VQuery qry = obj.Query();
-                    if (qry != null) {
+                    if (qry != null)
+                    {
                         return qry.GetAction(name);
                     }
                 }
@@ -84,15 +100,24 @@ namespace sql.builder.DataApi
         public override List<VSXElement> GetUsedElements()
         {
             VAction act = this.Action();
-            if (act != null) {
+            if (act != null)
+            {
                 return act.AsList();
-            } else if (this.IsWithQuery()) {
+            }
+            else if (this.IsWithQuery())
+            {
                 return this.CalledQuery().AsList();
-            } else if (this.IsWithForm()) {
+            }
+            else if (this.IsWithForm())
+            {
                 return this.CalledForm().AsList();
-            } else if (this.IsWithReport()) {
+            }
+            else if (this.IsWithReport())
+            {
                 return this.CalledReport().AsList();
-            } else {
+            }
+            else
+            {
                 return new List<VSXElement>();
             }
         }
@@ -100,9 +125,12 @@ namespace sql.builder.DataApi
         public static string[] child_nodes_other = { TextConst.EName.Column, TextConst.EName.Call, TextConst.EName.Const, TextConst.EName.UseParam, TextConst.EName.Fact, TextConst.EName.ColDimVal, TextConst.EName.UsePart };
         IList<string> IVParent.AllowedChildNodes()
         {
-            if (this.P_ActionType == TextConst.AVActionType.Custom) {
+            if (this.P_ActionType == TextConst.AVActionType.Custom)
+            {
                 return child_nodes_custom;
-            } else {
+            }
+            else
+            {
                 return child_nodes_other;
             }
         }
@@ -120,12 +148,16 @@ namespace sql.builder.DataApi
         {
             table.Rows.Clear();
             IList<VAction> list;
-            if (this.P_CalledObject == string.Empty) {
+            if (this.P_CalledObject == string.Empty)
+            {
                 list = XmlReports.Environment.GetElements(TextConst.EName.Actions).Cast<VAction>().ToList();
-            } else {
+            }
+            else
+            {
                 list = this.GetObject().Query().Actions();
             }
-            for (int index = 0; index < list.Count; index++) {
+            for (int index = 0; index < list.Count; index++)
+            {
                 VAction el = list[index];
                 table.Rows.Add(el.P_IdName, el.P_Title);
             }
@@ -145,7 +177,8 @@ namespace sql.builder.DataApi
         {
             table.Rows.Clear();
             IList<VQueryCall> list = (this.RootQuery() as VForm).MainAndRelatedQueries();
-            for (int index = 0; index < list.Count; index++) {
+            for (int index = 0; index < list.Count; index++)
+            {
                 VQueryCall el = list[index];
                 table.AddRow(el.XName, el.P_Title);
             }
@@ -154,33 +187,41 @@ namespace sql.builder.DataApi
         #region Column
         public override void P_Column_ListRefresh(VDataTable table)
         {
-            if (!this.IsColumnEvent()) {
+            if (!this.IsColumnEvent())
+            {
                 base.P_Column_ListRefresh(table);
                 return;
             }
             //P_Column_List(table);
             table.Rows.Clear();
             VSourcedElement rootQuery = null;
-            if (!(this.GetMainParent() is VReport)) {
+            if (!(this.GetMainParent() is VReport))
+            {
                 rootQuery = this.ExtendedOrRootQuery();
-            } else {
+            }
+            else
+            {
                 rootQuery = XmlReports.Environment.GetQuery(this.GetParent().GetParent().P_CalledQuery);
             }
             //var exsistsNames = rootQuery.ViewColumns().Select(e => e.P_Column).ToList();
             HashSet<string> exsistsNames = new HashSet<string>();
             IList<VViewColumn> view_cols = rootQuery.ViewColumns();
             int index;
-            for (index = 0; index < view_cols.Count; index++) {
+            for (index = 0; index < view_cols.Count; index++)
+            {
                 string name = view_cols[index].P_Column;
-                if (!exsistsNames.Contains(name)) {
+                if (!exsistsNames.Contains(name))
+                {
                     exsistsNames.Add(name);
                 }
             }
             IList<VSXElement> cols = rootQuery.Columns();
-            for (index = 0; index < cols.Count; index++) {
+            for (index = 0; index < cols.Count; index++)
+            {
                 VSXElement el = cols[index];
                 string name = el.XName;
-                if (!exsistsNames.Contains(name)) {
+                if (!exsistsNames.Contains(name))
+                {
                     AddColumnInfoToList(table, name, el);
                 }
             }
@@ -199,29 +240,37 @@ namespace sql.builder.DataApi
         {
             string s;
             string event_name = this.P_EventName;
-            if (!string.IsNullOrEmpty(event_name)) {
+            if (!string.IsNullOrEmpty(event_name))
+            {
                 s = "on " + this.P_Column + " " + event_name + ":";
-            } else {
+            }
+            else
+            {
                 s = string.Empty;
             }
             string called_object = this.P_CalledObject;
-            if (!string.IsNullOrEmpty(called_object)) {
-                s +=Bold(called_object + ".");
+            if (!string.IsNullOrEmpty(called_object))
+            {
+                s += Bold(called_object + ".");
             }
             s += Bold(this.P_CalledAction);
             string action = this.P_ActionType;
-            if (!string.IsNullOrEmpty(action)) { 
+            if (!string.IsNullOrEmpty(action))
+            {
                 s += " " + action + " ";
             }
             string call = this.P_Call;
-            if (!string.IsNullOrEmpty(call)) { 
+            if (!string.IsNullOrEmpty(call))
+            {
                 s += " " + Bold(call);
             }
-            if (string.IsNullOrEmpty(s)) {
+            if (string.IsNullOrEmpty(s))
+            {
                 s = base.GetNodeOtherInfo();
             }
             string title = this.P_Title;
-            if (!string.IsNullOrEmpty(title)) { 
+            if (!string.IsNullOrEmpty(title))
+            {
                 s += " " + Italic(title);
             }
             return s;
@@ -232,18 +281,25 @@ namespace sql.builder.DataApi
         {
             return true;
         }
-        public override string P_Title {
-            get {
+        public override string P_Title
+        {
+            get
+            {
                 string title = this.P_SelfTitle;
-                if (!string.IsNullOrEmpty(title)) {
+                if (!string.IsNullOrEmpty(title))
+                {
                     return title;
                 }
                 VAction act = this.Action();
-                if (act != null) {
+                if (act != null)
+                {
                     return act.P_Title;
-                } else if (this.IsWithForm()) {
+                }
+                else if (this.IsWithForm())
+                {
                     VForm frm = this.CalledForm();
-                    if (frm != null) {
+                    if (frm != null)
+                    {
                         return frm.P_SelfTitle;
                     }
                 }
@@ -284,10 +340,11 @@ namespace sql.builder.DataApi
             return true;
         }
         #endregion
-		#region DetailsUseZeros
-		public override bool P_DetailsUseZeros_Exists()
+        #region DetailsUseZeros
+        public override bool P_DetailsUseZeros_Exists()
         {
-			return TextConst.AVActionTypeArray.DetailReport.Contains(this.P_ActionType);
+            return TextConst.AVActionTypeArray.DetailReport.Contains(this.P_ActionType);
         }
         #endregion
-    }}
+    }
+}

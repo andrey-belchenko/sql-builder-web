@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Xml.Linq;
@@ -27,9 +26,9 @@ namespace sql.builder.DataApi
             return TextConst.AVActionTypeArray.WithThisFormGroupControl.Contains(this.P_ActionType);
         }
         private bool IsWithThisFormFieldControl()
-		{
+        {
             return TextConst.AVActionTypeArray.WithThisFormFieldControl.Contains(this.P_ActionType);
-		}
+        }
         public bool IsWithForm()
         {
             return TextConst.AVActionTypeArray.WithForm.Contains(this.P_ActionType);
@@ -56,46 +55,66 @@ namespace sql.builder.DataApi
         }
         private List<VParam> FormalParams()
         {
-            if (this.IsWithQuery()) {
+            if (this.IsWithQuery())
+            {
                 VQuery cq = this.CalledQuery();
-                if (cq == null) {
+                if (cq == null)
+                {
                     return new List<VParam>();
-                } else {
+                }
+                else
+                {
                     return cq.Params();
                 }
-            } else if (this.IsWithForm()) {
+            }
+            else if (this.IsWithForm())
+            {
                 VForm frm = this.CalledFormX();
-                if (frm == null) {
+                if (frm == null)
+                {
                     throw new VCompilerException("Форма " + this.P_Form + " не найдена", this.GetMainParent(), this);
                 }
                 return frm.Params();
-            } else if (this.IsWithReport()) {
+            }
+            else if (this.IsWithReport())
+            {
                 return this.CalledReport().Params();
-            } else {
+            }
+            else
+            {
                 return this.ActionOrSelf().GetElementsP(EName.@params).SelectMany(VSXElement.GetElementsP).Cast<VParam>().ToList();
             }
         }
         public VQuery CalledQuery()
         {
-            if (!this.IsWithQuery()) {
+            if (!this.IsWithQuery())
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return XmlReports.Environment.GetQuery(this.P_Call);
             }
         }
         protected VForm CalledForm()
         {
-            if (!this.IsWithFormX()) {
+            if (!this.IsWithFormX())
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return (VForm)XmlReports.Environment.GetElement(EName.forms, this.P_Form, TextConst.AName.Name);
             }
         }
         protected VSourcedElement CalledReport()
         {
-            if (!this.IsWithReport()) {
+            if (!this.IsWithReport())
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return (VSourcedElement)XmlReports.Environment.GetReportOrQuery(this.ActionOrSelf().P_Report);
             }
         }
@@ -114,7 +133,8 @@ namespace sql.builder.DataApi
         private VSXElement CalledElement()
         {
             VSXElement el = this.CalledForm();
-            if (el == null) {
+            if (el == null)
+            {
                 el = this.CalledQuery();
             }
             return el;
@@ -126,9 +146,12 @@ namespace sql.builder.DataApi
         public override List<VSXElement> GetUsedElements()
         {
             VSXElement el = this.CalledElement();
-            if (el != null) {
+            if (el != null)
+            {
                 return new List<VSXElement>(1) { el };
-            } else {
+            }
+            else
+            {
                 return new List<VSXElement>(0);
             }
         }
@@ -136,9 +159,12 @@ namespace sql.builder.DataApi
         public static string[] child_nodes_other = { TextConst.EName.Params, TextConst.EName.UsePart };
         IList<string> IVParent.AllowedChildNodes()
         {
-            if (this.P_ActionType == TextConst.AVActionType.Custom) {
+            if (this.P_ActionType == TextConst.AVActionType.Custom)
+            {
                 return child_nodes_custom;
-            } else {
+            }
+            else
+            {
                 return child_nodes_other;
             }
         }
@@ -153,11 +179,14 @@ namespace sql.builder.DataApi
         {
             return true;
         }
-        public override string P_IdName {
-            get {
+        public override string P_IdName
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.name);
             }
-            set {
+            set
+            {
                 this.SetIdName(AName_.name, value);
             }
         }
@@ -180,11 +209,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region CalledQuery
-        public override string P_CalledQuery {
-            get {
+        public override string P_CalledQuery
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.call);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.call, value);
             }
         }
@@ -192,9 +224,11 @@ namespace sql.builder.DataApi
         {
             table.Rows.Clear();
             IList<VSXElement> queries = XmlReports.Environment.GetElements(TextConst.EName.Queries);
-            for (int index = 0; index < queries.Count; index++) {
+            for (int index = 0; index < queries.Count; index++)
+            {
                 VQuery el = (VQuery)queries[index];
-                if (!el.IsExtension()) {
+                if (!el.IsExtension())
+                {
                     string name = el.P_Name;
                     table.AddRow(name, name, el.P_Title);
                 }
@@ -206,11 +240,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Form
-        public override string P_Form {
-            get {
+        public override string P_Form
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.call);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.call, value);
             }
         }
@@ -220,11 +257,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Report
-        public override string P_Report {
-            get {
+        public override string P_Report
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.call);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.call, value);
             }
         }
@@ -241,12 +281,16 @@ namespace sql.builder.DataApi
         {
             table.Rows.Clear();
             IList<VSXElement> list;
-            if (this.P_ActionType == TextConst.AVActionType.OpenColGrDetailReport) {
+            if (this.P_ActionType == TextConst.AVActionType.OpenColGrDetailReport)
+            {
                 list = XmlReports.Environment.GetQReports();
-            } else {
+            }
+            else
+            {
                 list = XmlReports.Environment.GetReportsAndQReports();
             }
-            for (int index = 0; index < list.Count; index++) {
+            for (int index = 0; index < list.Count; index++)
+            {
                 VSXElement report = list[index];
                 table.AddRow(report.XName, report.P_Title);
             }
@@ -256,60 +300,60 @@ namespace sql.builder.DataApi
         public override void P_Control_ListRefresh(VDataTable table)
         {
             table.Rows.Clear();
-            VForm form=null;
+            VForm form = null;
 
             if (IsWithFormX())
             {
                 form = CalledFormX();
-				foreach (VFieldGroup group in form.Groups())
-				{
-					if (group.P_Alias != "")
-					{
-						table.Rows.Add(group.P_Alias, group.P_Alias);
-					}
-				}
-			}
-            else if (IsWithThisFormGroupControl())
-            {
-				var flds = new List<VSXElement>();
-                if (RootQuery() is VForm)
+                foreach (VFieldGroup group in form.Groups())
                 {
-					flds = ((VForm)RootQuery()).Fields();
-                }
-				else if (RootQuery() is VQuery)
-				{
-					flds = ((VQuery)RootQuery()).Fields();
-				}
-				if (flds != null)
-				{
-					foreach (VSXElement group in flds)
-		            {
-			            if (group.P_Alias != "")
-				        {
-					        table.Rows.Add(group.P_Alias, group.P_Alias);
-						}
-					}
+                    if (group.P_Alias != "")
+                    {
+                        table.Rows.Add(group.P_Alias, group.P_Alias);
+                    }
                 }
             }
-			else if (IsWithThisFormFieldControl())
-			{
-				var flds = new List<VSXElement>();
-				if (RootQuery() is VForm)
-				{
-					flds = ((VForm)RootQuery()).Fields();
-				}
-				else if (RootQuery() is VQuery)
-				{
-					flds = ((VQuery)RootQuery()).Fields();
-				}
-				if (flds != null)
-				{
-					foreach (VSXElement fld in flds)
-					{
-						table.Rows.Add(fld.P_Name, fld.P_Name);
-					}
-				}
-			}
+            else if (IsWithThisFormGroupControl())
+            {
+                var flds = new List<VSXElement>();
+                if (RootQuery() is VForm)
+                {
+                    flds = ((VForm)RootQuery()).Fields();
+                }
+                else if (RootQuery() is VQuery)
+                {
+                    flds = ((VQuery)RootQuery()).Fields();
+                }
+                if (flds != null)
+                {
+                    foreach (VSXElement group in flds)
+                    {
+                        if (group.P_Alias != "")
+                        {
+                            table.Rows.Add(group.P_Alias, group.P_Alias);
+                        }
+                    }
+                }
+            }
+            else if (IsWithThisFormFieldControl())
+            {
+                var flds = new List<VSXElement>();
+                if (RootQuery() is VForm)
+                {
+                    flds = ((VForm)RootQuery()).Fields();
+                }
+                else if (RootQuery() is VQuery)
+                {
+                    flds = ((VQuery)RootQuery()).Fields();
+                }
+                if (flds != null)
+                {
+                    foreach (VSXElement fld in flds)
+                    {
+                        table.Rows.Add(fld.P_Name, fld.P_Name);
+                    }
+                }
+            }
 
         }
         public override bool P_Control_Exists()
@@ -328,18 +372,23 @@ namespace sql.builder.DataApi
         {
             return true;
         }
-        public override string P_Title {
-            get {
+        public override string P_Title
+        {
+            get
+            {
                 string title = this.P_SelfTitle;
-                if (!string.IsNullOrEmpty(title)) {
+                if (!string.IsNullOrEmpty(title))
+                {
                     return title;
                 }
-                if (this.IsWithForm()) {
+                if (this.IsWithForm())
+                {
                     VForm frm = this.CalledForm();
-                    if (frm != null) {
+                    if (frm != null)
+                    {
                         return frm.P_SelfTitle;
                     }
-                }               
+                }
                 return string.Empty;
             }
         }
@@ -363,35 +412,50 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Text
-        public override string P_Text {
-            get {
+        public override string P_Text
+        {
+            get
+            {
                 XElement text_node = this.Element(EName.text);
                 string text;
-                if (text_node == null) {
+                if (text_node == null)
+                {
                     text = string.Empty;
-                } else {
+                }
+                else
+                {
                     text = text_node.Value;
-                    if (string.IsNullOrEmpty(text)) {
+                    if (string.IsNullOrEmpty(text))
+                    {
                         text = string.Empty;
-                    } else {
+                    }
+                    else
+                    {
                         text = text.Trim();
                     }
                 }
                 return text;
             }
-            set {
+            set
+            {
                 string text;
-                if (string.IsNullOrEmpty(value)) {
+                if (string.IsNullOrEmpty(value))
+                {
                     text = string.Empty;
-                } else {
+                }
+                else
+                {
                     text = value.Trim();
                 }
                 XCData cdata_node = new XCData(text);
                 XElement text_node = this.Element(EName.text);
-                if (text_node == null) {
+                if (text_node == null)
+                {
                     text_node = new XElement(EName.text, cdata_node);
                     this.Add(text_node);
-                } else {
+                }
+                else
+                {
                     text_node.RemoveNodes();
                     text_node.Add(cdata_node);
                 }
@@ -409,14 +473,17 @@ namespace sql.builder.DataApi
             this.P_Column_List(table);
             table.Rows.Clear();
             VForm frm = this.RootQuery() as VForm;
-            if (frm == null) {
+            if (frm == null)
+            {
                 return;
             }
             VQueryCall src = frm.AllSources().First(e => e.XName == this.P_CalledObject);
             HashSet<string> srcNames = new HashSet<string>();
-            foreach (VQueryCall q in src.SelfAndAllMasterLinks()) {
+            foreach (VQueryCall q in src.SelfAndAllMasterLinks())
+            {
                 string name = q.XName;
-                if (!srcNames.Contains(name)) {
+                if (!srcNames.Contains(name))
+                {
                     srcNames.Add(name);
                 }
             }
@@ -427,7 +494,8 @@ namespace sql.builder.DataApi
             //{
             //    return;
             //}
-            foreach (VSXElement col in cols) {
+            foreach (VSXElement col in cols)
+            {
                 AddColumnInfoToList(table, col.XName, col);
             }
         }
@@ -437,19 +505,28 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region IsRet
-        public override string P_IsRet { // в action нужен для случая когда выполняются много разных действий создающих строки а возвращат нужно  не все созданные коды
-            get {
-                if (this.AttrOrEmpty(AName_.is_ret) != TextConst.AVBool.False) {
+        public override string P_IsRet
+        { // в action нужен для случая когда выполняются много разных действий создающих строки а возвращат нужно  не все созданные коды
+            get
+            {
+                if (this.AttrOrEmpty(AName_.is_ret) != TextConst.AVBool.False)
+                {
                     return TextConst.AVBool.True;
-                } else {
+                }
+                else
+                {
                     return TextConst.AVBool.False;
                 }
             }
-            set {
+            set
+            {
                 string val = value;
-                if (val == TextConst.AVBool.True) {
+                if (val == TextConst.AVBool.True)
+                {
                     val = null;
-                } else {
+                }
+                else
+                {
                     val = TextConst.AVBool.False;
                 }
                 this.SetAttributeValue(AName_.is_ret, val);
@@ -477,31 +554,40 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Message
-        public override string P_Message {
-            get {
+        public override string P_Message
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.message);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.message, value);
             }
         }
         #endregion
         #region Notification
-        public override string P_Notification {
-            get {
+        public override string P_Notification
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.notification);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.notification, value);
             }
         }
         #endregion
         #region Prompt
-        public override string P_Prompt {
-            get {
+        public override string P_Prompt
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.prompt);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.prompt, value);
             }
         }

@@ -1,10 +1,8 @@
-using sql.builder.Clean;
-using Devart.Data.Oracle;
-using Npgsql;
 using Asuse.Ai.Reports.Settings;
+using Devart.Data.Oracle;
 using Microsoft.Extensions.Options;
-using System.IO;
-using sql.builder.DataApi;
+using Npgsql;
+using sql.builder.Clean;
 
 namespace Asuse.Ai.Reports.Services
 {
@@ -38,14 +36,14 @@ namespace Asuse.Ai.Reports.Services
             var connectionString = _settings.OracleConnectionString ?? DefaultOracleConnectionString;
             using var conn = new OracleConnection(connectionString);
             conn.Open();
-            var ds =  CleanSqlBuilder.ExecuteReportGetDs(reportName, pars, new Dictionary<string, object>(), connection: conn);
+            var ds = CleanSqlBuilder.ExecuteReportGetDs(reportName, pars, new Dictionary<string, object>(), connection: conn);
             await _tempDataService.SaveDataSet(ds, datasetId);
         }
 
         public async Task WriteResultFile(string fileId, string fileName, string filePath)
         {
             var fileBytes = await File.ReadAllBytesAsync(filePath);
-            
+
             await using var conn = new NpgsqlConnection(_settings.PgConnectionString);
             await conn.OpenAsync();
             var sql = "INSERT INTO report_sys.file (file_id, file_name, file_data) VALUES (@fileId, @fileName, @fileData) ON CONFLICT (file_id) DO UPDATE SET file_name = @fileName, file_data = @fileData, changed_at = CURRENT_TIMESTAMP";

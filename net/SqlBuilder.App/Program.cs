@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
-using sql.builder;
-using sql.builder.Clean;
 using SqlBuilderLib.DevTools;
-
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static sql.builder.DataApi.VClientCalculations;
 
 namespace SqlBuilderApp
 {

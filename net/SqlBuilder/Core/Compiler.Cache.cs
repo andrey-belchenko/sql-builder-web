@@ -20,6 +20,6 @@ namespace sql.builder
         {
             return VCashUtils.GetCashValue(cash, methodName, parmsInfo);
         }
-      
+
     }
 }

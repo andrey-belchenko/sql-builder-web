@@ -1,8 +1,6 @@
-using System;
-using Contract = System.Diagnostics.Contracts.Contract;
-using System.Linq;
 using System.Xml.Linq;
 using sql.builder.DataApi;
+using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.Print.Xlsx
 {
@@ -25,7 +23,8 @@ namespace sql.builder.Print.Xlsx
         public void DeleteWorksheet(string file_name)
         {
             XElement el = this.XmlChanged.Root.Elements(ns.CT.Override).SearchByAttribute(ns.None.PartName, "/xl/worksheets/" + file_name + ".xml");
-            if (el != null) {
+            if (el != null)
+            {
                 el.Remove();
             }
         }

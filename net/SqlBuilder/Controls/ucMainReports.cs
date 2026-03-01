@@ -1,31 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Contract = System.Diagnostics.Contracts.Contract;
-using System.IO;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Data;
 ////using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Linq;
-using Devart.Data.Oracle;
-using infoenergo.sys;
-using sql.builder.Controls.Containers;
 //using sql.builder.Controls.Grids;
 using sql.builder.DataApi;
-using sql.builder.ExcelApi;
-using sql.builder.Print.Xlsx;
 //using sql.builder.Test;
 //using sql.builder.TFS;
 //using sql.builder.TFS.AutoCheckIn;
 //using sql.builder.TFS.AutoCheckIn.Commands;
 using sql.builder.UI;
-using sql.builder.WinForms;
-using sql.builder.XmlHelpers;
-using DataTable = System.Data.DataTable;
 //using sql.builder.WebReports;
 
 namespace sql.builder.Controls

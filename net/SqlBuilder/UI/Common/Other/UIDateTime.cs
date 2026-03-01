@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 //using System.Windows.Forms;
 using System.Xml.Linq;
 //using DevExpress.Utils;
@@ -15,7 +13,7 @@ namespace sql.builder.UI
     {
         public UIDateTime()
         {
-           // InitializeComponent();
+            // InitializeComponent();
         }
 
         public override void Initialize(XElement xfield, UIFormC form)
@@ -49,32 +47,40 @@ namespace sql.builder.UI
         }
         public override void RefreshData()
         {
-            if (this.UseDefaultQuery && this.data_set_default != null) {
+            if (this.UseDefaultQuery && this.data_set_default != null)
+            {
                 XElement master_values = OnNeedMasterValues(this);
                 this.data_set_default.Refresh(master_values);
                 DataRowCollection rows = this.data_set_default.Tables[0].Rows;
-                if (rows.Count > 0) {
+                if (rows.Count > 0)
+                {
                     object value = UIDate.ConvertToDateTime(rows[0][0]);
                     this.setValue(value);
                 }
-            } else if  ( string.IsNullOrEmpty(TableName)) { //(Form.FormUseType == UIFormC.UseType.ParamEditor)
-                if (Cmn.IsNullOrDBNull(this._value) && this.mandatory) {
+            }
+            else if (string.IsNullOrEmpty(TableName))
+            { //(Form.FormUseType == UIFormC.UseType.ParamEditor)
+                if (Cmn.IsNullOrDBNull(this._value) && this.mandatory)
+                {
                     setValue(DateTime.Now);
                 }
             }
             base.RefreshData();
         }
         public override string GetText()
-		{
-            if (Cmn.IsNullOrDBNull(this._value)) {
+        {
+            if (Cmn.IsNullOrDBNull(this._value))
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return this._value.ToString();
             }
-		}
+        }
         public override void SetError(string text, int index = 1)
         {
-           // SetError(deControl, text);
+            // SetError(deControl, text);
             this.SetErr(text);
             //deControl.ErrorText = text;
         }

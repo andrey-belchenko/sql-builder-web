@@ -1,14 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using Npgsql;
 using sql.builder;
-using sql.builder.Clean;
 using sql.builder.DataApi;
 
 namespace SqlBuilderLib.DevTools
@@ -125,7 +121,7 @@ namespace SqlBuilderLib.DevTools
             var sb = new StringBuilder();
             sb.AppendLine("import { Navigator } from '@/system/reports/types/Navigator';");
             sb.AppendLine("import { Folder } from '@/system/reports/types/Folder';");
-            
+
             // Add report imports
             if (result.ReportImports.Count > 0)
             {
@@ -135,7 +131,7 @@ namespace SqlBuilderLib.DevTools
                     sb.AppendLine($"import report_{reportName} from './reports/report_{reportName}';");
                 }
             }
-            
+
             sb.AppendLine();
             sb.AppendLine("export default async () =>");
             sb.AppendLine("    new Navigator({");
@@ -182,14 +178,14 @@ namespace SqlBuilderLib.DevTools
             // Update utils imports: '../../utils' -> '@/system/sql-builder'
             // Match both single and double quotes
             // Path: generated/nav_10/reports/report.ts -> generated/utils = @/system/sql-builder (3 levels up)
-            content = Regex.Replace(content, @"from\s+['""]\.\.\/\.\.\/utils['""]", m => 
+            content = Regex.Replace(content, @"from\s+['""]\.\.\/\.\.\/utils['""]", m =>
             {
                 var quote = m.Value.Contains("'") ? "'" : "\"";
                 return $"from {quote}@/system/sql-builder{quote}";
             });
-            
+
             // Form imports stay '../forms/' - no change needed
-            
+
             return content;
         }
 
@@ -198,12 +194,12 @@ namespace SqlBuilderLib.DevTools
             // Update utils imports: '../../utils' -> '@/system/sql-builder'
             // Match both single and double quotes
             // Path: generated/nav_10/forms/form.ts -> generated/utils = @/system/sql-builder (3 levels up)
-            content = Regex.Replace(content, @"from\s+['""]\.\.\/\.\.\/utils['""]", m => 
+            content = Regex.Replace(content, @"from\s+['""]\.\.\/\.\.\/utils['""]", m =>
             {
                 var quote = m.Value.Contains("'") ? "'" : "\"";
                 return $"from {quote}@/system/sql-builder{quote}";
             });
-            
+
             return content;
         }
 
@@ -261,7 +257,7 @@ namespace SqlBuilderLib.DevTools
             foreach (var nav in navs)
             {
                 var navigatorId = ExtractNavigatorId(nav.P_IdName);
-                
+
                 // Create navigator-specific folder directly under BasePath
                 var navigatorFolderPath = Path.Combine(BasePath, $"nav_{navigatorId}");
                 if (!Directory.Exists(navigatorFolderPath))
@@ -295,19 +291,19 @@ namespace SqlBuilderLib.DevTools
             var rootFormsPath = Path.Combine(BasePath, "forms");
             var rootReportsPath = Path.Combine(BasePath, "reports");
             var oldNavigatorsPath = Path.Combine(BasePath, "navigators");
-            
+
             if (Directory.Exists(rootFormsPath))
             {
                 Directory.Delete(rootFormsPath, recursive: true);
                 Console.WriteLine($"Deleted root forms folder: {rootFormsPath}");
             }
-            
+
             if (Directory.Exists(rootReportsPath))
             {
                 Directory.Delete(rootReportsPath, recursive: true);
                 Console.WriteLine($"Deleted root reports folder: {rootReportsPath}");
             }
-            
+
             // Clean up old navigators folder if it exists
             if (Directory.Exists(oldNavigatorsPath))
             {

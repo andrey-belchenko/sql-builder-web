@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 namespace sql.builder.DataApi
 {
@@ -21,11 +19,11 @@ namespace sql.builder.DataApi
             return true;
         }
         #endregion
-		#region EditorButtonType
-		public override bool P_EditorButtonSide_Exists()
-		{
-			return true;
-		}
-		#endregion
+        #region EditorButtonType
+        public override bool P_EditorButtonSide_Exists()
+        {
+            return true;
+        }
+        #endregion
     }
 }

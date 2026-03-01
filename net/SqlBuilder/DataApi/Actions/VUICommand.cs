@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
@@ -15,9 +12,12 @@ namespace sql.builder.DataApi
         public VSXElement ButtonType()
         {
             string button_type = this.P_ButtonType;
-            if (string.IsNullOrEmpty(button_type)) {
+            if (string.IsNullOrEmpty(button_type))
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return XmlReports.Environment.GetElement(EName.button_types, button_type, TextConst.AName.Name);
             }
         }
@@ -38,11 +38,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ButtonType
-        public override string P_ButtonType {
-            get {
+        public override string P_ButtonType
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.button_type);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.button_type, value);
             }
         }
@@ -58,7 +61,8 @@ namespace sql.builder.DataApi
         public void P_ButtonType_ListRefresh(VDataTable table)
         {
             table.Rows.Clear();
-            foreach (XElement el in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.button_types).Elements(EName.button_type)) {
+            foreach (XElement el in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.button_types).Elements(EName.button_type))
+            {
                 table.AddRow(el.AttrOrEmpty(AName_.name), el.AttrOrEmpty(AName_.title));
             }
         }
@@ -68,7 +72,8 @@ namespace sql.builder.DataApi
         {
             string s = base.GetNodeOtherInfo();
             string button_type = this.P_ButtonType;
-            if (!string.IsNullOrEmpty(button_type)) {
+            if (!string.IsNullOrEmpty(button_type))
+            {
                 s += " (" + button_type + ")";
             }
             return s;
@@ -81,12 +86,16 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Title
-        public override string P_Title {
-            get {
+        public override string P_Title
+        {
+            get
+            {
                 string s = base.P_Title;
-                if (string.IsNullOrEmpty(s)) {
+                if (string.IsNullOrEmpty(s))
+                {
                     VSXElement btntype = this.ButtonType();
-                    if (btntype != null) {
+                    if (btntype != null)
+                    {
                         s = btntype.P_SelfTitle;
                     }
                 }
@@ -106,13 +115,13 @@ namespace sql.builder.DataApi
             return true;
         }
         #endregion
-		#region Notification
+        #region Notification
         public override bool P_Notification_Exists()
-		{
-			return true;
-		}
-		#endregion
-		#region Prompt
+        {
+            return true;
+        }
+        #endregion
+        #region Prompt
         public override bool P_Prompt_Exists()
         {
             return true;

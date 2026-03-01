@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.CompilerServices; // MethodImplAttribute
-using System.Collections.Generic;
 
 namespace sql.builder
 {
@@ -27,7 +26,8 @@ namespace sql.builder
         }
         public static void Fill<T>(T[] array, T value)
         {
-            for (int index = 0; index < array.Length; index++) {
+            for (int index = 0; index < array.Length; index++)
+            {
                 array[index] = value;
             }
         }
@@ -36,10 +36,10 @@ namespace sql.builder
         {
             return array.Length > 0;
         }*/
-        #if !NETFX_40
+#if !NETFX_40
         // Этот аттрибут появился только в .Net Framework 4.5
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        #endif
+#endif
         public static bool Any<T>(this T[] array, Predicate<T> predicate)
         {
             return System.Array.Exists<T>(array, predicate);
@@ -76,11 +76,15 @@ namespace sql.builder
         public static TResult[] Select<TSource, TResult>(this TSource[] array, Func<TSource, TResult> selector)
         {
             int count = array.Length;
-            if (count == 0) {
+            if (count == 0)
+            {
                 return Array.Empty<TResult>();
-            } else {
+            }
+            else
+            {
                 TResult[] result = new TResult[count];
-                for (int index = 0; index < count; index++) {
+                for (int index = 0; index < count; index++)
+                {
                     result[index] = selector(array[index]);
                 }
                 return result;

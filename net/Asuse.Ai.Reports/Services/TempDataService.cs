@@ -1,12 +1,10 @@
-using MongoDB.Bson;
-using MongoDB.Driver;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
+using System.Xml.Linq;
 using Asuse.Ai.Reports.Settings;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using sql.builder.DataApi;
-using System.Xml.Linq;
 
 namespace Asuse.Ai.Reports.Services
 {

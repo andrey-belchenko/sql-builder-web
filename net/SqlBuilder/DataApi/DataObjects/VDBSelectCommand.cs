@@ -1,23 +1,16 @@
 using System;
-using System.Diagnostics.Contracts;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Xsl;
-using System.Xml.XPath;
-using System.IO;
 using System.Data.Common;
+using System.Diagnostics.Contracts;
+using System.Linq;
+using System.Xml.Linq;
+using sql.builder.Clean;
 ////using System.Windows.Forms;
 //using DevExpress.XtraVerticalGrid;
 using sql.builder.Core;
 //using sql.builder.Test;
 using SqlBuilderLib.DevTools;
-using sql.builder.Clean;
 
 namespace sql.builder.DataApi
 {

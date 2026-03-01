@@ -27,11 +27,13 @@ namespace sql.builder.ExcelApi
             this.lastColIndex = this.LastCell.Index;
             List<List<VExcelCell>> rows = new List<List<VExcelCell>>();
             XElement ret = null;
-            for (int i = firstRowIndex; i <= lastRowIndex; i++) {
+            for (int i = firstRowIndex; i <= lastRowIndex; i++)
+            {
                 List<VExcelCell> row = new List<VExcelCell>();
                 VExcelRow sourceRow = Sheet.Row(i);
                 rows.Add(row);
-                for (int j = firstColIndex; j <= lastColIndex; j++) {
+                for (int j = firstColIndex; j <= lastColIndex; j++)
+                {
                     VExcelCell cell = sourceRow.Cell(j, ref ret, true);
                     row.Add(cell);
                 }
@@ -43,7 +45,8 @@ namespace sql.builder.ExcelApi
             int firstColIndex = this.FirstCell.Index;
             int lastColIndex = this.LastCell.Index;
             List<VExcelColumn> columns = new List<VExcelColumn>();
-            for (int j = firstColIndex; j <= lastColIndex; j++) {
+            for (int j = firstColIndex; j <= lastColIndex; j++)
+            {
                 VExcelColumn column = this.Sheet.Column(j);
                 columns.Add(column);
             }
@@ -51,27 +54,38 @@ namespace sql.builder.ExcelApi
         }
         public void Remove()
         {
-            foreach (VExcelColumn col in this.Columns()) {
+            foreach (VExcelColumn col in this.Columns())
+            {
                 col.Remove();
             }
             int ir = 0;
-            foreach (List<VExcelCell> row in this.Data()) {
+            foreach (List<VExcelCell> row in this.Data())
+            {
                 int ic = 0;
-                foreach (VExcelCell cell in row) {
-                    if (cell != null) {
+                foreach (VExcelCell cell in row)
+                {
+                    if (cell != null)
+                    {
                         cell.Remove();
-                    } else {
-                        XElement lastBefore=null;
-                        VExcelCell cell1 = this.Sheet.Row(ir+firstRowIndex).Cell(ic+firstColIndex,ref lastBefore,true);
-                        if (lastBefore != null) {
+                    }
+                    else
+                    {
+                        XElement lastBefore = null;
+                        VExcelCell cell1 = this.Sheet.Row(ir + firstRowIndex).Cell(ic + firstColIndex, ref lastBefore, true);
+                        if (lastBefore != null)
+                        {
                             VExcelCommon.IncrementIndexAfter(lastBefore, -1);
                             int m = VExcelCommon.GetMergeAcrossAttrVal(lastBefore);
-                            if (m > 0) {
+                            if (m > 0)
+                            {
                                 VExcelCommon.SetMergeAcrossAttrVal(lastBefore, m - 1);
                             }
-                        } else {
+                        }
+                        else
+                        {
                             XElement cellElem = this.Sheet.Row(ir + firstRowIndex).Element.Elements(VExcelNS.SpreadSheet.Cell).FirstOrDefault();
-                            if (cellElem != null) {
+                            if (cellElem != null)
+                            {
                                 int index = VExcelCommon.GetIndex(cellElem);
                                 cellElem.SetAttributeValue(VExcelNS.SpreadSheet.Index, (index + 1).ToString());
                                 VExcelCommon.IncrementIndexAfter(cellElem, -1);
@@ -87,10 +101,14 @@ namespace sql.builder.ExcelApi
         public void Replace(string value, string newValue)
         {
             List<List<VExcelCell>> rows = Data();
-            foreach (List<VExcelCell> row in rows) {
-                foreach (VExcelCell cell in row) {
-                    if (cell != null) {
-                        if (cell.Value != null) {
+            foreach (List<VExcelCell> row in rows)
+            {
+                foreach (VExcelCell cell in row)
+                {
+                    if (cell != null)
+                    {
+                        if (cell.Value != null)
+                        {
                             cell.SetValue(cell.Value.Replace(value, newValue));
                         }
                     }

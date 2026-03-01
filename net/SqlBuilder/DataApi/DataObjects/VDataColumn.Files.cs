@@ -1,15 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
-using Devart.Data.Oracle;
-using System;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Xsl;
-using System.Xml.XPath;
-using System.Linq;
 using System.IO;
-using SqlBuilderLib.DevTools;
 using sql.builder.Clean;
+using SqlBuilderLib.DevTools;
 namespace sql.builder.DataApi
 {
     public partial class VDataColumn
@@ -64,7 +58,7 @@ namespace sql.builder.DataApi
             {
                 row = GetTable().CurrentRow;
             }
-            if (row == null || row.RowState==DataRowState.Deleted) return null;
+            if (row == null || row.RowState == DataRowState.Deleted) return null;
             if (FileGetters == null)
             {
                 return null;

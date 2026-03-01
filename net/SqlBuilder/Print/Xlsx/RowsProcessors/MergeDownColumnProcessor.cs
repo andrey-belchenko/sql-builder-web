@@ -9,7 +9,7 @@ namespace sql.builder.Print.Xlsx.RowsProcessors
     /// </summary>
     public class MergeDownColumnProcessor
     {
-        public MergeDownColumn MergeDownCol {get; private set;}
+        public MergeDownColumn MergeDownCol { get; private set; }
         public MergeDownColumnProcessor Prev { get; set; }
         public string LastProcessedText { get; private set; }
         public int ProcessedCellsCount { get { return _cellsCount; } }
@@ -31,30 +31,37 @@ namespace sql.builder.Print.Xlsx.RowsProcessors
             bool needMerge = false;
             string text = "";
             XElement xv = xcell.Element(ns.Main.v);
-            if (xv != null) {
+            if (xv != null)
+            {
                 text = xv.Value;
             }
             // !!! ���� ������ ������ ���������� (� �������) �� �� ����� � xml � ��� �� ��������� c �������
             // !!! ������ � ������� ���� ����������, �� ����� ������ - ���������
             // !!! ��� ��� ��� �� ��� ����, �� �������� ������ ����� ���� ������ ������ ���-���� ����� � xml
             if (//!string.IsNullOrEmpty(LastProcessedText) && !string.IsNullOrEmpty(text) && 
-                string.Equals(LastProcessedText, text)) {
+                string.Equals(LastProcessedText, text))
+            {
                 // � ������� ����� ������ ���� ��������
-                if (Prev == null || Prev.ProcessedCellsCount > 1) {
+                if (Prev == null || Prev.ProcessedCellsCount > 1)
+                {
                     needMerge = true;
                 }
             }
-            if (needMerge) {
+            if (needMerge)
+            {
                 _cellLast = cell;
                 _cellsCount++;
-            } else {
+            }
+            else
+            {
                 SaveMerge();
                 _cellFirst = cell;
                 _cellLast = cell;
                 _cellsCount = 1;
             }
             // ������� �������� ������ �� ���� ���������� ����� ����� ������
-            if (_cellsCount > 1 && xcell.Attribute(ns.None.t) == null && xv != null) {
+            if (_cellsCount > 1 && xcell.Attribute(ns.None.t) == null && xv != null)
+            {
                 xv.Remove();
             }
             LastProcessedText = text;

@@ -11,7 +11,7 @@ namespace SqlBuilderLib.DevTools
     public static class AnalyzerStorage
     {
         private static string ConnectionString = "Host=asusejs-dev.infoenergo.loc;Port=5432;Database=asuse;Username=asuse;Password=kl0pik";
-        
+
         private static List<AnalyzerDependency> _cachedDependencies = new List<AnalyzerDependency>();
         private static List<AnalyzerReportInfo> _cachedReports = new List<AnalyzerReportInfo>();
         private static List<AnalyzerDbObject> _cachedDbObjects = new List<AnalyzerDbObject>();
@@ -124,13 +124,13 @@ namespace SqlBuilderLib.DevTools
         private static bool DependencyExists(string objectName, string usedObjectName, NpgsqlConnection connection)
         {
             // Check cache first (case-insensitive)
-            bool existsInCache = _cachedDependencies.Any(d => 
+            bool existsInCache = _cachedDependencies.Any(d =>
                 string.Equals(d.ObjectName, objectName, StringComparison.OrdinalIgnoreCase) &&
                 string.Equals(d.UsedObjectName, usedObjectName, StringComparison.OrdinalIgnoreCase));
-            
+
             if (existsInCache)
                 return true;
-            
+
             // Check database (case-insensitive)
             using (var checkCommand = new NpgsqlCommand())
             {
@@ -149,12 +149,12 @@ namespace SqlBuilderLib.DevTools
         private static bool DbObjectExists(string objectName, NpgsqlConnection connection)
         {
             // Check cache first (case-insensitive)
-            bool existsInCache = _cachedDbObjects.Any(db => 
+            bool existsInCache = _cachedDbObjects.Any(db =>
                 string.Equals(db.ObjectName, objectName, StringComparison.OrdinalIgnoreCase));
-            
+
             if (existsInCache)
                 return true;
-            
+
             // Check database (case-insensitive)
             using (var checkCommand = new NpgsqlCommand())
             {
@@ -184,7 +184,7 @@ namespace SqlBuilderLib.DevTools
         public static DependencySaveResult SaveDependencies(IEnumerable<AnalyzerDependency> dependencies)
         {
             var result = new DependencySaveResult();
-            
+
             lock (_lockObject)
             {
                 if (!_isInitialized)
@@ -198,21 +198,21 @@ namespace SqlBuilderLib.DevTools
                         // Normalize object names to lowercase
                         string normalizedObjectName = NormalizeToLower(dep.ObjectName);
                         string normalizedUsedObjectName = NormalizeToLower(dep.UsedObjectName);
-                        
+
                         // Check if dependency already exists (case-insensitive)
                         bool dependencyExists = DependencyExists(normalizedObjectName, normalizedUsedObjectName, connection);
-                        
+
                         if (dependencyExists)
                         {
                             result.ExistingDependencies.Add(dep);
                             continue; // Skip saving existing dependency
                         }
-                        
+
                         // Check if DbObject exists for used_object_name, create if not exists
                         if (!string.IsNullOrEmpty(normalizedUsedObjectName) && dep.UsedObjectType.HasValue)
                         {
                             bool dbObjectExists = DbObjectExists(normalizedUsedObjectName, connection);
-                            
+
                             if (!dbObjectExists)
                             {
                                 // Create new DbObject
@@ -220,13 +220,13 @@ namespace SqlBuilderLib.DevTools
                                 {
                                     dbObjectCommand.Connection = connection;
                                     dbObjectCommand.CommandText = "INSERT INTO report_dev_sqlb.db_objects (object_name, object_type, processed) VALUES (@object_name, @object_type, @processed)";
-                                    
+
                                     dbObjectCommand.Parameters.AddWithValue("@object_name", normalizedUsedObjectName ?? (object)DBNull.Value);
                                     dbObjectCommand.Parameters.AddWithValue("@object_type", dep.UsedObjectType.Value.ToDatabaseString() ?? (object)DBNull.Value);
                                     dbObjectCommand.Parameters.AddWithValue("@processed", false);
                                     dbObjectCommand.ExecuteNonQuery();
                                 }
-                                
+
                                 // Update cache
                                 _cachedDbObjects.Add(new AnalyzerDbObject
                                 {
@@ -234,7 +234,7 @@ namespace SqlBuilderLib.DevTools
                                     ObjectType = dep.UsedObjectType,
                                     Processed = false
                                 });
-                                
+
                                 result.NewDbObjects.Add(normalizedUsedObjectName);
                             }
                             else
@@ -242,30 +242,30 @@ namespace SqlBuilderLib.DevTools
                                 result.ExistingDbObjects.Add(normalizedUsedObjectName);
                             }
                         }
-                        
+
                         // Save dependency (without type columns)
                         using (var command = new NpgsqlCommand())
                         {
                             command.Connection = connection;
                             command.CommandText = "INSERT INTO report_dev_sqlb.dependencies (object_name, used_object_name) VALUES (@object_name, @used_object_name)";
-                            
+
                             command.Parameters.AddWithValue("@object_name", normalizedObjectName ?? (object)DBNull.Value);
                             command.Parameters.AddWithValue("@used_object_name", normalizedUsedObjectName ?? (object)DBNull.Value);
                             command.ExecuteNonQuery();
                         }
-                        
+
                         // Update cache
                         _cachedDependencies.Add(new AnalyzerDependency
                         {
                             ObjectName = normalizedObjectName,
                             UsedObjectName = normalizedUsedObjectName
                         });
-                        
+
                         result.NewDependencies.Add(dep);
                     }
                 }
             }
-            
+
             return result;
         }
 
@@ -282,7 +282,7 @@ namespace SqlBuilderLib.DevTools
                         {
                             command.Connection = connection;
                             command.CommandText = "INSERT INTO report_dev_sqlb.reports (name, title, path, nav_id, nav_info) VALUES (@name, @title, @path, @nav_id, @nav_info)";
-                            
+
                             command.Parameters.AddWithValue("@name", report.Name ?? (object)DBNull.Value);
                             command.Parameters.AddWithValue("@title", report.Title ?? (object)DBNull.Value);
                             command.Parameters.AddWithValue("@path", report.Path ?? (object)DBNull.Value);
@@ -290,7 +290,7 @@ namespace SqlBuilderLib.DevTools
                             command.Parameters.AddWithValue("@nav_info", report.NavInfo ?? (object)DBNull.Value);
                             command.ExecuteNonQuery();
                         }
-                        
+
                         // Update cache
                         _cachedReports.Add(new AnalyzerReportInfo
                         {
@@ -316,18 +316,18 @@ namespace SqlBuilderLib.DevTools
                     {
                         // Normalize object name to lowercase
                         string normalizedObjectName = NormalizeToLower(dbObject.ObjectName);
-                        
+
                         using (var command = new NpgsqlCommand())
                         {
                             command.Connection = connection;
                             command.CommandText = "INSERT INTO report_dev_sqlb.db_objects (object_name, object_type, processed) VALUES (@object_name, @object_type, @processed)";
-                            
+
                             command.Parameters.AddWithValue("@object_name", normalizedObjectName ?? (object)DBNull.Value);
                             command.Parameters.AddWithValue("@object_type", dbObject.ObjectType.HasValue ? dbObject.ObjectType.Value.ToDatabaseString() : (object)DBNull.Value);
                             command.Parameters.AddWithValue("@processed", dbObject.Processed);
                             command.ExecuteNonQuery();
                         }
-                        
+
                         // Update cache
                         _cachedDbObjects.Add(new AnalyzerDbObject
                         {
@@ -361,21 +361,21 @@ namespace SqlBuilderLib.DevTools
             // Get the path to the Data folder relative to the project root
             // Find project root by looking for SqlBuilder.slnx
             string projectRoot = GetProjectRoot();
-            
+
             if (string.IsNullOrEmpty(projectRoot))
             {
                 // Fallback: use current directory if project root cannot be determined
                 projectRoot = Directory.GetCurrentDirectory();
             }
-            
+
             var dataFolder = Path.Combine(projectRoot, "Data");
-            
+
             // Ensure the Data folder exists
             if (!Directory.Exists(dataFolder))
             {
                 Directory.CreateDirectory(dataFolder);
             }
-            
+
             return dataFolder;
         }
 
@@ -420,7 +420,7 @@ namespace SqlBuilderLib.DevTools
 
                 var dataFolder = GetDataFolderPath();
                 var filePath = Path.Combine(dataFolder, fileName);
-                
+
                 var json = JsonConvert.SerializeObject(_cachedDependencies, Formatting.Indented);
                 File.WriteAllText(filePath, json);
             }
@@ -435,7 +435,7 @@ namespace SqlBuilderLib.DevTools
 
                 var dataFolder = GetDataFolderPath();
                 var filePath = Path.Combine(dataFolder, fileName);
-                
+
                 var json = JsonConvert.SerializeObject(_cachedReports, Formatting.Indented);
                 File.WriteAllText(filePath, json);
             }
@@ -450,7 +450,7 @@ namespace SqlBuilderLib.DevTools
 
                 var dataFolder = GetDataFolderPath();
                 var filePath = Path.Combine(dataFolder, fileName);
-                
+
                 var json = JsonConvert.SerializeObject(_cachedDbObjects, Formatting.Indented);
                 File.WriteAllText(filePath, json);
             }
@@ -581,7 +581,7 @@ namespace SqlBuilderLib.DevTools
                 using (var connection = new NpgsqlConnection(ConnectionString))
                 {
                     connection.Open();
-                    
+
                     // Fix db_objects table
                     using (var command = new NpgsqlCommand())
                     {
@@ -593,7 +593,7 @@ namespace SqlBuilderLib.DevTools
                             Console.WriteLine($"  Fixed {rowsAffected} object names in db_objects");
                         }
                     }
-                    
+
                     // Fix dependencies.object_name
                     using (var command = new NpgsqlCommand())
                     {
@@ -605,7 +605,7 @@ namespace SqlBuilderLib.DevTools
                             Console.WriteLine($"  Fixed {rowsAffected} object names in dependencies");
                         }
                     }
-                    
+
                     // Fix dependencies.used_object_name
                     using (var command = new NpgsqlCommand())
                     {
@@ -617,7 +617,7 @@ namespace SqlBuilderLib.DevTools
                             Console.WriteLine($"  Fixed {rowsAffected} used_object_names in dependencies");
                         }
                     }
-                    
+
                     // Reload caches to reflect changes
                     LoadDbObjects();
                     LoadDependencies();

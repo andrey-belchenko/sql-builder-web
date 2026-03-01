@@ -34,7 +34,7 @@
             public const string Valid = "Valid";
             public const string FontColor = "FontColor";
             public const string BackColor = "BackColor";
-        
+
         }
 
         public static class DsEName

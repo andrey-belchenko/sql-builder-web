@@ -1,27 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Xsl;
-using System.Xml.XPath;
-using System.IO;
+﻿using System.Collections.Generic;
 ////using System.Windows.Forms;
-using Devart.Data.Oracle;
-using sql.builder.FieldInfo;
-using System.Reflection;
-using System.Diagnostics;
 
 namespace sql.builder.DataApi
 {
-    public static class  VCashUtils
+    public static class VCashUtils
     {
 
-        public static bool CashEnabled 
+        public static bool CashEnabled
         {
             get
             {
@@ -36,7 +21,7 @@ namespace sql.builder.DataApi
 #endif
 
             }
-        
+
         }// = false;
         private static Dictionary<int, Dictionary<string, object>> CashLists = new Dictionary<int, Dictionary<string, object>>();
 
@@ -71,11 +56,11 @@ namespace sql.builder.DataApi
             {
                 name += "|" + parmsInfo;
             }
-            
+
             // Емцов - вылетает из-за неуникальности ключа 
             // release 33984-1 казань сети
 
-            cash[name]= val;
+            cash[name] = val;
         }
 
         public static bool IsCashValueExists(Dictionary<string, object> cash, string methodName, string parmsInfo)
@@ -108,7 +93,7 @@ namespace sql.builder.DataApi
         }
 
 
- 
+
     }
 
 
@@ -119,12 +104,12 @@ namespace sql.builder.DataApi
         private Dictionary<string, object> cash = new Dictionary<string, object>();
         protected void AddCashValue(object val, string methodName, string parmsInfo)
         {
-            VCashUtils.AddCashValue(cash, val,methodName, parmsInfo);
+            VCashUtils.AddCashValue(cash, val, methodName, parmsInfo);
         }
 
         protected bool IsCashValueExists(string methodName, string parmsInfo)
         {
-            return VCashUtils.IsCashValueExists(cash,methodName, parmsInfo);
+            return VCashUtils.IsCashValueExists(cash, methodName, parmsInfo);
         }
 
         protected object GetCashValue(string methodName, string parmsInfo)
@@ -201,5 +186,5 @@ namespace sql.builder.DataApi
 
 
 
-    
+
 }

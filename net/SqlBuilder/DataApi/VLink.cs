@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
@@ -122,11 +119,14 @@ namespace sql.builder.DataApi
             return (GetParent() is VFactLinks);
         }
         #region CalledQuery
-        public override string P_CalledQuery {
-            get {
+        public override string P_CalledQuery
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.name);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.name, value);
             }
         }

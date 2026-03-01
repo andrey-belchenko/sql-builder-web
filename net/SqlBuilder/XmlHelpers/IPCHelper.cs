@@ -1,7 +1,4 @@
-﻿using System;
-using Devart.Data.Oracle;
-
-namespace sql.builder.XmlHelpers
+﻿namespace sql.builder.XmlHelpers
 {
     // использовать WCFHelper
     public static class IPCHelper

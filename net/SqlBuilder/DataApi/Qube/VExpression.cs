@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
 using System.Linq;
+using System.Xml.Linq;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
@@ -19,7 +19,8 @@ namespace sql.builder.DataApi
         {
             IList<VSXElement> list = this.GetDescedantsP(EName.fact);
             VFact[] facts = new VFact[list.Count];
-            for (int index = 0; index < list.Count; index++) {
+            for (int index = 0; index < list.Count; index++)
+            {
                 facts[index] = (VFact)list[index];
             }
             return facts;
@@ -32,12 +33,16 @@ namespace sql.builder.DataApi
         {
             IList<VFact> facts = this.GetFacts();
             List<VSXElement> sources = new List<VSXElement>(facts.Count);
-            for (int index = 0; index < facts.Count; index++) {
+            for (int index = 0; index < facts.Count; index++)
+            {
                 VSXElement src = facts[index].GetFactSource();
                 VExpression expr = src as VExpression;
-                if (expr == null) {
+                if (expr == null)
+                {
                     sources.Add(src);
-                } else {
+                }
+                else
+                {
                     sources.AddRange(expr.GetFactColumns());
                 }
             }
@@ -105,8 +110,10 @@ namespace sql.builder.DataApi
             Cmn.copyAttributes(expr, elExpr);
             var dims = this.GetDimensions();
             var odims = outputDimensions.ToList();
-            foreach (VSXElement dim in dims) {
-                if (!odims.Contains(dim.P_Table)) {
+            foreach (VSXElement dim in dims)
+            {
+                if (!odims.Contains(dim.P_Table))
+                {
                     odims.Add(dim.P_Table);
                 }
             }
@@ -132,53 +139,70 @@ namespace sql.builder.DataApi
         public IList<VParam> FormalParams()
         {
             IList<VSXElement> pars = this.GetElementsP(EName.@params);
-            if (pars.Count != 0) {
+            if (pars.Count != 0)
+            {
                 IList<VSXElement> p = pars[0].GetElementsP();
                 List<VParam> list = new List<VParam>(p.Count);
-                for (int index = 0; index < p.Count; index++) {
+                for (int index = 0; index < p.Count; index++)
+                {
                     list.Add((VParam)p[index]);
                 }
                 return list;
-            } else {
+            }
+            else
+            {
                 return new VParam[0];
             }
         }
         private void BuildExpressionLevel(VSXElement source, XElement target, SortedList<string, VFact.FactDependantceInfo> infoList, List<string> conditions, List<string> outputDimensions, List<string> nonOutputDimensions, SortedList<string, int> names)
         {
-            foreach (VSXElement el in source.GetElementsP()) {
+            foreach (VSXElement el in source.GetElementsP())
+            {
                 if (el.Name == EName.@params) continue;
                 XElement elExpr = null;
                 VFact fact = el as VFact;
-                if (fact != null) {
+                if (fact != null)
+                {
                     var odims = outputDimensions.ToList();
                     VExpression condSrc = null;
-                    if (fact.P_Condition != "") {
+                    if (fact.P_Condition != "")
+                    {
                         condSrc = fact.GetConditionSource() as VExpression;
-                        if (condSrc.P_DontPushpred == TextConst.AVBool.True) { // Условия которые нужно преобразовать в If, нужно собрать измерения из условия
+                        if (condSrc.P_DontPushpred == TextConst.AVBool.True)
+                        { // Условия которые нужно преобразовать в If, нужно собрать измерения из условия
                             var dims = condSrc.GetDimensions(); //использование именованного предиката в предикате не обрабатывается, доделать
-                            foreach (VSXElement dim in dims) {
-                                if (!odims.Contains(dim.P_Table)) {
+                            foreach (VSXElement dim in dims)
+                            {
+                                if (!odims.Contains(dim.P_Table))
+                                {
                                     odims.Add(dim.P_Table);
                                 }
-                             }
-                         } else {
-                             condSrc = null;
-                         }
+                            }
+                        }
+                        else
+                        {
+                            condSrc = null;
+                        }
                     }
                     var conds = conditions.ToList();
                     fact.GetCondInfo(conds);
                     VSXElement elSrc1 = fact.GetFactSource();
-                    if (elSrc1 == null) {
+                    if (elSrc1 == null)
+                    {
                         throw new InvalidOperationException("Не найден факт " + fact.P_Column + " использованный в " + fact.GetMainParent().Name.LocalName + " " + fact.GetMainParent().P_IdName);
                     }
                     VExpression elSrc = elSrc1 as VExpression;
-                    if (elSrc != null) {
-                        elExpr = elSrc.BuildExpression(el.Element(EName.withparams), infoList, conds, odims, nonOutputDimensions,names); // Пока параметры подставляются только для верх. ур. Доделать если будет нужно. // Вроде, доделал
+                    if (elSrc != null)
+                    {
+                        elExpr = elSrc.BuildExpression(el.Element(EName.withparams), infoList, conds, odims, nonOutputDimensions, names); // Пока параметры подставляются только для верх. ур. Доделать если будет нужно. // Вроде, доделал
                         elExpr.RemoveAttribute(AName_.group);
-                    } else {
+                    }
+                    else
+                    {
                         elExpr = (el as VFact).BuildExpression(elSrc1, infoList, conds, odims, nonOutputDimensions, names);
                     }
-                    if (condSrc != null) {
+                    if (condSrc != null)
+                    {
                         XElement cndFullExpr = condSrc.BuildExpression(null /*если нужны будут параметры, обработать тут*/, infoList, conds, outputDimensions, nonOutputDimensions, names);
                         XElement expr1 = new XElement(EName.call);
                         Cmn.copyAttributes(elExpr, expr1);
@@ -188,12 +212,16 @@ namespace sql.builder.DataApi
                         elExpr = expr1;
                     }
                 }
-                if (elExpr == null) {
+                if (elExpr == null)
+                {
                     elExpr = new XElement(el.Name);
                     Cmn.copyAttributes(el, elExpr);
-                    if (el is VConst) {
+                    if (el is VConst)
+                    {
                         elExpr.Value = el.Value;
-                    } else {
+                    }
+                    else
+                    {
                         BuildExpressionLevel(el, elExpr, infoList, conditions, outputDimensions, nonOutputDimensions, names);
                     }
                 }
@@ -206,16 +234,20 @@ namespace sql.builder.DataApi
             return child_nodes;
         }
         #region Title
-        public override string P_Title {
-            get {
+        public override string P_Title
+        {
+            get
+            {
                 return this.P_SelfTitle;
             }
         }
         #endregion
         #region Fact
-        public override string P_Fact {
-            get {
-               return this.XName;
+        public override string P_Fact
+        {
+            get
+            {
+                return this.XName;
             }
         }
         public override bool P_Fact_Editable()

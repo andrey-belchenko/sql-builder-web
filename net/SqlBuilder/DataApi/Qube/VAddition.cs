@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
@@ -24,17 +22,21 @@ namespace sql.builder.DataApi
         public override List<VSXElement> GetUsedElements()
         {
             VQuery query = Query();
-            if (query != null) {
+            if (query != null)
+            {
                 return query.GetExtensionsAndParentAndMain().ToList<VSXElement>();
             }
             return null;
         }
         #region CalledQuery
-        public override string P_CalledQuery {
-            get {
+        public override string P_CalledQuery
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.name);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.name, value);
             }
         }
@@ -45,8 +47,10 @@ namespace sql.builder.DataApi
         public override void P_CalledQuery_ListRefresh(VDataTable table)
         {
             table.Rows.Clear();
-            foreach (VQuery el in XmlReports.Environment.GetElements(TextConst.EName.Queries)) {
-                if (!el.IsExtension() && el.GetQubeElement() != null) {
+            foreach (VQuery el in XmlReports.Environment.GetElements(TextConst.EName.Queries))
+            {
+                if (!el.IsExtension() && el.GetQubeElement() != null)
+                {
                     table.Rows.Add(el.P_IdName, el.P_IdName, el.P_Title);
                 }
             }

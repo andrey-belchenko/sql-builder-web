@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Xsl;
-using System.Xml.XPath;
-using System.IO;
+﻿using System.Data;
 //using System.Windows.Forms;
-using Devart.Data.Oracle;
 
 
 namespace sql.builder.DataApi
@@ -21,7 +9,7 @@ namespace sql.builder.DataApi
         public override object GetRuntimeValue(VDataSet dataSet, DataRow row, VDataColumn col)
         {
 
-            var tbl =(VDataTable) dataSet.Tables[P_Table];
+            var tbl = (VDataTable)dataSet.Tables[P_Table];
             // пока только знаяение свойе таблицы, может понадобиться еще значение родительской
             if (row == null)
             {

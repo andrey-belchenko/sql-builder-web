@@ -1,21 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Xsl;
-using System.Xml.XPath;
-using System.IO;
 //using System.Windows.Forms;
-using Devart.Data.Oracle;
 using sql.builder.FieldInfo;
-using System.Reflection;
 using sql.builder.UI;
-using System.Diagnostics;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
@@ -27,46 +15,61 @@ namespace sql.builder.DataApi
             // св-во P_XXXXX
             string propName = PropPfx + property_name;
             string value = (string)VFieldInfo.GetValue(this, propName);
-            if (!string.IsNullOrEmpty(value)) {
+            if (!string.IsNullOrEmpty(value))
+            {
                 return this;
             }
             // св-во P_ColumnXXXXX
             string colPropName = PropPfx + TextConst.Pfx.BehaviorPropCol + property_name;
             value = (string)VFieldInfo.GetValue(this, colPropName);
-            if (!string.IsNullOrEmpty(value)) {
+            if (!string.IsNullOrEmpty(value))
+            {
                 return this;
             }
             // св-во P_XXXXXInvert
             string invPropName = PropPfx + property_name + TextConst.Pfx.BehaviorPropInv;
             value = (string)VFieldInfo.GetValue(this, invPropName);
-            if (!string.IsNullOrEmpty(value)) {
+            if (!string.IsNullOrEmpty(value))
+            {
                 return this;
             }
             //
-            if (this.RootQuery() is VForm) {
+            if (this.RootQuery() is VForm)
+            {
                 VSXElement src = this.SourceColumns().FirstOrDefault();
-                if (src == null) {
+                if (src == null)
+                {
                     return null;
                 }
-                if (useColumnOptionsForLink || !((this as VColumn).Source() is VLink)) {
+                if (useColumnOptionsForLink || !((this as VColumn).Source() is VLink))
+                {
                     value = (string)VFieldInfo.GetValue(src, propName);
-                    if (!string.IsNullOrEmpty(value)) {
+                    if (!string.IsNullOrEmpty(value))
+                    {
                         return src;
                     }
                     value = (string)VFieldInfo.GetValue(src, colPropName);
-                    if (!string.IsNullOrEmpty(value)) {
+                    if (!string.IsNullOrEmpty(value))
+                    {
                         return src;
                     }
                     value = (string)VFieldInfo.GetValue(src, invPropName);
-                    if (!string.IsNullOrEmpty(value)) {
+                    if (!string.IsNullOrEmpty(value))
+                    {
                         return src;
-                    } else {
+                    }
+                    else
+                    {
                         return null;
                     }
-                } else {
+                }
+                else
+                {
                     return null;
                 }
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
@@ -74,54 +77,72 @@ namespace sql.builder.DataApi
         {
             string propNameRes = PropPfx + property_name + TextConst.Pfx.BehaviorPropRes; // P_XXXXXResult
             VSXElement src = VFieldInfo.Source(this, propNameRes);
-            if (src == null) {
+            if (src == null)
+            {
                 return string.Empty;
             }
             string result;
             string colPropName = PropPfx + TextConst.Pfx.BehaviorPropCol + property_name; // P_ColumnXXXXX
             string invPropName = PropPfx + property_name + TextConst.Pfx.BehaviorPropInv; // P_XXXXXInvert
             string value = (string)VFieldInfo.GetValue(src, colPropName);
-            if (!string.IsNullOrEmpty(value)) {
+            if (!string.IsNullOrEmpty(value))
+            {
                 result = TextConst.EName.Query + ":" + value;
-            } else {
+            }
+            else
+            {
                 string propName = PropPfx + property_name;
                 value = (string)VFieldInfo.GetValue(src, propName);
-                if (string.IsNullOrEmpty(value)) {
+                if (string.IsNullOrEmpty(value))
+                {
                     result = string.Empty;
-                } else {
-                    if (src.RootQuery() is VForm) {
+                }
+                else
+                {
+                    if (src.RootQuery() is VForm)
+                    {
                         result = TextConst.EName.Param + ":";
-                    } else {
+                    }
+                    else
+                    {
                         result = TextConst.EName.Column + ":";
                     }
                     result = result + value;
                 }
             }
             value = (string)VFieldInfo.GetValue(src, invPropName);
-            if (value == TextConst.AVBool.True) {
+            if (value == TextConst.AVBool.True)
+            {
                 result = "!" + result;
             }
             return result;
         }
         #region Visible
-        public virtual string P_Visible {
-            get {
+        public virtual string P_Visible
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.visible);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.visible, value);
             }
         }
         public virtual XElement P_Visible_UsedEl()
         {
-            if (string.IsNullOrEmpty(this.P_Visible)) {
+            if (string.IsNullOrEmpty(this.P_Visible))
+            {
                 return null;
             }
             VSourcedElement rootQuery = this.RootQuery();
             VSXElement col;
-            if (rootQuery is VQuery) {
+            if (rootQuery is VQuery)
+            {
                 col = rootQuery.SearchColumn(this.P_Visible);
-            } else {
+            }
+            else
+            {
                 col = (rootQuery as VForm).SearchVariableSource(this.P_Visible);
             }
             return col;
@@ -152,11 +173,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ColumnVisible
-        public virtual string P_ColumnVisible {
-            get {
+        public virtual string P_ColumnVisible
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.column_visible);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.column_visible, value);
             }
         }
@@ -228,8 +252,10 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region VisibleResult
-        public virtual string P_VisibleResult {
-            get {
+        public virtual string P_VisibleResult
+        {
+            get
+            {
                 return this.BehaviorResult("Visible");
             }
         }
@@ -243,7 +269,7 @@ namespace sql.builder.DataApi
         }
         public virtual VSXElement P_VisibleResult_Source()
         {
-           return this.BehaviorPropSource("Visible", true);
+            return this.BehaviorPropSource("Visible", true);
         }
         public virtual VSXElement P_VisibleResult_UsedEl()
         {
@@ -263,11 +289,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Editable
-        public virtual string P_Editable {
-            get {
+        public virtual string P_Editable
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.editable);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.editable, value);
             }
         }
@@ -293,29 +322,33 @@ namespace sql.builder.DataApi
         {
             table.Rows.Clear();
             VSourcedElement rootQuery = RootQuery();
-            if (rootQuery is VForm || VSXElement.Get(getPartParent(this.GetParent())).GetAncestorsAndSelf(EName.content).Count != 0) {
-                if (addBool) {
+            if (rootQuery is VForm || VSXElement.Get(getPartParent(this.GetParent())).GetAncestorsAndSelf(EName.content).Count != 0)
+            {
+                if (addBool)
+                {
                     table.Rows.Add("1", "true");
                     table.Rows.Add("0", "false");
                 }
-                if (addNull) {
+                if (addNull)
+                {
                     table.Rows.Add("null", "null");
                 }
                 ObjectFieldPropertyListRefreshForForm(table);
             }
-            else if (rootQuery is VQuery) {
+            else if (rootQuery is VQuery)
+            {
                 ObjectFieldPropertyListRefreshForQuery(table);
             }
         }
         protected void ObjectFieldPropertyListRefreshForForm(VDataTable table)
         {
 
-           
+
             var rootQuery = RootQuery();
             VForm rootForm = RootQuery() as VForm;
-            if (rootForm !=null)
+            if (rootForm != null)
             {
-               
+
                 foreach (VSXElement col in rootForm.VariableColumns())
                 {
                     table.Rows.Add(col.P_ParName, col.P_ParName, col.P_Title);
@@ -359,25 +392,29 @@ namespace sql.builder.DataApi
         {
             List<string> names = new List<string>();
             VSourcedElement rootQuery = RootQuery();
-            foreach (VSXElement el in rootQuery.Columns()) {
-                if (!names.Contains(el.XName)) {
+            foreach (VSXElement el in rootQuery.Columns())
+            {
+                if (!names.Contains(el.XName))
+                {
                     table.Rows.Add(el.XName, el.XName, el.P_Title);
                     names.Add(el.XName);
                 }
             }
-            foreach (VSXElement exp in XmlReports.Environment.GetElements(TextConst.EName.Queries).SelectMany(e => (e as VQuery).FactColumns()).Distinct()) {
+            foreach (VSXElement exp in XmlReports.Environment.GetElements(TextConst.EName.Queries).SelectMany(e => (e as VQuery).FactColumns()).Distinct())
+            {
                 string name = TextConst.Pfx.QubeQueryAlias + "." + exp.P_Fact;
                 table.Rows.Add(name, name, exp.P_Title);
 
             }
-            foreach (VExpression exp in XmlReports.Environment.GetElements(TextConst.EName.ExpressionPackages).SelectMany(VSXElement.GetElementsP)) {
+            foreach (VExpression exp in XmlReports.Environment.GetElements(TextConst.EName.ExpressionPackages).SelectMany(VSXElement.GetElementsP))
+            {
                 string name = TextConst.Pfx.QubeQueryAlias + "." + exp.XName;
                 table.Rows.Add(name, name, exp.P_Title);
             }
         }
         public virtual void P_Editable_ListRefresh(VDataTable table)
         {
-            ObjectFieldPropertyListRefresh(table,true);
+            ObjectFieldPropertyListRefresh(table, true);
         }
 
         public virtual bool P_Editable_Exists()
@@ -386,11 +423,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ColumnEditable
-        public virtual string P_ColumnEditable {
-            get {
+        public virtual string P_ColumnEditable
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.column_editable);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.column_editable, value);
             }
         }
@@ -466,8 +506,10 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region EditableResult
-        public virtual string P_EditableResult {
-            get {
+        public virtual string P_EditableResult
+        {
+            get
+            {
                 return this.BehaviorResult("Editable");
             }
         }
@@ -552,11 +594,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ColumnExists
-        public virtual string P_ColumnExists {
-            get {
+        public virtual string P_ColumnExists
+        {
+            get
+            {
                 return GetAttrValue(TextConst.AName.ColumnExists);
             }
-            set {
+            set
+            {
                 SetAttribute(TextConst.AName.ColumnExists, value);
             }
         }
@@ -628,8 +673,10 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ExistsResult
-        public virtual string P_ExistsResult {
-            get {
+        public virtual string P_ExistsResult
+        {
+            get
+            {
                 return this.BehaviorResult("Exists");
             }
         }
@@ -809,8 +856,10 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region MandatoryResult
-        public virtual string P_MandatoryResult {
-            get {
+        public virtual string P_MandatoryResult
+        {
+            get
+            {
                 return this.BehaviorResult("Mandatory");
             }
         }
@@ -949,8 +998,10 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region DefaultResult
-        public virtual string P_DefaultResult {
-            get {
+        public virtual string P_DefaultResult
+        {
+            get
+            {
                 return this.BehaviorResult("Default");
             }
         }
@@ -1037,8 +1088,10 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region NewValResult
-        public virtual string P_NewValResult {
-            get {
+        public virtual string P_NewValResult
+        {
+            get
+            {
                 return this.BehaviorResult("NewVal");
             }
         }
@@ -1072,11 +1125,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Valid
-        public virtual string P_Valid {
-            get {
+        public virtual string P_Valid
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.valid);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.valid, value);
             }
         }
@@ -1098,7 +1154,7 @@ namespace sql.builder.DataApi
         }
         public virtual void P_Valid_ListRefresh(VDataTable table)
         {
-            ObjectFieldPropertyListRefresh(table,false,true);
+            ObjectFieldPropertyListRefresh(table, false, true);
         }
         public virtual bool P_Valid_Exists()
         {
@@ -1106,8 +1162,10 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ValidResult
-        public virtual string P_ValidResult {
-            get {
+        public virtual string P_ValidResult
+        {
+            get
+            {
                 return this.BehaviorResult("Valid");
             }
         }
@@ -1141,11 +1199,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region TextSource
-        public virtual string P_TextSource {
-            get {
+        public virtual string P_TextSource
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.textsource);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.textsource, value);
             }
         }
@@ -1175,8 +1236,10 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region TextSourceResult
-        public virtual string P_TextSourceResult {
-            get {
+        public virtual string P_TextSourceResult
+        {
+            get
+            {
                 return this.BehaviorResult("TextSource");
             }
         }
@@ -1210,11 +1273,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region BackColor
-        public virtual string P_BackColor {
-            get {
+        public virtual string P_BackColor
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.color);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.color, value);
             }
         }
@@ -1232,7 +1298,7 @@ namespace sql.builder.DataApi
         }
         public virtual void P_BackColor_List(VDataTable table)
         {
-            this.P_Editable_List(table); 
+            this.P_Editable_List(table);
         }
         public virtual void P_BackColor_ListRefresh(VDataTable table)
         {
@@ -1244,8 +1310,10 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region BackColorResult
-        public virtual string P_BackColorResult {
-            get {
+        public virtual string P_BackColorResult
+        {
+            get
+            {
                 return this.BehaviorResult("BackColor");
             }
         }
@@ -1279,11 +1347,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region FontColor
-        public virtual string P_FontColor {
-            get {
+        public virtual string P_FontColor
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.font_color);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.font_color, value);
             }
         }
@@ -1313,8 +1384,10 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region FontColorResult
-        public virtual string P_FontColorResult {
-            get {
+        public virtual string P_FontColorResult
+        {
+            get
+            {
                 return this.BehaviorResult("FontColor");
             }
         }

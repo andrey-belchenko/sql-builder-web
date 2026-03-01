@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 namespace sql.builder.DataApi
 {
@@ -22,11 +20,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ConstListValue
-        public override string P_ConstListValue {
-            get {
+        public override string P_ConstListValue
+        {
+            get
+            {
                 return this.Value;
             }
-            set {
+            set
+            {
                 this.Value = value ?? string.Empty;
             }
         }

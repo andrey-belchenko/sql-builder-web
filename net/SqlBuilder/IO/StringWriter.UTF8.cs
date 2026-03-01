@@ -19,8 +19,10 @@ namespace sql.builder
         /// <summary>
         /// Возвращает кодировку utf-8 вместо utf-16 у базового класса.
         /// </summary>
-        public override Encoding Encoding {
-            get {
+        public override Encoding Encoding
+        {
+            get
+            {
                 return Encoding.UTF8;
             }
         }

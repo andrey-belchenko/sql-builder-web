@@ -1,14 +1,8 @@
-
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Xml.Linq;
 using sql.builder;
 using sql.builder.DataApi;
-using sql.builder.UI;
 
 
 namespace SqlBuilderLib.DevTools

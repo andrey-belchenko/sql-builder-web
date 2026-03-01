@@ -1,10 +1,8 @@
-using System;
-using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
-using System.Linq;
 //using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using sql.builder.DataApi;
+using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.Print.Xlsx
 {
@@ -22,24 +20,30 @@ namespace sql.builder.Print.Xlsx
             this._rels = new List<ExcelRel>();
             this.last_id = 0;
             this.last_sheet_num = 0;
-            foreach (XElement xrel in root.Elements(ns.Relsp.Relationship)) {
+            foreach (XElement xrel in root.Elements(ns.Relsp.Relationship))
+            {
                 string rid = xrel.Attribute(ns.None.Id).Value;
                 string type = xrel.Attribute(ns.None.Type).Value;
                 string target = xrel.Attribute(ns.None.Target).Value;
                 int id;
                 Contract.Assume(rid.StartsWith("rId"));
-                if (int.TryParse(rid.Substring(3), out id)) {
-                    if (this.last_id < id) {
+                if (int.TryParse(rid.Substring(3), out id))
+                {
+                    if (this.last_id < id)
+                    {
                         this.last_id = id;
                     }
                 }
-                if (type == SHEET_TYPE) {
+                if (type == SHEET_TYPE)
+                {
                     //int num = int.Parse(Regex.Match(target, @".*sheet([0-9]+)\.xml").Groups[1].Value);
                     Contract.Assume(target.StartsWith("worksheets/sheet"));
                     Contract.Assume(target.EndsWith(".xml"));
                     int num;
-                    if (int.TryParse(target.Substring(16, target.Length - 20), out num)) {
-                        if (this.last_sheet_num < num) {
+                    if (int.TryParse(target.Substring(16, target.Length - 20), out num))
+                    {
+                        if (this.last_sheet_num < num)
+                        {
                             this.last_sheet_num = num;
                         }
                     }
@@ -50,9 +54,11 @@ namespace sql.builder.Print.Xlsx
         public string GetNativeWorksheetRID(string file_name)
         {
             file_name = file_name.Replace('\\', '/');
-            for (int index = 0; index < this._rels.Count; index++) {
+            for (int index = 0; index < this._rels.Count; index++)
+            {
                 ExcelRel r = this._rels[index];
-                if (file_name.EndsWith(r.Target)) {
+                if (file_name.EndsWith(r.Target))
+                {
                     return r.ID;
                 }
             }
@@ -76,12 +82,15 @@ namespace sql.builder.Print.Xlsx
         public void DeleteWorksheet(string rid)
         {
             XElement el = this.XmlChanged.Root.Elements(ns.Relsp.Relationship).SearchByAttribute("Id", rid);
-            if (el != null) {
+            if (el != null)
+            {
                 el.Remove();
             }
-            for (int index = 0; index < this._rels.Count; index++) {
+            for (int index = 0; index < this._rels.Count; index++)
+            {
                 ExcelRel r = this._rels[index];
-                if (r.ID == rid) {
+                if (r.ID == rid)
+                {
                     this._rels.RemoveAt(index);
                     break;
                 }

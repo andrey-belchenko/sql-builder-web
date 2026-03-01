@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Data;
 //using System.Collections.Generic;
 using System.Xml;
-using System.Xml.Linq;
-using System.Data;
 //using System.Text;
 using Contract = System.Diagnostics.Contracts.Contract;
 
@@ -26,9 +25,9 @@ namespace sql.builder.Print.XML
             //settings.NewLineOnAttributes = false;
             //settings.NewLineChars = "\n";
             settings.NewLineHandling = NewLineHandling.None;
-            #if !FRAMEWORK_40
+#if !FRAMEWORK_40
             settings.WriteEndDocumentOnClose = false;
-            #endif
+#endif
             this.writer = XmlWriter.Create(file_name, settings);
             this.dataset = dataset;
             this.print_big_data = print_big_data;
@@ -47,11 +46,11 @@ namespace sql.builder.Print.XML
         }
         public void Dispose()
         {
-            #if FRAMEWORK_40
+#if FRAMEWORK_40
             ((IDisposable)this.writer).Dispose();
-            #else
+#else
             this.writer.Dispose();
-            #endif
+#endif
         }
     }
 }

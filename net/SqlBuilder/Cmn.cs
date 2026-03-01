@@ -8,14 +8,19 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 //using System.Net.Http;
 using System.Reflection;
-using System.Runtime.InteropServices;
+// Cross-platform: Drawing2D and Imaging are Windows-only, commented out
+//using System.Drawing.Drawing2D;
+//using System.Drawing.Imaging;
+using System.Security.Principal;
 using System.Text;
+using System.Xml;
 ////using System.Windows.Forms;
 using System.Xml.Linq;
-using System.Xml;
+//using DevExpress.Skins;
+//using DevExpress.XtraEditors.Controls;
+using infoenergo.core.Data;
 //using DevExpress.Compression;
 //using DevExpress.LookAndFeel;
 //using DevExpress.XtraEditors;
@@ -26,26 +31,16 @@ using System.Xml;
 //using DevExpress.XtraTreeList;
 //using TreeListNode = DevExpress.XtraTreeList.Nodes.TreeListNode;
 using Microsoft.Win32;
+using sql.builder.Clean;
 using sql.builder.DataApi;
-using sql.builder.XmlHelpers;
-using System.Text.RegularExpressions;
 //using DevExpress.XtraBars;
 //using infoenergo.core.Extensions;
 using sql.builder.UI;
-using sql.builder.Clean;
-// Cross-platform: Drawing2D and Imaging are Windows-only, commented out
-//using System.Drawing.Drawing2D;
-//using System.Drawing.Imaging;
-using System.Security.Principal;
-//using DevExpress.Skins;
-//using DevExpress.XtraEditors.Controls;
-using infoenergo.core.Data;
+using sql.builder.XmlHelpers;
 //using Microsoft.Office.Interop.Excel;
 //using sql.builder.TFS;
-using sql.builder.WinForms;
 //using Application = System.Windows.Forms.Application;
 using DataTable = System.Data.DataTable;
-using Rectangle = System.Drawing.Rectangle;
 //using Resources = infoenergo.ui.resources.Properties.Resources;
 //using sql.builder.Properties;
 namespace sql.builder
@@ -69,13 +64,14 @@ namespace sql.builder
         #endregion
         public static string[] SplitString(string s)
         {
-            var splitChars = new string[] {" ", ","};
-            var ss = s.Split(splitChars,StringSplitOptions.None).Where(s1=>!string.IsNullOrEmpty(s1)).ToArray();
+            var splitChars = new string[] { " ", "," };
+            var ss = s.Split(splitChars, StringSplitOptions.None).Where(s1 => !string.IsNullOrEmpty(s1)).ToArray();
             return ss;
         }
         public static string OpenText(string filename)
         {
-            using (var reader = new StreamReader(filename)) {
+            using (var reader = new StreamReader(filename))
+            {
                 return reader.ReadToEnd();
             }
         }
@@ -83,10 +79,12 @@ namespace sql.builder
         {
             string[] ss = name.Split('\\');
             var name1 = "";
-            for (int i = 0; i < ss.Length - 1; i++) {
+            for (int i = 0; i < ss.Length - 1; i++)
+            {
                 var s = ss[i];
                 name1 += s + "\\";
-                if (!Directory.Exists(name1)) {
+                if (!Directory.Exists(name1))
+                {
                     Directory.CreateDirectory(name1);
                 }
             }
@@ -94,7 +92,7 @@ namespace sql.builder
         public static void SaveTextWithCheckOut(string text, string filename)
         {
         }
-     
+
         public static void SaveText(string text, string filename, Encoding encoding)
         {
             //try {
@@ -118,33 +116,55 @@ namespace sql.builder
 
         public static bool IsGreater(object obj1, object obj2)
         {
-            if (IsNullOrDBNull(obj1)) {
+            if (IsNullOrDBNull(obj1))
+            {
                 return false;
-            } else if (IsNullOrDBNull(obj2)) {
+            }
+            else if (IsNullOrDBNull(obj2))
+            {
                 return true;
-            } else if (obj1 is decimal) {
+            }
+            else if (obj1 is decimal)
+            {
                 return Convert.ToDecimal(obj1) > Convert.ToDecimal(obj2);
-            } else if (obj1 is int) {
+            }
+            else if (obj1 is int)
+            {
                 return Convert.ToInt32(obj1) > Convert.ToInt32(obj2);
-            } else if (obj1 is DateTime) {
+            }
+            else if (obj1 is DateTime)
+            {
                 return (DateTime)(obj1) > (DateTime)(obj2);
-            } else {
+            }
+            else
+            {
                 return (obj1.ToString().CompareTo(obj2.ToString()) > 0);
             }
         }
         public static bool IsLess(object obj1, object obj2)
         {
-            if (IsNullOrDBNull(obj1)) {
+            if (IsNullOrDBNull(obj1))
+            {
                 return false;
-            } else if (IsNullOrDBNull(obj2)) {
+            }
+            else if (IsNullOrDBNull(obj2))
+            {
                 return true;
-            } else if (obj1 is decimal) {
+            }
+            else if (obj1 is decimal)
+            {
                 return Convert.ToDecimal(obj1) < Convert.ToDecimal(obj2);
-            } else if (obj1 is int) {
+            }
+            else if (obj1 is int)
+            {
                 return Convert.ToInt32(obj1) < Convert.ToInt32(obj2);
-            } else if (obj1 is DateTime) {
+            }
+            else if (obj1 is DateTime)
+            {
                 return (DateTime)(obj1) < (DateTime)(obj2);
-            } else {
+            }
+            else
+            {
                 return obj1.ToString().CompareTo(obj2.ToString()) < 0;
             }
         }
@@ -195,7 +215,8 @@ namespace sql.builder
         {
             Contract.Assert(src != null);
             XAttribute attr = src.Attribute(name);
-            if (attr != null) {
+            if (attr != null)
+            {
                 dest.SetAttributeValue(name, attr.Value);
             }
         }
@@ -203,7 +224,8 @@ namespace sql.builder
         public static void CopyAttributeNoReplace(XElement src, XElement tag, XName name)
         {
             XAttribute attr = src.Attribute(name);
-            if (attr != null && tag.Attribute(name) == null) {
+            if (attr != null && tag.Attribute(name) == null)
+            {
                 tag.Add(new XAttribute(name, attr.Value));
             }
         }
@@ -214,24 +236,30 @@ namespace sql.builder
         }
         public static void CopyAttributesNoReplace(XElement src, XElement tag)
         {
-            foreach (XAttribute attr in src.Attributes()) {
-                if (tag.Attribute(attr.Name) == null) {
+            foreach (XAttribute attr in src.Attributes())
+            {
+                if (tag.Attribute(attr.Name) == null)
+                {
                     tag.Add(new XAttribute(attr));
                 }
             }
         }
         public static decimal ToDecimal(object val)
         {
-            if (IsNullOrDBNull(val)) {
+            if (IsNullOrDBNull(val))
+            {
                 return decimal.Zero;
             }
-            if (val is decimal) {
+            if (val is decimal)
+            {
                 return (decimal)val;
             }
-            if (val is int) {
+            if (val is int)
+            {
                 return Convert.ToDecimal(val);
             }
-            if (string.Empty.Equals(val)) {
+            if (string.Empty.Equals(val))
+            {
                 return Decimal.Zero;
             }
             return (decimal)ToDecimal(val.ToString());
@@ -360,30 +388,37 @@ namespace sql.builder
         }
         public static string ToOracleString(object val)
         {
-            if (IsNullOrDBNull(val)) {
+            if (IsNullOrDBNull(val))
+            {
                 return "null";
             }
             Type type = val.GetType();
             string sval = val.ToString();
-            if (type == XmlReports.numberType) {
+            if (type == XmlReports.numberType)
+            {
                 return sval.Replace(",", ".");
             }
-            if (type == typeof(string)) {
+            if (type == typeof(string))
+            {
                 // Емцов - параметры массивы типа string уже обернуты в кавычки
-                if (sval.Length > 0 && sval[0] != '\'') {
-                    return "'" + sval + "'";                    
-                } else {
+                if (sval.Length > 0 && sval[0] != '\'')
+                {
+                    return "'" + sval + "'";
+                }
+                else
+                {
                     return sval;
                 }
             }
-            if (type == typeof(DateTime)) {
+            if (type == typeof(DateTime))
+            {
                 return String.Format("to_date('{0}','DD.MM.YYYY')", ((DateTime)val).ToString("dd.MM.yyyy"));
             }
             //if (type == typeof(VStringParamName)) {
             //    return sval;
             //}
             return sval;
-        }        
+        }
         public static object EvaluateOracleConst(string val)
         {
             if (val.Contains("to_date"))
@@ -443,19 +478,26 @@ namespace sql.builder
         public static void setParams(XElement formalParams, XElement factParams, bool useDefaults)
         {
             if (formalParams == null) return;
-            if (factParams == null) {
+            if (factParams == null)
+            {
                 factParams = new XElement(EName.globalparams);
             }
-            foreach (XElement formalParam in formalParams.Elements()) {
+            foreach (XElement formalParam in formalParams.Elements())
+            {
                 string param_name = formalParam.Attribute(AName.name).Value;
                 XElement factParam = factParams.Elements().SearchByAttribute(AName.name, param_name);
-                if (factParam != null) {
+                if (factParam != null)
+                {
                     formalParam.Elements().Remove();
                     Compiler.copyContent(factParam, formalParam);
-                } else if (useDefaults) {
+                }
+                else if (useDefaults)
+                {
                     formalParam.Elements().Remove();
                     formalParam.Add(new XElement(EName.undefined));
-                } else {
+                }
+                else
+                {
                     formalParam.Elements().Remove();
                     formalParam.Add(new XElement(EName.undefined));
                 }
@@ -486,12 +528,12 @@ namespace sql.builder
             {
                 if (_imageEdit12 == null)
                 {
-            
+
                     //_imageEdit12 = Properties.Resources.cell_edit.ToBitmap();
                 }
                 return _imageEdit12;
             }
-            
+
         }
         /*public static Image ImageCheck12
         {
@@ -556,12 +598,16 @@ namespace sql.builder
             undefined_without_brace = false;
             s = s.Replace(undefNvluConst, "null");
             int i1 = s.IndexOf(undefinedString);
-            while (i1 >= 0) {
+            while (i1 >= 0)
+            {
                 int i0 = s.LastIndexOf('{', i1);
-                if (i0 < 0) {
+                if (i0 < 0)
+                {
                     undefined_without_brace = true;
                     s = s.Substring(0, i1) + "null" + s.Substring(i1 + undefinedString.Length);
-                } else {
+                }
+                else
+                {
                     int i2 = s.IndexOf('}', i1);
                     s = s.Remove(i0, i2 - i0);
                 }
@@ -578,28 +624,36 @@ namespace sql.builder
         {
             startPos = -1;
             endPos = -1;
-            
+
             // Find the last opening brace before undefinedString
             int openBracePos = -1;
-            for (int i = undefinedPos - 1; i >= 0; i--) {
-                if (s[i] == '{') {
+            for (int i = undefinedPos - 1; i >= 0; i--)
+            {
+                if (s[i] == '{')
+                {
                     openBracePos = i;
                     break;
                 }
             }
-            
-            if (openBracePos < 0) {
+
+            if (openBracePos < 0)
+            {
                 return false; // No opening brace found
             }
-            
+
             // Find the matching closing brace by counting nested braces
             int braceCount = 1;
-            for (int i = openBracePos + 1; i < s.Length; i++) {
-                if (s[i] == '{') {
+            for (int i = openBracePos + 1; i < s.Length; i++)
+            {
+                if (s[i] == '{')
+                {
                     braceCount++;
-                } else if (s[i] == '}') {
+                }
+                else if (s[i] == '}')
+                {
                     braceCount--;
-                    if (braceCount == 0) {
+                    if (braceCount == 0)
+                    {
                         // Found matching closing brace
                         startPos = openBracePos;
                         endPos = i;
@@ -607,16 +661,18 @@ namespace sql.builder
                     }
                 }
             }
-            
+
             return false; // No matching closing brace found
         }
-        
+
         public static string ClearUndef(string s)
         {
             s = s.Replace(undefNvluConst, "null");
             int i1 = s.IndexOf(undefinedString);
-            while (i1 >= 0) {
-                if (!FindMatchingBraces(s, i1, out int i0, out int i2)) {
+            while (i1 >= 0)
+            {
+                if (!FindMatchingBraces(s, i1, out int i0, out int i2))
+                {
                     return "";
                 }
                 s = s.Remove(i0, i2 - i0 + 1);
@@ -629,15 +685,17 @@ namespace sql.builder
             s = s.Replace('\r', ' ');
             return s;
         }
-        
+
         public static string ClearUndefined(string s)
         {
             s = s.Replace(undefNvluConst, "null");
             //Протестировать производительность, оптимизировать
             int i1 = s.IndexOf(undefinedString);
-            while (i1 >= 0) {
+            while (i1 >= 0)
+            {
                 int i0 = s.LastIndexOf('{', i1);
-                if (i0 < 0) {
+                if (i0 < 0)
+                {
                     return "";
                 }
                 int i2 = s.IndexOf('}', i1);
@@ -653,7 +711,8 @@ namespace sql.builder
         }
         public static string ClearSql(string sql)
         {
-            if (sql == null) {
+            if (sql == null)
+            {
                 return null;
             }
             return sql.Replace('\r', ' ');
@@ -661,7 +720,7 @@ namespace sql.builder
         public static void HtmlOutput(string content, string filename)
         {
 
-            string fullName = Printing.GetFreeName(sql.builder.Clean.Settings. GetInstance().TempPath, filename, "html");
+            string fullName = Printing.GetFreeName(sql.builder.Clean.Settings.GetInstance().TempPath, filename, "html");
 
 
             File.WriteAllText(fullName, content);
@@ -677,7 +736,7 @@ namespace sql.builder
         public static void TxtOutput(string content, string filename)
         {
 
-            string fullName = Printing.GetFreeName(sql.builder.Clean.Settings. GetInstance().TempPath, filename, "txt");
+            string fullName = Printing.GetFreeName(sql.builder.Clean.Settings.GetInstance().TempPath, filename, "txt");
 
 
             File.WriteAllText(fullName, content);
@@ -697,17 +756,23 @@ namespace sql.builder
         }
         public static object Nvl(object v1, object v2)
         {
-            if (IsNullOrDBNull(v1)) {
+            if (IsNullOrDBNull(v1))
+            {
                 return v2;
-            } else {
+            }
+            else
+            {
                 return v1;
             }
         }
         public static object Nvle(object v1, object v2)
         {
-            if (IsNullOrDBNull(v1) || string.Empty.Equals(v1)) {
+            if (IsNullOrDBNull(v1) || string.Empty.Equals(v1))
+            {
                 return v2;
-            } else {
+            }
+            else
+            {
                 return v1;
             }
         }
@@ -716,7 +781,8 @@ namespace sql.builder
         {
             IEnumerable<XElement> all_elements = recursive ? elements.DescendantsAndSelf() : elements;
             int i = 0;
-            foreach (XElement node in all_elements) {
+            foreach (XElement node in all_elements)
+            {
                 string si = i.ToString();
                 node.SetAttributeValue("elid", si);
                 node.SetAttributeValue("ord", si);
@@ -724,34 +790,44 @@ namespace sql.builder
                 node.SetAttributeValue("lvl", node.Ancestors().Count());
                 i++;
             }
-            foreach (XElement node in all_elements) {
+            foreach (XElement node in all_elements)
+            {
                 node.SetAttributeValue("pelid", node.Parent.AttrOrEmpty("elid"));
             }
             DataTable dt = new DataTable();
             dt.Columns.Add(new DataColumn("node_name", typeof(string)));
-            if (addNodeToTable) {
+            if (addNodeToTable)
+            {
                 dt.Columns.Add(new DataColumn("node", typeof(XElement)));
             }
             var attrNames = all_elements.Attributes().Select(e => e.Name.LocalName).Distinct();
-            foreach (string name in attrNames) {
-                if (!dt.Columns.Contains(name)) {
+            foreach (string name in attrNames)
+            {
+                if (!dt.Columns.Contains(name))
+                {
                     Type type;
-                    if (name == "ord" || name == "lvl") {
+                    if (name == "ord" || name == "lvl")
+                    {
                         type = typeof(Int32);
-                    } else {
+                    }
+                    else
+                    {
                         type = typeof(string);
                     }
                     dt.Columns.Add(new DataColumn(name, type));
                 }
             }
             //all_elements = recursive ? elements.DescendantsAndSelf() : elements;
-            foreach (XElement node in all_elements) {
+            foreach (XElement node in all_elements)
+            {
                 DataRow row = dt.Rows.Add();
                 row["node_name"] = node.Name.LocalName;
-                foreach (XAttribute attr in node.Attributes()) {
+                foreach (XAttribute attr in node.Attributes())
+                {
                     row[attr.Name.LocalName] = attr.Value;
                 }
-                if (addNodeToTable) {
+                if (addNodeToTable)
+                {
                     row["node"] = node;
                 }
             }
@@ -955,7 +1031,8 @@ namespace sql.builder
         }
         public static void SetProperty(object obj, string fieldName, object value)
         {
-            if (IsNullOrDBNull(value)) {
+            if (IsNullOrDBNull(value))
+            {
                 value = null;
             }
             string[] path = fieldName.Split('.');
@@ -1002,14 +1079,14 @@ namespace sql.builder
         }
         public static XDocument OpenXmlClearNS(string fileName)
         {
-			try
-			{
-				return XDocument.Parse(OpenText(fileName).Replace("xmlns=\"sqlbuilder\"", ""));
-			}
-			catch (XmlException ex)
-			{
-				throw new System.Exception("Ошибка при разборе xml файла " + fileName + " ." + Environment.NewLine  + ex.Message);
-			}
+            try
+            {
+                return XDocument.Parse(OpenText(fileName).Replace("xmlns=\"sqlbuilder\"", ""));
+            }
+            catch (XmlException ex)
+            {
+                throw new System.Exception("Ошибка при разборе xml файла " + fileName + " ." + Environment.NewLine + ex.Message);
+            }
         }
         /// <summary>
         /// Сохраняет XML-документ <paramref name="node"/> в файл <paramref name="file_name"/>
@@ -1157,18 +1234,22 @@ namespace sql.builder
         #endregion
         public static List<string> ExtractParamsFromString(string str)
         {
-            if (str == null) {
+            if (str == null)
+            {
                 return null;
             }
             int pos_1 = str.IndexOf("[:");
-            if (pos_1 < 0) {
+            if (pos_1 < 0)
+            {
                 return null;
             }
             int len = str.Length;
             List<string> pars = new List<string>(4);
-            do {
+            do
+            {
                 int pos_2 = str.IndexOf(']', pos_1 + 2);
-                if (pos_2 < 0) {
+                if (pos_2 < 0)
+                {
                     break;
                 }
                 Contract.Assert(str[pos_1] == '[');
@@ -1176,9 +1257,11 @@ namespace sql.builder
                 Contract.Assert(str[pos_2] == ']');
                 pos_1 = pos_1 + 2;
                 int param_len = pos_2 - pos_1;
-                if (len > 0) {
+                if (len > 0)
+                {
                     string param = string.Intern(str.Substring(pos_1, pos_2 - pos_1));
-                    if (!pars.Contains(param)) {
+                    if (!pars.Contains(param))
+                    {
                         pars.Add(param);
                     }
                 }
@@ -1191,7 +1274,7 @@ namespace sql.builder
         /// Интервал времени в полсекунды
         /// </summary>
         public static readonly TimeSpan HalfOfSecond = new TimeSpan(500L * TimeSpan.TicksPerMillisecond);
-        */ 
+        */
         /// <summary>
         /// Записывает наиболее позднюю из двух дат в <paramref name="last_date"/>
         /// </summary>
@@ -1199,7 +1282,8 @@ namespace sql.builder
         /// <param name="date"></param>
         public static void GetLastDate(ref DateTime last_date, DateTime date)
         {
-            if (date > last_date) {
+            if (date > last_date)
+            {
                 last_date = date;
             }
         }
@@ -1293,17 +1377,23 @@ namespace sql.builder
         }*/
         public static void SyncWithVForm(XElement xroot, List<VSXElement> applying_parts)
         {
-            foreach (XElement xitem in xroot.Elements()) {
+            foreach (XElement xitem in xroot.Elements())
+            {
                 VSXElement vitem = applying_parts.FirstOrDefault(item => item.BaseElementOrSelf().GetUniqueKey().ToString() == xitem.Attribute(AName.id).Value);
-                if (vitem == null) {
+                if (vitem == null)
+                {
                     continue;
                 }
                 bool custom_layout = (vitem.Attribute(AName.size) != null);
-                if (custom_layout) {
-                    if (xitem.Attribute(AName.size) == null) {
+                if (custom_layout)
+                {
+                    if (xitem.Attribute(AName.size) == null)
+                    {
                         xitem.Add(new XAttribute(AName.size, vitem.Attribute(AName.size).Value));
                     }
-                } else {
+                }
+                else
+                {
                     vitem.Attributes().Where(APredicate.IsCustomLayoutOptions).Remove();
                     xitem.Attributes().Where(APredicate.IsCustomLayoutOptions).Remove();
                 }
@@ -1313,7 +1403,8 @@ namespace sql.builder
                 xitem.SetAttributeValue(AName.text_location, vitem.AttrOrDefault(AName.text_location, null));
                 //xitem.SetAttributeValue(TextConst.AName.LayoutMode, vitem.AttrOrDef(TextConst.AName.LayoutMode, null));
                 // колонки грида не обрабатываем, тк. к ним запарно генерировать id
-                if (xitem.Name == EName.grid || xitem.Name == EName.field) {
+                if (xitem.Name == EName.grid || xitem.Name == EName.field)
+                {
                     continue;
                 }
                 SyncWithVForm(xitem, applying_parts);
@@ -1326,25 +1417,29 @@ namespace sql.builder
         }
         public static string GetAvgReportFormingTime(string repname)
         {
-            #if DEBUG
+#if DEBUG
             DateTime d1 = DateTime.Now;
-            #endif
+#endif
             TimeSpan? value = db.AverageReportFormingTime(repname);
-            #if DEBUG
+#if DEBUG
             DateTime d2 = DateTime.Now;
-            #endif
-            if (value.HasValue) {
-                #if DEBUG
-                if (XmlReports.IsDeveloperMode() && !WCFHelper.IsClient && !WCFHelper.IsClient && (d2 - d1).TotalMilliseconds > 1000) {
+#endif
+            if (value.HasValue)
+            {
+#if DEBUG
+                if (XmlReports.IsDeveloperMode() && !WCFHelper.IsClient && !WCFHelper.IsClient && (d2 - d1).TotalMilliseconds > 1000)
+                {
                     //ShowMessage.ShowExclamation("Ахтунг! Расчет среднего времени формирования занял " + (d2 - d1).TotalMilliseconds.ToString(CultureInfo.InvariantCulture) + " мс !");
                 }
-                #endif
+#endif
                 return value.GetValueOrDefault().ToString(@"hh\:mm\:ss\.fff");
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
-  
+
         public static Color MixColors(this Color source, Color target, float percent)
         {
             float amountSource = 1.0f - percent;
@@ -1356,7 +1451,7 @@ namespace sql.builder
                 (int)(source.B * amountSource + target.B * percent));
 
         }
-        private static IVBarButton CreateBarButtonControl(XElement xcmd, VVariableDepandantceController vdc,ValueChangeEventHandler  handler)
+        private static IVBarButton CreateBarButtonControl(XElement xcmd, VVariableDepandantceController vdc, ValueChangeEventHandler handler)
         {
             throw new NotImplementedException();
         }
@@ -1364,9 +1459,12 @@ namespace sql.builder
         public static object GetIcon(XElement xcmd)
         {
             XAttribute xicon = xcmd.Attribute(AName.icon);
-            if (xicon == null) {
+            if (xicon == null)
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return GetIcon(xicon.Value);
             }
         }
@@ -1483,11 +1581,13 @@ namespace sql.builder
         {
             DataTable dt = new DataTable(vdt.TableName);
             int index;
-            for (index = 0; index < vdt.Columns.Count; index++) {
+            for (index = 0; index < vdt.Columns.Count; index++)
+            {
                 DataColumn column = vdt.Columns[index];
                 dt.Columns.Add(new DataColumn(column.ColumnName, column.DataType));
             }
-            for (index = 0; index < vdt.Rows.Count; index++) {
+            for (index = 0; index < vdt.Rows.Count; index++)
+            {
                 dt.ImportRow(vdt.Rows[index]);
             }
             CopyPrimaryKey(vdt, dt);
@@ -1507,11 +1607,13 @@ namespace sql.builder
             VDataTable vdt = new VDataTable();
             vdt.TableName = dt.TableName;
             int index;
-            for (index = 0; index < dt.Columns.Count; index++) {
+            for (index = 0; index < dt.Columns.Count; index++)
+            {
                 DataColumn column = dt.Columns[index];
                 vdt.AddColumn(column.ColumnName, column.DataType);
             }
-            for (index = 0; index < dt.Rows.Count; index++) {
+            for (index = 0; index < dt.Rows.Count; index++)
+            {
                 vdt.ImportRow(dt.Rows[index]);
             }
             CopyPrimaryKey(dt, vdt);
@@ -1538,11 +1640,15 @@ namespace sql.builder
             DataColumn[] src_pk = src.PrimaryKey;
             DataColumn[] pk;
             int count = src_pk.Length;
-            if (count == 0) {
+            if (count == 0)
+            {
                 pk = Array.Empty<DataColumn>();
-            } else {
+            }
+            else
+            {
                 pk = new DataColumn[count];
-                for (int index = 0; index < count; index++) {
+                for (int index = 0; index < count; index++)
+                {
                     DataColumn col = dest.Columns[src_pk[index].ColumnName];
                     Contract.Assume(col != null);
                     pk[index] = col;
@@ -1557,7 +1663,7 @@ namespace sql.builder
         /// <param name="column_name">Наименование интернируемой колонки</param>
         /// <returns>Количество уникальных значений в колонке</returns>
         public static int InternStringColumn(DataTable table, string column_name)
-        { 
+        {
             Contract.Assert(table != null);
             Contract.Assert(!string.IsNullOrEmpty(column_name));
             DataColumn column = table.Columns[column_name];
@@ -1566,15 +1672,19 @@ namespace sql.builder
             IDictionary<string, string> set = new Dictionary<string, string>(StringComparer.InvariantCulture); // ReferenceEqualityComparer.Instance
             //HashSet<string> set = new HashSet<string>(StringComparer.InvariantCulture); // ReferenceEqualityComparer.Instance
             DataRowCollection rows = table.Rows;
-            for (int index = 0; index < rows.Count; index++) {
+            for (int index = 0; index < rows.Count; index++)
+            {
                 DataRow row = rows[index];
-                if (!row.IsNull(column)) {
+                if (!row.IsNull(column))
+                {
                     string old_value = (string)row[column];
                     string new_value;
-                    if (!set.TryGetValue(old_value, out new_value)) {
+                    if (!set.TryGetValue(old_value, out new_value))
+                    {
                         // Если строка интернирована, используем интернированное значение
                         new_value = string.IsInterned(old_value);
-                        if (new_value == null) {
+                        if (new_value == null)
+                        {
                             // А если строка не интернирована, используем значение из DataTable,
                             // чтобы не забивать мусором таблицу интернированых строк
                             // и чтобы эти строки могли быть удалены сборщиком мусора.
@@ -1582,7 +1692,8 @@ namespace sql.builder
                         }
                         set.Add(new_value, new_value);
                     }
-                    if (!object.ReferenceEquals(old_value, new_value)) {
+                    if (!object.ReferenceEquals(old_value, new_value))
+                    {
                         row.BeginEdit();
                         row[column] = new_value;
                         row.EndEdit();
@@ -1595,9 +1706,12 @@ namespace sql.builder
         public static XElement LoadDefaultReportParams(string repname)
         {
             string data = db.SelectDefaultSettingData(repname);
-            if (data == null) {
+            if (data == null)
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return XElement.Parse(data).Element(EName.@params);
             }
         }
@@ -1613,7 +1727,8 @@ namespace sql.builder
             // первая папка после папки source
             var proj = parts.SkipWhile(p => p != XmlReports.SourceFolderName).Skip(1).FirstOrDefault();
             // если в пути нет папки source - первая папка
-            if (proj == null) {
+            if (proj == null)
+            {
                 proj = parts.First(p => p != "");
             }
             return proj;
@@ -1622,9 +1737,12 @@ namespace sql.builder
         {
             string name = xproject.Attribute(AName.name).Value;
             XAttribute attr = xproject.Attribute(AName.directory);
-            if (attr == null) {
+            if (attr == null)
+            {
                 return Path.Combine(XmlReports.GetDefaultSourceFolder(), name);
-            } else {
+            }
+            else
+            {
                 return Path.Combine(XmlReports.GetRootPath(), attr.Value, name);
             }
         }
@@ -1648,10 +1766,12 @@ namespace sql.builder
 
         public static Type GetTypeFromStringType(string type, Type def)
         {
-            if (string.IsNullOrEmpty(type)) {
+            if (string.IsNullOrEmpty(type))
+            {
                 return def;
             }
-            switch (type) {
+            switch (type)
+            {
                 case TextConst.AVDataType.Number:
                     return XmlReports.numberType;
                 case TextConst.AVDataType.Bool:
@@ -1662,8 +1782,8 @@ namespace sql.builder
                     return typeof(string);
                 case TextConst.AVDataType.Clob:
                     return typeof(string);
-				case TextConst.AVDataType.Blob:
-					return typeof(byte[]);
+                case TextConst.AVDataType.Blob:
+                    return typeof(byte[]);
                 default:
                     return def;
             }
@@ -1694,10 +1814,10 @@ namespace sql.builder
                 return "VARCHAR2(" + length.ToString() + ")";
             }
 
-			if (type == typeof(byte[]))
-			{
-				return "BLOB";
-			}
+            if (type == typeof(byte[]))
+            {
+                return "BLOB";
+            }
 
             return "";
 
@@ -1751,7 +1871,8 @@ namespace sql.builder
         }*/
         public static sql.builder.Clean.VOracleDbType GetDBType(string type)
         {
-            switch (type) {
+            switch (type)
+            {
                 case "number":
                     return sql.builder.Clean.VOracleDbType.Number;
                 case "bool":
@@ -1762,25 +1883,30 @@ namespace sql.builder
                     return sql.builder.Clean.VOracleDbType.Array;
                 case "clob":
                     return sql.builder.Clean.VOracleDbType.Clob;
-				case "blob":
-					return sql.builder.Clean.VOracleDbType.Blob;
-				default:
+                case "blob":
+                    return sql.builder.Clean.VOracleDbType.Blob;
+                default:
                     return sql.builder.Clean.VOracleDbType.VarChar;
             }
         }
         public static sql.builder.Clean.VOracleDbType GetDBType(Type type)
         {
-            if (type == typeof(Decimal)) {
+            if (type == typeof(Decimal))
+            {
                 return sql.builder.Clean.VOracleDbType.Number;
-            } else if (type == typeof(DateTime)) {
+            }
+            else if (type == typeof(DateTime))
+            {
                 return sql.builder.Clean.VOracleDbType.Date;
-            } else {
+            }
+            else
+            {
                 return sql.builder.Clean.VOracleDbType.VarChar;
             }
         }
         public static string writeScriptFile(string name, string data)
         {
-            var namefile = string.Format("{0}\\{1}_{2}_{3}_ddl.sql", Path.GetDirectoryName(sql.builder.Clean.Settings. GetInstance().TempPath), DateTime.Now.ToString("yyMMdd"), Environment.MachineName, name);
+            var namefile = string.Format("{0}\\{1}_{2}_{3}_ddl.sql", Path.GetDirectoryName(sql.builder.Clean.Settings.GetInstance().TempPath), DateTime.Now.ToString("yyMMdd"), Environment.MachineName, name);
             using (var sw = new StreamWriter(new FileStream(namefile, FileMode.Create), Encoding.GetEncoding(1251)))
             {
                 sw.Write(data);
@@ -1791,7 +1917,7 @@ namespace sql.builder
 
         public static string WriteFileToTemp(string name, string data)
         {
-            var namefile = string.Format("{0}\\{1}", Path.GetDirectoryName(sql.builder.Clean.Settings. GetInstance().TempPath), name);
+            var namefile = string.Format("{0}\\{1}", Path.GetDirectoryName(sql.builder.Clean.Settings.GetInstance().TempPath), name);
             using (var sw = new StreamWriter(new FileStream(namefile, FileMode.Create), Encoding.GetEncoding(1251)))
             {
                 sw.Write(data);
@@ -1813,28 +1939,28 @@ namespace sql.builder
 
             var sb = new StringBuilder();
             sb.AppendLine(string.Format("new XElement({0}", BuildCodeOfXmlString_GetElementName(element)));
- 
-            foreach (var  attr in element.Attributes())
+
+            foreach (var attr in element.Attributes())
             {
                 sb.Append(",");
                 sb.AppendLine(string.Format("new XAttribute({0},{1})", BuildCodeOfXmlString_GetAttrName(attr),
                     BuildCodeOfXmlString_GetAttrVal(attr)));
-            
+
             }
 
-      
+
             foreach (var el in element.Elements())
             {
                 sb.Append(",");
                 sb.Append(BuildCodeOfXmlStringLevel(el));
-          
+
             }
             sb.AppendLine(string.Format(")"));
             return sb;
         }
 
 
-        private static string BuildCodeOfXmlString_FindConst(Type cls,string value)
+        private static string BuildCodeOfXmlString_FindConst(Type cls, string value)
         {
             if (cls != null)
             {
@@ -1843,27 +1969,27 @@ namespace sql.builder
                     var val = p.GetValue(null);
                     if (val.ToString() == value)
                     {
-                        return typeof (TextConst).Name + "." + cls.Name + "." + p.Name;
+                        return typeof(TextConst).Name + "." + cls.Name + "." + p.Name;
                     }
                 }
             }
-            
+
             return string.Format("\"{0}\"", value);
 
         }
 
         private static string BuildCodeOfXmlString_GetElementName(XElement element)
         {
-            
-            var name = BuildCodeOfXmlString_FindConst(typeof (TextConst.EName),
+
+            var name = BuildCodeOfXmlString_FindConst(typeof(TextConst.EName),
                 element.Name.LocalName);
 
             return name;
-           
+
         }
         private static string BuildCodeOfXmlString_GetAttrName(XAttribute attr)
         {
-            var name = BuildCodeOfXmlString_FindConst(typeof(TextConst.AName), 
+            var name = BuildCodeOfXmlString_FindConst(typeof(TextConst.AName),
                attr.Name.LocalName);
 
             return name;
@@ -1897,14 +2023,19 @@ namespace sql.builder
             sb.Replace("\n\r", "\r");
             sb.Replace("\r\n", "\r");
             int index = 0;
-            while (index < sb.Length) {
+            while (index < sb.Length)
+            {
                 char ch = sb[index];
-                if (XmlConvert.IsXmlChar(ch)) {
-                    if (ch == '\n') {
+                if (XmlConvert.IsXmlChar(ch))
+                {
+                    if (ch == '\n')
+                    {
                         sb[index] = '\r';
                     }
                     index++;
-                } else {
+                }
+                else
+                {
                     sb.Remove(index, 1);
                 }
             }
@@ -1914,11 +2045,15 @@ namespace sql.builder
             Contract.Assume(parameters != null);
             string[] param_names;
             int pаram_count = parameters.Count;
-            if (pаram_count == 0) {
+            if (pаram_count == 0)
+            {
                 param_names = Array.Empty<string>();
-            } else {
+            }
+            else
+            {
                 param_names = new string[pаram_count];
-                for (int index = 0; index < pаram_count; index++) {
+                for (int index = 0; index < pаram_count; index++)
+                {
                     param_names[index] = parameters[index].ParameterName;
                 }
             }
@@ -1930,11 +2065,15 @@ namespace sql.builder
             Contract.Assume(parameters != null);
             string[] param_names;
             int pаram_count = parameters.Count;
-            if (pаram_count == 0) {
+            if (pаram_count == 0)
+            {
                 param_names = Array.Empty<string>();
-            } else {
+            }
+            else
+            {
                 param_names = new string[pаram_count];
-                for (int index = 0; index < pаram_count; index++) {
+                for (int index = 0; index < pаram_count; index++)
+                {
                     param_names[index] = parameters[index].ParameterName;
                 }
             }
@@ -1948,7 +2087,8 @@ namespace sql.builder
         public static string[] ExtractParameterNamesFromSQL(string sql)
         {
             string[] param_names;
-            using (VOracleCommand cmd = new VOracleCommand()) {
+            using (VOracleCommand cmd = new VOracleCommand())
+            {
                 cmd.ParameterCheck = true; // чтобы коллекция Parameters заполнилась при установке CommandText
                 cmd.CommandText = sql;
                 param_names = Cmn.GetParameterNames(cmd.Parameters);
@@ -2028,9 +2168,12 @@ namespace sql.builder
         public static DataRow[] ToArray(this DataRowCollection rows)
         {
             int count = rows.Count;
-            if (count == 0) {
+            if (count == 0)
+            {
                 return Array.Empty<DataRow>(); // Используем единственный экземпляр пустого массива, чтобы не захламлять память
-            } else {
+            }
+            else
+            {
                 DataRow[] arr = new DataRow[count];
                 rows.CopyTo(arr, 0);
                 return arr;
@@ -2039,17 +2182,18 @@ namespace sql.builder
         public static void DisposeAndSetNull<T>(ref T disposable)
             where T : class, IDisposable
         {
-            if (disposable!=null)
+            if (disposable != null)
             {
                 disposable.Dispose();
             }
-           
+
             disposable = null;
         }
-        public static void RaiseEvent<TEventArgs>(ref EventHandler<TEventArgs> event_delegate, object sender, TEventArgs args)
+        public static void RaiseEvent<TEventArgs>(ref EventHandler<TEventArgs> event_delegate, object sender, TEventArgs args)
         {
             EventHandler<TEventArgs> handler = System.Threading.Volatile.Read(ref event_delegate);
-            if (handler != null) {
+            if (handler != null)
+            {
                 handler.Invoke(sender, args);
             }
         }

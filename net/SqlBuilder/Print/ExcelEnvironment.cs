@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
 //using DevExpress.Compression;
 
 namespace sql.builder
@@ -21,7 +19,7 @@ namespace sql.builder
 
         static ExcelEnvironment()
         {
-            _temp_directory = Path.Combine(sql.builder.Clean.Settings. GetInstance().TempPath, "sql.builder.printing");
+            _temp_directory = Path.Combine(sql.builder.Clean.Settings.GetInstance().TempPath, "sql.builder.printing");
 
             _sheet_path = Path.Combine(_temp_directory, "xl", "worksheets", "sheet1.xml");
             _strings_path = Path.Combine(_temp_directory, "xl", "sharedStrings.xml");

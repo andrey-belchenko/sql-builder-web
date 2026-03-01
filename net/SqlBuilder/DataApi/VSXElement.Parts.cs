@@ -1,20 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Xsl;
-using System.Xml.XPath;
-using System.IO;
 //using System.Windows.Forms;
-using Devart.Data.Oracle;
-using sql.builder.FieldInfo;
-using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.DataApi
@@ -38,8 +28,10 @@ namespace sql.builder.DataApi
             var elements = new List<VSXElement>();
             elements.Add(vsxelement);
 
-            while (elements.Count != 0) {
-                foreach (var element in elements) {
+            while (elements.Count != 0)
+            {
+                foreach (var element in elements)
+                {
                     var elements1 = VSXElement.GetElementsP(element);
                     element.Elements().Remove();
                     element.Add(elements1);
@@ -67,20 +59,24 @@ namespace sql.builder.DataApi
         {
             var list = new List<VSXElement>();
             IList<XElement> elements = parent.Elements().Where(EPredicate.IsNotExcuded).ToList();
-            for (int index_1 = 0; index_1 < elements.Count; index_1++) {
+            for (int index_1 = 0; index_1 < elements.Count; index_1++)
+            {
                 VSXElement el = VSXElement.Get(elements[index_1]);
                 VUsePart use_part = el as VUsePart;
-                if (use_part != null) {
+                if (use_part != null)
+                {
                     list.AddRange(use_part.Content());
-                } else {
+                }
+                else
+                {
                     list.Add(el);
                 }
             }
             return list;
         }
-        #if !FRAMEWORK_40
+#if !FRAMEWORK_40
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        #endif
+#endif
         public IList<VSXElement> GetElementsP()
         {
             return VSXElement.GetElementsP(this);
@@ -90,18 +86,24 @@ namespace sql.builder.DataApi
             Contract.Assert(name != null);
             var list = new List<VSXElement>();
             IList<XElement> elements = this.Elements().Where(EPredicate.IsNotExcuded).ToList();
-            for (int index_1 = 0; index_1 < elements.Count; index_1++) {
+            for (int index_1 = 0; index_1 < elements.Count; index_1++)
+            {
                 XElement el = elements[index_1];
-                if (el.Name == EName.usepart) {
+                if (el.Name == EName.usepart)
+                {
                     VUsePart use_part = VSXElement.Get<VUsePart>(el);
                     IList<VSXElement> els = use_part.Content();
-                    for (int index_2 = 0; index_2 < els.Count; index_2++) {
+                    for (int index_2 = 0; index_2 < els.Count; index_2++)
+                    {
                         VSXElement el1 = els[index_2];
-                        if (el1.Name == name) {
+                        if (el1.Name == name)
+                        {
                             list.Add(el1);
                         }
                     }
-                } else if (el.Name == name) {
+                }
+                else if (el.Name == name)
+                {
                     list.Add(VSXElement.Get(el));
                 }
             }
@@ -120,9 +122,10 @@ namespace sql.builder.DataApi
         {
             Contract.Assert(name != null);
             List<VSXElement> list = this.GetDescedantsP(name);
-            if (this.Name == name) {
+            if (this.Name == name)
+            {
                 list.Add(this);
-            }            
+            }
             return list;
         }
         #endregion
@@ -132,7 +135,8 @@ namespace sql.builder.DataApi
             Contract.Assert(parent != null);
             IList<VSXElement> childs = VSXElement.GetElementsP(parent);
             var list = new List<VSXElement>(childs.Count);
-            for (int index = 0; index < childs.Count; index++) {
+            for (int index = 0; index < childs.Count; index++)
+            {
                 VSXElement child = childs[index];
                 list.Add(child);
                 list.AddRange(VSXElement.GetDescedantsP(child));
@@ -144,9 +148,11 @@ namespace sql.builder.DataApi
             Contract.Assert(name != null);
             IList<VSXElement> childs = VSXElement.GetElementsP(this);
             var list = new List<VSXElement>();
-            for (int index = 0; index < childs.Count; index++) {
+            for (int index = 0; index < childs.Count; index++)
+            {
                 VSXElement child = childs[index];
-                if (child.Name == name) {
+                if (child.Name == name)
+                {
                     list.Add(child);
                 }
                 list.AddRange(child.GetDescedantsP(name));
@@ -158,9 +164,11 @@ namespace sql.builder.DataApi
             Contract.Assert(predicate != null);
             IList<VSXElement> childs = VSXElement.GetElementsP(this);
             var list = new List<VSXElement>();
-            for (int index = 0; index < childs.Count; index++) {
+            for (int index = 0; index < childs.Count; index++)
+            {
                 VSXElement child = childs[index];
-                if (predicate(child)) {
+                if (predicate(child))
+                {
                     list.Add(child);
                 }
                 list.AddRange(child.GetDescedantsP(predicate));
@@ -205,9 +213,12 @@ namespace sql.builder.DataApi
         public VSXElement UsePartElement;
         public VSXElement BaseElementOrSelf()
         {
-            if (this.BaseElement != null) {
+            if (this.BaseElement != null)
+            {
                 return BaseElement;
-            } else {
+            }
+            else
+            {
                 return this;
             }
         }

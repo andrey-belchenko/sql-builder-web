@@ -1,13 +1,12 @@
 ﻿using System;
-using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 ////using System.Windows.Forms;
 using System.Xml.Linq;
-
 using sql.builder.DataApi;
 using sql.builder.XmlHelpers;
+using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.Core
 {
@@ -25,26 +24,32 @@ namespace sql.builder.Core
         {
             this._projects = new Dictionary<string, Project>();
             // чтобы подтянуть изменения напрямую из файлов
-            foreach (XElement xproject in XmlSpecialFiles.GetActualXml().Elements(EName.projects).Elements(EName.project)) {
+            foreach (XElement xproject in XmlSpecialFiles.GetActualXml().Elements(EName.projects).Elements(EName.project))
+            {
                 Project project = new Project(xproject);
-                if (!this._projects.ContainsKey(project.Name)) {
+                if (!this._projects.ContainsKey(project.Name))
+                {
                     this._projects.Add(project.Name, project);
                 }
-                if (XmlReports.GetDemandProjects().Contains(project.Name)) {
+                if (XmlReports.GetDemandProjects().Contains(project.Name))
+                {
                     project.LoadIfNeed();
                 }
             }
-            if (_controller != null) {
+            if (_controller != null)
+            {
                 _controller.ReloadProjects();
             }
         }
         public void LoadProjectIfNeed(string name)
         {
             Project proj = this._projects[name];
-            if (proj.Hidden) {
+            if (proj.Hidden)
+            {
                 proj.Show();
             }
-            if (!proj.Loaded) {
+            if (!proj.Loaded)
+            {
                 proj.LoadIfNeed();
                 // подгружаем зависимости
                 this.LoadProjectsIfNeed(proj.ReferencesNames);
@@ -52,7 +57,8 @@ namespace sql.builder.Core
         }
         public void LoadProjectsIfNeed(IList<string> names)
         {
-            for (int index = 0; index < names.Count; index++) {
+            for (int index = 0; index < names.Count; index++)
+            {
                 this.LoadProjectIfNeed(names[index]);
             }
         }
@@ -68,7 +74,8 @@ namespace sql.builder.Core
         public void SetProjectScheme(string name, VSXElement scheme, VSXElement native_scheme)
         {
             Project project;
-            if (!this._projects.TryGetValue(name, out project)) {
+            if (!this._projects.TryGetValue(name, out project))
+            {
                 project = new Project(name);
                 this._projects.Add(project.Name, project);
             }
@@ -112,7 +119,7 @@ namespace sql.builder.Core
         {
             return this._projects[project_name];
         }
-        private Stack< bool> _oldOnly = new Stack<bool>();
+        private Stack<bool> _oldOnly = new Stack<bool>();
         public void PushOldOnly(bool value)
         {
             this._oldOnly.Push(value);
@@ -123,22 +130,31 @@ namespace sql.builder.Core
         }
         public bool IsOldOnly()
         {
-            if (this._oldOnly.Count == 0) {
+            if (this._oldOnly.Count == 0)
+            {
                 return false;
-            } else {
+            }
+            else
+            {
                 return this._oldOnly.Peek();
             }
         }
         public IList<VSXElement> GetScheme()
         {
-            if (this.IsOldOnly()) {
+            if (this.IsOldOnly())
+            {
                 return this.GetOldScheme();
-            } else {
+            }
+            else
+            {
                 var list = new List<VSXElement>();
-                foreach (Project project in this._projects.Values) {
-                    if (!project.Hidden) {
+                foreach (Project project in this._projects.Values)
+                {
+                    if (!project.Hidden)
+                    {
                         VSXElement scheme = project.Scheme;
-                        if (scheme != null) {
+                        if (scheme != null)
+                        {
                             list.Add(scheme);
                         }
                     }
@@ -148,9 +164,12 @@ namespace sql.builder.Core
         }
         public IList<VSXElement> GetOldScheme()
         {
-            if (this._schemeOld != null) {
+            if (this._schemeOld != null)
+            {
                 return new VSXElement[1] { this._schemeOld };
-            } else {
+            }
+            else
+            {
                 //string name;
                 /*if (_projects.Any(p => p.Value.Loaded && p.Value.Name == "asuse2")) {
                     name = "asuse2";
@@ -161,9 +180,11 @@ namespace sql.builder.Core
                 }*/
                 string name = "asuse2";
                 Project project;
-                if (!_projects.TryGetValue(name, out project) || !project.Loaded) {
+                if (!_projects.TryGetValue(name, out project) || !project.Loaded)
+                {
                     name = "asuse1";
-                    if (!_projects.TryGetValue(name, out project) || !project.Loaded) {
+                    if (!_projects.TryGetValue(name, out project) || !project.Loaded)
+                    {
                         return Array.Empty<VSXElement>(); // "Не удалось загрузить старую схему;
                     }
                 }
@@ -177,10 +198,13 @@ namespace sql.builder.Core
         public IList<VSXElement> GetNativeScheme()
         {
             var list = new List<VSXElement>();
-            foreach (Project project in this._projects.Values) {
-                if (!project.Hidden) {
+            foreach (Project project in this._projects.Values)
+            {
+                if (!project.Hidden)
+                {
                     VSXElement native_scheme = project.SchemeNative;
-                    if (native_scheme != null) {
+                    if (native_scheme != null)
+                    {
                         list.Add(native_scheme);
                     }
                 }
@@ -189,7 +213,8 @@ namespace sql.builder.Core
         }
         public ProjectsController GetController()
         {
-            if (this._controller == null) {
+            if (this._controller == null)
+            {
                 this._controller = new ProjectsController();
             }
             this._controller.UpdateStatus();
@@ -248,8 +273,10 @@ namespace sql.builder.Core
         /// <summary>
         /// Имя native-файла проекта \sql.builder\projects\&lt;имя проекта&gt;\&lt;имя проекта&gt;.native.xml
         /// </summary>
-        public string FileNativePath {
-            get {
+        public string FileNativePath
+        {
+            get
+            {
                 return Path.Combine(this.project_path, this.name + ".native.xml");
             }
         }
@@ -258,7 +285,8 @@ namespace sql.builder.Core
         /// </summary>
         public string FileCompiledPath
         {
-            get {
+            get
+            {
                 return Path.Combine(this.project_path, this.name + ".xml");
             }
         }
@@ -273,16 +301,21 @@ namespace sql.builder.Core
             this.name = xproject.Attribute(AName.name).Value;
             //
             this.references_names = new List<string>();
-            foreach (XElement reference in xproject.Elements(EName.references).Elements(EName.reference)) {
+            foreach (XElement reference in xproject.Elements(EName.references).Elements(EName.reference))
+            {
                 this.references_names.Add(reference.Attribute(AName.project).Value);
             }
             // Определяем зависимые проекты
             this.masters_names = new List<string>();
-            foreach (XElement el in xproject.Parent.Elements(EName.project)) {
+            foreach (XElement el in xproject.Parent.Elements(EName.project))
+            {
                 string name = el.Attribute(AName.name).Value;
-                if (name != this.name) {
-                    foreach (XElement reference in el.Elements(EName.references).Elements(EName.reference)) {
-                        if (reference.Attribute(AName.project).Value == this.name) {
+                if (name != this.name)
+                {
+                    foreach (XElement reference in el.Elements(EName.references).Elements(EName.reference))
+                    {
+                        if (reference.Attribute(AName.project).Value == this.name)
+                        {
                             this.masters_names.Add(name);
                             break;
                         }
@@ -290,25 +323,32 @@ namespace sql.builder.Core
                 }
             }
             XAttribute attr = xproject.Attribute(AName.directory);
-            if (attr == null) {
+            if (attr == null)
+            {
                 this.project_path = Path.Combine(XmlReports.GetDefaultSourceFolder(), this.name);
                 this.runtime_path = Path.Combine(XmlReports.GetRuntimePath(), "sql.builder", XmlReports.SourceFolderName, this.name);
-            } else {
+            }
+            else
+            {
                 this.project_path = Path.Combine(XmlReports.GetRootPath(), attr.Value, this.name);
                 this.runtime_path = Path.Combine(XmlReports.GetRuntimePath(), attr.Value);
             }
         }
         public void LoadIfNeed()
         {
-            if (!this.loaded) {
+            if (!this.loaded)
+            {
                 string rootPath = XmlReports.UseProjectSourceFolder ? this.project_path : this.runtime_path;
                 this.scheme = VSXElement.Get(XElement.Load(Path.Combine(rootPath, this.name + ".xml")));
                 Compiler.forCustomersProcessing(new[] { this.scheme }, XmlReports.customerId);
                 this.scheme_native = VSXElement.Get(XElement.Load(Path.Combine(rootPath, this.name + ".native.xml")));
-                if (this.name != "common") {
-                    foreach (XElement xpar in this.scheme.Elements(EName.globalparams).Elements(EName.param)) {
+                if (this.name != "common")
+                {
+                    foreach (XElement xpar in this.scheme.Elements(EName.globalparams).Elements(EName.param))
+                    {
                         string parname = xpar.Attribute(AName.name).Value;
-                        if (!XmlReports.IsGlobalParExists(parname)) {
+                        if (!XmlReports.IsGlobalParExists(parname))
+                        {
                             XmlReports.SetGlobalParValue(parname, xpar.Value);
                         }
                     }
@@ -337,7 +377,8 @@ namespace sql.builder.Core
         }*/
         public void Unload()
         {
-            if (this.loaded) {
+            if (this.loaded)
+            {
                 this.scheme = null;
                 this.scheme_native = null;
                 this.loaded = false;
@@ -361,13 +402,15 @@ namespace sql.builder.Core
 
         public ProjectsController()
         {
-            ReloadProjects();          
+            ReloadProjects();
         }
 
         public void UncheckAll()
         {
-            foreach (ProjectRecord projectRecord in Projects.Values) {
-                if (projectRecord.Name != "common" && projectRecord.Checked) {
+            foreach (ProjectRecord projectRecord in Projects.Values)
+            {
+                if (projectRecord.Name != "common" && projectRecord.Checked)
+                {
                     projectRecord.StatusChanging -= RecordOnStatusChanging;
                     projectRecord.Checked = false;
                     projectRecord.StatusChanging += RecordOnStatusChanging;
@@ -407,11 +450,13 @@ namespace sql.builder.Core
             var projects_to_load = Projects.Values.Where(p => p.Status == ProjectStatus.ReadyToLoad).ToList();
             var projects_to_unload = Projects.Values.Where(p => p.Status == ProjectStatus.ReadyToUnload).ToList();
             if (projects_to_load.Count == 0 && projects_to_unload.Count == 0) return;
-            foreach (var project in projects_to_load) {
+            foreach (var project in projects_to_load)
+            {
                 project.Project.LoadIfNeed();
                 project.UpdateStatus();
             }
-            foreach (var project in projects_to_unload) {
+            foreach (var project in projects_to_unload)
+            {
                 project.Project.Unload();
                 project.UpdateStatus();
             }
@@ -422,9 +467,11 @@ namespace sql.builder.Core
         public void SaveState()
         {
             var xprojects = new XElement(EName.projects);
-            foreach (ProjectRecord record in Projects.Values) {
+            foreach (ProjectRecord record in Projects.Values)
+            {
                 record.DefaultLoaded = (record.Status == ProjectStatus.Loaded);
-                if (record.Status == ProjectStatus.Loaded) {
+                if (record.Status == ProjectStatus.Loaded)
+                {
                     xprojects.Add(new XElement(EName.project, new XAttribute(AName.name, record.Name)));
                 }
             }
@@ -440,7 +487,7 @@ namespace sql.builder.Core
             foreach (var xproject in xprojects.Elements(TextConst.EName.Project))
             {
                 ProjectRecord rec = null;
-                if(!Projects.TryGetValue(xproject.Attribute(TextConst.AName.Name).Value, out rec))
+                if (!Projects.TryGetValue(xproject.Attribute(TextConst.AName.Name).Value, out rec))
                 {
                     continue;
                 }
@@ -460,13 +507,15 @@ namespace sql.builder.Core
             //    args.Cancel = true;
             //}
             // один из загружающих уже загружен или будет загружен
-            if (args.NewValue == ProjectStatus.NotLoaded || args.NewValue == ProjectStatus.ReadyToUnload) {
+            if (args.NewValue == ProjectStatus.NotLoaded || args.NewValue == ProjectStatus.ReadyToUnload)
+            {
                 IList<ProjectRecord> loadedMasters = rec.Project.MastersNames
                     .SelectAsArray(pn => Projects[pn])
                     .Where(p => p.Status == ProjectStatus.Loaded || p.Status == ProjectStatus.ReadyToLoad)
                     .ToList();
-                if (loadedMasters.Count != 0) {
-                    string message = string.Format("Невозможно выгрузить {0}, т.к. на него ссылаются другие загруженные проекты {1}", 
+                if (loadedMasters.Count != 0)
+                {
+                    string message = string.Format("Невозможно выгрузить {0}, т.к. на него ссылаются другие загруженные проекты {1}",
                         rec.Name, string.Join(", ", loadedMasters.SelectAsArray(ProjectRecord.GetName)));
                     HasMessage(this, new HasMessageArgs(message));
                     args.Cancel = true;
@@ -515,14 +564,20 @@ namespace sql.builder.Core
         private bool default_loaded;
         private ProjectStatus _status;
         public Project Project { get { return this.project; } }
-        public bool Checked {
-            get {
+        public bool Checked
+        {
+            get
+            {
                 return this._status == ProjectStatus.ReadyToLoad || this._status == ProjectStatus.Loaded;
             }
-            set {
-                if (this.project.Loaded) {
+            set
+            {
+                if (this.project.Loaded)
+                {
                     this.Status = (value) ? ProjectStatus.Loaded : ProjectStatus.ReadyToUnload;
-                } else {
+                }
+                else
+                {
                     this.Status = (value) ? ProjectStatus.ReadyToLoad : ProjectStatus.NotLoaded;
                 }
             }
@@ -533,20 +588,25 @@ namespace sql.builder.Core
         public bool DefaultLoaded { get { return this.default_loaded; } set { this.default_loaded = value; } }
         public ProjectStatus Status
         {
-            get {
+            get
+            {
                 return this._status;
             }
-            set {
-                if (this._status == value) {
+            set
+            {
+                if (this._status == value)
+                {
                     return;
                 }
-                if (this.StatusChanging != null) {
+                if (this.StatusChanging != null)
+                {
                     var args = new StatusChangingArgs(this._status, value);
                     this.StatusChanging(this, args);
                     if (args.Cancel) return;
                 }
                 this._status = value;
-                if (this.StatusChanged != null) {
+                if (this.StatusChanged != null)
+                {
                     this.StatusChanged(this, new StatusChangedArgs(this._status));
                 }
             }
@@ -611,7 +671,7 @@ namespace sql.builder.Core
 
     public class HasMessageArgs : EventArgs
     {
-        public string Message {get; private set;}
+        public string Message { get; private set; }
 
         public HasMessageArgs(string message)
         {

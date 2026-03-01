@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using System.Reflection;
 
 namespace sql.builder.DataApi
@@ -21,9 +19,11 @@ namespace sql.builder.DataApi
         {
             IList<VSXElement> list = this.GetElementsP(EName.use_object);
             List<string> permissions = new List<string>(list.Count);
-            for (int index = 0; index < list.Count; index++) {
+            for (int index = 0; index < list.Count; index++)
+            {
                 VUseObject uo = (VUseObject)list[index];
-                if (!write || uo.P_WriteAccess == TextConst.AVBool.True) {
+                if (!write || uo.P_WriteAccess == TextConst.AVBool.True)
+                {
                     permissions.Add(uo.P_CalledObject);
                 }
             }
@@ -31,12 +31,14 @@ namespace sql.builder.DataApi
         }
         private HashSet<string> AllPermissions(bool write)
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), write.ToString())) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), write.ToString()))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), write.ToString()) as HashSet<string>);
             }
             List<string> list = this.SelfPermissions(write);
             IList<VSXElement> roles = this.GetElementsP(EName.use_role);
-            for (int index = 0; index < roles.Count; index++) {
+            for (int index = 0; index < roles.Count; index++)
+            {
                 VRole role = ((VUseRole)roles[index]).UsedRole();
                 list.AddRange(role.AllPermissions(write));
             }

@@ -1,20 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Xsl;
-using System.Xml.XPath;
-using System.IO;
 //using System.Windows.Forms;
-using Devart.Data.Oracle;
-using sql.builder.UI;
 using System.Reflection;
-using sql.builder.Exceptions;
+using System.Xml.Linq;
 namespace sql.builder.DataApi
 {
     public partial class VForm
@@ -23,7 +12,9 @@ namespace sql.builder.DataApi
         {
             /*if (this.Multireferences().Count != 0) {
                 return true;// пока только Multireference возможно понадобится еще что-нибудь по той же технологии
-            } else*/ if (this.ContentExpressions().Count != 0) {
+            } else*/
+            if (this.ContentExpressions().Count != 0)
+            {
                 return true;
             }
             return false;
@@ -34,7 +25,7 @@ namespace sql.builder.DataApi
             {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VCall>);
             }
-            var list = GetContentSections().SelectMany(c => c.GetDescedantsP(EName.call).Where(cc=>cc.P_Table!="")).Cast<VCall>().ToList();
+            var list = GetContentSections().SelectMany(c => c.GetDescedantsP(EName.call).Where(cc => cc.P_Table != "")).Cast<VCall>().ToList();
 
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), null);
             return list;
@@ -161,11 +152,11 @@ namespace sql.builder.DataApi
         private void PreprocessExpressions(XElement xform1)
         {
 
-            var list = xform1.Descendants(TextConst.EName.Call).Where(c=>Cmn.GetAttrValue(c,TextConst.AName.Table)!="").ToList();
+            var list = xform1.Descendants(TextConst.EName.Call).Where(c => Cmn.GetAttrValue(c, TextConst.AName.Table) != "").ToList();
             foreach (XElement xcall in list)
             {
                 var vcall = GetContentExpression(xcall.Attribute(TextConst.AName.Table).Value, xcall.Attribute(TextConst.AName.As).Value);
-                
+
                 var xdummyCol = new XElement(TextConst.AName.Column);
                 Cmn.copyAttributes(xcall, xdummyCol);
                 xdummyCol.Attributes(TextConst.AName.Function).Remove();
@@ -211,7 +202,7 @@ namespace sql.builder.DataApi
                 return vform1;
 
             }
-            
+
         }
     }
 }

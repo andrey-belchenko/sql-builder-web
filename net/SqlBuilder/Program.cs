@@ -1,32 +1,16 @@
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.Data;
-using System.Linq;
-using System.Threading;
 //using System.Windows.Forms;
-using System.Xml.Linq;
-using Devart.Data.Oracle;
 //using DevExpress.LookAndFeel;
 //using DevExpress.Skins;
 //using DevExpress.UserSkins;
 //using DevExpress.XtraEditors;
-using infoenergo.core;
-using infoenergo.core.Data;
-using infoenergo.sys;
 //using infoenergo.ui.win;
 //using sql.builder.Controls.Testing;
 //using sql.builder.Properties;
-using sql.builder.DataApi;
-using sql.builder.UI.CommandItems;
-using sql.builder.WinForms;
-using sql.builder.XmlHelpers;
 //using infoenergo.framework.Extensions.Oracle;
 using System.Collections.Generic;
 using System.Text;
 using sql.builder.Clean;
-using SqlBuilderLib.DevTools;
-using System.Text.RegularExpressions;
 
 // Basic usage
 
@@ -102,7 +86,7 @@ namespace sql.builder
 
 
             pars.Add("p_ym_end", 2025.02m);
-           
+
 
             var path = CleanSqlBuilder.ExecReportGetPath("kazan_el.74988", pars, "74988.xlsx");
             // Output as file URI for VS Code debug console to recognize as clickable link

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 namespace sql.builder.DataApi
 {
@@ -10,7 +8,7 @@ namespace sql.builder.DataApi
             : base(EName.content)
         {
         }
-        private static string[] child_nodes = { TextConst.EName.FieldGroup, TextConst.EName.Column, TextConst.EName.Fact, TextConst.EName.Call, TextConst.EName.Grid, 
+        private static string[] child_nodes = { TextConst.EName.FieldGroup, TextConst.EName.Column, TextConst.EName.Fact, TextConst.EName.Call, TextConst.EName.Grid,
             TextConst.EName.TabContainer, TextConst.EName.SplitContainer, TextConst.EName.Field,
             TextConst.EName.UseForm, TextConst.EName.Splitter, TextConst.EName.Label, TextConst.EName.Menu,
             TextConst.EName.UseField, TextConst.EName.UICommand, TextConst.EName.UsePart };

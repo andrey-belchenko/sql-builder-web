@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Linq; // XElement, XAttribute
-using Enumerable = System.Linq.Enumerable;
-using Contract = System.Diagnostics.Contracts.Contract;
 using System.Globalization; // DateTimeStyles
+using System.Xml.Linq; // XElement, XAttribute
+using Contract = System.Diagnostics.Contracts.Contract;
+using Enumerable = System.Linq.Enumerable;
 
 namespace sql.builder.DataApi
 {
@@ -32,9 +32,12 @@ namespace sql.builder.DataApi
         {
             Contract.Assert(el != null);
             XAttribute attr = el.Attribute(attr_name);
-            if (attr != null) {
+            if (attr != null)
+            {
                 return attr.Value;
-            } else {
+            }
+            else
+            {
                 return default_value;
             }
         }
@@ -42,9 +45,12 @@ namespace sql.builder.DataApi
         {
             Contract.Assert(el != null);
             XAttribute attr = el.Attribute(attr_name);
-            if (attr != null) {
+            if (attr != null)
+            {
                 return attr.Value == TextConst.AVBool.True;
-            } else {
+            }
+            else
+            {
                 return default_value;
             }
         }
@@ -52,20 +58,29 @@ namespace sql.builder.DataApi
         {
             Contract.Assert(el != null);
             XAttribute attr = el.Attribute(attr_name);
-            if (attr == null) {
+            if (attr == null)
+            {
                 return default_value;
-            } else {
+            }
+            else
+            {
                 string str_value = attr.Value;
                 string format;
-                if (str_value.Length == date_format.Length) {
+                if (str_value.Length == date_format.Length)
+                {
                     format = date_format;
-                } else {
+                }
+                else
+                {
                     format = iso_date_format;
                 }
                 DateTime value;
-                if (DateTime.TryParseExact(str_value, format, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out value)) {
+                if (DateTime.TryParseExact(str_value, format, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out value))
+                {
                     return value;
-                } else {
+                }
+                else
+                {
                     return default_value;
                 }
             }
@@ -75,11 +90,16 @@ namespace sql.builder.DataApi
             Contract.Assert(el != null);
             XAttribute attr = el.Attribute(attr_name);
             DateTime value;
-            if (attr == null) {
+            if (attr == null)
+            {
                 return default_value;
-            } else if (DateTime.TryParseExact(attr.Value, format, provider, style, out value)) {
+            }
+            else if (DateTime.TryParseExact(attr.Value, format, provider, style, out value))
+            {
                 return value;
-            } else {
+            }
+            else
+            {
                 return default_value;
             }
         }
@@ -87,9 +107,12 @@ namespace sql.builder.DataApi
         {
             Contract.Assert(el != null);
             XAttribute attr = el.Attribute(attr_name);
-            if (attr != null) {
+            if (attr != null)
+            {
                 return Convert.ToInt32(attr.Value);
-            } else {
+            }
+            else
+            {
                 return default_value;
             }
         }
@@ -110,9 +133,12 @@ namespace sql.builder.DataApi
             Contract.Assert(value != null);
             //value = string.Intern(value);
             XAttribute attr = el.Attribute(attr_name);
-            if (attr != null) {
+            if (attr != null)
+            {
                 attr.Value = value;
-            } else {
+            }
+            else
+            {
                 el.Add(new XAttribute(attr_name, value));
             }
         }
@@ -149,11 +175,15 @@ namespace sql.builder.DataApi
         {
             Contract.Assert(dest != null);
             Contract.Assert(src != null);
-            foreach (XAttribute src_attr in src) {
+            foreach (XAttribute src_attr in src)
+            {
                 XAttribute dest_attr = dest.Attribute(src_attr.Name);
-                if (dest_attr == null) {
+                if (dest_attr == null)
+                {
                     dest.Add(new XAttribute(src_attr.Name, src_attr.Value));
-                } else {
+                }
+                else
+                {
                     dest_attr.Value = src_attr.Value;
                 }
             }
@@ -167,7 +197,8 @@ namespace sql.builder.DataApi
         {
             Contract.Assert(el != null);
             XAttribute attr = el.Attribute(attr_name);
-            if (attr != null) {
+            if (attr != null)
+            {
                 attr.Remove();
             }
         }
@@ -181,7 +212,8 @@ namespace sql.builder.DataApi
         {
             Contract.Assert(el != null);
             XElement element = el.Element(element_name);
-            if (element != null) {
+            if (element != null)
+            {
                 element.Remove();
             }
         }
@@ -195,7 +227,8 @@ namespace sql.builder.DataApi
             Contract.Assert(nodes != null);
             Contract.Assert(new_parent != null);
             IList<XNode> childs = Enumerable.ToList<XNode>(nodes);
-            for (int index = 0; index < childs.Count; index++) {
+            for (int index = 0; index < childs.Count; index++)
+            {
                 XNode e = childs[index];
                 e.Remove();
                 new_parent.Add(e);
@@ -211,7 +244,8 @@ namespace sql.builder.DataApi
             Contract.Assert(attrs != null);
             Contract.Assert(new_parent != null);
             IList<XAttribute> childs = Enumerable.ToList<XAttribute>(attrs);
-            for (int index = 0; index < childs.Count; index++) {
+            for (int index = 0; index < childs.Count; index++)
+            {
                 XAttribute attr = childs[index];
                 attr.Remove();
                 new_parent.Add(attr);
@@ -230,10 +264,12 @@ namespace sql.builder.DataApi
         {
             Contract.Assert(elements != null);
             Contract.Assert(attr_name != null);
-            foreach (XElement e in elements) {
+            foreach (XElement e in elements)
+            {
                 XAttribute attr = e.Attribute(attr_name);
                 //Contract.Assert(attr != null);
-                if (attr != null && attr.Value == attr_value) {
+                if (attr != null && attr.Value == attr_value)
+                {
                     return e;
                 }
             }
@@ -244,8 +280,10 @@ namespace sql.builder.DataApi
             Contract.Assert(element != null);
             Contract.Assert(name != null);
             XElement parent = element.Parent;
-            while (parent != null) {
-                if (parent.Name == name) {
+            while (parent != null)
+            {
+                if (parent.Name == name)
+                {
                     break;
                 }
                 parent = parent.Parent;

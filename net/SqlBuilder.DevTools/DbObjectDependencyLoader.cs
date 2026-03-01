@@ -36,7 +36,7 @@ namespace SqlBuilderLib.DevTools
             {
                 iteration++;
                 Console.WriteLine($"\n=== Iteration {iteration} ===");
-                
+
                 var unprocessed = AnalyzerStorage.GetUnprocessedDbObjects(customQuery);
                 if (unprocessed.Count == 0)
                 {
@@ -67,7 +67,7 @@ namespace SqlBuilderLib.DevTools
                 }
 
                 Console.WriteLine($"Iteration {iteration} complete: {processedCount} processed, {errorCount} errors.");
-                
+
                 // Fix schemas after each iteration
                 Console.WriteLine("Fixing schemas...");
                 AnalyzerStorage.FixSchemas();
@@ -95,7 +95,7 @@ namespace SqlBuilderLib.DevTools
                 {
                     var tableInfo = DevOracleSheme.GetTableInfo(dbObject.ObjectName);
                     currentType = tableInfo.Type;
-                    
+
                     // Update the database with the resolved type
                     AnalyzerStorage.UpdateDbObjectType(dbObject.ObjectName, tableInfo.Type);
                     Console.WriteLine($"  Resolved type: {currentType}");
@@ -153,12 +153,12 @@ namespace SqlBuilderLib.DevTools
 
                 Console.WriteLine($"  Extracting dependencies from DDL...");
                 var dependencies = ExtractDependenciesFromSql(tableInfo.DDL, objectName, type);
-                
+
                 if (System.Linq.Enumerable.Any(dependencies))
                 {
                     var result = AnalyzerStorage.SaveDependencies(dependencies);
                     Console.WriteLine($"  Found {dependencies.Count()} dependencies ({result.NewDependencies.Count} new, {result.ExistingDependencies.Count} existing):");
-                    
+
                     if (System.Linq.Enumerable.Any(result.NewDependencies))
                     {
                         Console.WriteLine($"    New dependencies:");
@@ -169,7 +169,7 @@ namespace SqlBuilderLib.DevTools
                             Console.WriteLine($"      - {dep.UsedObjectName} ({dep.UsedObjectType?.ToString() ?? "null"}){dbObjectStatus}");
                         }
                     }
-                    
+
                     if (System.Linq.Enumerable.Any(result.ExistingDependencies))
                     {
                         Console.WriteLine($"    Existing dependencies:");
@@ -198,12 +198,12 @@ namespace SqlBuilderLib.DevTools
             try
             {
                 int lastDotIndex = objectName.LastIndexOf('.');
-                
+
                 if (lastDotIndex < 0)
                 {
                     // Standalone procedure - no dot in name
                     Console.WriteLine($"  Standalone procedure: {objectName}");
-                    
+
                     try
                     {
                         var procedureInfo = DevOracleSheme.GetProcedureInfo(objectName);
@@ -212,16 +212,16 @@ namespace SqlBuilderLib.DevTools
                             Console.WriteLine($"  No DDL available for procedure {objectName}");
                             return;
                         }
-                        
+
                         Console.WriteLine($"  Extracting dependencies from procedure DDL...");
                         // Extract dependencies directly (no procedureName parameter needed)
                         var dependencies = ExtractDependenciesFromSql(procedureInfo.DDL, objectName, DbObjectType.Procedure);
-                        
+
                         if (System.Linq.Enumerable.Any(dependencies))
                         {
                             var result = AnalyzerStorage.SaveDependencies(dependencies);
                             Console.WriteLine($"  Found {dependencies.Count()} dependencies ({result.NewDependencies.Count} new, {result.ExistingDependencies.Count} existing):");
-                            
+
                             if (System.Linq.Enumerable.Any(result.NewDependencies))
                             {
                                 Console.WriteLine($"    New dependencies:");
@@ -232,7 +232,7 @@ namespace SqlBuilderLib.DevTools
                                     Console.WriteLine($"      - {dep.UsedObjectName} ({dep.UsedObjectType?.ToString() ?? "null"}){dbObjectStatus}");
                                 }
                             }
-                            
+
                             if (System.Linq.Enumerable.Any(result.ExistingDependencies))
                             {
                                 Console.WriteLine($"    Existing dependencies:");
@@ -285,12 +285,12 @@ namespace SqlBuilderLib.DevTools
             Console.WriteLine($"  Extracting dependencies from package DDL...");
             var objectName = procedureName != null ? $"{packageName}.{procedureName}" : packageName;
             var dependencies = ExtractDependenciesFromSql(packageInfo.DDL, objectName, DbObjectType.Procedure, procedureName);
-            
+
             if (System.Linq.Enumerable.Any(dependencies))
             {
                 var result = AnalyzerStorage.SaveDependencies(dependencies);
                 Console.WriteLine($"  Found {dependencies.Count()} dependencies ({result.NewDependencies.Count} new, {result.ExistingDependencies.Count} existing):");
-                
+
                 if (System.Linq.Enumerable.Any(result.NewDependencies))
                 {
                     Console.WriteLine($"    New dependencies:");
@@ -301,7 +301,7 @@ namespace SqlBuilderLib.DevTools
                         Console.WriteLine($"      - {dep.UsedObjectName} ({dep.UsedObjectType?.ToString() ?? "null"}){dbObjectStatus}");
                     }
                 }
-                
+
                 if (System.Linq.Enumerable.Any(result.ExistingDependencies))
                 {
                     Console.WriteLine($"    Existing dependencies:");

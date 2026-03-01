@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
 using AName_ = sql.builder.DataApi.AName;
@@ -17,7 +16,8 @@ namespace sql.builder.DataApi
             XElement el = new XElement(this);
             IList<XElement> list = new List<XElement>(el.Descendants(EName.val));
             int index;
-            for (index = 0; index < list.Count; index++) {
+            for (index = 0; index < list.Count; index++)
+            {
                 XElement val = list[index];
                 val.ReplaceWith(new XText("[par" + (index + 1).ToString() + "]"));
             }
@@ -27,9 +27,11 @@ namespace sql.builder.DataApi
             // sb.Replace("\r", "");
             // sb.Replace("\n", "");
             index = sb.Length - 1;
-            while (index >= 0) {
+            while (index >= 0)
+            {
                 char ch = sb[index];
-                if (ch == '\r' || ch == '\n') {
+                if (ch == '\r' || ch == '\n')
+                {
                     sb.Remove(index, 1);
                 }
                 index--;
@@ -37,11 +39,14 @@ namespace sql.builder.DataApi
             return sb.ToString();
         }
         #region IdName
-        public override string P_IdName {
-            get {
+        public override string P_IdName
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.name);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.name, value);
             }
         }
@@ -67,9 +72,12 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Text
-        public override string P_Text {
-            get {
-                if (this.IsEmpty) {
+        public override string P_Text
+        {
+            get
+            {
+                if (this.IsEmpty)
+                {
                     return string.Empty;
                 }
                 string text = this.ToString(SaveOptions.DisableFormatting);

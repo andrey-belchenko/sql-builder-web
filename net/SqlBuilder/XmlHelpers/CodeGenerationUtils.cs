@@ -1,13 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Xml.Linq;
-using Devart.Data.Oracle;
 //using DevExpress.XtraCharts.Design;
 using sql.builder.DataApi;
-using System.Collections.Generic;
-using sql.builder.Clean;
 
 
 namespace sql.builder.XmlHelpers
@@ -24,9 +21,9 @@ namespace sql.builder.XmlHelpers
         {
             return ExecuteMergeOrDelete(reportName, true);
         }
-        private static string ExecuteMergeOrDelete(string reportName,bool isDelete)
+        private static string ExecuteMergeOrDelete(string reportName, bool isDelete)
         {
-            var sProc = SqlReportPkg.Generate(reportName, true, true,true,isDelete);
+            var sProc = SqlReportPkg.Generate(reportName, true, true, true, isDelete);
             var rep = XmlReports.Environment.GetPrecompiledReport(reportName);
             var sParams = GetParamsLine(rep);
             var sUseParams = GetCodeAddOraclePars(rep);
@@ -37,14 +34,14 @@ namespace sql.builder.XmlHelpers
             {
                 retType = "void";
             }
-            sb.AppendLine(string.Format("public {2} {0}({1})", methdName, sParams,retType));
+            sb.AppendLine(string.Format("public {2} {0}({1})", methdName, sParams, retType));
             sb.AppendLine("{");
             sb.AppendLine(string.Format("var cmd = new VOracleCommand();"));
             if (!isDelete)
             {
                 sb.AppendLine("object ret=null;");
             }
-           
+
             sb.AppendLine("try {");
             sb.AppendLine("cmd.Connection=" + ConnectionExpr() + ";");
             sb.AppendLine(sUseParams);
@@ -81,11 +78,11 @@ namespace sql.builder.XmlHelpers
         {
             var rep = XmlReports.Environment.GetPrecompiledReport(reportName);
             var ds = rep.Result(2, false);
-            var s = GenMethodCode(rep,reportName,ds);
+            var s = GenMethodCode(rep, reportName, ds);
             return s;
         }
 
-        public static string MethodSelect(string reportName,bool retStatus)
+        public static string MethodSelect(string reportName, bool retStatus)
         {
             var rep = XmlReports.Environment.GetPrecompiledReport(reportName);
             var ds = rep.Result(2, false);
@@ -94,11 +91,11 @@ namespace sql.builder.XmlHelpers
         }
 
 
-        
 
 
-       
-        public static string ReportWithErrorResultClass(VReport rep, string fieldName=null)
+
+
+        public static string ReportWithErrorResultClass(VReport rep, string fieldName = null)
         {
 
             var s1 = @" public class {0}
@@ -115,9 +112,9 @@ namespace sql.builder.XmlHelpers
             {
                 fieldName = ParseToUpper(mqry.P_Alias);
             }
-          
-            
-            var s2 = string.Format(s1, className,className1,fieldName);
+
+
+            var s2 = string.Format(s1, className, className1, fieldName);
 
             return s2;
         }
@@ -125,7 +122,7 @@ namespace sql.builder.XmlHelpers
         public static string ClassDeclaration(string[] reportNames)
         {
             var sb = new StringBuilder();
-            var names=new HashSet<string>();
+            var names = new HashSet<string>();
             foreach (var reportName in reportNames)
             {
                 var rep = XmlReports.Environment.GetPrecompiledReport(reportName);
@@ -146,7 +143,7 @@ namespace sql.builder.XmlHelpers
                         sb.AppendLine(sClassDef);
                     }
                 }
-                
+
             }
 
             return sb.ToString();
@@ -156,14 +153,14 @@ namespace sql.builder.XmlHelpers
         {
             var rep = XmlReports.Environment.GetPrecompiledReport(reportName);
             var ds = rep.Result(2, false);
-           
+
             var sb = new StringBuilder();
 
-            var className = ParseToUpper(ReplaceClsPfx(  rep.MainSource().P_CalledQuery )  );
+            var className = ParseToUpper(ReplaceClsPfx(rep.MainSource().P_CalledQuery));
             var methodName = ParseToUpper(reportName);
             var objName = ParseParam(rep.MainSource().P_Alias);
             sb.AppendLine(string.Format("public  void {0} ({1} {2})", methodName, className, objName));
-          
+
             sb.AppendLine("{");
             sb.AppendLine("OracleParameter par =null;");
             sb.AppendLine("int idCounter = 0;");
@@ -190,7 +187,7 @@ namespace sql.builder.XmlHelpers
         {
 
 
-          
+
             var tblName = queryCall.P_CalledQuery;
             var sql = string.Format("delete {0}", tblName);
 
@@ -198,9 +195,9 @@ namespace sql.builder.XmlHelpers
 
 
             var className = ParseToUpper(dt.TableName);
-         
-            var cmdName = "cmd" + className+"Del";
-            
+
+            var cmdName = "cmd" + className + "Del";
+
             sb.AppendLine(string.Format("var {0} = new VOracleCommand();", cmdName));
             sb.AppendLine("try {");
             sb.AppendLine(string.Format("{0}.Connection = {1};", cmdName, ConnectionExpr()));
@@ -214,10 +211,10 @@ namespace sql.builder.XmlHelpers
             sb.AppendLine(string.Format("{0}.Dispose();", cmdName));
             sb.AppendLine("}");
 
-           
+
             return sb;
         }
-        private static StringBuilder InsertIntoTempTable(VQueryCall queryCall, VDataTable dt,VReport rep)
+        private static StringBuilder InsertIntoTempTable(VQueryCall queryCall, VDataTable dt, VReport rep)
         {
 
 
@@ -229,9 +226,11 @@ namespace sql.builder.XmlHelpers
                 fkName = queryCall.GetRelChildColumnName();
             }
             IList<VDataColumn> realColumns = new List<VDataColumn>(dt.Columns.Count);
-            for (int index = 0; index < dt.Columns.Count; index++) {
+            for (int index = 0; index < dt.Columns.Count; index++)
+            {
                 VDataColumn col = (VDataColumn)dt.Columns[index];
-                if (TextConst.AVColumn.IsNotSysColumn(col.ColumnName)) {
+                if (TextConst.AVColumn.IsNotSysColumn(col.ColumnName))
+                {
                     realColumns.Add(col);
                 }
             }
@@ -245,13 +244,17 @@ namespace sql.builder.XmlHelpers
             //var pars = string.Join(",", parNames);
             string flds = string.Empty;
             string pars = string.Empty;
-            for (int index = 0; index < realColumns.Count; index++) {
+            for (int index = 0; index < realColumns.Count; index++)
+            {
                 string col_name = realColumns[index].ColumnName;
                 string par_name = ":" + GetParNameForColumn(col_name);
-                if (index == 0) {
+                if (index == 0)
+                {
                     flds = col_name;
                     pars = par_name;
-                } else {
+                }
+                else
+                {
                     flds = flds + "," + col_name;
                     pars = pars + "," + par_name;
                 }
@@ -268,7 +271,7 @@ namespace sql.builder.XmlHelpers
             sb.AppendLine(string.Format("var {0} = new VOracleCommand();", cmdName));
             sb.AppendLine("try {");
             sb.AppendLine(string.Format("{0}.Connection = {1};", cmdName, ConnectionExpr()));
-        
+
             sb.AppendLine(string.Format("{0}.CommandText=\"{1}\";", cmdName, sql));
             foreach (var col in realColumns)
             {
@@ -279,7 +282,7 @@ namespace sql.builder.XmlHelpers
 
                 sb.AppendLine(string.Format("{0}.Parameters.Add(par);", cmdName));
                 sb.AppendLine();
-             //   var cmd = new OracleCommand();
+                //   var cmd = new OracleCommand();
 
                 //var par = new OracleParameter();
                 //par.Value=
@@ -289,14 +292,14 @@ namespace sql.builder.XmlHelpers
             if (fkName != null)
             {
                 parentObjName = ParseParam(dt.ParentRelations[0].ParentTable.TableName);
-                sb.AppendLine(string.Format("foreach (var {0} in {1}.{2})",objName, parentObjName, className));
+                sb.AppendLine(string.Format("foreach (var {0} in {1}.{2})", objName, parentObjName, className));
                 sb.AppendLine("{");
             }
 
 
             sb.AppendLine("idCounter++;");
             var idName = objName + "Id";
-           
+
             sb.AppendLine(string.Format("var {0}Id=idCounter;", objName));
             foreach (var col in realColumns)
             {
@@ -318,7 +321,7 @@ namespace sql.builder.XmlHelpers
                 }
                 sb.AppendLine(string.Format("par.Value={0};", val));
                 sb.AppendLine();
-              
+
             }
 
             sb.AppendLine(string.Format("SqlTrace.Trace({0});", cmdName));
@@ -475,7 +478,7 @@ namespace sql.builder.XmlHelpers
 
                 retClassNamePre = mainTab;
             }
-           
+
 
             string resClassName = ParseToUpper(ReplaceClsPfx(retClassNamePre)) + ((multSel) ? "[] " : " ");
 
@@ -515,7 +518,8 @@ namespace sql.builder.XmlHelpers
         }
         private static string GetPrimitiveResultType(VReport rep)
         {
-            if (rep.Queries().Count > 1) {
+            if (rep.Queries().Count > 1)
+            {
                 return null;
             }
             return GetPrimitiveResultType(rep.GetQuery(rep.MainSource().P_Alias));
@@ -528,14 +532,19 @@ namespace sql.builder.XmlHelpers
             //        .Columns()
             //        .Where(c => !TextConst.AVColumnArray.SysColumns.Contains(c.XName));
             IList<VSXElement> cols = new List<VSXElement>();
-            foreach (VSXElement col in qry.Query().Columns()) {
-                if (TextConst.AVColumn.IsNotSysColumn(col.XName)) {
+            foreach (VSXElement col in qry.Query().Columns())
+            {
+                if (TextConst.AVColumn.IsNotSysColumn(col.XName))
+                {
                     cols.Add(col);
                 }
             }
-            if (cols.Count > 1) {
+            if (cols.Count > 1)
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return GetNullAbleDataType(Cmn.GetTypeFromStringType(cols.First().XDataType(), null));
             }
         }
@@ -593,11 +602,11 @@ namespace sql.builder.XmlHelpers
             foreach (VDataTable t in ds.Tables)
             {
                 result.AppendLine(@"            var cmdText" + ParseToUpper(t.TableName) + @" = @""" + t.DataAdapter.SelectCommand.CommandText + @""";");
-                
+
                 result.AppendLine(@"            var cmd" + ParseToUpper(t.TableName) + " = new Devart.Data.Oracle.OracleCommand(cmdText" + ParseToUpper(t.TableName) + ", _Connection);");
                 if (ds.ProcedureText == null) result.AppendLine(GetCodeAddOraclePars(rep, ParseToUpper(t.TableName)));
                 result.AppendLine(@"            var dataReader" + ParseToUpper(t.TableName) + " = cmd" + ParseToUpper(t.TableName) + ".ExecuteReader();");
-                
+
                 result.AppendLine();
             }
             result.AppendLine("try {");
@@ -624,7 +633,7 @@ namespace sql.builder.XmlHelpers
                 result.AppendLine("res." + ParseToUpper(rep.MainSource().P_Alias) + "=" + retExpr + ";");
                 retExpr = "res";
             }
-           
+
             result.AppendLine(@"            return " + retExpr + ";");
 
             result.AppendLine("} finally {");
@@ -692,12 +701,16 @@ namespace sql.builder.XmlHelpers
                 relColName = qry.GetElementsP(EName.call).First().GetDescedantsP(EName.column).Where(c => c.P_Table == qry.XName).Select(c => c.P_Column).First();
 
             }
-            foreach (DataColumn col in t.Columns) {
+            foreach (DataColumn col in t.Columns)
+            {
                 string col_name = col.ColumnName;
                 string mod;
-                if (col_name == relColName || !TextConst.AVColumn.IsNotSysColumn(col_name)) {
+                if (col_name == relColName || !TextConst.AVColumn.IsNotSysColumn(col_name))
+                {
                     mod = "public";
-                } else {
+                }
+                else
+                {
                     mod = "public";
                 }
                 result.AppendLine(@"        " + mod + " " + GetNullAbleDataType(col.DataType) + " " + ParseToUpper(col.ColumnName) + "=null;");
@@ -790,7 +803,8 @@ namespace sql.builder.XmlHelpers
                 }
                 else
                 {
-                    if (TextConst.AVColumn.IsNotSysColumn(col.ColumnName)) {
+                    if (TextConst.AVColumn.IsNotSysColumn(col.ColumnName))
+                    {
                         //result.Append("  dataReader" + ParseToUpper(alias) + ".Get" + col.DataType.Name + @"(""" + col.ColumnName + @""");");
                         result.Append(
                             string.Format(

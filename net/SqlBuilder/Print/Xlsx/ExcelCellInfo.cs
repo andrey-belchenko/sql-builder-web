@@ -1,6 +1,6 @@
 using System;
-using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
+using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.Print.Xlsx
 {
@@ -20,10 +20,12 @@ namespace sql.builder.Print.Xlsx
         /// </summary>
         public int ColumnID
         {
-            get {
+            get
+            {
                 return this.column_id;
             }
-            set {
+            set
+            {
                 this.column_id = value;
                 this.column_name = ExcelUtils.GetColumnName(value);
             }
@@ -33,21 +35,26 @@ namespace sql.builder.Print.Xlsx
         /// </summary>
         public int RowID
         {
-            get {
+            get
+            {
                 return this.row_id;
             }
-            set {
+            set
+            {
                 this.row_id = value;
             }
         }
         /// <summary>
         /// ��������� ����������� �������
         /// </summary>
-        public string ColumnName {
-            get {
+        public string ColumnName
+        {
+            get
+            {
                 return this.column_name;
             }
-            set {
+            set
+            {
                 this.column_name = value;
                 this.column_id = ExcelUtils.GetColumnNumber(this.column_name);
             }
@@ -57,7 +64,8 @@ namespace sql.builder.Print.Xlsx
         /// </summary>
         public string CellName
         {
-            get {
+            get
+            {
                 return this.column_name + this.row_id.ToString();
             }
         }
@@ -87,9 +95,12 @@ namespace sql.builder.Print.Xlsx
         }
         public bool Equals(ExcelCellInfo obj)
         {
-            if (obj == null) {
+            if (obj == null)
+            {
                 return false;
-            } else {
+            }
+            else
+            {
                 return (obj.column_id == this.column_id) && (obj.row_id == this.row_id);
             }
         }
@@ -105,8 +116,10 @@ namespace sql.builder.Print.Xlsx
         }
         public static IEnumerable<ExcelCellInfo> Range(ExcelCellInfo cellFrom, ExcelCellInfo cellTo)
         {
-            for (int row = cellFrom.row_id; row <= cellTo.row_id; row++) {
-                for (int colunm = cellFrom.column_id; colunm <= cellTo.column_id; colunm++) {
+            for (int row = cellFrom.row_id; row <= cellTo.row_id; row++)
+            {
+                for (int colunm = cellFrom.column_id; colunm <= cellTo.column_id; colunm++)
+                {
                     yield return new ExcelCellInfo(row, colunm);
                 }
             }

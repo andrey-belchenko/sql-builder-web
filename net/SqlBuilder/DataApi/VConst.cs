@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Xml.Linq;
 
 namespace sql.builder.DataApi
@@ -22,18 +20,23 @@ namespace sql.builder.DataApi
             //    return (VColumn)this.GetParent().GetParent();
             //}
             XElement col = this.Parent.Element(EName.column);
-            if (col != null) {
+            if (col != null)
+            {
                 return VSXElement.Get<VColumn>(col);
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
         protected VDataTable SelectionListTable()
         {
             VColumn col = this.TypedColumn();
-            if (col != null) {
+            if (col != null)
+            {
                 VDataSet ds = col.SelectionListDataSet();
-                if (ds != null) {
+                if (ds != null)
+                {
                     return (ds.Tables[0] as VDataTable);
                 }
             }
@@ -47,15 +50,20 @@ namespace sql.builder.DataApi
         public static object ValueToObject(string value)
         {
             string v = value;
-            if (v == "null") {
+            if (v == "null")
+            {
                 return null;
             }
-            if (v.StartsWith("'")) {
+            if (v.StartsWith("'"))
+            {
                 return v.Substring(1, v.Length - 2);
             }
-            if (Cmn.IsNumeric(v)) {
+            if (Cmn.IsNumeric(v))
+            {
                 return Cmn.ToDecimal(v);
-            } else {
+            }
+            else
+            {
                 return v;
             }
         }
@@ -73,15 +81,18 @@ namespace sql.builder.DataApi
         public override string GetNodeOtherInfo()
         {
             string s = this.P_ConstValue;
-            if (this.P_Alias_Exists()) {
+            if (this.P_Alias_Exists())
+            {
                 s += " as " + this.P_Alias;
             }
             string fact = this.P_Fact;
-            if (!string.IsNullOrEmpty(fact)) {
+            if (!string.IsNullOrEmpty(fact))
+            {
                 s += " fact:" + Bold(fact);
             }
             string dimension = this.P_Dimension;
-            if (!string.IsNullOrEmpty(dimension)) {
+            if (!string.IsNullOrEmpty(dimension))
+            {
                 s += " dim " + Bold(dimension);
             }
             return s;
@@ -89,11 +100,14 @@ namespace sql.builder.DataApi
         #endregion
         #region Свойства
         #region ConstValue
-        public override string P_ConstValue {
-            get {
+        public override string P_ConstValue
+        {
+            get
+            {
                 return this.Value;
             }
-            set {
+            set
+            {
                 this.Value = value ?? string.Empty;
             }
         }

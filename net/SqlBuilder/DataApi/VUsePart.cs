@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml.Linq;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
@@ -22,7 +21,7 @@ namespace sql.builder.DataApi
 
 
 
-      
+
 
         public static List<VSXElement> PartContentOrSelf(VSXElement element)
         {
@@ -46,7 +45,7 @@ namespace sql.builder.DataApi
         public override List<VSXElement> GetUsedElements()
         {
             VSXElement p = Part();
-           
+
             if (p != null)
             {
                 if (p.VirtualParent != null)
@@ -72,7 +71,7 @@ namespace sql.builder.DataApi
 
         public override string GetNodeInfo()
         {
-            return  GetNodeTypeInfo()+" "+ GetNodeOtherInfo();
+            return GetNodeTypeInfo() + " " + GetNodeOtherInfo();
 
         }
 

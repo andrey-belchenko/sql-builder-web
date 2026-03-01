@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
+using System.Diagnostics; // Debug, Stopwatch
 using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using System.Diagnostics; // Debug, Stopwatch
-using Contract = System.Diagnostics.Contracts.Contract;
 //using DevExpress.Utils.CodedUISupport;
 using sql.builder.DataApi;
 using sql.builder.ExcelApi;
+using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.Print.XML
 {
@@ -23,17 +21,22 @@ namespace sql.builder.Print.XML
             ExcelPrintSheet sheet;
             string name = worksheet.AttrOrDefault(VExcelNS.SpreadSheet.Name, string.Empty);
             int pos_1 = name.IndexOf('{');
-            if (pos_1 >= 0) {
+            if (pos_1 >= 0)
+            {
                 pos_1 = pos_1 + 1;
                 int pos_2 = name.IndexOf('}', pos_1);
-                if (pos_2 < 0) {
+                if (pos_2 < 0)
+                {
                     pos_2 = name.Length;
                 }
                 sheet = new ExcelPrintMultiplicatedSheet(worksheet, parent, name.Substring(pos_1, pos_2 - pos_1));
-            } else {
+            }
+            else
+            {
                 sheet = new ExcelPrintSheet(worksheet, parent);
             }
-            if (prev_sheet != null) {
+            if (prev_sheet != null)
+            {
                 prev_sheet.next_sheet = sheet;
             }
             return sheet;
@@ -98,11 +101,14 @@ namespace sql.builder.Print.XML
             }*/
             //
             this.page_breaks_element = sheet.Element(VExcelNS.Excel.PageBreaks);
-            if (this.page_breaks_element != null) {
+            if (this.page_breaks_element != null)
+            {
                 XElement row_breaks = this.page_breaks_element.Element(VExcelNS.Excel.RowBreaks);
-                if (row_breaks != null) {
+                if (row_breaks != null)
+                {
                     this.row_page_breaks = new List<int>(0);
-                    foreach (XElement row_break in row_breaks.Elements(VExcelNS.Excel.RowBreak).Elements(VExcelNS.Excel.Row)) {
+                    foreach (XElement row_break in row_breaks.Elements(VExcelNS.Excel.RowBreak).Elements(VExcelNS.Excel.Row))
+                    {
                         this.row_page_breaks.Add(Convert.ToInt32(row_break.Value));
                     }
                     row_breaks.Remove();
@@ -114,14 +120,17 @@ namespace sql.builder.Print.XML
             IList<XElement> rows = table.Elements(VExcelNS.SpreadSheet.Row).ToList();
             int row_index = 0;
             int index;
-            for (index = 0; index < rows.Count; index++) {
+            for (index = 0; index < rows.Count; index++)
+            {
                 XElement row = rows[index];
                 row.RemoveAttribute(VExcelNS.SpreadSheet.Span);
                 row_index++;
                 XAttribute attr = row.Attribute(VExcelNS.SpreadSheet.Index);
-                if (attr != null) {
+                if (attr != null)
+                {
                     int ind = Convert.ToInt32(attr.Value);
-                    while (row_index < ind) {
+                    while (row_index < ind)
+                    {
                         row.AddBeforeSelf(new XElement(VExcelNS.SpreadSheet.Row));
                         row_index++;
                     }
@@ -133,7 +142,8 @@ namespace sql.builder.Print.XML
             Contract.Assume(rows.Count > 0);
             this.row_marker = new XElement(VExcelNS.SpreadSheet.Row);
             rows[0].AddBeforeSelf(this.row_marker); // Как маркер для вставки строк
-            for (index = 0; index < rows.Count; index++) {
+            for (index = 0; index < rows.Count; index++)
+            {
                 rows[index].Remove();
             }
             // foreach (XElement cell in sheet.Descendants().Where(e1 => !e1.HasElements).Where(e => e.Value.Contains("end:")).ToList()) {
@@ -142,8 +152,10 @@ namespace sql.builder.Print.XML
             // foreach (XElement cell in sheet.Descendants().Where(e1 => !e1.HasElements).Where(e => e.Value.Contains("begin:")).ToList()) {
             //     cell.Parent.Remove();
             // }
-            foreach (XElement cell in rows.Descendants().ToList()) {
-                if ((!cell.HasElements) && (cell.Value.Contains("begin:") || cell.Value.Contains("end:"))) {
+            foreach (XElement cell in rows.Descendants().ToList())
+            {
+                if ((!cell.HasElements) && (cell.Value.Contains("begin:") || cell.Value.Contains("end:")))
+                {
                     cell.Parent.Remove();
                 }
             }
@@ -172,9 +184,11 @@ namespace sql.builder.Print.XML
         }
         private void ResetPageBreaks()
         {
-            if (this.page_breaks_element != null) {
+            if (this.page_breaks_element != null)
+            {
                 XElement row_breaks = this.page_breaks_element.Element(VExcelNS.Excel.RowBreaks);
-                if (row_breaks != null) {
+                if (row_breaks != null)
+                {
                     row_breaks.Remove();
                 }
             }
@@ -186,13 +200,16 @@ namespace sql.builder.Print.XML
         /// <param name="template_row">Номер строки шаблона</param>
         public void AddBreakIfNeeded(int template_row)
         {
-            if (this.row_page_breaks == null) {
+            if (this.row_page_breaks == null)
+            {
                 return;
             }
-            if (this.row_page_breaks.Contains(template_row)) {
+            if (this.row_page_breaks.Contains(template_row))
+            {
                 Contract.Assume(this.page_breaks_element != null);
                 XElement rb = this.page_breaks_element.Element(VExcelNS.Excel.RowBreaks);
-                if (rb == null) {
+                if (rb == null)
+                {
                     rb = new XElement(VExcelNS.Excel.RowBreaks);
                     this.page_breaks_element.Add(rb);
                 }
@@ -222,7 +239,8 @@ namespace sql.builder.Print.XML
         {
             XmlWriter writer = serializer.Writer;
             XAttribute attr = element.FirstAttribute;
-            while (attr != null) {
+            while (attr != null)
+            {
                 writer.WriteAttributeString(attr);
                 attr = attr.NextAttribute;
             }
@@ -242,11 +260,13 @@ namespace sql.builder.Print.XML
             this.WriteAttributes(serializer, element);
             // Записываем узлы
             XNode node = element.FirstNode;
-            while (node != null) {
+            while (node != null)
+            {
                 Write(serializer, node);
                 node = node.NextNode;
             }
-            if (object.ReferenceEquals(element, this.element) && this.page_breaks_element != null) {
+            if (object.ReferenceEquals(element, this.element) && this.page_breaks_element != null)
+            {
                 Write(serializer, this.page_breaks_element);
             }
             writer.WriteEndElement();
@@ -259,11 +279,16 @@ namespace sql.builder.Print.XML
         /// <param name="node">сериализуемый узел</param>
         protected void Write(XmlSerializer serializer, XNode node)
         {
-            if (object.ReferenceEquals(node, this.row_marker)) {
+            if (object.ReferenceEquals(node, this.row_marker))
+            {
                 this.PrintData(serializer.Writer, serializer.DataSet, serializer.Row, serializer.PrintBigData);
-            } else if (node.NodeType == XmlNodeType.Element) {
+            }
+            else if (node.NodeType == XmlNodeType.Element)
+            {
                 this.Write(serializer, (XElement)node);
-            } else {
+            }
+            else
+            {
                 node.WriteTo(serializer.Writer);
             }
         }
@@ -273,7 +298,7 @@ namespace sql.builder.Print.XML
         /// <param name="serializer">объект, содержащий контекст сериализации</param>
         protected void Write(XmlSerializer serializer)
         {
-            #if DEBUG
+#if DEBUG
             Stopwatch sw = new Stopwatch();
             Contract.Assume(GC.MaxGeneration == 2);
             int gen_0_before = GC.CollectionCount(0);
@@ -281,9 +306,9 @@ namespace sql.builder.Print.XML
             int gen_2_before = GC.CollectionCount(2);
             long mem_before = GC.GetTotalMemory(false);
             sw.Start();
-            #endif
+#endif
             this.Write(serializer, this.element);
-            #if DEBUG
+#if DEBUG
             sw.Stop();
             long mem_after = GC.GetTotalMemory(false);
             int gen_0_after = GC.CollectionCount(0);
@@ -292,7 +317,7 @@ namespace sql.builder.Print.XML
             Debug.WriteLine("sql.builder.Print.XML.ExcelPrintSheet.Write(XmlSerializer): " + sw.ElapsedMilliseconds.ToString() + " мс, " + this.row_count.ToString() + " строк");
             Debug.WriteLine("  Занятая память: " + (mem_after - mem_before).ToString());
             Debug.WriteLine("  Сборок мусора (0/1/2): " + (gen_0_after - gen_0_before).ToString() + " / " + (gen_1_after - gen_1_before).ToString() + " / " + (gen_2_after - gen_2_before).ToString());
-            #endif
+#endif
         }
         #endregion
         /*private void PrintSingle(XmlWriter writer, DataSet dataSet, DataRow row, bool print_big_data = false)
@@ -350,10 +375,12 @@ namespace sql.builder.Print.XML
             // this.row_count накручивается при печати строки, rowsCount оперделяется расчетным методом добавил чтобы поместить в headder, по идее лолжны совпадать
             this.row_count = 0;
             int index;
-            for (index = 0; index < this.childs.Count; index++) {
+            for (index = 0; index < this.childs.Count; index++)
+            {
                 this.childs[index].ClearData();
             }
-            for (index = 0; index < this.childs.Count; index++) {
+            for (index = 0; index < this.childs.Count; index++)
+            {
                 this.childs[index].Print(writer, dataset, row, print_big_data);
             }
         }
@@ -365,20 +392,25 @@ namespace sql.builder.Print.XML
             XElement begMarker = null;
             string table_name = null;
             bool dontRemove = false;
-            for (int index = 0; index < rows.Count; index++) {
+            for (int index = 0; index < rows.Count; index++)
+            {
                 XElement row = rows[index];
-                if (begMarker == null) {
+                if (begMarker == null)
+                {
                     begMarker = row.Descendants().FirstOrDefault(e => (!e.HasElements) && e.Value.StartsWith(table_prefix + "begin:"));
-                    if (begMarker != null) {
+                    if (begMarker != null)
+                    {
                         string text = begMarker.Value;
                         int pos_1 = table_prefix.Length + 6;
                         Contract.Assume(text.Substring(0, pos_1) == table_prefix + "begin:");
                         int pos_2 = text.IndexOfWhiteSpace(pos_1);
-                        if (pos_2 < 0) {
+                        if (pos_2 < 0)
+                        {
                             pos_2 = text.Length;
                         }
                         int pos_3 = pos_2 - 3;
-                        if (text[pos_3] == '(' && text[pos_3 + 1] == '+' && text[pos_3 + 2] == ')') {
+                        if (text[pos_3] == '(' && text[pos_3 + 1] == '+' && text[pos_3 + 2] == ')')
+                        {
                             Contract.Assume(text.Substring(pos_3, 3) == "(+)");
                             dontRemove = true;
                             pos_2 = pos_3;
@@ -386,17 +418,23 @@ namespace sql.builder.Print.XML
                         table_name = text.Substring(pos_1, pos_2 - pos_1);
                     }
                 }
-                if (begMarker == null) {
+                if (begMarker == null)
+                {
                     this.template_row_index++;
                     childs.Add(new ExcelPrintRow(this, this.template_row_index, row, parent));
-                } else {
-                    if (childRows == null) {
+                }
+                else
+                {
+                    if (childRows == null)
+                    {
                         childRows = new List<XElement>(1);
                     }
                     childRows.Add(row);
-                    if (table_name != null) {
+                    if (table_name != null)
+                    {
                         XElement endMarker = row.Descendants().FirstOrDefault(e => (!e.HasElements) && e.Value.Contains("end:" + table_name + ";"));
-                        if (endMarker != null) {
+                        if (endMarker != null)
+                        {
                             childs.Add(new ExcelPrintGroup(this, childRows, dontRemove, parent, table_name));
                             begMarker = null;
                             dontRemove = false;
@@ -423,29 +461,36 @@ namespace sql.builder.Print.XML
         {
             ExcelPrintGroup el = this.childs.OfType<ExcelPrintGroup>().First();
             List<DataRow> rows = el.GetRowsByParent(dataSet, print_big_data);
-            for (int index = 0; index < rows.Count; index++) {
+            for (int index = 0; index < rows.Count; index++)
+            {
                 DataRow row = rows[index];
                 list.Add(new Tuple<ExcelPrintMultiplicatedSheet, string, DataRow>(this, row[this.name_variable].ToString(), row));
             }
         }
         public override ExcelPrintSheet Print(DataSet dataset, bool print_big_data)
         {
-            if (this.printed) {
+            if (this.printed)
+            {
                 return this.next_sheet;
-            } else {
+            }
+            else
+            {
                 // Печать всех множащихся листов стоящих подряд с сортировкой по имени
                 var list = new List<Tuple<ExcelPrintMultiplicatedSheet, string, DataRow>>();
                 ExcelPrintSheet sheet;
                 ExcelPrintMultiplicatedSheet mp_sheet = this;
-                do {
+                do
+                {
                     mp_sheet.GetMultipleSet(list, dataset, print_big_data);
                     sheet = mp_sheet.next_sheet;
                     mp_sheet = sheet as ExcelPrintMultiplicatedSheet;
                 } while (mp_sheet != null);
-                if (list.Count > 1 && !print_big_data) {
+                if (list.Count > 1 && !print_big_data)
+                {
                     list = list.OrderBy(r => r.Item2).ToList();
                 }
-                for (int index = 0; index < list.Count; index++) {
+                for (int index = 0; index < list.Count; index++)
+                {
                     Tuple<ExcelPrintMultiplicatedSheet, string, DataRow> rec = list[index];
                     rec.Item1.PrintData(null, dataset, rec.Item3, print_big_data);
                 }
@@ -454,25 +499,31 @@ namespace sql.builder.Print.XML
         }
         public override ExcelPrintSheet Print(XmlSerializer serializer)
         {
-            if (this.printed) {
+            if (this.printed)
+            {
                 return this.next_sheet;
-            } else {
+            }
+            else
+            {
                 XmlWriter writer = serializer.Writer;
                 DataSet dataset = serializer.DataSet;
                 bool print_big_data = serializer.PrintBigData;
                 var list = new List<Tuple<ExcelPrintMultiplicatedSheet, string, DataRow>>();
                 ExcelPrintSheet sheet;
                 ExcelPrintMultiplicatedSheet mp_sheet = this;
-                do {
+                do
+                {
                     mp_sheet.GetMultipleSet(list, dataset, print_big_data);
                     sheet = mp_sheet.next_sheet;
                     mp_sheet = sheet as ExcelPrintMultiplicatedSheet;
                 } while (mp_sheet != null);
                 //
-                if (!print_big_data) {
+                if (!print_big_data)
+                {
                     list = list.OrderBy(r => r.Item2).ToList();
                 }
-                for (int index = 0; index < list.Count; index++) {
+                for (int index = 0; index < list.Count; index++)
+                {
                     Tuple<ExcelPrintMultiplicatedSheet, string, DataRow> rec = list[index];
                     serializer.SetRow(rec.Item3);
                     rec.Item1.Write(serializer);
@@ -486,10 +537,12 @@ namespace sql.builder.Print.XML
             DataRow row = serializer.Row;
             XmlWriter writer = serializer.Writer;
             XAttribute attr = element.FirstAttribute;
-            while (attr != null) {
+            while (attr != null)
+            {
                 writer.WriteStartAttribute(attr.Name);
                 string value = attr.Value;
-                if (value.IndexOf('{') >= 0) {
+                if (value.IndexOf('{') >= 0)
+                {
                     Contract.Assume(row != null);
                     string variable_value = row[this.name_variable].ToString();
                     value = value.Replace("{" + this.name_variable + "}", variable_value);

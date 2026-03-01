@@ -1,24 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.IO;
 using System.Linq;
 //using System.Windows.Forms;
 using System.Reflection;
 using System.Text;
-using System.Xml;
 using System.Xml.Linq;
-using System.Xml.XPath;
-using System.Xml.Xsl;
 using Devart.Data.Oracle;
 using sql.builder.Clean;
-using sql.builder.Clean.Extensions;
 //using DevExpress.XtraVerticalGrid;
 //using infoenergo.core.Extensions;
-using sql.builder.UI;
-using SqlBuilderLib.DevTools; // из-за конфликта с экземплярным методом VForm.AName()
 using _AName = sql.builder.DataApi.AName;
 using Contract = System.Diagnostics.Contracts.Contract;
 
@@ -1902,7 +1893,7 @@ namespace sql.builder.DataApi
                 xitem.CopyAttributes(xitem_native.Attributes());
                 //xitem.SetAttributeValue(_AName.src_field, xitem.GetAttributeValue(_AName.field.LocalName));
                 xitem.RemoveAttribute(_AName.field);
-                
+
                 foreach (XElement el in xitem_native.Elements())
                 {
                     XName name = el.Name;

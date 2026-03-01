@@ -1,14 +1,12 @@
-using System;
-using System.Diagnostics; 
-using Contract = System.Diagnostics.Contracts.Contract;
-using System.Text;
 using System.Data;
+using System.Diagnostics;
+using System.Text;
 using Devart.Data.Oracle;
-using infoenergo.sys;
 using infoenergo.core.Data; // DataHelper, OracleSqlException
+using infoenergo.sys;
+using sql.builder.Clean;
 using sql.builder.DataApi; // TextConst
 using SqlBuilderLib.DevTools;
-using sql.builder.Clean;
 
 namespace sql.builder.Core
 {
@@ -26,8 +24,8 @@ namespace sql.builder.Core
         private static bool TryGetOracleType(string type_name, ref OracleType type)
         {
             //try {
-                type = OracleType.GetObjectType(type_name, db.Connection);
-                return true;
+            type = OracleType.GetObjectType(type_name, db.Connection);
+            return true;
         }
         static ArrayStorage()
         {
@@ -63,24 +61,28 @@ namespace sql.builder.Core
         }
         private void SetStoredValues(object[] values)
         {
-                this._values = null;
-                VOracleDbType data_type;
-                OracleType array_type;
-                if (values[0] is string) {
-                    this._value_column = "sval";
-                    data_type = VOracleDbType.NVarChar;
-                    array_type = _varchar2_table_type;
-                } else {
-                    this._value_column = "nval";
-                    data_type = VOracleDbType.Number;
-                    array_type = _number_table_type;
-                }
-                #if DEBUG
-                Stopwatch sw = new Stopwatch();
-                sw.Start();
-                #endif
-                VOracleCommand cmd = null;
-                try {
+            this._values = null;
+            VOracleDbType data_type;
+            OracleType array_type;
+            if (values[0] is string)
+            {
+                this._value_column = "sval";
+                data_type = VOracleDbType.NVarChar;
+                array_type = _varchar2_table_type;
+            }
+            else
+            {
+                this._value_column = "nval";
+                data_type = VOracleDbType.Number;
+                array_type = _number_table_type;
+            }
+#if DEBUG
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+#endif
+            VOracleCommand cmd = null;
+            try
+            {
                 try
                 {
                     if (array_type != null)
@@ -130,31 +132,42 @@ namespace sql.builder.Core
                     throw ex;
                     //throw new infoenergo.core.Data.OracleSqlException(ex, cmd.CommandText, cmd.Parameters);
                 }
-                } finally {
-                    if (cmd != null) {
-                        Cmn.DisposeAndSetNull(ref cmd);
-                    }
+            }
+            finally
+            {
+                if (cmd != null)
+                {
+                    Cmn.DisposeAndSetNull(ref cmd);
                 }
-                #if DEBUG
-                sw.Stop();
-                // Debug.WriteLine("ArrayStorage.SetStoredValues(): Вставка в vr_array_storage." + this._value_column + " " + values.Length.ToString() + " значений с array_id=\"" + this._id + "\" за " + sw.ElapsedTicks.ToString() + " тактов = " + sw.ElapsedMilliseconds.ToString() + " мс");
-                #endif
+            }
+#if DEBUG
+            sw.Stop();
+            // Debug.WriteLine("ArrayStorage.SetStoredValues(): Вставка в vr_array_storage." + this._value_column + " " + values.Length.ToString() + " значений с array_id=\"" + this._id + "\" за " + sw.ElapsedTicks.ToString() + " тактов = " + sw.ElapsedMilliseconds.ToString() + " мс");
+#endif
         }
         public void SetValues(object[] values)
         {
-            if (values.Length > 30) { // раньше было 999 , и получался очень большой текст sql
+            if (values.Length > 30)
+            { // раньше было 999 , и получался очень большой текст sql
                 this.SetStoredValues(values);
-            } else {
+            }
+            else
+            {
                 this.SetInlinedValues(values);
             }
         }
         public void SetValues(object[] values, string mode)
         {
-            if (mode == TextConst.AVArrayParamModes.Store) {
+            if (mode == TextConst.AVArrayParamModes.Store)
+            {
                 this.SetStoredValues(values);
-            } else if (mode == TextConst.AVArrayParamModes.Inline) {
+            }
+            else if (mode == TextConst.AVArrayParamModes.Inline)
+            {
                 this.SetInlinedValues(values);
-            } else {
+            }
+            else
+            {
                 this.SetValues(values);
             }
         }
@@ -184,15 +197,21 @@ namespace sql.builder.Core
         }*/
         public string GetSql()
         {
-            if (this._values == null) {
+            if (this._values == null)
+            {
                 return " (select " + this._value_column + " from vr_array_storage where array_id = '" + this._id + "') ";
-            } else if (this._values.Length == 0) {
+            }
+            else if (this._values.Length == 0)
+            {
                 return Cmn.undefinedString;
-            } else {
+            }
+            else
+            {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(" (");
                 sb.Append(Cmn.ToOracleString(this._values[0]));
-                for (int index = 1; index < this._values.Length; index++) {
+                for (int index = 1; index < this._values.Length; index++)
+                {
                     sb.Append(',');
                     sb.Append(Cmn.ToOracleString(this._values[index]));
                 }

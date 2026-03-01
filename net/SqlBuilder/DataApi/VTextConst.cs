@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace sql.builder.DataApi
+﻿namespace sql.builder.DataApi
 {
 
     public static partial class TextConst
@@ -13,10 +11,10 @@ namespace sql.builder.DataApi
         }
         public static class MsgTypePrefArray
         {
-            public static string[] All = { MsgTypePref.Information,MsgTypePref.Warning,MsgTypePref.Error};
+            public static string[] All = { MsgTypePref.Information, MsgTypePref.Warning, MsgTypePref.Error };
             public static string[] CanSave = { MsgTypePref.Information, MsgTypePref.Warning };
-            public static string[] Alert = { MsgTypePref.Warning};
-           
+            public static string[] Alert = { MsgTypePref.Warning };
+
 
         }
         public static class EName
@@ -45,7 +43,7 @@ namespace sql.builder.DataApi
             public const string EmptyItem = "empty-item";
             public const string With = "with";
             public const string Color = "color";
-          
+
             public const string UseColor = "use-color";
             public const string ColorPackages = "color-packages";
             public const string ColorPackage = "color-package";
@@ -139,7 +137,7 @@ namespace sql.builder.DataApi
             public const string Union = "union";
             public const string Links = "links";
             public const string WithParams = "withparams";
-          //  public const string WithParams2 = "withparams2"; // дурацкая заплатка, элемент withparams удаляется при компиляции а иногда нужно оставить
+            //  public const string WithParams2 = "withparams2"; // дурацкая заплатка, элемент withparams удаляется при компиляции а иногда нужно оставить
             public const string ReportProc = "procedure";
 
             public const string Customers = "customers";
@@ -167,7 +165,7 @@ namespace sql.builder.DataApi
             public const string Splitter = "splitter";
             public const string Dimension = "dimension";
             public const string Dimensions = "dimensions";
-            public const string DimensionValues= "dimension-values";
+            public const string DimensionValues = "dimension-values";
             public const string DimensionPackage = "dimension-package";
             public const string DimensionPackages = "dimension-packages";
             public const string Scope = "scope";
@@ -201,16 +199,16 @@ namespace sql.builder.DataApi
             public static string[] ALinks = { EName.Link, EName.ELink, EName.DLink, EName.SLink };
             public static string[] ALinksAndQuery = { EName.Query, EName.Link, EName.ELink, EName.DLink, EName.SLink };
             public static string[] ALinksButElink = { EName.Link, EName.DLink, EName.SLink };
-            public static string[] ANewQueryAttributes = { AName.MaterializeId, AName.Dimension, AName.MultiplicatePoint, AName.LinkMultiplicatePoint,AName.NoGrouping };
+            public static string[] ANewQueryAttributes = { AName.MaterializeId, AName.Dimension, AName.MultiplicatePoint, AName.LinkMultiplicatePoint, AName.NoGrouping };
             public static string[] ColumnAndFact = { EName.Column, EName.Fact };
-            public static string[] ColumnAndFactAndCall = { EName.Column, EName.Fact,EName.Call };
+            public static string[] ColumnAndFactAndCall = { EName.Column, EName.Fact, EName.Call };
             public static string[] AllowTextMode = { EName.Column, EName.Field, EName.Fact, EName.Label };
             public static string[] AllowLayoutMode = { EName.FieldGroup };
         }
         public static class ANameSpec
         {
             public const string IsFromTemp = "is-from-temp";
-           
+
         }
 
 
@@ -219,18 +217,18 @@ namespace sql.builder.DataApi
             public const string Async = "async";
             public const string InsByLoop = "ins-by-loop";
             public const string CondSource = "condsource";
-            public const string PostProcess = "post-process"; 
-            public const string IsScalar = "is-scalar"; 
+            public const string PostProcess = "post-process";
+            public const string IsScalar = "is-scalar";
             public const string Interval = "intrval";
             public const string CanBeChecked = "can-be-checked";
-            public const string Old = "old"; 
-            public const string Index = "index"; 
+            public const string Old = "old";
+            public const string Index = "index";
             public const string ClientView = "client-view";
-            public const string FormatSource = "format-source"; 
-            public const string UseColPreset = "use-col-preset"; 
+            public const string FormatSource = "format-source";
+            public const string UseColPreset = "use-col-preset";
             public const string AutoFilter = "auto-filter";
-			public const string AllowSelectMoveColumns = "allow-select-move-columns";
-			public const string InvisibleInColumnChooser = "invisible-in-column-chooser";
+            public const string AllowSelectMoveColumns = "allow-select-move-columns";
+            public const string InvisibleInColumnChooser = "invisible-in-column-chooser";
             public const string MergeDimsets = "merge-dimsets";
             public const string StarScheme = "star-scheme";
             public const string SingleWay = "single-way";
@@ -243,7 +241,7 @@ namespace sql.builder.DataApi
             public const string Nvl = "nvl";
             public const string Project = "project";
             public const string Navigator = "navigator";
-            public const string CanUseSimpleParams = "can-use-simple-params"; 
+            public const string CanUseSimpleParams = "can-use-simple-params";
             // способ подстановыки параметров 1. через oracleparametr, 2. подстановка константы в текст при компиляции.
             // 1. включается если для вех параметров указаны типы
             // если этот признак НЕ установлен то типы параметров не указываются
@@ -253,7 +251,7 @@ namespace sql.builder.DataApi
             public const string DontUseForGroupingKey = "dont-use-for-gr-key";
             public const string Prompt = "prompt";
             public const string Message = "message";
-			public const string Notification = "notification";
+            public const string Notification = "notification";
             public const string Groupingid = "groupingid";
             public const string ParentGroupingid = "parent-groupingid";
             public const string RowSelector = "row-selector";
@@ -320,7 +318,7 @@ namespace sql.builder.DataApi
             public const string ColumnExists = "column-exists";
             public const string Title = "title";
             public const string Width = "width";
-           
+
             public const string Comment = "comment";
             public const string ClassTitle = "class-title";
             public const string DataType = "type";
@@ -347,7 +345,7 @@ namespace sql.builder.DataApi
             public const string Position = "position";
             public const string TextLocation = "text-location";
             public const string TextVisible = "text-visible";
-           // public const string LayoutMode = "layout-mode";
+            // public const string LayoutMode = "layout-mode";
             public const string TemplateName = "template-name";
             public const string ChildName = "child-name";
             public const string KeyName = "key-name";
@@ -367,7 +365,7 @@ namespace sql.builder.DataApi
             public const string DTitle = "dtitle";
             public const string Key = "key";
             public const string ParentKey = "parent-key";
-            public const string Parent= "parent";
+            public const string Parent = "parent";
             public const string If = "if";
             public const string Function = "function";
             public const string Field = "field";
@@ -451,7 +449,7 @@ namespace sql.builder.DataApi
             public const string AllowBackReference = "allow-back-reference";
             public const string AllRows = "all-rows";
             public const string ButtonType = "button-type";
-           // public const string Listquery = "listquery";
+            // public const string Listquery = "listquery";
             public const string ShowToolBar = "show-toolbar";
             public const string ShowBottomToolBar = "show-bottom-toolbar";
             public const string ShowFooter = "show-footer";
@@ -480,11 +478,11 @@ namespace sql.builder.DataApi
             public const string Intern = "intern";
             public const string Invert = "invert";
             public const string PartId = "part-id";
-			public const string Part = "part";
+            public const string Part = "part";
             public const string Multiple = "multiple";
             public const string Pth = "pth";
             public const string NewRowsVisForOtherTbls = "new-rows-vis-for-other-tbls";
-            
+
             public const string ActionRows = "action-rows";
             public const string Exists = "exists";
             public const string CalculateTree = "calctree";
@@ -515,7 +513,7 @@ namespace sql.builder.DataApi
             public const string DataReader = "datareader";
 
             public const string ColumnWidth = "column-width";
-			public const string DetailsUseZeros = "details-use-zeros";
+            public const string DetailsUseZeros = "details-use-zeros";
             public const string EnableShowHiddenCollumnsOption = "Enable-Show-Hidden-Columns-Option";
         }
         public static class AVHAlign
@@ -523,7 +521,7 @@ namespace sql.builder.DataApi
             public const string Left = "left";
             public const string Right = "right";
             public const string Center = "center";
-            
+
         }
 
         public static class AVFormButtonType
@@ -540,7 +538,7 @@ namespace sql.builder.DataApi
             public const string LoadSettings = "btnLoadSettings";
         }
 
-         
+
 
         public static class AVFormButtonTypeArray
         {
@@ -593,9 +591,9 @@ namespace sql.builder.DataApi
         }
         public static class AVArrayParamModes
         {
-            public const string Auto   = "auto";
+            public const string Auto = "auto";
             public const string Inline = "inline";
-            public const string Store  = "store";
+            public const string Store = "store";
         }
         public static class AVParamTypes
         {
@@ -632,7 +630,7 @@ namespace sql.builder.DataApi
 
         public static class AVViewModesArray
         {
-            public static string[] All = {AVViewModes.Default, AVViewModes.Pivot, AVViewModes.Tree, AVViewModes.Excel, AVViewModes.DashboardDesigner, AVViewModes.DashboardViewer};
+            public static string[] All = { AVViewModes.Default, AVViewModes.Pivot, AVViewModes.Tree, AVViewModes.Excel, AVViewModes.DashboardDesigner, AVViewModes.DashboardViewer };
         }
 
         public static class AVParamArray
@@ -692,7 +690,7 @@ namespace sql.builder.DataApi
             public const string FileData = "file-data";
             public const string RowId = "rowid";
         }
-      
+
         public static class AVSpecColumnGrset
         {
             //с именами этих колонок путница, навести порядок, не везде используются эти константы
@@ -712,12 +710,12 @@ namespace sql.builder.DataApi
             public const string GrTreeLevel = "gr_tree_level";
         }
 
-      
+
         public static class TreeSources
         {
             public const string Self = "self";
             public const string Child = "child";
-            
+
         }
 
         public static class TreeSourcesArray
@@ -727,7 +725,7 @@ namespace sql.builder.DataApi
             {
                 TreeSources.Self, TreeSources.Child
             };
-            
+
         }
 
         public static class AVEventName
@@ -789,7 +787,7 @@ namespace sql.builder.DataApi
             public const string Bool = "bool";
             public const string String = "string";
             public const string Clob = "clob";
-			public const string Blob = "blob";
+            public const string Blob = "blob";
             public const string Array = "array";
             public const string Variant = "variant";
         }
@@ -798,7 +796,7 @@ namespace sql.builder.DataApi
         {
             public const string Hint = "hint";
             public const string TempTable = "temp-table";
-           
+
         }
 
         public static class AVControlType
@@ -888,12 +886,12 @@ namespace sql.builder.DataApi
             public const string OpenExpressReport = "open-express-report";
             public const string OpenGrDetailReport = "open-grouping-detail";
             public const string OpenColGrDetailReport = "open-column-grouping-detail";
-			public const string AddSelected = "add-selected";
-			public const string RemoveSelected = "remove-selected";
-			public const string CopyFieldToClipboard = "save-field-to-clipboard";
-			public const string FillFieldFromClipboard = "fill-field-from-clipboard";
-			public const string ShowPopupField = "show-popup";
-           
+            public const string AddSelected = "add-selected";
+            public const string RemoveSelected = "remove-selected";
+            public const string CopyFieldToClipboard = "save-field-to-clipboard";
+            public const string FillFieldFromClipboard = "fill-field-from-clipboard";
+            public const string ShowPopupField = "show-popup";
+
         }
 
         public static class AVTitle
@@ -932,16 +930,16 @@ namespace sql.builder.DataApi
            ,AVActionType.AddSelected
            ,AVActionType.RemoveSelected
            ,AVActionType.ExecuteCopyByReport
-		   ,AVActionType.CopyFieldToClipboard
-		   ,AVActionType.FillFieldFromClipboard
-		   ,AVActionType.ShowPopupField
+           ,AVActionType.CopyFieldToClipboard
+           ,AVActionType.FillFieldFromClipboard
+           ,AVActionType.ShowPopupField
             ,AVActionType.ExecuteInsertByReport
         };
             public static string[] WithThisFormGroupControl =
         {
              AVActionType.ShowSubForm
         };
-			public static string[] WithThisFormFieldControl =
+            public static string[] WithThisFormFieldControl =
         {
              AVActionType.FillFieldFromClipboard, AVActionType.CopyFieldToClipboard, AVActionType.ShowPopupField
         };
@@ -964,13 +962,13 @@ namespace sql.builder.DataApi
              AVActionType.ClientAddByForm, AVActionType.DynamicForm, AVActionType.DynamicFormCreate,AVActionType.DynamicFormCreateMultiple,AVActionType.DynamicFormForSelect
         };
 
-        public static string[] WithReport =
-        {
+            public static string[] WithReport =
+            {
              AVActionType.OpenReport,AVActionType.OpenGrDetailReport,AVActionType.OpenColGrDetailReport,AVActionType.OpenExpressReport,AVActionType.ExecuteCopyByReport,AVActionType.ExecuteInsertByReport
         };
-        
-        public static string[] Custom =
-        {
+
+            public static string[] Custom =
+            {
              AVActionType.Custom
         };
 
@@ -983,10 +981,10 @@ namespace sql.builder.DataApi
         {
              AVActionType.ClientUpdate,AVActionType.DynamicForm
         };
-			public static string[] DetailReport =
-			{
-				AVActionType.OpenGrDetailReport, AVActionType.OpenColGrDetailReport
-			};
+            public static string[] DetailReport =
+            {
+                AVActionType.OpenGrDetailReport, AVActionType.OpenColGrDetailReport
+            };
         }
 
         public static class AVFunction
@@ -1301,7 +1299,7 @@ namespace sql.builder.DataApi
             public const string BeginTime = "beg_time";
             public const string EndTime = "end_time";
             public const string Val = "val";
-           
+
 
         }
 

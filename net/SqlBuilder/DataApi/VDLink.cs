@@ -1,7 +1,4 @@
-﻿using System;
-using System.Xml.Linq;
-
-namespace sql.builder.DataApi
+﻿namespace sql.builder.DataApi
 {
     public sealed class VDLink : VELink
     {

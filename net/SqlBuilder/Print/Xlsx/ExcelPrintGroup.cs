@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Xml.Linq;
-using System.IO;
 using System.Data;
-using sql.builder.Print.Xlsx;
 
 namespace sql.builder.Print.Xlsx
 {
@@ -25,16 +22,21 @@ namespace sql.builder.Print.Xlsx
             //this.sheet = sheet;
             this.parent = parent;
             this.dont_remove = dontRemove;
-            if (string.IsNullOrEmpty(tableName)) {
+            if (string.IsNullOrEmpty(tableName))
+            {
                 this.table_references = new Dictionary<string, TableReference>(0);
-            } else {
+            }
+            else
+            {
                 string[] tabnames = tableName.Split(',');
                 this.table_references = new Dictionary<string, TableReference>(tabnames.Length);
-                for (int index = 0; index < tabnames.Length; index++) {
+                for (int index = 0; index < tabnames.Length; index++)
+                {
                     string table_name = tabnames[index];
                     TableReference tr = new TableReference(this, table_name);
                     this.table_references.Add(table_name, tr);
-                    if (index == 0) {
+                    if (index == 0)
+                    {
                         this.main_table_reference = tr;
                     }
                 }
@@ -47,33 +49,44 @@ namespace sql.builder.Print.Xlsx
         {
             // Dictionary<TKey, TValue>.ValueCollection.Enumerator поддерживает Reset(),
             // поэтому используем его трижды чтобы не плодить лишние объекты в памяти
-            using (IEnumerator<TableReference> enumerator = this.table_references.Values.GetEnumerator()) {
-                while (enumerator.MoveNext()) {
+            using (IEnumerator<TableReference> enumerator = this.table_references.Values.GetEnumerator())
+            {
+                while (enumerator.MoveNext())
+                {
                     enumerator.Current.OpenRows(data, row, use_data_reader);
                 }
                 bool hasAnyRows = true;
                 bool first = true;
-                while (hasAnyRows) {
+                while (hasAnyRows)
+                {
                     hasAnyRows = false;
                     enumerator.Reset();
-                    while (enumerator.MoveNext()) {
+                    while (enumerator.MoveNext())
+                    {
                         bool hasRows = enumerator.Current.NextRow(use_data_reader);
-                        if (hasRows) {
+                        if (hasRows)
+                        {
                             hasAnyRows = true;
                         }
                     }
-                    if (first && !hasAnyRows) {
+                    if (first && !hasAnyRows)
+                    {
                         this.DeleteNode(pi);
-                    } else if (hasAnyRows) {
-                        for (int index = 0; index < this.сhilds.Count; index++) {
+                    }
+                    else if (hasAnyRows)
+                    {
+                        for (int index = 0; index < this.сhilds.Count; index++)
+                        {
                             this.сhilds[index].Print(pi, data, use_data_reader, null);
                         }
                     }
                     first = false;
                 }
-                if (!use_data_reader) {
+                if (!use_data_reader)
+                {
                     enumerator.Reset();
-                    while (enumerator.MoveNext()) {
+                    while (enumerator.MoveNext())
+                    {
                         enumerator.Current.CloseRows(data, use_data_reader);
                     }
                 }
@@ -81,7 +94,8 @@ namespace sql.builder.Print.Xlsx
         }
         public void DeleteNode(WorksheetPrint pi)
         {
-            for (int index = 0; index < this.сhilds.Count; index++) {
+            for (int index = 0; index < this.сhilds.Count; index++)
+            {
                 this.сhilds[index].DeleteNode(pi);
             }
         }
@@ -90,9 +104,12 @@ namespace sql.builder.Print.Xlsx
         bool IExcelPrintEl.HasParent { get { return this.parent != null; } }
         TableReference IExcelPrintEl.GetParentTableReference()
         {
-            if (this.parent == null) {
+            if (this.parent == null)
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return this.parent.GetTableReference();
             }
         }
@@ -104,10 +121,13 @@ namespace sql.builder.Print.Xlsx
         public TableReference GetTableReference(string table_name)
         {
             TableReference tr;
-            if (!this.table_references.TryGetValue(table_name, out tr)) {
-                if (this.parent != null) {
+            if (!this.table_references.TryGetValue(table_name, out tr))
+            {
+                if (this.parent != null)
+                {
                     tr = this.parent.GetTableReference(table_name);
-                    if (tr == null) {
+                    if (tr == null)
+                    {
                         throw new KeyNotFoundException();
                     }
                 }
@@ -141,29 +161,37 @@ namespace sql.builder.Print.Xlsx
             List<DataRow> res = new List<DataRow>();
             TableReference tr = this.GetTableReference();
             DataTable tbl = null;
-            if (print_big_data) {
+            if (print_big_data)
+            {
                 tbl = new DataTable();
                 tbl.TableName = tr.MainTableName;
             }
             tr.OpenRows(dataSet, null, print_big_data, tbl);
             bool hasAnyRows = true;
-            while (hasAnyRows) {
+            while (hasAnyRows)
+            {
                 hasAnyRows = tr.NextRow(print_big_data);
-                if (hasAnyRows) {
+                if (hasAnyRows)
+                {
                     DataRow row = null;
-                    if (print_big_data) {
+                    if (print_big_data)
+                    {
                         row = tbl.Rows.Add();
-                        for (int index = 0; index < tbl.Columns.Count; index++) {
+                        for (int index = 0; index < tbl.Columns.Count; index++)
+                        {
                             DataColumn col = tbl.Columns[index];
                             row[col] = tr.GetCurrentRowValue(col.ColumnName);
                         }
-                    } else {
+                    }
+                    else
+                    {
                         row = tr.GetCurrentRow();
                     }
                     res.Add(row);
                 }
             }
-            if (!print_big_data) {
+            if (!print_big_data)
+            {
                 tr.CloseRows(dataSet, print_big_data);
             }
             return res;

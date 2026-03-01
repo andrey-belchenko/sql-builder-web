@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 using System.Data;
 using AName_ = sql.builder.DataApi.AName;
 
@@ -22,32 +20,45 @@ namespace sql.builder.DataApi
         }
         public VSXElement GetFactParam(List<VSXElement> factParams, int index)
         {
-            if (factParams.Any(VSXElement.HasParameterName)) {
+            if (factParams.Any(VSXElement.HasParameterName))
+            {
                 string name = this.AName();
-                for (int i = 0; i < factParams.Count; i++) {
+                for (int i = 0; i < factParams.Count; i++)
+                {
                     VSXElement param = factParams[i];
-                    if (param.P_ParName == name) {
+                    if (param.P_ParName == name)
+                    {
                         return param;
                     }
                 }
                 return null;
-            } else if (factParams.Count > index) {
+            }
+            else if (factParams.Count > index)
+            {
                 return factParams[index];
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
         public object GetRuntimeValue(List<VSXElement> factParams, VDataSet dataSet, DataRow row, VDataColumn col, int index)
         {
             VSXElement factParam = this.GetFactParam(factParams, index);
-            if (factParam == null) {
+            if (factParam == null)
+            {
                 VSXElement defVal = this.GetElementsP().FirstOrDefault();
-                if (defVal != null) {
+                if (defVal != null)
+                {
                     return defVal.GetRuntimeValue(dataSet, row, col);
-                } else {
+                }
+                else
+                {
                     return Cmn.undefinedString;
                 }
-            } else {
+            }
+            else
+            {
                 object val;
                 //if ((factParam is VUseParam) && paramsDataSet != null)
                 //{
@@ -55,7 +66,7 @@ namespace sql.builder.DataApi
                 //}
                 //else
                 //{
-                     val = factParam.GetRuntimeValue(dataSet, row,col);
+                val = factParam.GetRuntimeValue(dataSet, row, col);
                 //}
                 return val;
             }
@@ -84,16 +95,22 @@ namespace sql.builder.DataApi
         public override string GetNodeOtherInfo()
         {
             string s;
-            if (!string.IsNullOrEmpty(this.P_IsRet)) {
+            if (!string.IsNullOrEmpty(this.P_IsRet))
+            {
                 s = "out ";
-            } else {
+            }
+            else
+            {
                 s = string.Empty;
             }
             s += Bold(this.P_FormalParName) + " ";
             string query = this.P_CalledQuery;
-            if (string.IsNullOrEmpty(query)) {
+            if (string.IsNullOrEmpty(query))
+            {
                 s += this.P_DataType;
-            } else {
+            }
+            else
+            {
                 s += query;
             }
             s += " " + Italic(this.P_SelfTitle);
@@ -116,11 +133,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region CalledQuery
-        public override string P_CalledQuery {
-            get {
+        public override string P_CalledQuery
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.class_type);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.class_type, value);
             }
         }
@@ -176,11 +196,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ParamType
-        public override string P_ParamType {
-            get {
+        public override string P_ParamType
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.param_type);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.param_type, value);
             }
         }

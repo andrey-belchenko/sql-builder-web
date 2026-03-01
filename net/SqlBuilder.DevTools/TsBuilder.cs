@@ -1,15 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
-using Npgsql;
 using sql.builder;
 using sql.builder.Clean;
-using sql.builder.DataApi;
 
 namespace SqlBuilderLib.DevTools
 {
@@ -25,7 +18,7 @@ namespace SqlBuilderLib.DevTools
             Enabled = true;
             DevUtilsProvider.Instance = new DevUtilsProviderImpl();
             Console.OutputEncoding = Encoding.UTF8;
-            DevAnalyzer.PrepareOnly =  true;
+            DevAnalyzer.PrepareOnly = true;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
             var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
             // var conStr = "User Id=asuse;Password=kl0pik;Server=REALKAZN;Pooling=False;Sid=REALKAZN;Port=1521";

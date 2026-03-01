@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Contract = System.Diagnostics.Contracts.Contract;
+﻿using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder
 {
@@ -50,8 +47,10 @@ namespace sql.builder
             Contract.Assert(startIndex >= 0 && startIndex < str.Length);
             int index = startIndex;
             int len = str.Length;
-            while (index < len) {
-                if (char.IsWhiteSpace(str, index)) {
+            while (index < len)
+            {
+                if (char.IsWhiteSpace(str, index))
+                {
                     return index;
                 }
                 index++;
@@ -71,9 +70,12 @@ namespace sql.builder
         {
             Contract.Assert(str != null);
             int pos = str.IndexOf(ch);
-            if (pos >= 0) {
+            if (pos >= 0)
+            {
                 return str.Substring(0, pos);
-            } else {
+            }
+            else
+            {
                 return str;
             }
         }
@@ -90,9 +92,12 @@ namespace sql.builder
         {
             Contract.Assert(str != null);
             int pos = str.LastIndexOf(ch);
-            if (pos >= 0) {
+            if (pos >= 0)
+            {
                 return str.Substring(pos + 1);
-            } else {
+            }
+            else
+            {
                 return str;
             }
         }

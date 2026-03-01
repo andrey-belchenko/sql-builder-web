@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace sql.builder.Print.Xlsx.RowsProcessors
 {
@@ -22,7 +21,7 @@ namespace sql.builder.Print.Xlsx.RowsProcessors
         {
             ColumnName = ExcelUtils.GetColumnName(columnId);
             ColumnID = columnId;
-            WithStartMarks = withStartMarks; 
+            WithStartMarks = withStartMarks;
 
             // достаем key, если есть
             var result = Regex.Match(mark, @"\[key:([a-zA-Z0-9_]+)\]");

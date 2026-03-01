@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
@@ -62,7 +61,7 @@ namespace SqlBuilderLib.DevTools
                 return null;
 
             string trimmed = plsqlText.Trim();
-            
+
             // Check if it starts with CREATE MATERIALIZED VIEW (case-insensitive)
             if (!trimmed.StartsWith("CREATE", StringComparison.OrdinalIgnoreCase))
                 return null;
@@ -83,7 +82,7 @@ namespace SqlBuilderLib.DevTools
             // We'll look for "AS" followed by "SELECT" or "WITH"
             int searchStart = viewPos + "VIEW".Length;
             int asPos = -1;
-            
+
             while (true)
             {
                 asPos = trimmed.IndexOf("AS", searchStart, StringComparison.OrdinalIgnoreCase);
@@ -172,7 +171,7 @@ namespace SqlBuilderLib.DevTools
             string trimmedText = textToParse.Trim();
             bool looksLikeStandaloneSelect = trimmedText.StartsWith("SELECT", StringComparison.OrdinalIgnoreCase) ||
                                              trimmedText.StartsWith("WITH", StringComparison.OrdinalIgnoreCase);
-            
+
             // Remove default error listeners and add a throwing error listener
             var errorListener = new ThrowingErrorListener(textToParse, originalPlSqlText);
             lexer.RemoveErrorListeners();
@@ -181,10 +180,10 @@ namespace SqlBuilderLib.DevTools
             parser.AddErrorListener(errorListener);
 
             IParseTree tree = null;
-            
+
             // Create visitor to extract table names (reused for both paths)
             var visitor = new TableNameExtractorVisitor(normalizedProcedureName);
-            
+
             // If it looks like a standalone SELECT, try parsing as select_statement first
             if (looksLikeStandaloneSelect)
             {
@@ -195,7 +194,7 @@ namespace SqlBuilderLib.DevTools
                     {
                         // Successfully parsed as standalone SELECT
                         visitor.VisitSelect_statement((PlSqlParser.Select_statementContext)tree);
-                        
+
                         return BuildResult(visitor);
                     }
                 }
@@ -338,10 +337,10 @@ namespace SqlBuilderLib.DevTools
 
             // Remove surrounding quotes
             procedureName = procedureName.Trim().Trim('"', '\'');
-            
+
             // Trim whitespace
             procedureName = procedureName.Trim();
-            
+
             return procedureName;
         }
 
@@ -355,10 +354,10 @@ namespace SqlBuilderLib.DevTools
 
             // Remove surrounding quotes
             tableName = tableName.Trim().Trim('"', '\'');
-            
+
             // Trim whitespace
             tableName = tableName.Trim();
-            
+
             return tableName;
         }
 
@@ -531,7 +530,7 @@ namespace SqlBuilderLib.DevTools
             /// </summary>
             private bool ShouldExtractTables()
             {
-                return string.IsNullOrWhiteSpace(_targetProcedureName) || 
+                return string.IsNullOrWhiteSpace(_targetProcedureName) ||
                        (string.Equals(_currentProcedureName, _targetProcedureName, StringComparison.OrdinalIgnoreCase));
             }
 
@@ -549,14 +548,14 @@ namespace SqlBuilderLib.DevTools
             public override object VisitAnonymous_block(PlSqlParser.Anonymous_blockContext context)
             {
                 if (context == null) return null;
-                
+
                 // Visit seq_of_statements which contains the actual DML statements
                 var seqOfStatements = context.seq_of_statements();
                 if (seqOfStatements != null)
                 {
                     Visit(seqOfStatements);
                 }
-                
+
                 // Don't call base.VisitAnonymous_block to avoid double-visiting
                 return null;
             }
@@ -797,13 +796,13 @@ namespace SqlBuilderLib.DevTools
             public override object VisitSeq_of_statements(PlSqlParser.Seq_of_statementsContext context)
             {
                 if (context == null) return null;
-                
+
                 // Visit all statement items
                 foreach (var statement in context.statement())
                 {
                     Visit(statement);
                 }
-                
+
                 // Don't call base.VisitSeq_of_statements to avoid double-visiting
                 return null;
             }
@@ -1200,11 +1199,11 @@ namespace SqlBuilderLib.DevTools
             public override object VisitWhere_clause(PlSqlParser.Where_clauseContext context)
             {
                 if (context == null) return null;
-                
+
                 // Visit children to find subqueries and other expressions that may contain tables
                 // This will automatically visit subqueries through the visitor pattern
                 VisitChildren(context);
-                
+
                 return null;
             }
 
@@ -1623,7 +1622,7 @@ namespace SqlBuilderLib.DevTools
             /// </summary>
             private bool ShouldExtractProcedures()
             {
-                return string.IsNullOrWhiteSpace(_targetProcedureName) || 
+                return string.IsNullOrWhiteSpace(_targetProcedureName) ||
                        (string.Equals(_currentProcedureName, _targetProcedureName, StringComparison.OrdinalIgnoreCase));
             }
 
@@ -1638,13 +1637,13 @@ namespace SqlBuilderLib.DevTools
             public override object VisitAnonymous_block(PlSqlParser.Anonymous_blockContext context)
             {
                 if (context == null) return null;
-                
+
                 var seqOfStatements = context.seq_of_statements();
                 if (seqOfStatements != null)
                 {
                     Visit(seqOfStatements);
                 }
-                
+
                 return null;
             }
 
@@ -1663,7 +1662,7 @@ namespace SqlBuilderLib.DevTools
                 {
                     // Get the actual package name (last one if multiple)
                     packageName = GetPackageNameText(packageNames[packageNames.Length - 1]);
-                    
+
                     // Prepend schema if present
                     var schemaObjectName = context.schema_object_name();
                     if (schemaObjectName != null && !string.IsNullOrWhiteSpace(packageName))
@@ -1895,12 +1894,12 @@ namespace SqlBuilderLib.DevTools
             public override object VisitSeq_of_statements(PlSqlParser.Seq_of_statementsContext context)
             {
                 if (context == null) return null;
-                
+
                 foreach (var statement in context.statement())
                 {
                     Visit(statement);
                 }
-                
+
                 return null;
             }
 

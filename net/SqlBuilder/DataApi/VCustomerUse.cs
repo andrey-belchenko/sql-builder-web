@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
 using AName_ = sql.builder.DataApi.AName;
 
@@ -13,11 +11,14 @@ namespace sql.builder.DataApi
         {
         }
         #region Customer
-        public override string P_Customer {
-            get {
+        public override string P_Customer
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.id);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.id, value);
             }
         }
@@ -33,20 +34,27 @@ namespace sql.builder.DataApi
         public void P_Customer_ListRefresh(VDataTable table)
         {
             table.Rows.Clear();
-            foreach (XElement el in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.customers).Elements(EName.customer)) {
-                if (EPredicate.IsNotExcuded(el)) {
+            foreach (XElement el in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.customers).Elements(EName.customer))
+            {
+                if (EPredicate.IsNotExcuded(el))
+                {
                     table.AddRow(el.AttrOrEmpty(AName_.id), el.AttrOrEmpty(AName_.title));
                 }
             }
         }
         #endregion
         #region Title
-        public override string P_Title {
-            get {
+        public override string P_Title
+        {
+            get
+            {
                 XElement el = XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.customers).Elements(EName.customer).Where(EPredicate.IsNotExcuded).SearchByAttribute(AName_.id, this.P_Customer);
-                if (el == null) {
+                if (el == null)
+                {
                     return string.Empty;
-                } else {
+                }
+                else
+                {
                     return el.AttrOrEmpty(AName_.title);
                 }
             }

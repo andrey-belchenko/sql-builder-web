@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
@@ -37,11 +35,13 @@ namespace sql.builder.DataApi
         {
             return true;
         }
-        public override void  P_Table_ListRefresh(VDataTable table)
+        public override void P_Table_ListRefresh(VDataTable table)
         {
             table.Rows.Clear();
-            foreach (VQueryCall el in this.RootQuery().AllSources()) {
-                if (el is VFromQuery || el.GetType() == typeof(VELink)) {
+            foreach (VQueryCall el in this.RootQuery().AllSources())
+            {
+                if (el is VFromQuery || el.GetType() == typeof(VELink))
+                {
                     TableListRowFromElement(table, el);
                 }
             }
@@ -103,7 +103,8 @@ namespace sql.builder.DataApi
         public override void P_ParentFieldName_ListRefresh(VDataTable table)
         {
             table.Rows.Clear();
-            foreach (VColumn el in this.Columns()) {
+            foreach (VColumn el in this.Columns())
+            {
                 table.AddRow(el.P_Name, el.P_Name);
             }
         }
@@ -116,7 +117,8 @@ namespace sql.builder.DataApi
         public override void P_OrderFieldName_ListRefresh(VDataTable table)
         {
             table.Rows.Clear();
-            foreach (VColumn el in this.Columns()) {
+            foreach (VColumn el in this.Columns())
+            {
                 table.AddRow(el.P_Name, el.P_Name);
             }
         }
@@ -132,18 +134,27 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region DxExport
-        public override string P_DxExport {
-            get {
-                if (this.AttrOrEmpty(TextConst.AName.DxExport) == TextConst.AVBool.False) {
+        public override string P_DxExport
+        {
+            get
+            {
+                if (this.AttrOrEmpty(TextConst.AName.DxExport) == TextConst.AVBool.False)
+                {
                     return TextConst.AVBool.False;
-                } else {
+                }
+                else
+                {
                     return TextConst.AVBool.True;
                 }
             }
-            set {
-                if (value == TextConst.AVBool.True) {
+            set
+            {
+                if (value == TextConst.AVBool.True)
+                {
                     value = null;
-                } else {
+                }
+                else
+                {
                     value = TextConst.AVBool.False;
                 }
                 this.SetAttributeValue(TextConst.AName.DxExport, value);
@@ -160,8 +171,8 @@ namespace sql.builder.DataApi
             return true;
         }
         #endregion
-		#region AllowSelectMoveColumns
-		public override bool P_AllowSelectMoveColumns_Exists()
+        #region AllowSelectMoveColumns
+        public override bool P_AllowSelectMoveColumns_Exists()
         {
             return true;
         }

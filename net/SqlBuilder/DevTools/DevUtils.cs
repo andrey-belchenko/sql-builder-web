@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace SqlBuilderLib.DevTools
 {
     public interface IDevUtilsProvider

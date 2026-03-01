@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using sql.builder.UI;
+﻿using System.Collections.Generic;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
@@ -17,13 +13,17 @@ namespace sql.builder.DataApi
         public VQueryCall ListQuery()
         {
             IList<VSXElement> list = this.GetDescedantsP(EName.listquery);
-            if (list.Count == 0) {
+            if (list.Count == 0)
+            {
                 return null;
             }
             list = list[0].GetElementsP(EName.query);
-            if (list.Count == 0) {
+            if (list.Count == 0)
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return (VQueryCall)list[0];
             }
         }
@@ -31,13 +31,17 @@ namespace sql.builder.DataApi
         public VQueryCall DefaultQuery()
         {
             IList<VSXElement> list = this.GetDescedantsP(EName.defaultquery);
-            if (list.Count == 0) {
+            if (list.Count == 0)
+            {
                 return null;
             }
             list = list[0].GetElementsP(EName.query);
-            if (list.Count == 0) {
+            if (list.Count == 0)
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return (VQueryCall)list[0];
             }
         }
@@ -78,9 +82,12 @@ namespace sql.builder.DataApi
         {
             string s;
             string name = this.P_IdName;
-            if (!string.IsNullOrEmpty(name)) {
+            if (!string.IsNullOrEmpty(name))
+            {
                 s = name + " ";
-            } else {
+            }
+            else
+            {
                 s = string.Empty;
             }
             s += this.P_FormalParName + " " + Italic(this.P_SelfTitle);
@@ -164,11 +171,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region IdName
-        public override string P_IdName {
-            get {
+        public override string P_IdName
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.id);
             }
-            set {
+            set
+            {
                 this.SetIdName(AName_.id, value);
             }
         }
@@ -226,19 +236,28 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ShowCheckbox
-        public override string P_ShowCheckbox {
-            get {
-                if (this.AttrOrEmpty(AName_.show_checkbox) == string.Empty) {
+        public override string P_ShowCheckbox
+        {
+            get
+            {
+                if (this.AttrOrEmpty(AName_.show_checkbox) == string.Empty)
+                {
                     return TextConst.AVBool.True;
-                } else {
+                }
+                else
+                {
                     return string.Empty;
                 }
             }
-            set {
+            set
+            {
                 string s;
-                if (value == string.Empty) {
+                if (value == string.Empty)
+                {
                     s = TextConst.AVBool.False;
-                } else {
+                }
+                else
+                {
                     s = null;
                 }
                 this.SetAttributeValue(AName_.show_checkbox, s);
@@ -293,7 +312,7 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ClearOnListChange
-       
+
 
         public override bool P_ClearOnListChange_Exists()
         {

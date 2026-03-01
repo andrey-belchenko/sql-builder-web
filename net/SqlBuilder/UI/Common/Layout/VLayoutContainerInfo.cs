@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace sql.builder.UI
 {
@@ -12,7 +10,7 @@ namespace sql.builder.UI
         public VLayoutContainerInfo(VLayout controller, VLayoutContainerInfo parentGroup)
         {
             layoutController = controller;
-          
+
             if (parentGroup != null)
             {
                 parentGroup.AddChild(this);
@@ -30,7 +28,7 @@ namespace sql.builder.UI
                 }
             }
         }
-       
+
         protected VLayout layoutController;
         public VLayout GetLayoutController()
         {
@@ -45,22 +43,22 @@ namespace sql.builder.UI
             {
                 node = node.GetNextVisible();
             }
-           
+
             return node;
         }
 
-        public  VLayoutNodeInfo [] GetVisibleNodes()
+        public VLayoutNodeInfo[] GetVisibleNodes()
         {
-            return Nodes.Where(n=>n.IsSelfVisible()).ToArray();
+            return Nodes.Where(n => n.IsSelfVisible()).ToArray();
         }
-        
+
         public virtual void AddChild(VLayoutNodeInfo node)
         {
             node.SetParent(this);
-            
-            node.linkedListNode= new LinkedListNode<VLayoutNodeInfo>(node) ;
+
+            node.linkedListNode = new LinkedListNode<VLayoutNodeInfo>(node);
             Nodes.AddLast(node.linkedListNode);
-            
+
         }
 
         private SortedList<int, int> nodesIndexes = null;
@@ -75,7 +73,7 @@ namespace sql.builder.UI
                     var id = (int)n.GetId();
                     if (id == -1)
                     {
-                         GetLayoutController().AddNodeId(n);
+                        GetLayoutController().AddNodeId(n);
                     }
                     id = (int)n.GetId();
                     nodesIndexes.Add(id, i);
@@ -83,7 +81,7 @@ namespace sql.builder.UI
                 }
             }
             return nodesIndexes[node.id];
-            
+
         }
 
 
@@ -95,7 +93,7 @@ namespace sql.builder.UI
             }
             node.SetParent(this);
             node.linkedListNode = new LinkedListNode<VLayoutNodeInfo>(node);
-            Nodes.AddFirst (node.linkedListNode);
+            Nodes.AddFirst(node.linkedListNode);
         }
 
         public virtual void RemoveChild(VLayoutNodeInfo node)
@@ -113,7 +111,7 @@ namespace sql.builder.UI
         }
         public virtual void ResetAndCalculateChilds()
         {
-            
+
         }
         public virtual int GetControlBorderWidth()
         {
@@ -142,6 +140,6 @@ namespace sql.builder.UI
 
 
     }
-    
-    
+
+
 }

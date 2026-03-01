@@ -1,37 +1,30 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Xsl;
-using System.Xml.XPath;
-using System.Threading;
 using sql.builder.Clean;
 using sql.builder.UI;
 namespace sql.builder.DataApi
 {
     public partial class VDataSet
     {
-       
-        public SortedList<string, VDataColumn > VariableColumns = null;
+
+        public SortedList<string, VDataColumn> VariableColumns = null;
         public HashSet<string> VariableColumnHasValue = null;
         public VWithParams FactParamsElement = null; // параметры listquery, описанного для для колонки в форме
-      //  public DataColumnChangeEventHandler VariableChanged = null;
+                                                     //  public DataColumnChangeEventHandler VariableChanged = null;
         public VVariableDepandantceController VariableDepandantceController = null;
         public EventHandler ChangeCompleted = null;
         public VDataTable ChoiceSource = null;
         public bool WasRefresh = false;
         public void OnVariableValueChanged(string variableName)
         {
-            if (this.VariableColumnHasValue == null) {
+            if (this.VariableColumnHasValue == null)
+            {
                 this.VariableColumnHasValue = new HashSet<string>();
             }
-            if (!this.VariableColumnHasValue.Contains(variableName)) {
+            if (!this.VariableColumnHasValue.Contains(variableName))
+            {
                 this.VariableColumnHasValue.Add(variableName);
             }
             //foreach (VDataTable tbl in this.Tables) { //!!! не оптимизированно + если зависит от нескольких переменных будет обновляться несколько раз
@@ -46,7 +39,7 @@ namespace sql.builder.DataApi
         //чтобы при изменении нескольких переменных одна и та же таблица не обновлялась несколько раз
         public void PrcessRefreshQueue()
         {
-            if (_tablesToResresh==null) return;
+            if (_tablesToResresh == null) return;
             var tt = _tablesToResresh;
             _tablesToResresh = null;
             foreach (var tableName in tt)
@@ -55,30 +48,30 @@ namespace sql.builder.DataApi
                 tbl.Refresh();
                 tbl.RaiseCurrentRowChanged();
             }
-           // _tablesToResresh.Clear();
+            // _tablesToResresh.Clear();
         }
 
         public void EnqueueTableRefresh(string tableName)
         {
             if (_tablesToResresh == null)
             {
-                _tablesToResresh=new HashSet<string>();
+                _tablesToResresh = new HashSet<string>();
             }
             if (!_tablesToResresh.Contains(tableName))
             {
                 _tablesToResresh.Add(tableName);
             }
         }
-        
+
         public bool IsVariableHasValue(string variableName)
         {
-            
+
             if (VariableColumnHasValue == null)
             {
                 return false;
             }
             return VariableColumnHasValue.Contains(variableName);
-            
+
         }
 
         public bool IsValid = true;
@@ -89,8 +82,8 @@ namespace sql.builder.DataApi
         {
             InvalidTables = null;
             IsValid = true;
-            SetVariableValue(TextConst.AVParam.FormValid, 1,true);
-            SetVariableValue(TextConst.AVParam.FormValidNot, 0,true);
+            SetVariableValue(TextConst.AVParam.FormValid, 1, true);
+            SetVariableValue(TextConst.AVParam.FormValidNot, 0, true);
         }
 
         public void AddInvalidTable(string name)
@@ -107,19 +100,22 @@ namespace sql.builder.DataApi
             if (IsValid)
             {
                 IsValid = false;
-                SetVariableValue(TextConst.AVParam.FormValid, 0 ,true);
-                SetVariableValue(TextConst.AVParam.FormValidNot, 1,true);
+                SetVariableValue(TextConst.AVParam.FormValid, 0, true);
+                SetVariableValue(TextConst.AVParam.FormValidNot, 1, true);
             }
         }
         public void RemoveInvalidTable(string name)
         {
-            if (InvalidTables == null) {
+            if (InvalidTables == null)
+            {
                 return;
             }
-            if (InvalidTables.Contains(name)) {
+            if (InvalidTables.Contains(name))
+            {
                 InvalidTables.Remove(name);
             }
-            if (InvalidTables.Count == 0) {
+            if (InvalidTables.Count == 0)
+            {
                 ResetValidation();
             }
         }
@@ -135,7 +131,7 @@ namespace sql.builder.DataApi
         }
 
 
-        public void AddVariableColumn(string variableName,VDataColumn column)
+        public void AddVariableColumn(string variableName, VDataColumn column)
         {
             if (VariableColumns == null)
             {
@@ -145,66 +141,86 @@ namespace sql.builder.DataApi
             column.VariableName = variableName;
             (column.Table as VDataTable).AttachBehaviorEvent();
         }
-        public void SetVariableValue(string variableName,object value, bool isDataChanged)
+        public void SetVariableValue(string variableName, object value, bool isDataChanged)
         {
-            if (VariableColumns==null) return;
+            if (VariableColumns == null) return;
             var col = VariableColumns[variableName];
             var tbl = col.Table as VDataTable;
             if (tbl.CurrentRow != null && tbl.CurrentRow.RowState != DataRowState.Deleted)
             {
                 if (col.SetValue(tbl.CurrentRow, value))
                 {
-                   // tbl.ProcessBehaviorChanges(col, tbl.CurrentRow, isDataChanged); // вроде не нужно событие и так срабатывает от setvalue дает повтор
+                    // tbl.ProcessBehaviorChanges(col, tbl.CurrentRow, isDataChanged); // вроде не нужно событие и так срабатывает от setvalue дает повтор
                 }
-                
+
             }
-            
+
 
         }
 
         public object GetVariableValue(string variableName)
         {
-           return GetVariableValue( variableName,null);
+            return GetVariableValue(variableName, null);
         }
 
-        public object GetVariableValue(string variableName,DataRow row)
+        public object GetVariableValue(string variableName, DataRow row)
         {
             bool invert;
-            if (variableName[0] == '!') {
+            if (variableName[0] == '!')
+            {
                 invert = true;
                 variableName = variableName.Substring(1);
-            } else {
+            }
+            else
+            {
                 invert = false;
             }
             object val = null;
-            if (variableName == TextConst.AVBool.False) { // заплатка для стыковки состарым вариантом
+            if (variableName == TextConst.AVBool.False)
+            { // заплатка для стыковки состарым вариантом
                 val = DBNull.Value;
-            } else if (variableName == TextConst.AVBool.True) {
+            }
+            else if (variableName == TextConst.AVBool.True)
+            {
                 val = variableName;
-            } else {
-                if (this.VariableColumns == null) {
+            }
+            else
+            {
+                if (this.VariableColumns == null)
+                {
                     return null;
                 }
                 VDataColumn col;
-                if (!this.VariableColumns.TryGetValue(variableName, out col)) {
+                if (!this.VariableColumns.TryGetValue(variableName, out col))
+                {
                     return null;
                 }
                 var tbl = col.Table as VDataTable;
                 DataRow row1;
-                if (row != null && row.Table == tbl) {
+                if (row != null && row.Table == tbl)
+                {
                     row1 = row;
-                } else {
+                }
+                else
+                {
                     row1 = tbl.CurrentRow;
                 }
-                if (row1 != null && row1.RowState != DataRowState.Deleted) {
+                if (row1 != null && row1.RowState != DataRowState.Deleted)
+                {
                     val = row1[col];
-                } else {
+                }
+                else
+                {
                     val = DBNull.Value;
                 }
-                if (invert) {
-                    if (Cmn.IsNullOrDBNull(val) || val.ToString() == TextConst.AVBool.False) {
+                if (invert)
+                {
+                    if (Cmn.IsNullOrDBNull(val) || val.ToString() == TextConst.AVBool.False)
+                    {
                         val = 1;
-                    } else {
+                    }
+                    else
+                    {
                         val = 0;
                     }
                 }
@@ -239,7 +255,7 @@ namespace sql.builder.DataApi
             //{
             //    ClearChangingColumns();
             //}
-          //  return;
+            //  return;
             if (!changingColumns.Contains(column))
             {
                 if (column.ColumnName == "dat_do")
@@ -257,10 +273,10 @@ namespace sql.builder.DataApi
             }
             if (changingColumns.Contains(column))
             {
-               
+
                 changingColumns.Remove(column);
             }
-            
+
         }
 
         public bool IsColumnChanging(VDataColumn column)
@@ -269,7 +285,7 @@ namespace sql.builder.DataApi
             return changingColumns.Contains(column);
         }
 
-    
+
 
         //public bool IsColumnsChanging()
         //{

@@ -1,12 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Xml.Linq;
-using System.Collections;
-using System.Collections.Generic;
-
-using sql.builder.DataApi;
 using Devart.Data.Oracle;
+using sql.builder.DataApi;
 //using DevExpress.XtraEditors;
 //using DevExpress.XtraEditors.Controls;
 //using System.Windows.Forms;
@@ -27,16 +25,23 @@ namespace sql.builder.UI
         /// Колонка "value" устанавливается ключевой, в ней допускаются значения NULL.
         /// Создаётся методом <see cref="UIBase.CreateBoundTable" />.
         /// </summary>
-        public VDataTable ArrayEditValue {
-            get {
+        public VDataTable ArrayEditValue
+        {
+            get
+            {
                 return this.array_edit_value;
             }
         }
-        public VDataTable DataTableList {
-            get {
-                if (this.data_set_list == null) {
+        public VDataTable DataTableList
+        {
+            get
+            {
+                if (this.data_set_list == null)
+                {
                     return null;
-                } else {
+                }
+                else
+                {
                     return this.data_set_list.Tables[0] as VDataTable;
                 }
             }
@@ -45,34 +50,46 @@ namespace sql.builder.UI
         #region Открытые методы
         public void BindData()
         {
-            if (this.SourceType == ReturnType.Simple) {
+            if (this.SourceType == ReturnType.Simple)
+            {
                 this.CreateBoundColumn(this.field_name);
-            } else if (this.SourceType == ReturnType.SimpleRange) {
+            }
+            else if (this.SourceType == ReturnType.SimpleRange)
+            {
                 this.CreateBoundColumn(this.field_name + "1");
                 this.CreateBoundColumn(this.field_name + "2");
-            } else if (this.SourceType == ReturnType.Array) {
+            }
+            else if (this.SourceType == ReturnType.Array)
+            {
                 //if (this is UICustom) {
                 //    this.CreateBoundTable(this.field_name);
                 //}
-                if (!this.Form.WithBehavior) {
-                    if (this.DataTableList == null || this.DataTableList.Columns.Count == 0) {
+                if (!this.Form.WithBehavior)
+                {
+                    if (this.DataTableList == null || this.DataTableList.Columns.Count == 0)
+                    {
                         return;
                     }
                 }
                 this.CreateBoundTable(this.field_name);
-                if (this.xfield.AttrOrEmpty(AName.type) == TextConst.AVDataType.String) {
-                    if (this.xfield.AttrOrDefault(TextConst.AName.IsScalar, false)) {
+                if (this.xfield.AttrOrEmpty(AName.type) == TextConst.AVDataType.String)
+                {
+                    if (this.xfield.AttrOrDefault(TextConst.AName.IsScalar, false))
+                    {
                         this.array_edit_value.IsArrayParamStringUse = true;
                     }
                 }
             }
             // Дополнительные настройки
             this.ShowCheck = (this.UseType == UIFormC.UseType.ParamEditor && this.xfield.AttrOrDefault(AName.show_checkbox, true));
-            if (this.mandatory) {
+            if (this.mandatory)
+            {
                 //this.SetCheckEnabled(false);
                 // ceUsed.Enabled = false;
                 this.Used = true;
-            } else {
+            }
+            else
+            {
                 this.Used = !this.ShowCheck;
             }
         }
@@ -141,7 +158,7 @@ namespace sql.builder.UI
         }
 
 
-        public bool GetVisibilityFromSource(bool useExists=true)
+        public bool GetVisibilityFromSource(bool useExists = true)
         {
             if (SourceType == ReturnType.Simple || SourceType == ReturnType.Array)
             {
@@ -158,7 +175,7 @@ namespace sql.builder.UI
                 //{
                 //    System.Windows.Forms.MessageBox.Show("1");
                 //}
-                return column.GetVisibility(row,useExists);
+                return column.GetVisibility(row, useExists);
 
 
             }
@@ -291,28 +308,41 @@ namespace sql.builder.UI
         #region Закрытые методы
         public void SetSourceValue(object value, int index = 1)
         {
-            if (this.SourceType == ReturnType.Simple) {
-                if (this.GetSimpleSourceValue() != value) {
+            if (this.SourceType == ReturnType.Simple)
+            {
+                if (this.GetSimpleSourceValue() != value)
+                {
                     bool force = (this.key_field_name != this.value_field_name);
                     this.SetSimpleSourceValue(value, this.field_name, force);
                 }
-            } else if (this.SourceType == ReturnType.SimpleRange) {
-                if (this.GetSimpleSourceValue(index) != value) {
+            }
+            else if (this.SourceType == ReturnType.SimpleRange)
+            {
+                if (this.GetSimpleSourceValue(index) != value)
+                {
                     this.SetSimpleSourceValue(value, this.field_name + index);
                 }
-            } else if (this.SourceType == ReturnType.Array) {
+            }
+            else if (this.SourceType == ReturnType.Array)
+            {
                 this.SetArraySourceValue(value);
             }
         }
         public void ClearSourceValues()
         {
-            if (this.SourceType == ReturnType.Simple) {
+            if (this.SourceType == ReturnType.Simple)
+            {
                 this.SetSourceValue(DBNull.Value);
-            } else if (SourceType == ReturnType.SimpleRange) {
+            }
+            else if (SourceType == ReturnType.SimpleRange)
+            {
                 this.SetSourceValue(DBNull.Value, 1);
                 this.SetSourceValue(DBNull.Value, 2);
-            } else if (this.SourceType == ReturnType.Array) {
-                if (this.array_edit_value != null) {
+            }
+            else if (this.SourceType == ReturnType.Array)
+            {
+                if (this.array_edit_value != null)
+                {
                     this.array_edit_value.Rows.Clear();
                 }
                 this.UpdateSimpleValueForArray();
@@ -322,7 +352,8 @@ namespace sql.builder.UI
         {
             VDataTable table = this.Form.DataSource.GetTable(this.table_name);
             VDataColumn column = (VDataColumn)table.Columns[column_name];
-            if (column == null) {
+            if (column == null)
+            {
                 column = table.AddColumn(column_name, this.ValueType);
             }
             //if (Form.FormUseType == UIFormC.UseType.ParamEditor) // !!! не заработало, потом доделать. 
@@ -337,22 +368,31 @@ namespace sql.builder.UI
         private void CreateBoundTable(string table_name)
         {
             VDataTable table = null;
-            if (this.array_edit_value == null) {
+            if (this.array_edit_value == null)
+            {
                 table = Form.DataSource.GetTable(this.table_name);
                 this.array_edit_value = Form.DataSource.GetTable(table_name);
-                if (this.array_edit_value != null) {
+                if (this.array_edit_value != null)
+                {
                     this.array_edit_value.AllowAsyncRefresh = false;
-                } else {
+                }
+                else
+                {
                     Type value_type;
-                    if (this.Form.WithBehavior) {
-                        if (xfield.Attribute(AName.type)==null)
+                    if (this.Form.WithBehavior)
+                    {
+                        if (xfield.Attribute(AName.type) == null)
                         {
                             xfield.SetAttributeValue(AName.type, TextConst.AVDataType.Number);
                         }
                         value_type = Cmn.GetTypeFromStringType(this.xfield.Attribute(AName.type).Value, XmlReports.numberType);
-                    } else if (this.DataTableList != null) {
+                    }
+                    else if (this.DataTableList != null)
+                    {
                         value_type = this.DataTableList.Columns[value_field_name].DataType;
-                    } else {
+                    }
+                    else
+                    {
                         value_type = this.ValueType;
                     }
                     this.array_edit_value = new VDataTable(true);
@@ -366,16 +406,19 @@ namespace sql.builder.UI
                 // Поведение заявязано на колонку, поэтому создается еще и фиктивная колонка
                 //VDataTable table1 = Form.DataSource.GetTable(this.table_name);
                 VDataColumn column = (VDataColumn)table.Columns[table_name]; //table.Columns.Cast<VDataColumn>().FirstOrDefault(e => e.ColumnName == table_name);
-                if (column != null) {
+                if (column != null)
+                {
                     column.BindControl(this);
                 }
                 this.array_edit_value.StructureType = StructureType.Array;
                 this.array_edit_value.Control = this;
-                if (UseType != UIFormC.UseType.DataEditor) {
+                if (UseType != UIFormC.UseType.DataEditor)
+                {
                     this.array_edit_value.Changed += VDataTable_Changed;
                 }
                 //column = table.Columns.Cast<VDataColumn>().FirstOrDefault(e => e.ColumnName == table_name);
-                if (column != null) {
+                if (column != null)
+                {
                     attachTableEvents(table);
                 }
             }
@@ -403,7 +446,8 @@ namespace sql.builder.UI
         {
             if (SourceType == ReturnType.Simple)
             {
-                if (column.ColumnName == this.field_name) {
+                if (column.ColumnName == this.field_name)
+                {
                     SetControlValue(value);
                     SetDisplayValue(column.GetFieldValueName(UseType));
 
@@ -425,9 +469,12 @@ namespace sql.builder.UI
                     }
                     else
                     {
-                        if (!Cmn.IsNullOrDBNull(value)) {
+                        if (!Cmn.IsNullOrDBNull(value))
+                        {
                             newUsed = true;
-                        } else if (this.null_as_undefined && Cmn.IsNullOrDBNull(value)) {
+                        }
+                        else if (this.null_as_undefined && Cmn.IsNullOrDBNull(value))
+                        {
                             // Емцов - для бытовых поисковиков с range и like в одном поле
                             newUsed = false;
                         }
@@ -456,7 +503,9 @@ namespace sql.builder.UI
 
                     //var error = GetSourceError(1);
                     //SetError(error);
-                } else if (column.ColumnName == this.field_name + "2") {
+                }
+                else if (column.ColumnName == this.field_name + "2")
+                {
                     SetControlValue(value, 2);
                     SetDisplayValue(column.GetFieldValueName(UseType), 2);
 
@@ -475,20 +524,24 @@ namespace sql.builder.UI
                     SetDisplayValue(null);
                 }
 
-                if (this.special_type == TextConst.AVSpecType.ColSets) {
+                if (this.special_type == TextConst.AVSpecType.ColSets)
+                {
                     var data = this.array_edit_value.Select().Select(row => row["text"].ToString());
                     OnSpecialTypeChanged("colsets", data);
                 }
             }
 
             //Заплатка для 32274, возможность выбирать отчет в форме для выбора параметров
-            if (this.special_type == TextConst.AVSpecType.SelectRep) {
+            if (this.special_type == TextConst.AVSpecType.SelectRep)
+            {
                 SpecialTypeChanged(TextConst.AVSpecType.SelectRep, value);
             }
-            if (EditValueChanged != null) {
+            if (EditValueChanged != null)
+            {
                 EditValueChanged(this, EventArgs.Empty);
             }
-            if (this.Form.TitleVariables.Contains(this.full_name)) {
+            if (this.Form.TitleVariables.Contains(this.full_name))
+            {
                 this.Form.UpdateTitle();
             }
         }
@@ -496,12 +549,18 @@ namespace sql.builder.UI
         public VDataColumn GetBoundColumn(int index = 1)
         {
             VDataColumn column = null;
-            if (SourceType == ReturnType.Simple) {
+            if (SourceType == ReturnType.Simple)
+            {
                 column = (VDataColumn)Form.DataSource.GetTable(this.table_name).Columns[this.field_name];
-            } else if (SourceType == ReturnType.SimpleRange) {
+            }
+            else if (SourceType == ReturnType.SimpleRange)
+            {
                 column = (VDataColumn)Form.DataSource.GetTable(this.table_name).Columns[this.field_name + index];
-            } else if (SourceType == ReturnType.Array) {
-                if (Form.DataSource.GetTable(this.table_name).Columns.Contains(this.field_name)) {
+            }
+            else if (SourceType == ReturnType.Array)
+            {
+                if (Form.DataSource.GetTable(this.table_name).Columns.Contains(this.field_name))
+                {
                     column = (VDataColumn)Form.DataSource.GetTable(this.table_name).Columns[this.field_name];
                 }
             }
@@ -595,14 +654,14 @@ namespace sql.builder.UI
                     }
                     else if (ValueType == typeof(decimal))
                     {
-                     
+
                         if (Cmn.Nvl(value, null) != null)
                         {
                             decimal num_value;
                             success = decimal.TryParse(value.ToString(), out num_value);
                             value = num_value;
                         }
-                       
+
                     }
 
                     if (success && !value.Equals(srcValue) && row != null)
@@ -610,9 +669,9 @@ namespace sql.builder.UI
 
                         if (row != null) //!!! Почему то приходит row=null
                         {
-                            changed = table.GetColumn(column_name).SetValue(row, value,true);
+                            changed = table.GetColumn(column_name).SetValue(row, value, true);
 
-                           
+
 
                             if (!table.IsBackgroundRefreshProcessing() && changed && !Form.IsRefreshig)
                             {
@@ -630,11 +689,11 @@ namespace sql.builder.UI
                 }
             }
         }
-        public  void ReloadListDataIfNeed(bool onlyForselectedValue = false, bool allowAsync = true)
+        public void ReloadListDataIfNeed(bool onlyForselectedValue = false, bool allowAsync = true)
         {
             if (_need_refresh)
             {
-                ReloadListData(onlyForselectedValue,allowAsync);
+                ReloadListData(onlyForselectedValue, allowAsync);
             }
 
         }
@@ -645,23 +704,23 @@ namespace sql.builder.UI
         }
         public virtual void CancelRowsLimit()
         {
-           
+
         }
 
 
-        public virtual void ReloadListData(bool onlyForselectedValue = false,bool allowAsync=true,IEnumerable<string> names=null )
+        public virtual void ReloadListData(bool onlyForselectedValue = false, bool allowAsync = true, IEnumerable<string> names = null)
         {
             PrepareListSource();
 
             if (Form.NoData) return;
 
             bool disableAsync = false;
-            if (UIStatic.IsWeb() ||((onlyForselectedValue || !allowAsync || names!=null) && DataTableList.AsyncLoad))
+            if (UIStatic.IsWeb() || ((onlyForselectedValue || !allowAsync || names != null) && DataTableList.AsyncLoad))
             {
                 DataTableList.AsyncLoad = false;
                 disableAsync = true;
             }
-            
+
 
             _need_refresh = false;
             // Значения по умолчанию должны остаться
@@ -670,10 +729,13 @@ namespace sql.builder.UI
             SaveTempValues();
             XElement xparams = null;//!!! перенести эту логику в DataSet
             xparams = OnNeedMasterValues(this);
-            if (UseType == UIFormC.UseType.DataEditor) {
+            if (UseType == UIFormC.UseType.DataEditor)
+            {
                 xparams = new XElement(TextConst.EName.Params);
-                if (this.data_set_list.FactParamsElement != null) { // listquery описан на уровне формы
-                    foreach (VSXElement el in this.data_set_list.FactParamsElement.GetElementsP()) {
+                if (this.data_set_list.FactParamsElement != null)
+                { // listquery описан на уровне формы
+                    foreach (VSXElement el in this.data_set_list.FactParamsElement.GetElementsP())
+                    {
                         var val = el.GetRuntimeValue(Form.DataSource, null, null);
                         var xpar = new XElement(TextConst.EName.Param);
                         xpar.SetAttributeValue(TextConst.AName.Name, el.P_ParName);
@@ -751,7 +813,7 @@ namespace sql.builder.UI
 
             if (this.rows_limit > 0)
             {
-                ApplyFilterParams(xparams, onlyForselectedValue,names);
+                ApplyFilterParams(xparams, onlyForselectedValue, names);
             }
 
             this.data_set_list.Refresh(xparams);
@@ -761,7 +823,7 @@ namespace sql.builder.UI
                 ReloadListComplete();
             }
 
-            
+
 
             if (disableAsync)
             {
@@ -772,8 +834,10 @@ namespace sql.builder.UI
         {
             LoadTempValues();
 
-            if (this.mandatory && DataTableList.Rows.Count > 0) {
-                if (SourceType == ReturnType.Simple) {
+            if (this.mandatory && DataTableList.Rows.Count > 0)
+            {
+                if (SourceType == ReturnType.Simple)
+                {
                     if (GetSimpleSourceValue() == DBNull.Value) SetSourceValue(DataTableList.Rows[0][0]);
                 }
                 else if (SourceType == ReturnType.SimpleRange)
@@ -802,19 +866,24 @@ namespace sql.builder.UI
         {
             VDataTable dt = this.array_edit_value;
             string column_name = dt.ArrayEditValueRefColumn;
-            if (column_name != null) {
+            if (column_name != null)
+            {
                 return dt.Columns[column_name];
-            } else {
+            }
+            else
+            {
                 return dt.Columns[0];
             }
         }
         public void ApplyArrayValueToControl()
         {
-            if (this.Form.NoData) {
+            if (this.Form.NoData)
+            {
                 return;
             }
             //PrepareListSource();
-            if (this.UseType == UIFormC.UseType.DataEditor) {
+            if (this.UseType == UIFormC.UseType.DataEditor)
+            {
                 this.array_edit_value.Refresh();
             }
             // обновляем таблицу контрола значениями из главной
@@ -826,11 +895,14 @@ namespace sql.builder.UI
             int index;
             DataRow row;
             DataColumn key_column = this.getArrayEditValueKeyColumn();
-            for (index = 0; index < rows.Count; index++) {
+            for (index = 0; index < rows.Count; index++)
+            {
                 row = rows[index];
-                if (row.RowState != DataRowState.Deleted) {
+                if (row.RowState != DataRowState.Deleted)
+                {
                     object key = row[key_column];
-                    if (!keys.Contains(key)) {
+                    if (!keys.Contains(key))
+                    {
                         keys.Add(key);
                     }
                 }
@@ -841,38 +913,45 @@ namespace sql.builder.UI
             //    keys.CopyTo(arr, 0);
             //    custom.SetControlValue(arr);
             //} else {
-                VDataTable dt = this.DataTableList;
-                if (dt != null) {
-                    key_column = dt.Columns[this.value_field_name];
-                    DataColumn check_column = dt.Columns["check"];
-                    this.BeginUpdate();
-                    for (index = 0; index < dt.Rows.Count; index++) {
-                        row = dt.Rows[index];
-                        int old_val = (int)row[check_column];
-                        if (old_val != (keys.Contains(row[key_column]) ? 1 : 0)) {
-                            // инвертируем значение
-                            object new_val = (old_val == 0) ? Cmn.INT32_ONE : Cmn.INT32_ZERO;
-                            row[check_column] = new_val;
-                        }
+            VDataTable dt = this.DataTableList;
+            if (dt != null)
+            {
+                key_column = dt.Columns[this.value_field_name];
+                DataColumn check_column = dt.Columns["check"];
+                this.BeginUpdate();
+                for (index = 0; index < dt.Rows.Count; index++)
+                {
+                    row = dt.Rows[index];
+                    int old_val = (int)row[check_column];
+                    if (old_val != (keys.Contains(row[key_column]) ? 1 : 0))
+                    {
+                        // инвертируем значение
+                        object new_val = (old_val == 0) ? Cmn.INT32_ONE : Cmn.INT32_ZERO;
+                        row[check_column] = new_val;
                     }
-                    this.EndUpdate();
                 }
+                this.EndUpdate();
+            }
             //}
         }
         private void addArrayEditValue(object key, string name)
         {
             VDataTable dt = this.array_edit_value;
             DataRow row;
-            if (this.UseType == UIFormC.UseType.DataEditor) {
+            if (this.UseType == UIFormC.UseType.DataEditor)
+            {
                 DataColumn col = this.getArrayEditValueKeyColumn();
                 row = dt.NewRow();
                 row[col] = key;
                 dt.Rows.Add(row);
-            } else {
+            }
+            else
+            {
                 row = dt.Rows.Find(key);
-                if (row == null) {
+                if (row == null)
+                {
                     dt.Rows.Add(key, name);
-				}
+                }
             }
         }
         public bool SetArraySourceValueMultiple(IList<object> values, IList<string> names, bool resumeChange)
@@ -880,40 +959,54 @@ namespace sql.builder.UI
             string[] svalue = new string[values.Count];
             List<object> value1 = new List<object>(values.Count);
             int index;
-            for (index = 0; index < values.Count; index++) {
+            for (index = 0; index < values.Count; index++)
+            {
                 object value = values[index];
                 svalue[index] = value.ToString();
                 value1.Add(value);
             }
             var rows = this.array_edit_value.GetRowsForCurrentParent().Where(r => r.RowState != DataRowState.Deleted).ToList();
             bool changes = false;
-            for (index = 0; index < rows.Count; index++) {
+            for (index = 0; index < rows.Count; index++)
+            {
                 DataRow r = rows[index];
-                if (!svalue.Contains(r[getArrayEditValueKeyColumn()].ToString())) {
+                if (!svalue.Contains(r[getArrayEditValueKeyColumn()].ToString()))
+                {
                     //ArrayEditValue.DeleteRow(r);
                     r.Delete();
                     changes = true;
-                } else {
+                }
+                else
+                {
                     value1.Remove(r[getArrayEditValueKeyColumn()]);
                 }
             }
             this.array_edit_value.Changed -= VDataTable_Changed;
-            if (value1.Count > 0) {
+            if (value1.Count > 0)
+            {
                 Dictionary<object, string> valNames;
-                if (names != null) {
+                if (names != null)
+                {
                     valNames = new Dictionary<object, string>();
-                    for (index = 0; index < values.Count; index++) {
+                    for (index = 0; index < values.Count; index++)
+                    {
                         valNames.Add(values[index], names[index]);
                     }
-                } else {
+                }
+                else
+                {
                     valNames = null;
                 }
-                for (index = 0; index < value1.Count; index++) {
+                for (index = 0; index < value1.Count; index++)
+                {
                     object v = value1[index];
                     string valName;
-                    if (valNames != null) {
+                    if (valNames != null)
+                    {
                         valName = valNames[v];
-                    } else {
+                    }
+                    else
+                    {
                         valName = null;
                     }
                     addArrayEditValue(v, valName);
@@ -921,18 +1014,22 @@ namespace sql.builder.UI
                 }
             }
             this.array_edit_value.Changed += VDataTable_Changed;
-            if (resumeChange) { // костыль чтобы не повторять то что ниже
+            if (resumeChange)
+            { // костыль чтобы не повторять то что ниже
                 this.array_edit_value.ResumeChangeEvent();
             }
             UpdateBaseEditValue();
-            if (changes) {
+            if (changes)
+            {
                 UpdateSimpleValueForArray();
                 VDataTable dt = this.array_edit_value.GetParentTable();
-                if (dt != null) {
+                if (dt != null)
+                {
                     dt.RaiseUserChangedData(null, null);
                 }
             }
-            if (resumeChange) {
+            if (resumeChange)
+            {
                 Changed();
             }
             return changes;
@@ -953,12 +1050,16 @@ namespace sql.builder.UI
         }
         protected void UpdateSimpleValueForArray()
         {
-            if (Form.FormUseType == UIFormC.UseType.DataEditor) {
+            if (Form.FormUseType == UIFormC.UseType.DataEditor)
+            {
                 DataRow row = this.array_edit_value.AsEnumerable().FirstOrDefault(r => r.RowState != DataRowState.Deleted);
-                if (row != null) {
+                if (row != null)
+                {
                     MarkUsed(true);
                     SetSimpleSourceValue(Cmn.DECIMAL_ONE, this.field_name, true);
-                } else {
+                }
+                else
+                {
                     MarkUsed(false);
                     SetSimpleSourceValue(DBNull.Value, this.field_name, true);
                 }
@@ -1010,7 +1111,7 @@ namespace sql.builder.UI
             }
 
 
-           // ArrayEditValue.ResumeChangeEvent();
+            // ArrayEditValue.ResumeChangeEvent();
             if (Form.FormUseType == UIFormC.UseType.DataEditor) // чтобы обрабатывалась валидация обязательных полей
             {
                 //if (this.UseType != UIFormC.UseType.DataEditor)
@@ -1018,18 +1119,20 @@ namespace sql.builder.UI
                 UpdateSimpleValueForArray();
                 //}
             }
-       
-          //  Changed();
+
+            //  Changed();
             _need_get_data = tmp;
         }
         private void SaveTempValues()
         {
-            if (this.TempTable == null) {
+            if (this.TempTable == null)
+            {
                 // Clone() не работает - пока так копируем DataTable
                 // TODO: переопределить Clone() для VDataTable
                 this.TempTable = new DataTable();
                 // копируем колонки
-                for (int index = 0; index < this.DataTableList.Columns.Count; index++) {
+                for (int index = 0; index < this.DataTableList.Columns.Count; index++)
+                {
                     DataColumn col_src = this.DataTableList.Columns[index];
                     DataColumn col_desc = new DataColumn(col_src.ColumnName, col_src.DataType);
                     col_desc.AllowDBNull = col_src.AllowDBNull;
@@ -1037,8 +1140,10 @@ namespace sql.builder.UI
                 }
                 // копируем primary key
                 Cmn.CopyPrimaryKey(this.DataTableList, this.TempTable);
-                if (this.show_nulls) {
-                    foreach (DataColumn pk in this.TempTable.PrimaryKey) {
+                if (this.show_nulls)
+                {
+                    foreach (DataColumn pk in this.TempTable.PrimaryKey)
+                    {
                         pk.AllowDBNull = true;
                     }
                 }
@@ -1060,8 +1165,11 @@ namespace sql.builder.UI
                         vals.Add(value, GetText());
                     }
                 }
-            } else {
-                foreach (DataRow row in this.array_edit_value.Rows) {
+            }
+            else
+            {
+                foreach (DataRow row in this.array_edit_value.Rows)
+                {
                     vals.Add(row[0], row[1].ToString());
                 }
             }

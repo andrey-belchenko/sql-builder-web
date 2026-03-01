@@ -78,13 +78,16 @@ namespace sql.builder.XmlHelpers
             if (!XmlReports.IsDeveloperMode() || !XmlReports.IsNative) return;
             string filepath = Path.Combine(FormsFolder, form_name + ".xml");
             FileInfo file = new FileInfo(filepath);
-            if (!file.Exists) {
+            if (!file.Exists)
+            {
                 Cmn.SaveText(xform.ToString(), filepath, Encoding.UTF8);
                 //using (var tfs = new TFSServer()) {
                 //    tfs.AddFile(filepath);
                 //}                
                 //VSProjectHelper.AddContentToProject(filepath);
-            } else if (!IsActualForm(form_name, file.LastWriteTime)) {
+            }
+            else if (!IsActualForm(form_name, file.LastWriteTime))
+            {
                 Cmn.SaveXmlWithCheckOut(xform, filepath);
             }
         }
@@ -117,7 +120,8 @@ namespace sql.builder.XmlHelpers
         public static DateTime GetLastQubeCacheTime(string query_name)
         {
             string qube_path = Path.Combine(QubesFolder, query_name + ".xml");
-            if (!File.Exists(qube_path)) {
+            if (!File.Exists(qube_path))
+            {
                 return DateTime.MinValue;
             }
             XElement xqube = XElement.Load(qube_path);
@@ -128,22 +132,28 @@ namespace sql.builder.XmlHelpers
             if (!XmlReports.IsDeveloperMode() || !XmlReports.IsNative) return;
             xqube.SetAttributeValue(AName.timestamp, DateTime.Now);
             string qube_path = Path.Combine(QubesFolder, query_name + ".xml");
-            if (!File.Exists(qube_path)) {
+            if (!File.Exists(qube_path))
+            {
                 Cmn.SaveText(xqube.ToString(), qube_path, Encoding.UTF8);
                 //using (var tfs = new TFSServer()) {
                 //    tfs.AddFile(qube_path);
                 //}
                 //VSProjectHelper.AddContentToProject(qube_path);
-            } else {
+            }
+            else
+            {
                 Cmn.SaveXmlWithCheckOut(xqube, qube_path);
             }
         }
         #endregion
         #region Queries
         private static string _queries_folder;
-        public static string QueriesFolder {
-            get {
-                if (_queries_folder == null) {
+        public static string QueriesFolder
+        {
+            get
+            {
+                if (_queries_folder == null)
+                {
                     _queries_folder = Path.Combine(XmlReports.GetCurrentContentFolder(), XmlReports.QueriesCacheFolderName);
                 }
                 return _queries_folder;
@@ -154,13 +164,16 @@ namespace sql.builder.XmlHelpers
             if (!XmlReports.IsDeveloperMode() || !XmlReports.IsNative) return;
             xquery.SetAttrValue(AName.timestamp, DateTime.Now);
             string query_path = Path.Combine(QueriesFolder, query_name + ".xml");
-            if (!File.Exists(query_path)) {
+            if (!File.Exists(query_path))
+            {
                 Cmn.SaveText(xquery.ToString(), query_path, Encoding.UTF8);
                 //using (var tfs = new TFSServer()) {
                 //    tfs.AddFile(query_path);
                 //}
                 //VSProjectHelper.AddContentToProject(query_path);
-            } else {
+            }
+            else
+            {
                 Cmn.SaveXmlWithCheckOut(xquery, query_path);
             }
         }
@@ -168,30 +181,44 @@ namespace sql.builder.XmlHelpers
         {
             string query_path = Path.Combine(QueriesFolder, query_name + ".xml");
             XElement xquery = null;
-            if (!File.Exists(query_path)) {
-                if (!XmlReports.IsDeveloperMode()) {
-                    if (allowNoCacheInRelease) {
+            if (!File.Exists(query_path))
+            {
+                if (!XmlReports.IsDeveloperMode())
+                {
+                    if (allowNoCacheInRelease)
+                    {
                         return null;
-                    } else {
+                    }
+                    else
+                    {
                         // будет ошибка - специально
                         xquery = XElement.Load(query_path);
                     }
-                } else {
+                }
+                else
+                {
                     return null;
                 }
-            } else {
+            }
+            else
+            {
                 xquery = XElement.Load(query_path);
             }
-            if (!XmlReports.IsDeveloperMode()) {
+            if (!XmlReports.IsDeveloperMode())
+            {
                 return xquery;
             }
-            if (changeTime == DateTime.MaxValue) {
+            if (changeTime == DateTime.MaxValue)
+            {
                 changeTime = XmlReports.Environment.GetLastSchemeAssembleTime();
             }
             DateTime query_time = xquery.AttrOrDefault(AName.timestamp, DateTime.MinValue);
-            if (changeTime > query_time) {
+            if (changeTime > query_time)
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return xquery;
             }
         }

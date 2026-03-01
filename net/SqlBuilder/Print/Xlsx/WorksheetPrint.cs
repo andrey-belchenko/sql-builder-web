@@ -170,17 +170,18 @@ namespace sql.builder.Print.Xlsx
             }
             return _worksheetRels;
         }
-       
+
         public XElement GetHyperlinksXml()
         {
-            if (_hyperLinksInfo.Count == 0) {
+            if (_hyperLinksInfo.Count == 0)
+            {
                 return null;
             }
             //<hyperlinks>
             //    <hyperlink ref="B3" r:id="rId1"/>
             //</hyperlinks>
             XElement xml = new XElement(ns.Main.hyperlinks);
-			int _hyperLinksCount = 0;
+            int _hyperLinksCount = 0;
             foreach (var hi in _hyperLinksInfo)
             {
                 // ������ ����, �.�. ���� sheet.xml.rels �� ����� ������������
@@ -190,12 +191,13 @@ namespace sql.builder.Print.Xlsx
                 xhl.Add(new XAttribute(ns.None.ref_, hi.Cell));
                 xhl.Add(new XAttribute(ns.Relsd.id, rid));
                 xhl.Add(new XAttribute(ns.None.tooltip, "������� �����������"));
-				if (_hyperLinksCount == 65530) {
-					break;
-				}
-				_hyperLinksCount += 1;
+                if (_hyperLinksCount == 65530)
+                {
+                    break;
+                }
+                _hyperLinksCount += 1;
                 xml.Add(xhl);
-             
+
             }
             return xml;
         }
@@ -203,7 +205,8 @@ namespace sql.builder.Print.Xlsx
         public XElement GetMergesXml()
         {
             var me = MergeDownColsP.GetMerges().ToArray();
-            if (me.Length != 0)            {
+            if (me.Length != 0)
+            {
                 if (_merges == null && Worksheet.Merges != null)
                 {
                     _merges = new ExcelWorksheetMerges(Worksheet.Merges);
@@ -215,7 +218,7 @@ namespace sql.builder.Print.Xlsx
                     if (merged.Contains(mergeInfo.Item2.CellName)) continue;
 
                     var merge = Merges.GetContainedMerge(mergeInfo.Item1);
-                    if(merge == null)
+                    if (merge == null)
                     {
                         Merges.CreateMerge(mergeInfo.Item1, mergeInfo.Item2);
                     }
@@ -230,10 +233,10 @@ namespace sql.builder.Print.Xlsx
                         // ����� �� ������� ��� ����������
                         for (int i = mergeInfo.Item1.ColumnID; i <= mergeInfo.Item2.ColumnID; i++)
                         {
-                            merged.Add(ExcelUtils.GetColumnName(i) + mergeInfo.Item2.RowID);   
+                            merged.Add(ExcelUtils.GetColumnName(i) + mergeInfo.Item2.RowID);
                         }
                     }
-                }   
+                }
             }
 
             return Merges.GetXml();
@@ -241,7 +244,8 @@ namespace sql.builder.Print.Xlsx
 
         public void Dispose()
         {
-            if (_writer != null) {
+            if (_writer != null)
+            {
                 _writer.Flush();
                 _writer.Close();
                 _writer = null;

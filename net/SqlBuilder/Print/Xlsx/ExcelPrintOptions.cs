@@ -1,4 +1,3 @@
-using System.Data;
 using System.Xml.Linq;
 using sql.builder.DataApi;
 
@@ -93,8 +92,10 @@ namespace sql.builder.Print.Xlsx
         /// <summary>
         /// �������� �� ���������
         /// </summary>
-        public static ExcelPrintOptions Default {
-            get {
+        public static ExcelPrintOptions Default
+        {
+            get
+            {
                 return new ExcelPrintOptions();
             }
         }

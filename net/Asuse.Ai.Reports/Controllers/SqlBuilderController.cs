@@ -1,8 +1,6 @@
-using System.Xml.Linq;
-using Microsoft.AspNetCore.Mvc;
-using sql.builder.Clean;
-using Asuse.Ai.Reports.Services;
 using Asuse.Ai.Reports.Models;
+using Asuse.Ai.Reports.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Asuse.Ai.Reports.Controllers
 {

@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Xsl;
-using System.Xml.XPath;
-using System.IO;
 //using System.Windows.Forms;
 //using DevExpress.XtraPrinting;
-using sql.builder.XmlHelpers;
 using sql.builder.Exceptions;
 
 namespace sql.builder.DataApi
@@ -30,7 +22,7 @@ namespace sql.builder.DataApi
             return info;
         }
 
-        public static bool ApplyOuterExpr(VFact fact, int level=1)
+        public static bool ApplyOuterExpr(VFact fact, int level = 1)
         {
             var f = fact;
             var fsrc = f.GetFactSource();
@@ -43,7 +35,7 @@ namespace sql.builder.DataApi
 
                     expNew.CopyAttributes(f.Attributes());
                     expNew.RemoveAttribute(AName.table);
-                    
+
                     if (f.P_Group == "")
                     {
                         expNew.Attributes(TextConst.AName.Group).Remove();
@@ -57,7 +49,8 @@ namespace sql.builder.DataApi
                     }
                     VSXElement vexpNew = VSXElement.Get(new XElement(expNew));
                     vexpNew.VirtualParent = fact.GetParent();
-                    foreach (VFact f1 in vexpNew.Descendants(EName.fact).ToList().SelectAsArray(VSXElement.Get<VFact>)) {
+                    foreach (VFact f1 in vexpNew.Descendants(EName.fact).ToList().SelectAsArray(VSXElement.Get<VFact>))
+                    {
                         var r = ApplyOuterExpr(f1, level + 1);
                     }
                     f.ReplaceWith(vexpNew);
@@ -69,7 +62,7 @@ namespace sql.builder.DataApi
         public static XElement CreateQubeQuery(VQuery query, XElement rep, XElement qubeInfo = null)
         {
             if (qubeInfo == null) CacheQubeIfNeed(query);
-           
+
             var xquery = Compiler.copyThisColumns(query);
             var query1 = VSXElement.Get<VQuery>(new XElement(xquery));
             //query1.environment = query.environment;
@@ -118,21 +111,21 @@ namespace sql.builder.DataApi
             bool hasOuterExps = false;
             foreach (var f in facts1)
             {
-               var r= ApplyOuterExpr(f);
-               if (r)
-               {
-                   hasOuterExps = true;
-               }
+                var r = ApplyOuterExpr(f);
+                if (r)
+                {
+                    hasOuterExps = true;
+                }
             }
 
             if (hasOuterExps)
             {
                 facts1 = null;
             }
-           
 
 
-            
+
+
 
 
             if (qubeElement.P_MergeDimsets == TextConst.AVBool.True)
@@ -151,8 +144,8 @@ namespace sql.builder.DataApi
             var outputLinkNames = new List<string>();
 
 
-            
-           
+
+
             //var factSources = new SortedList<string, VSXElement>();
 
 
@@ -162,28 +155,28 @@ namespace sql.builder.DataApi
 
 
             bool autoMerge = false;
-           
+
             if (rep != null)
             {
-                
+
                 if (Cmn.GetAttrValue(rep, TextConst.AName.AutoMerge) == TextConst.AVBool.True)
                 {
                     autoMerge = true;
-                    
+
                 }
             }
-            var keysOfDims = new SortedList<string,string>();
+            var keysOfDims = new SortedList<string, string>();
             var mergerKeyAliasMergeKeyInQube = new SortedList<string, string>();
 
             var usedLinks = new List<VQueryCall>();
             var usedInSelectLinks = new List<VQueryCall>();
-            var notUsedLinks = new SortedList<string,List<VQueryCall>>();
+            var notUsedLinks = new SortedList<string, List<VQueryCall>>();
             var notUsedInSelectLinks = new SortedList<string, List<VQueryCall>>();
-            var optionalDimensions = new SortedList<string,List<string>>();
-           // var specFactsForOptionalDimensions = new HashSet<string>();
+            var optionalDimensions = new SortedList<string, List<string>>();
+            // var specFactsForOptionalDimensions = new HashSet<string>();
 
             var xqe = qubeElement.AsXElementApplyingParts();
-            var usdtabnamesInWhere = xqe.Descendants(TextConst.EName.Where).Descendants(TextConst.EName.Column).Attributes(TextConst.AName.Table).Select(a=>a.Value).ToList();
+            var usdtabnamesInWhere = xqe.Descendants(TextConst.EName.Where).Descendants(TextConst.EName.Column).Attributes(TextConst.AName.Table).Select(a => a.Value).ToList();
             if (usdtabnamesInWhere.Contains(TextConst.AVTable.Ths))
             {
                 usdtabnamesInWhere.Remove(TextConst.AVTable.Ths);
@@ -225,7 +218,7 @@ namespace sql.builder.DataApi
                                     if (usedColumnsNotDs.Any())
                                     {
                                         dimSetsWithFacts.Add(ds.P_Alias);
-                                         found = true;
+                                        found = true;
                                         break;
                                     }
                                 }
@@ -255,10 +248,10 @@ namespace sql.builder.DataApi
                 }
                 var dimSet = (link.GetParent() as VDimSet);
                 //bool dimSetHasFacts = false;
-                string ds1name=null;
+                string ds1name = null;
                 if (dimSet != null)
                 {
-                    ds1name=dimSet.P_Alias;
+                    ds1name = dimSet.P_Alias;
                     //dimSetHasFacts = dimSet.GetFacts().Any();
                 }
                 foreach (VQueryCall cl in allChilds)
@@ -312,19 +305,20 @@ namespace sql.builder.DataApi
                             }
                             else
                             {
-                                if (usedColumns.Any(c => c.GetAncestorsAndSelf(EName.select).Count != 0)) {
+                                if (usedColumns.Any(c => c.GetAncestorsAndSelf(EName.select).Count != 0))
+                                {
                                     hasUsesInSelect = true;
                                     break;
                                 }
                             }
                         }
                     }
-                    
+
                 }
                 var name = link.P_CalledQuery;
                 if (!hasUses)
                 {
-             
+
                     if (!notUsedLinks.ContainsKey(name))
                     {
                         notUsedLinks.Add(name, new List<VQueryCall>());
@@ -334,7 +328,7 @@ namespace sql.builder.DataApi
                 else
                 {
                     usedLinks.Add(link);
-                    
+
                 }
                 if (autoMerge)
                 {
@@ -369,8 +363,8 @@ namespace sql.builder.DataApi
                             scondSrc = ". Условие перенесено из запроса " + csrcInfoAtr.Value;
                         }
                     }
-                    
-                    throw new VCompilerException("Не найден источник данных " + tn + " в запросе " + query.XName+scondSrc, query, ni);
+
+                    throw new VCompilerException("Не найден источник данных " + tn + " в запросе " + query.XName + scondSrc, query, ni);
                 }
             }
 
@@ -379,7 +373,7 @@ namespace sql.builder.DataApi
                 foreach (VQueryCall link in notUsedInSelectLinks.SelectMany(e => e.Value))
                 {
                     link.Attributes(TextConst.AName.AllRows).Remove();
-                   
+
                     changes = true;
                 }
                 foreach (VQueryCall link in usedInSelectLinks.ToArray())
@@ -406,7 +400,7 @@ namespace sql.builder.DataApi
                                 {
                                     optionalDimensions.Add(name, new List<string>());
                                 }
-                                
+
                                 //ur_mat_isp_kod_mat_isp
                             }
                         }
@@ -422,8 +416,10 @@ namespace sql.builder.DataApi
 
                     }
                 }
-                foreach (VQueryCall link in usedInSelectLinks) {
-                    if (!keysOfDims.ContainsKey(link.XName) && link.P_OnlyForCond != TextConst.AVBool.True) {
+                foreach (VQueryCall link in usedInSelectLinks)
+                {
+                    if (!keysOfDims.ContainsKey(link.XName) && link.P_OnlyForCond != TextConst.AVBool.True)
+                    {
                         string keyName = link.Query().KeyColumn().XName;
                         //var keyCol =  cols.Where(c => c.P_Column == keyName).FirstOrDefault();
                         //if (keyCol == null)
@@ -468,7 +464,7 @@ namespace sql.builder.DataApi
                     }
                     else if (el.Name.LocalName == TextConst.EName.Fact)
                     {
-                        
+
                         var dimsetName = el.P_Table;
                         if (!mergeKeysForDimset.ContainsKey(dimsetName))
                         {
@@ -499,25 +495,25 @@ namespace sql.builder.DataApi
 
                             mergeKey = mergeKeysForDimset[dimsetName];
                         }
-                        
+
                     }
                     //доделать для выражений
                     var smergeKey = string.Join(",", mergeKey);
 
                     //if (!specFactsForOptionalDimensions.Contains(el.XName))
                     //{
-                        el.SetAttributeValue(TextConst.AName.MergeKey, smergeKey);
+                    el.SetAttributeValue(TextConst.AName.MergeKey, smergeKey);
                     //}
-                    
-                    
+
+
                 }
-               // var mergeOrder =  string.Join(",", keysOfDims.Values);
+                // var mergeOrder =  string.Join(",", keysOfDims.Values);
                 var mergeOrder = "";
                 var qq = "";
                 var addedMK = new HashSet<string>();
                 foreach (var l in qubeElement.AllQubeLinks()) // важен порядок
                 {
-                    if (keysOfDims.ContainsKey(l.XName) && !addedMK.Contains(l.XName) && l.P_OnlyForCond!=TextConst.AVBool.True)
+                    if (keysOfDims.ContainsKey(l.XName) && !addedMK.Contains(l.XName) && l.P_OnlyForCond != TextConst.AVBool.True)
                     {
                         addedMK.Add(l.XName);
                         mergeOrder += qq + keysOfDims[l.XName];
@@ -533,7 +529,7 @@ namespace sql.builder.DataApi
             //}
             ///!!!!!!!!!!!!!!!
             ///
-          
+
             if (facts1 == null)
             {
                 facts1 = query.AllUsedFacts().Distinct().ToList();
@@ -643,7 +639,7 @@ namespace sql.builder.DataApi
                     }
                 }
             }
-            
+
             foreach (var fact1 in facts)
             {
                 if (!factsExpressios_N.ContainsKey(fact1.Value.GetFactId()))
@@ -694,18 +690,18 @@ namespace sql.builder.DataApi
 
             }
 
-           
+
             foreach (VQueryCall link in allLinksPre.ToArray())
             {
                 if (link.P_AllRows == TextConst.AVBool.True)
                 {
-                     
+
 
                     var factInfo = new VFact.FactDependantceInfo("");
                     factInfo.ObjectFact = link.P_CalledQuery;
                     factInfo.OutputDimensions = mainOutputDims_N.ToList();
-              
-                    var dimSet=link.GetParent() as VDimSet;
+
+                    var dimSet = link.GetParent() as VDimSet;
 
                     // !!! Не дописано для allRows из dimset
                     if (dimSet != null)
@@ -731,14 +727,14 @@ namespace sql.builder.DataApi
                     {
                         factInfoList_N.Add(id, factInfo);
                     }
-                
-                   
+
+
                 }
             }
 
             if (factInfoList_N.Count == 0)
             {
-                throw new VCompilerException("Запрос к кубу не содержит ни одного факта, следует добавить факты или установить признак \"Все строки\" на одном из измерений",query,null);
+                throw new VCompilerException("Запрос к кубу не содержит ни одного факта, следует добавить факты или установить признак \"Все строки\" на одном из измерений", query, null);
             }
 
             foreach (var info in factInfoList_N)
@@ -755,10 +751,10 @@ namespace sql.builder.DataApi
 
                     //if (!allOutputDims_N.Contains(dimName))
                     //{
-                        if (!innerDimensions.Contains(dimName))
-                        {
-                            innerDimensions.Add(dimName);
-                        }
+                    if (!innerDimensions.Contains(dimName))
+                    {
+                        innerDimensions.Add(dimName);
+                    }
                     //}
                 }
 
@@ -803,7 +799,7 @@ namespace sql.builder.DataApi
                 if (dimCollection == null)
                 {
                     dimCollection = new DimensionCollection();
-                    
+
                     foreach (var dim in factInfoList_N[factId].OutputDimensions)
                     {
                         dimCollection.Dimensions.Add(dim);
@@ -814,13 +810,13 @@ namespace sql.builder.DataApi
                     }
                     dimensionsCollections.Add(dimCollection);
                 }
-                dimCollection.Facts.Add(factId,factInfoList_N[factId]);
+                dimCollection.Facts.Add(factId, factInfoList_N[factId]);
             }
             //
 
             #region mergeDimCollections
 
-            if (qubeElement.P_MergeDimsets==TextConst.AVBool.True)
+            if (qubeElement.P_MergeDimsets == TextConst.AVBool.True)
             {
 
                 var ftScrQryInfoList = GetSourceQueryInfoList(XmlReports.Environment, dimensionsCollections);
@@ -842,7 +838,7 @@ namespace sql.builder.DataApi
                     {
                         dimCollection.Facts.Add(fi.GetInfoId(), fi);
                     }
-                 
+
                     dimensionsCollections1.Add(dimCollection);
                     //dimCollection.Facts.Add(factId, factInfoList_N[factId]);
                 }
@@ -930,7 +926,7 @@ namespace sql.builder.DataApi
                     col = new XElement(col);
                     //if (!autoMerge)
                     //{
-                        col.Attribute(TextConst.AName.Group).Remove();
+                    col.Attribute(TextConst.AName.Group).Remove();
                     //}
                     xQubeUnionQuery1.Element(TextConst.EName.Select).Add(col);
                 }
@@ -961,14 +957,14 @@ namespace sql.builder.DataApi
                     else if (gr == TextConst.AVGroup.List)
                     {
                         gr = TextConst.AVGroup.Inner;
-                      
+
                     }
                     expr.SetAttributeValue(TextConst.AName.Group, gr);
                     xQubeFullQuery.Element(TextConst.EName.Select).Add(expr);
                     addedExpr.Add(fact.Value.GetFactId());
                 }
                 fact.Value.P_Column = expr.Attribute(TextConst.AName.As).Value; //  20160729-1
-              
+
             }
 
             #region del
@@ -994,7 +990,7 @@ namespace sql.builder.DataApi
                     col.SetAttributeValue(TextConst.AName.Column, name);
                     //if (autoMerge)
                     //{
-                        //col.SetAttributeValue(TextConst.AName.Group, TextConst.AVGroup.Group);
+                    //col.SetAttributeValue(TextConst.AName.Group, TextConst.AVGroup.Group);
                     //}
                     xQubeUnionQuery1.Element(TextConst.EName.Select).Add(col);
                 }
@@ -1028,12 +1024,16 @@ namespace sql.builder.DataApi
                     dxCall.Add(jcol);
                     dxQuery.Add(dxCall);
                     xQubeUnionQuery1.AddAfterSelf(dxQuery);
-                } else {
+                }
+                else
+                {
                     string dimAlias = dimension.XName;
-                    if (extOuterDimensionNames.ContainsKey(dimAlias)) {
+                    if (extOuterDimensionNames.ContainsKey(dimAlias))
+                    {
                         dimAlias = extOuterDimensionNames[dimAlias];
                     }
-                    foreach (XElement timeCol in xcolsAll.Where(e => e.AttrOrEmpty(AName.table) == dimAlias).ToList()) {
+                    foreach (XElement timeCol in xcolsAll.Where(e => e.AttrOrEmpty(AName.table) == dimAlias).ToList())
+                    {
                         XElement xExpr = dimension.GetTimeAttrExpression(xQubeUnionQuery1.Attribute(AName.@as).Value, dimension.XName, timeCol.Attribute(AName.column).Value);
                         xExpr.CopyAttributes(timeCol.Attributes().Where(APredicate.IsColumnRecoveredAttribute));
                         timeCol.ReplaceWith(xExpr);
@@ -1060,7 +1060,7 @@ namespace sql.builder.DataApi
                     //}
                     //else
                     //{
-                        expr.Attributes(TextConst.AName.Group).Remove();
+                    expr.Attributes(TextConst.AName.Group).Remove();
                     //}
                     xQubeUnionQuery1.Element(TextConst.EName.Select).Add(expr);
                 }
@@ -1104,7 +1104,7 @@ namespace sql.builder.DataApi
 
             Cmn.copyAttributes(qubeElement, xQubeFullQuery);
             xQuery.Element(TextConst.EName.From).Element(TextConst.EName.Qube).ReplaceWith(xQubeFullQuery);
-          
+
 
             var xcolsAll1 = Compiler.getQueryColumnsWithGr(xQuery).ToList();
             var xcolsAllJoin1 = Compiler.getQueryJoinColumns(xQuery).ToList();
@@ -1155,14 +1155,18 @@ namespace sql.builder.DataApi
                         dxQuery.Add(dxCall);
                         dxQuery.Add(link.Links(null));
                         xQubeFullQuery.AddAfterSelf(dxQuery);
-                    } else {
+                    }
+                    else
+                    {
                         string dimAlias = link.XName;
-                        foreach (XElement timeCol in xcolsAll1.Where(e => e.AttrOrEmpty(AName.table) == dimAlias).ToList()) {
+                        foreach (XElement timeCol in xcolsAll1.Where(e => e.AttrOrEmpty(AName.table) == dimAlias).ToList())
+                        {
                             XElement xExpr = dimension.GetTimeAttrExpression(xQubeFullQuery.Attribute(AName.@as).Value, dimension.XName, timeCol.Attribute(AName.column).Value);
                             xExpr.CopyAttributes(timeCol.Attributes().Where(APredicate.IsColumnRecoveredAttribute));
                             Cmn.CopyAttribute(timeCol, xExpr, AName.group);
                             string alias = timeCol.AttrOrEmpty(AName.@as);
-                            if (string.IsNullOrEmpty(alias)) {
+                            if (string.IsNullOrEmpty(alias))
+                            {
                                 alias = timeCol.AttrOrEmpty(AName.table);
                             }
                             xExpr.SetAttributeValue(AName.@as, alias);
@@ -1203,10 +1207,10 @@ namespace sql.builder.DataApi
                 var piv = fact.Elements(TextConst.EName.Pivot).ToList();
                 if (piv.Any())
                 {
-                   
+
                     piv.Remove();
                     col.Add(piv);
-                   
+
                 }
 
                 #region del
@@ -1218,7 +1222,7 @@ namespace sql.builder.DataApi
                     }
                     //col.Attribute(TextConst.EName.Column).Value = new FactInfo(fact.Attribute(TextConst.AName.Column).Value, null, Cmn.GetAttrValue(fact, TextConst.EName.Table)).BuildName();
                     // вроде как уже установлен , см. //  20160729-1
-                
+
                 }
 
 
@@ -1239,7 +1243,7 @@ namespace sql.builder.DataApi
 
             //}
 
-            xQubeFullQuery.Descendants() .Attributes(TextConst.AName.Dimname).Remove();
+            xQubeFullQuery.Descendants().Attributes(TextConst.AName.Dimname).Remove();
             xQubeFullQuery.Descendants().Attributes("pivot").Remove();
 
             if (autoMerge)
@@ -1254,8 +1258,8 @@ namespace sql.builder.DataApi
                     var name = Cmn.GetAttrValue(el, TextConst.AName.Column);
                     if (processedNames.Contains(name)) continue;
                     processedNames.Add(name);
-                    
-                  //  var alias = el.Attribute(TextConst.AName.As).Value;// Cmn.GetAttrValue(el, TextConst.AName.As);
+
+                    //  var alias = el.Attribute(TextConst.AName.As).Value;// Cmn.GetAttrValue(el, TextConst.AName.As);
 
                     XElement srcCol = null;
                     //if (specFactsForOptionalDimensions.Contains(Cmn.GetAttrValue(el, TextConst.AName.As)))
@@ -1265,11 +1269,11 @@ namespace sql.builder.DataApi
                     //else
                     //{
 
-                        srcCol = xQubeFullQuery.Element(TextConst.EName.Select).Elements().First(e => Cmn.GetAttrValue(e, TextConst.AName.As) == name);
+                    srcCol = xQubeFullQuery.Element(TextConst.EName.Select).Elements().First(e => Cmn.GetAttrValue(e, TextConst.AName.As) == name);
                     //}
-                    
 
-                    var xovr=new XElement(TextConst.EName.Call,new XAttribute(TextConst.AName.Function,TextConst.AVFunction.Over));
+
+                    var xovr = new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunction.Over));
                     Cmn.CopyAttributesNoReplace(srcCol, xovr);
                     xovr.Attributes(TextConst.AName.Table).Remove();
                     xovr.Attributes(TextConst.AName.Column).Remove();
@@ -1305,10 +1309,10 @@ namespace sql.builder.DataApi
 
 
                     var xovr = new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunction.Over));
-                    var nm=TextConst.Pfx.Ovr + name;
-                  
+                    var nm = TextConst.Pfx.Ovr + name;
+
                     xovr.SetAttributeValue(TextConst.AName.As, nm);
-                  
+
                     var xmax = new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunction.Max));
                     var xcnct = new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunction.Concat));
 
@@ -1324,7 +1328,7 @@ namespace sql.builder.DataApi
 
                     foreach (string name1 in optionalDimensions[name])
                     {
-                      
+
                         var xpcol1 = new XElement(TextConst.EName.Column
                                , new XAttribute(TextConst.AName.Table, TextConst.AVTable.Ths)
                               , new XAttribute(TextConst.AName.Column, name1)
@@ -1332,11 +1336,11 @@ namespace sql.builder.DataApi
                         xcnct.Add(xpcol1);
                     }
                     xQubeFullQuery.Element(TextConst.EName.From).Elements().First().Element(TextConst.EName.Select).Add(xovr);
-                    
 
 
 
-                
+
+
                     var srcCol = xQubeFullQuery.Element(TextConst.EName.Select).Elements().First(e => Cmn.GetAttrValue(e, TextConst.AName.Column) == name);
                     var xif = new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunction.If));
                     Cmn.CopyAttributesNoReplace(srcCol, xif);
@@ -1368,7 +1372,7 @@ namespace sql.builder.DataApi
             return xQuery;
         }
 
-        
+
         public static void CacheQubeIfNeed(VQuery query)
         {
         }
@@ -1398,23 +1402,23 @@ namespace sql.builder.DataApi
 
             , DimensionCollection dimCollection
 
-            , SortedList<string, VFact.FactDependantceInfo> factInfoList_N 
+            , SortedList<string, VFact.FactDependantceInfo> factInfoList_N
 
             , List<VQueryCall> allLinks // заменил на allLinks
              , List<VQueryCall> mainLinks
             , VQube qubeElement
             , VQuery query
             , XElement xQubeUnion
-     
+
             , List<string> allInnerDimeNames_D
-   
+
             , XElement info
             , List<string> nonOutputDimensions_D,
             List<VQuery> storages
             )
         {
 
-          //  var cumulateDimNames = cumulateDimNamesByFact.Where(e => dimCollection.Facts.Contains(e.Key)).SelectMany(e1 => e1.Value).Distinct().ToList();
+            //  var cumulateDimNames = cumulateDimNamesByFact.Where(e => dimCollection.Facts.Contains(e.Key)).SelectMany(e1 => e1.Value).Distinct().ToList();
             var dimensionNames = new SortedList<string, string>();
 
 
@@ -1471,13 +1475,13 @@ namespace sql.builder.DataApi
             }
 
 
-            
+
 
             foreach (var qryInfo in srcQueryInfoList_N)
             {
 
 
-                XElement addWhere=null;
+                XElement addWhere = null;
 
                 //List<string> nonOutputDimensions = new List<string>();
                 var dimensionNamesExt = new SortedList<string, string>();
@@ -1500,10 +1504,10 @@ namespace sql.builder.DataApi
                     }
                     //if (link.P_OnlyForCond != TextConst.AVBool.True) // 28.04.2017 // убрал 05.05.2017 - не добавляются линки заданные не через dimset - ошибка
                     //{
-                        if (!dimensionNamesExt.ContainsKey(link.P_CalledQuery))
-                        {
-                            dimensionNamesExt.Add(link.P_CalledQuery, link.XName);
-                        }
+                    if (!dimensionNamesExt.ContainsKey(link.P_CalledQuery))
+                    {
+                        dimensionNamesExt.Add(link.P_CalledQuery, link.XName);
+                    }
                     //}
                 }
 
@@ -1524,7 +1528,7 @@ namespace sql.builder.DataApi
                                 expr = XmlReports.Environment.GetExpression(condName);
                             }
                             expr1 = new List<XElement>();
-                            expr1.Add( new XElement(expr));
+                            expr1.Add(new XElement(expr));
 
                             foreach (var col1 in expr.GetDimensions())
                             {
@@ -1539,14 +1543,14 @@ namespace sql.builder.DataApi
                             isDimset = true;
                             var dimsetName = condName.Substring(0, condName.Length - TextConst.Pfx.Dimset.Length);
                             var dimset = (VDimSet)qubeElement.GetDimSet(dimsetName);
-                            expr1 =  dimset.GetElementsP(EName.where).FirstOrDefault().Elements().Select(e=>new XElement(e)).ToList();
+                            expr1 = dimset.GetElementsP(EName.where).FirstOrDefault().Elements().Select(e => new XElement(e)).ToList();
                             foreach (VQueryCall link in qubeElement.GetDimsetLinks(dimset.XName))
                             {
                                 if (!xtraDimNames.Contains(link.P_CalledQuery))
                                 {
                                     xtraDimNames.Add(link.P_CalledQuery);
                                 }
-                              
+
                             }
                         }
 
@@ -1588,7 +1592,7 @@ namespace sql.builder.DataApi
 
                 VQuery factSourceQuery = qryInfo.Value.Query;
 
-               // var factsCols = qryInfo.Value.Facts.Select(f => f.Column).ToList();
+                // var factsCols = qryInfo.Value.Facts.Select(f => f.Column).ToList();
                 XElement sourceInfo = null;
                 if (info != null)
                 {
@@ -1611,7 +1615,7 @@ namespace sql.builder.DataApi
                         {
                             columnsInfo.Add(new XElement(TextConst.EName.Column
                               , new XAttribute(TextConst.AName.Table, fact1.ObjectFact)
-                             
+
                               ));
                         }
                     }
@@ -1657,7 +1661,7 @@ namespace sql.builder.DataApi
                     }
                 }
 
-                SearchSourceLinks(factSourceQuery, dimensionNamesExt, parentLookUpNode, found, storages1,qubeElement);
+                SearchSourceLinks(factSourceQuery, dimensionNamesExt, parentLookUpNode, found, storages1, qubeElement);
 
                 List<DimensionPathTreeNode> routs = null;
                 if (found.Count != 0)
@@ -1677,7 +1681,7 @@ namespace sql.builder.DataApi
                         if (dimNodes[dimName].Count > 1)
                         {
 
-                            
+
 
 
                             for (int i = 1; i < dimNodes[dimName].Count; i++)
@@ -1729,7 +1733,7 @@ namespace sql.builder.DataApi
 
 
 
-                  
+
 
                     if (false)
                     {
@@ -1783,7 +1787,7 @@ namespace sql.builder.DataApi
                 }
                 else
                 {
-                    if (!routs[0].AllNodes().Where(e => e.IsContainsBackReferences || e.StorageName!=null).Any())
+                    if (!routs[0].AllNodes().Where(e => e.IsContainsBackReferences || e.StorageName != null).Any())
                     {
                         isSimpleRout = true;
                     }
@@ -1802,11 +1806,11 @@ namespace sql.builder.DataApi
                     else
                     {
                         //found1 = GetLeavs(parentLookUpNode1);
-                      found1 = parentLookUpNode1.AllNodes().Where(e => e.Parent != null && e.DimensionName != null && dimensionNames.Keys.Contains(e.DimensionName)).ToList();
-                      found1Ext = parentLookUpNode1.AllNodes().Where(e => e.Parent != null && e.DimensionName != null && dimensionNamesExt.Keys.Contains(e.DimensionName)).ToList();
+                        found1 = parentLookUpNode1.AllNodes().Where(e => e.Parent != null && e.DimensionName != null && dimensionNames.Keys.Contains(e.DimensionName)).ToList();
+                        found1Ext = parentLookUpNode1.AllNodes().Where(e => e.Parent != null && e.DimensionName != null && dimensionNamesExt.Keys.Contains(e.DimensionName)).ToList();
                         //20161109 - заменил dimensionNames на dimensionNamesExt ,  иначе проблемы с веременными измерениями только для условий
-                    
-                    
+
+
                     }
 
                     XElement xDimQry = null;
@@ -1847,8 +1851,8 @@ namespace sql.builder.DataApi
                     }
 
                     XElement commonWhere = qubeElement.GetElementsP(EName.where).FirstOrDefault();
-                   
-                
+
+
                     if (commonWhere != null)
                     {
                         commonWhere = new XElement(commonWhere);
@@ -1875,7 +1879,7 @@ namespace sql.builder.DataApi
                         commonWhere = new XElement(commonWhere);
                     }
 
-                    AddLinksXml(parentLookUpNode1, dimFromQuery, allLinks, dimFromQuery.Parent,commonWhere);
+                    AddLinksXml(parentLookUpNode1, dimFromQuery, allLinks, dimFromQuery.Parent, commonWhere);
 
                     var selfDim = factSourceQuery.GetDimension();
                     if (selfDim != null)
@@ -1884,10 +1888,10 @@ namespace sql.builder.DataApi
                         dimFromQuery.SetAttributeValue(TextConst.AName.Dimension, selfDim.P_IdName);
                     }
 
-                   
+
                     foreach (VSXElement alink in allLinks)
                     {
-                        
+
                         if (alink.XName == dimFromQuery.Attribute(TextConst.AName.As).Value)
                         {
                             dimFromQuery.Add(alink.Elements());
@@ -1928,7 +1932,7 @@ namespace sql.builder.DataApi
                         }
                         qc.Add(cw);
                     }
-                  //  dimFromQuery.Add(qc);
+                    //  dimFromQuery.Add(qc);
 
                     element.Element(TextConst.EName.From).Add(qc);
                     string colAlias = null;
@@ -1977,7 +1981,7 @@ namespace sql.builder.DataApi
                         }
                     }
 
-                    foreach (DimensionPathTreeNode node in found1.OrderBy(n=>n.DimensionName))
+                    foreach (DimensionPathTreeNode node in found1.OrderBy(n => n.DimensionName))
                     {
                         col1 = new XElement(TextConst.EName.Column);
                         string colName;
@@ -2013,10 +2017,10 @@ namespace sql.builder.DataApi
                         }
                         else
                         {
-                           
+
                             if (node.StorageName != null)
                             {
-                                tableName=node.Alias;
+                                tableName = node.Alias;
                                 var keyDim = (node.Element as VQueryCall).Query().KeyColumn();
                                 colName = keyDim.XName;
                             }
@@ -2032,7 +2036,7 @@ namespace sql.builder.DataApi
                                     colName = (node.Element as VRelation).ChildColumnSource().XName;
                                 }
                             }
-                            
+
                             alias = node.Element.P_Dimension;
 
                         }
@@ -2046,7 +2050,7 @@ namespace sql.builder.DataApi
 
                         if (isSimpleRout)
                         {
-                           
+
                             if (columnsForSimpleRout.Keys.Contains(alias) && columnsForSimpleRout[alias] == null)
                             {
 
@@ -2067,7 +2071,7 @@ namespace sql.builder.DataApi
 
 
 
-                        
+
 
 
                     }
@@ -2102,10 +2106,12 @@ namespace sql.builder.DataApi
 
 
                                     string dimAlias = dimension.XName;
-                                    if (allDimensionNames.ContainsKey(dimAlias)) {
+                                    if (allDimensionNames.ContainsKey(dimAlias))
+                                    {
                                         dimAlias = allDimensionNames[dimAlias];
                                     }
-                                    foreach (XElement timeCol in commonWhere.Descendants(EName.column).Where(e => e.AttrOrEmpty(AName.table) == dimAlias).ToList()) {
+                                    foreach (XElement timeCol in commonWhere.Descendants(EName.column).Where(e => e.AttrOrEmpty(AName.table) == dimAlias).ToList())
+                                    {
                                         XElement xExpr = dimension.GetTimeAttrExpression(tableName, colName, timeCol.Attribute(AName.column).Value);
                                         xExpr.CopyAttributes(timeCol.Attributes().Where(APredicate.IsColumnRecoveredAttribute));
                                         Cmn.CopyAttribute(timeCol, xExpr, AName.@as);
@@ -2170,12 +2176,12 @@ namespace sql.builder.DataApi
                     col.SetAttributeValue(TextConst.AName.Column, factSourceQuery.KeyColumn().XName + TextConst.Pfx.PrimaryKeyParam);
                     joinCall.Add(col);
 
-                   
+
                     element.Element(TextConst.EName.From).Add(fromQuery);
                     if (selDim != null)
                     {
                         fromQuery.SetAttributeValue(TextConst.AName.Dimension, selDim.P_IdName);
-                        
+
                     }
 
                 }
@@ -2185,7 +2191,7 @@ namespace sql.builder.DataApi
                     if (selDim != null)
                     {
                         element.SetAttributeValue(TextConst.AName.Dimension, selDim.P_IdName);
-                       
+
                     }
                 }
 
@@ -2283,7 +2289,7 @@ namespace sql.builder.DataApi
                         if (gr == TextConst.AVGroup.List)
                         {
                             gr = TextConst.AVGroup.Group;
-                          
+
                         }
 
                         if (gr == "")
@@ -2312,7 +2318,7 @@ namespace sql.builder.DataApi
                 else
                 {
                     col = new XElement(TextConst.EName.Const);
-                  
+
                     col.Value = "null";
                     col.SetAttributeValue(TextConst.AName.As, name);
                 }
@@ -2323,16 +2329,16 @@ namespace sql.builder.DataApi
 
 
 
-           // factInfoList_N
+            // factInfoList_N
 
-          
+
             foreach (var factSrcItem in factInfoList_N)
             {
-            
+
 
                 XElement expr = null;
                 var factSrc = factSrcItem.Value;
-               
+
                 //var factInfo = FactInfo.FromString(factSrcItem.Key);
 
 
@@ -2375,14 +2381,14 @@ namespace sql.builder.DataApi
 
 
 
-            
+
 
 
             var xcolsAll = Compiler.getQueryColumnsWithGr(xQubeQuery).ToList();
             var xcolsAllJoin = Compiler.getQueryJoinColumns(xQubeQuery).ToList();
             xcolsAll.AddRange(xcolsAllJoin);
 
-          
+
 
             xQubeUnion.Add(xQubeQuery);
 
@@ -2396,9 +2402,9 @@ namespace sql.builder.DataApi
 
         private static void SearchSourceLinksEndStep(VQuery source, List<int> wached, List<int> wachedLocal, ref List<string> dimsToSearch
             , List<string> foundNames, SortedList<string, SecondaryLinkInfo> secondaryRoots
-            ,ref List<DimensionPathTreeNode> list
+            , ref List<DimensionPathTreeNode> list
              , SortedList<string, string> dimensionNames
-            ,VQube qubeElement)
+            , VQube qubeElement)
         {
 
             wached.AddRange(wachedLocal);
@@ -2414,18 +2420,25 @@ namespace sql.builder.DataApi
             list = list.SelectMany(e => e.Childs).ToList();
             bool notFound = false;
             var dimsToSearchNotFound = dimsToSearch.ToList();
-            if (qubeElement.P_StarScheme == TextConst.AVBool.True) {
+            if (qubeElement.P_StarScheme == TextConst.AVBool.True)
+            {
                 HashSet<string> foundSecondary = new HashSet<string>();
-                foreach (SecondaryLinkInfo v in secondaryRoots.Values) {
+                foreach (SecondaryLinkInfo v in secondaryRoots.Values)
+                {
                     string dim_name = v.DimName;
-                    if (!foundSecondary.Contains(dim_name)) {
+                    if (!foundSecondary.Contains(dim_name))
+                    {
                         foundSecondary.Add(dim_name);
                     }
                 }
-                foreach (string dn in dimsToSearchNotFound.ToArray()) {
-                    if (!foundSecondary.Contains(dn)) {
+                foreach (string dn in dimsToSearchNotFound.ToArray())
+                {
+                    if (!foundSecondary.Contains(dn))
+                    {
                         notFound = true;
-                    } else {
+                    }
+                    else
+                    {
                         dimsToSearchNotFound.Remove(dn);
                     }
                 }
@@ -2435,7 +2448,7 @@ namespace sql.builder.DataApi
             {
                 if (list.Count == 0)
                 {
-                   dimsToSearchNotFound= dimensionNames.Keys.Where(e => !foundNames.Contains(e)).ToList();
+                    dimsToSearchNotFound = dimensionNames.Keys.Where(e => !foundNames.Contains(e)).ToList();
                 }
                 if (dimsToSearchNotFound.Any())
                 {
@@ -2451,7 +2464,7 @@ namespace sql.builder.DataApi
 
         private static void SearchSourceLinks(VQuery source, SortedList<string, string> dimensionNames
             , DimensionPathTreeNode parentLookUpNode, List<DimensionPathTreeNode> found
-            ,   List<VQuery> storages,VQube qubeElement)
+            , List<VQuery> storages, VQube qubeElement)
         {
 
 
@@ -2523,14 +2536,14 @@ namespace sql.builder.DataApi
 
                 //list = parentLookUpNode.Childs;
 
-                SearchSourceLinksEndStep(source, wached, wachedLocal,ref dimsToSearch, foundNames, secondaryRoots,ref list, dimensionNames,qubeElement);
+                SearchSourceLinksEndStep(source, wached, wachedLocal, ref dimsToSearch, foundNames, secondaryRoots, ref list, dimensionNames, qubeElement);
 
                 while (foundNames.Count != dimensionNames.Count)
                 {
                     foreach (DimensionPathTreeNode node in list)
                     {
                         node.SecondaryOnly = node.Parent.SecondaryOnly;
-                        VEntityType entityType=null;
+                        VEntityType entityType = null;
                         bool isSecondaryPathPart = false;
                         if (!node.IsTime)
                         {
@@ -2554,8 +2567,8 @@ namespace sql.builder.DataApi
                                 isSecondaryPathPart = secondaryRoots.Values.Where(e => e.FinalPath != path && e.FinalPath.StartsWith(path) && !e.Found).Any();
 
                             }
-                           
-                               
+
+
 
 
 
@@ -2565,14 +2578,14 @@ namespace sql.builder.DataApi
                             {
                                 if (node.IsLink)
                                 {
-                                    
-                                        entityType = ((node.Element as VQueryCall).Query() as VQuery).EntityType;
-                                    
+
+                                    entityType = ((node.Element as VQueryCall).Query() as VQuery).EntityType;
+
                                 }
                                 else if (!node.IsColumn)
                                 {
-                                       entityType = (node.Element as VQueryCall).Query().EntityType;
-                                    
+                                    entityType = (node.Element as VQueryCall).Query().EntityType;
+
                                 }
                                 else
                                 {
@@ -2585,7 +2598,7 @@ namespace sql.builder.DataApi
                             }
                         }
                     }
-                    SearchSourceLinksEndStep(source, wached, wachedLocal,ref dimsToSearch, foundNames, secondaryRoots,ref list, dimensionNames,qubeElement);
+                    SearchSourceLinksEndStep(source, wached, wachedLocal, ref dimsToSearch, foundNames, secondaryRoots, ref list, dimensionNames, qubeElement);
                 }
             }
             //if (source.XName == "ur_inkasso")
@@ -2670,38 +2683,38 @@ namespace sql.builder.DataApi
             {
                 if (childNode.Used && !childNode.IsTime)
                 {
-                    XElement link=null;
+                    XElement link = null;
                     XElement linkRoot = null;
                     if (childNode.IsLink)
                     {
-                        
-                            var eName = childNode.Element.Name.LocalName;
+
+                        var eName = childNode.Element.Name.LocalName;
+                        if (eName == TextConst.EName.DLink)
+                        {
+                            eName = TextConst.EName.ELink;
+                        }
+                        link = new XElement(eName);
+                        Cmn.copyAttributes(childNode.Element, link);
+
+                        var parent = childNode.Element.GetParent();
+                        var link1 = link;
+                        linkRoot = link;
+                        while ((parent is VLink) || (parent is VELink))
+                        {
+                            eName = parent.Name.LocalName;
                             if (eName == TextConst.EName.DLink)
                             {
                                 eName = TextConst.EName.ELink;
                             }
-                            link = new XElement(eName);
-                            Cmn.copyAttributes(childNode.Element, link);
+                            linkRoot = new XElement(eName);
+                            Cmn.copyAttributes(parent, linkRoot);
+                            linkRoot.Add(link1);
+                            link1 = linkRoot;
+                            link1.SetAttributeValue(TextConst.AName.As, parent.XName + TextConst.Pfx.AddDim1);
+                            parent = parent.GetParent();
+                        }
 
-                            var parent = childNode.Element.GetParent();
-                            var link1 = link;
-                            linkRoot = link;
-                            while ((parent is VLink) || (parent is VELink))
-                            {
-                                eName = parent.Name.LocalName;
-                                if (eName == TextConst.EName.DLink)
-                                {
-                                    eName = TextConst.EName.ELink;
-                                }
-                                linkRoot = new XElement(eName);
-                                Cmn.copyAttributes(parent, linkRoot);
-                                linkRoot.Add(link1);
-                                link1 = linkRoot;
-                                link1.SetAttributeValue(TextConst.AName.As, parent.XName + TextConst.Pfx.AddDim1);
-                                parent = parent.GetParent();
-                            }
 
-                           
                         element.Add(linkRoot);
                     }
                     else if (!childNode.IsColumn)
@@ -2751,7 +2764,7 @@ namespace sql.builder.DataApi
 
                         fromNode.Add(link);
 
-                       
+
                     }
                     link.SetAttributeValue(TextConst.AName.As, childNode.Alias);
                     //link.SetAttributeValue(TextConst.AName.LinkMultiplicatePoint, TextConst.AVBool.True);
@@ -2770,22 +2783,22 @@ namespace sql.builder.DataApi
                     //}
 
 
-                    AddLinksXml(childNode, link, links, fromNode,commonWhere);
+                    AddLinksXml(childNode, link, links, fromNode, commonWhere);
                 }
             }
         }
 
         private class SecondaryLinkInfo
         {
-           public string DimName;
-           public string InitialPath;
-           public string FinalPath;
-           public bool FoundOne=false;
-           public bool Found = false;
-           public bool IsFinalDimension = false;
-           
+            public string DimName;
+            public string InitialPath;
+            public string FinalPath;
+            public bool FoundOne = false;
+            public bool Found = false;
+            public bool IsFinalDimension = false;
+
         }
-        private static bool IsSecondaryPathPart(SortedList<string, SecondaryLinkInfo> secondaryRoots,DimensionPathTreeNode parent, string dimName)
+        private static bool IsSecondaryPathPart(SortedList<string, SecondaryLinkInfo> secondaryRoots, DimensionPathTreeNode parent, string dimName)
         {
             var path = parent.GetPath() + "." + dimName;
             return secondaryRoots.Values.Where(e => !e.Found && e.FinalPath.StartsWith(path)).Any();
@@ -2810,7 +2823,7 @@ namespace sql.builder.DataApi
             }
             else
             {
-               
+
                 if (pdimName == "")
                 {
                     var qry = parentLink.Query();
@@ -2882,9 +2895,9 @@ namespace sql.builder.DataApi
             )
         {
 
-          
+
             //storages.Add(entityType.Query.GetEnvironment().GetQuery("ur_graf_dp")); // пробный вариант точечного использования отдельных "хранилищ"  с небольшим набором колонок. Пока связи измерений с множественным путем
-            SortedList<string, DimensionPathTreeNode> storedDimensions = new  SortedList<string, DimensionPathTreeNode>();
+            SortedList<string, DimensionPathTreeNode> storedDimensions = new SortedList<string, DimensionPathTreeNode>();
             if (storages.Any())
             {
                 string selfDimName = null;
@@ -2895,7 +2908,7 @@ namespace sql.builder.DataApi
                     selfDimName = selfDim.P_IdName;
                 }
 
-              
+
                 if (selfDimName != null)
                 {
                     foreach (VQuery qry in storages)
@@ -2919,11 +2932,11 @@ namespace sql.builder.DataApi
                                             lookUpNode.Element = rel;
                                             parentLookUpNode.Childs.Add(lookUpNode);
                                             lookUpNode.Parent = parentLookUpNode;
-                                           
+
                                             if (dimsToSearch.Contains(rel.P_Dimension))
                                             {
 
-                                               
+
                                                 found.Add(lookUpNode);
                                                 lookUpNode.Alias = dimensionNames[rel.P_Dimension];
                                             }
@@ -2970,11 +2983,11 @@ namespace sql.builder.DataApi
                     if (!storedDimensions.ContainsKey(rel.P_Dimension))
                     {
 
-                      
+
                         if (!wached.Contains(rel.GetUniqueKey()) || IsSecondaryPathPart(secondaryRoots, parentLookUpNode, rel.P_Dimension))
                         {
-                         
-                            processSecondaryLink(rel,wachedLocal,secondaryRoots,parentLookUpNode);
+
+                            processSecondaryLink(rel, wachedLocal, secondaryRoots, parentLookUpNode);
                         }
                     }
                     else
@@ -3015,7 +3028,7 @@ namespace sql.builder.DataApi
 
                         if (!wached.Contains(rel.GetUniqueKey()) || spp)
                         {
-                            
+
                             wachedLocal.Add(rel.GetUniqueKey());
                             var lookUpNode = new DimensionPathTreeNode();
                             lookUpNode.Element = rel;
@@ -3040,7 +3053,7 @@ namespace sql.builder.DataApi
                                 lookUpNode.Alias = rel.P_Dimension + TextConst.Pfx.AddDim;
                             }
 
-                          
+
                         }
                     }
                     else
@@ -3071,12 +3084,12 @@ namespace sql.builder.DataApi
                 var spp = IsSecondaryPathPart(secondaryRoots, parentLookUpNode, rel.P_Dimension);
                 if (rel.P_IsPrivateDimension != TextConst.AVBool.True || source.EntityType == entityType || spp /*secondaryRoots.ContainsKey(rel.P_Dimension)*/)
                 {
-                /*if (rel.P_IsPrivateDimension != TextConst.AVBool.True || source.EntityType == entityType || secondaryRoots.ContainsKey(rel.P_Dimension))
-                {*/
-                    if (!storedDimensions.ContainsKey(rel.P_Dimension) )
+                    /*if (rel.P_IsPrivateDimension != TextConst.AVBool.True || source.EntityType == entityType || secondaryRoots.ContainsKey(rel.P_Dimension))
+                    {*/
+                    if (!storedDimensions.ContainsKey(rel.P_Dimension))
                     {
                         //foundLocal.Add(col.P_Dimension);
-                        if (!wached.Contains(rel.GetUniqueKey()) ||spp)
+                        if (!wached.Contains(rel.GetUniqueKey()) || spp)
                         {
                             wachedLocal.Add(rel.GetUniqueKey());
                             var lookUpNode = new DimensionPathTreeNode();
@@ -3134,7 +3147,7 @@ namespace sql.builder.DataApi
                 }
             }
 
-           
+
 
 
 
@@ -3149,8 +3162,8 @@ namespace sql.builder.DataApi
                 var spp = IsSecondaryPathPart(secondaryRoots, parentLookUpNode, rel.P_Dimension);
                 if (rel.P_IsPrivateDimension != TextConst.AVBool.True || source.EntityType == entityType || spp /*secondaryRoots.ContainsKey(rel.P_Dimension)*/)
                 {
-                //if (rel.P_IsPrivateDimension != TextConst.AVBool.True || source.EntityType == entityType || secondaryRoots.ContainsKey(rel.P_Dimension))
-                //{
+                    //if (rel.P_IsPrivateDimension != TextConst.AVBool.True || source.EntityType == entityType || secondaryRoots.ContainsKey(rel.P_Dimension))
+                    //{
                     if (!storedDimensions.ContainsKey(rel.P_Dimension))
                     {
                         //foundLocal.Add(rel.P_Dimension);
@@ -3210,7 +3223,7 @@ namespace sql.builder.DataApi
 
 
 
-           
+
 
 
             foreach (DimensionPathTreeNode node in storedDimensions.Values.Where(e => !e.Checked).ToList())
@@ -3221,13 +3234,13 @@ namespace sql.builder.DataApi
             }
 
 
-            
 
 
 
-            foreach (DimensionPathTreeNode node in  parentLookUpNode.Childs.ToArray())
+
+            foreach (DimensionPathTreeNode node in parentLookUpNode.Childs.ToArray())
             {
-                
+
                 if (node.DimensionName != null)
                 {
                     if (secondaryRoots.ContainsKey(node.DimensionName))
@@ -3252,7 +3265,7 @@ namespace sql.builder.DataApi
                                     foundNames.Remove(node.DimensionName);
                                 }
 
-                               
+
                             }
                             if (parentLookUpNode.Childs.Contains(node))
                             {
@@ -3287,7 +3300,7 @@ namespace sql.builder.DataApi
             }
 
 
-            
+
 
         }
 
@@ -3326,7 +3339,8 @@ namespace sql.builder.DataApi
 
             XElement origWhere = newQuery.Element(EName.where);
 
-            if (origWhere == null) {
+            if (origWhere == null)
+            {
                 newQuery.Add(new XElement(TextConst.EName.Where));
                 origWhere = newQuery.Element(TextConst.EName.Where);
             }
@@ -3434,14 +3448,15 @@ namespace sql.builder.DataApi
 
         }
 
-        
+
 
         private class DimensionPathTreeNode
         {
             public VSXElement Element;
-            private DimensionPathTreeNode parent =null;
+            private DimensionPathTreeNode parent = null;
             public string SecondaryPath = null;
-            public DimensionPathTreeNode Parent {
+            public DimensionPathTreeNode Parent
+            {
                 get
                 {
                     if (parent != null && parent.Childs.Count == 0)
@@ -3517,7 +3532,7 @@ namespace sql.builder.DataApi
                 copy.SecondaryPath = SecondaryPath;
                 return copy;
             }
-            private string _path=null;
+            private string _path = null;
             public string GetPath()
             {
                 if (_path == null)

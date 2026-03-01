@@ -1,41 +1,42 @@
-using System.Collections.Generic;
-using System.Data;
 using System;
-using sql.builder.Clean;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Xsl;
-using System.Xml.XPath;
-using System.Linq;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
+using System.Linq;
 using System.Threading;
+using sql.builder.Clean;
 ////using System.Windows.Forms;
 namespace sql.builder.DataApi
 {
     public partial class VDataColumn
     {
-        public bool ParamUsed {
-            get {
-                if (!HasBoundControl(this)) {
+        public bool ParamUsed
+        {
+            get
+            {
+                if (!HasBoundControl(this))
+                {
                     return false;
-                } else {
+                }
+                else
+                {
                     return this._bound_controls[0].GetUsed();
                 }
             }
         }
 
-       
+
         public VDBSelectCommand ValueRefreshCommand = null;
         public VDBSelectCommand ValueResetCommand = null;
-        public SortedList<string,VDBSelectCommand> DependantsRefreshCommands = null;
+        public SortedList<string, VDBSelectCommand> DependantsRefreshCommands = null;
 
-        public void AddDependantsRefreshCommand(string tableName,VDBSelectCommand cmd)
+        public void AddDependantsRefreshCommand(string tableName, VDBSelectCommand cmd)
         {
             if (DependantsRefreshCommands == null)
             {
                 DependantsRefreshCommands = new SortedList<string, VDBSelectCommand>();
             }
-            DependantsRefreshCommands.Add(tableName,cmd);
+            DependantsRefreshCommands.Add(tableName, cmd);
         }
         //public VDBSelectCommand DefaultValueCommand = null;
         public bool HasCellEvents = false;// Для создания линков при экспорте в excel
@@ -44,9 +45,12 @@ namespace sql.builder.DataApi
         public List<VDataColumn> Dependants = null;
         public bool HasAdditionalButtons()
         {
-            if (!HasBoundControl(this)) {
+            if (!HasBoundControl(this))
+            {
                 return false;
-            } else {
+            }
+            else
+            {
                 return this._bound_controls[0].HasAdditionalButtons();
             }
         }
@@ -72,7 +76,7 @@ namespace sql.builder.DataApi
         {
             return !GetTable().IsNotMerged(this, row);
         }
-       
+
         public bool IsMerged(DataRow row1, DataRow row2)
         {
             if (row1 == null || row2 == null) return false;
@@ -88,11 +92,11 @@ namespace sql.builder.DataApi
                 return false;
             }
             return val1.Equals(val2);
-           
+
         }
 
 
-       
+
 
         public string VariableName = null;
         public void AddDependant(VDataColumn col)
@@ -103,8 +107,8 @@ namespace sql.builder.DataApi
                 Dependants = new List<VDataColumn>();
             }
 
-           
-           
+
+
             Dependants.Add(col);
         }
 
@@ -127,7 +131,7 @@ namespace sql.builder.DataApi
         public string NewValSource = null;
         public string BackColorSource = null;
         public string FontColorSource = null;
-      
+
 
 
         public bool EditableInvert = false;
@@ -137,8 +141,8 @@ namespace sql.builder.DataApi
         public bool ValidInvert = false;
 
 
-       
-        public string ClientEditableSource =null;
+
+        public string ClientEditableSource = null;
         public string ClientMandatorySource = null;
         public string ClientDefaultSource = null;
         public string ClientVisibleSource = null;
@@ -155,10 +159,10 @@ namespace sql.builder.DataApi
                 if (_clientValidSource == "null")// чтобы убирать валидацию где она не нужна 
                 {
                     _clientValidSource = null;
-                    
+
                 }
             }
-            
+
         }
         public string ClientExistsSource = null;
         public string ClientNewValSource = null;
@@ -188,7 +192,7 @@ namespace sql.builder.DataApi
             {
                 return ColumnName;
             }
-            
+
         }
 
         public void AddDependantProp(VDataColumn col, string propName)
@@ -226,7 +230,7 @@ namespace sql.builder.DataApi
         }
         private int columnElitable = -1;
 
-        private bool GetClientSourceBoolValue(DataRow row,string variableName,bool invert)
+        private bool GetClientSourceBoolValue(DataRow row, string variableName, bool invert)
         {
             object editable = null;
             object val = null;
@@ -282,7 +286,7 @@ namespace sql.builder.DataApi
         public bool GetEditable(DataRow row)
         {
             object editable = null;
-            
+
             if (row.RowState == DataRowState.Deleted) return false;
 
             if (GetTable().IsRowAdded(row))
@@ -291,7 +295,7 @@ namespace sql.builder.DataApi
             }
             if (ClientEditableSource != null)
             {
-                editable = GetClientSourceBoolValue(row, ClientEditableSource,EditableInvert);
+                editable = GetClientSourceBoolValue(row, ClientEditableSource, EditableInvert);
 
             }
             if (editable == null)
@@ -373,12 +377,17 @@ namespace sql.builder.DataApi
         }
         public string GetFontColor(DataRow row)
         {
-            if (this.ClientFontColorSource != null) {
+            if (this.ClientFontColorSource != null)
+            {
                 VDataColumn srcCol = GetTable().GetDataSet().GetVariableColumn(ClientFontColorSource);
                 return row[srcCol].ToString();
-            } else if (this.FontColorSource != null) {
+            }
+            else if (this.FontColorSource != null)
+            {
                 return row[this.FontColorSource].ToString();
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
@@ -388,7 +397,7 @@ namespace sql.builder.DataApi
             {
 
 
-                return GetClientSourceBoolValue(row, ClientMandatorySource,MandatoryInvert);
+                return GetClientSourceBoolValue(row, ClientMandatorySource, MandatoryInvert);
 
             }
 
@@ -467,8 +476,8 @@ namespace sql.builder.DataApi
                     if (srcCol != null)
                     {
                         DataRow srcRow = srcCol.GetInOrCurrentRow(row);
-                        
-                       // 
+
+                        // 
                         if (srcRow != null)
                         {
                             val = srcRow[srcCol];
@@ -517,11 +526,11 @@ namespace sql.builder.DataApi
             return propVal;
         }
 
-        public  DataRow GetInOrCurrentRow(DataRow row )
+        public DataRow GetInOrCurrentRow(DataRow row)
         {
-            
+
             DataRow row1 = null;
-            if (row !=null && row.Table == Table)
+            if (row != null && row.Table == Table)
             {
                 row1 = row;
             }
@@ -663,15 +672,15 @@ namespace sql.builder.DataApi
                 val = row[BackColorSource];
 
             }
-           
 
-            
-            
+
+
+
             return (string)Cmn.Nvle(val, null);
 
         }
 
-        
+
         public string GetValidation(DataRow row)
         {
             string val = "";
@@ -689,7 +698,7 @@ namespace sql.builder.DataApi
                 }
                 else
                 {
-                    
+
                     if (!GetExists(row))
                     {
                         val = "";
@@ -700,11 +709,11 @@ namespace sql.builder.DataApi
                         Cmn.Nvl(row[this], null) == null
                         || (VDataColumn.HasBoundControl(this) && this._bound_controls[0] is UI.UICheck && Cmn.ToDecimal(row[this]) == 0m)
                         )
-                        ) 
+                        )
                     {
                         //else if (GetMandatory(row) == true && Cmn.Nvl(row[GetTextSourceName()], null) == null)//  не прогружается textsource вовремя
-                    //{
-                  
+                        //{
+
 
                         val = "Поле \"" + this.Caption + "\" должно быть заполнено";
 
@@ -755,9 +764,9 @@ namespace sql.builder.DataApi
         }
 
         private static Semaphore semaphore1 = new Semaphore(1, 1);
-       
-       
-   
+
+
+
 
 
         public static List<BackgroundWorker> backgroundWorkers = null;
@@ -766,7 +775,7 @@ namespace sql.builder.DataApi
         // если поле B зависит от поля А, поле С от B , А от С обновление при изменении А:  A->B->C->стоп (А не обновится) 
         //т.к. А уже в списке полей изменение которых обрабатывается.
         {
-            public RefreshInfo(VDataColumn col, DataRow row,bool isAsync)
+            public RefreshInfo(VDataColumn col, DataRow row, bool isAsync)
             {
                 Col = col;
                 Row = row;
@@ -779,8 +788,10 @@ namespace sql.builder.DataApi
         }
         public void RaiseDataChangeForUI(DataRow row)
         {
-            if (this._bound_controls != null) {
-                for (int index = 0; index < this._bound_controls.Count; index++) {
+            if (this._bound_controls != null)
+            {
+                for (int index = 0; index < this._bound_controls.Count; index++)
+                {
                     this._bound_controls[index].ColumnChanged(row);
                 }
             }
@@ -799,10 +810,10 @@ namespace sql.builder.DataApi
             if (GetTable().DontRefreshDependats) return;
             var column = this;
 
-            
 
 
-           // column.GetTable().GetDataSet().AddChangingColumn(column);
+
+            // column.GetTable().GetDataSet().AddChangingColumn(column);
 
             if (column.TempColumnName != null)
             {
@@ -811,7 +822,7 @@ namespace sql.builder.DataApi
 
 
 
-           
+
             var ds = tbl.GetDataSet();
             var changesRuning = false;
             var hasTextSource = false;
@@ -825,7 +836,7 @@ namespace sql.builder.DataApi
             }
 
             var depOnlyText = false;
-            if (hasTextSource && Dependants==null/*&&  Dependants.Count == 1*/)// textsource нет в dependance?
+            if (hasTextSource && Dependants == null/*&&  Dependants.Count == 1*/)// textsource нет в dependance?
             {
                 depOnlyText = true;
             }
@@ -853,41 +864,49 @@ namespace sql.builder.DataApi
             //{
             //    column.GetTable().GetDataSet().RemoveChangingColumn(column);
             //}
-            
+
         }
         public static void DataTableColumnChanged(object sender, DataColumnChangeEventArgs e)
         {
             var column = (e.Column as VDataColumn);
             column.ProcessChanges(e.Row);
         }
-        public void ChangeValueForDisplay(bool IsExists,DataRow row)
+        public void ChangeValueForDisplay(bool IsExists, DataRow row)
         {
             if (row == null)
             {
                 return;
             }
 
-           
+
             var row1 = row;
             bool newVal = false;
             object val = null;
             // !!! плохо проверенная часть, производительность?
-            if (IsExists) {
-                if (HasBoundControl(this) && this._bound_controls[0].IsBool()) {
+            if (IsExists)
+            {
+                if (HasBoundControl(this) && this._bound_controls[0].IsBool())
+                {
                     decimal val1;
-                    if (row[this] == DBNull.Value) {
+                    if (row[this] == DBNull.Value)
+                    {
                         newVal = true;
                         val1 = decimal.Zero;
-                    } else {
+                    }
+                    else
+                    {
                         val1 = (decimal)row[this];
-                        if (val1 != decimal.Zero && val1 != decimal.One) {
+                        if (val1 != decimal.Zero && val1 != decimal.One)
+                        {
                             newVal = true;
                             val1 = decimal.One;
                         }
                     }
                     val = val1;
                 }
-            } else if (row[this] != DBNull.Value) {
+            }
+            else if (row[this] != DBNull.Value)
+            {
                 val = DBNull.Value;
                 newVal = true;
             }
@@ -906,7 +925,7 @@ namespace sql.builder.DataApi
             }
         }
 
-        public void RefreshCalulatedValue(DataRow row, RefreshInfo ri,bool isAsync)
+        public void RefreshCalulatedValue(DataRow row, RefreshInfo ri, bool isAsync)
         {
             if (GetTable().CancelTempUpdate) return;
             var col = this;
@@ -943,7 +962,7 @@ namespace sql.builder.DataApi
 
 
                     bw.DoWork += new DoWorkEventHandler(
-                    delegate(object o, DoWorkEventArgs args)
+                    delegate (object o, DoWorkEventArgs args)
                     {
                         // mutex1.WaitOne();
                         semaphore1.WaitOne();
@@ -973,7 +992,7 @@ namespace sql.builder.DataApi
 
 
                     bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
-                    delegate(object o, RunWorkerCompletedEventArgs args)
+                    delegate (object o, RunWorkerCompletedEventArgs args)
                     {
 
                         //mutex2.WaitOne();  //!!!Мьютексы, чтобы не зацикливалось, например, при изменении суммы гп. Все равно, сделано криво (
@@ -1012,7 +1031,8 @@ namespace sql.builder.DataApi
         public void RefreshAllColumn()
         {
             VDataTable tbl = this.GetTable();
-            if (this.ValueRefreshCommand == null) {
+            if (this.ValueRefreshCommand == null)
+            {
                 throw new NullReferenceException();
             }
             tbl.EnqueueBackgroundRefresh(tbl.Rows.ToArray(), this.ValueRefreshCommand, null, null, false);
@@ -1020,20 +1040,25 @@ namespace sql.builder.DataApi
         public void ResetAllColumn()
         {
             VDataTable tbl = this.GetTable();
-            if (this.ValueResetCommand == null) {
+            if (this.ValueResetCommand == null)
+            {
                 throw new NullReferenceException();
             }
             tbl.EnqueueBackgroundRefresh(tbl.Rows.ToArray(), this.ValueResetCommand, null, null, false);
         }
         public void RefreshCalulatedValueNewSimple(DataRow row)
         {
-            if (this.ValueRefreshCommand != null) {
+            if (this.ValueRefreshCommand != null)
+            {
                 List<VOracleParameter> pars;
                 VDataTable tbl = this.GetTable();
                 VDataSet ds = tbl.GetDataSet();
-                if (ds.InputParams != null) {
+                if (ds.InputParams != null)
+                {
                     pars = ds.InputParams.Values.ToList();
-                } else {
+                }
+                else
+                {
                     pars = new List<VOracleParameter>(0);
                 }
                 RefreshCalulatedValue_AddParams(pars, ds, tbl, row, this);
@@ -1062,17 +1087,20 @@ namespace sql.builder.DataApi
             {
                 if (valTbl.Rows.Count > 1)
                 {
-                    throw new System.InvalidOperationException("Некрректно построен запрос для обновения поля "+col.Caption);
-                               
+                    throw new System.InvalidOperationException("Некрректно построен запрос для обновения поля " + col.Caption);
+
                 }
             }
         }
         private static void RefreshCalulatedValue_Complete(BackgroundWorker bw, RefreshInfo ri, VDataColumn col)
         {
             backgroundWorkers.Remove(bw);
-            if (ri != null && ri.Next != null) {
+            if (ri != null && ri.Next != null)
+            {
                 ri.Next.Col.RefreshCalulatedValue(ri.Next.Row, ri.Next, ri.IsAsync);
-            } else if (backgroundWorkers.Count == 0) {
+            }
+            else if (backgroundWorkers.Count == 0)
+            {
                 col.GetTable().GetDataSet().RaiseChangeCompleted();
             }
         }
@@ -1083,9 +1111,9 @@ namespace sql.builder.DataApi
             //}
             if (!this.GetExists(row))
             {
-              //  Undo(row);
+                //  Undo(row);
             }
-            if (row == null || row.RowState==DataRowState.Deleted)
+            if (row == null || row.RowState == DataRowState.Deleted)
             {
                 return;
             }
@@ -1103,12 +1131,12 @@ namespace sql.builder.DataApi
                 }
                 else
                 {
-                    var sVal = Cmn.Nvl( GetTable().GetDataSet().InputParams[ClientDefaultSource].Value,"").ToString();
+                    var sVal = Cmn.Nvl(GetTable().GetDataSet().InputParams[ClientDefaultSource].Value, "").ToString();
 
                     if (sVal != Cmn.undefinedString)
                     {
 
-                        row[this] = Cmn.Nvl( GetTable().GetDataSet().InputParams[ClientDefaultSource].Value,DBNull.Value);
+                        row[this] = Cmn.Nvl(GetTable().GetDataSet().InputParams[ClientDefaultSource].Value, DBNull.Value);
                     }
                 }
                 return;
@@ -1124,7 +1152,7 @@ namespace sql.builder.DataApi
             {
                 var val = VQuery.ExecuteQueryReturnScalar(ColumnDefaultSource);
                 SetValue(row, val);
-               
+
             }
 
 
@@ -1135,7 +1163,7 @@ namespace sql.builder.DataApi
         {
             if (row != null && row.RowState != DataRowState.Deleted)
             {
-                
+
                 if (ClientNewValSource != null)
                 {
                     if (this.GetTable().CurrentRow != null)

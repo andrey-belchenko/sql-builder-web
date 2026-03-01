@@ -1,9 +1,8 @@
 using System;
-using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using sql.builder.DataApi;
+using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.Print.Xlsx
 {
@@ -19,12 +18,16 @@ namespace sql.builder.Print.Xlsx
             Contract.Assert(xitem != null);
             Contract.Assert(xitem.Name == ns.Main.mergeCells);
             XAttribute attr = xitem.Attribute(ns.None.count);
-            if (attr != null) {
+            if (attr != null)
+            {
                 this._merges = new List<ExcelWorksheetMerge>(Convert.ToInt32(attr.Value));
-            } else {
+            }
+            else
+            {
                 this._merges = new List<ExcelWorksheetMerge>();
             }
-            foreach (XElement xmerge in xitem.Elements(ns.Main.mergeCell)) {
+            foreach (XElement xmerge in xitem.Elements(ns.Main.mergeCell))
+            {
                 this._merges.Add(new ExcelWorksheetMerge(xmerge.Attribute(ns.None.ref_).Value));
             }
         }
@@ -33,42 +36,51 @@ namespace sql.builder.Print.Xlsx
             Contract.Assert(merges != null);
             int count = merges._merges.Count;
             this._merges = new List<ExcelWorksheetMerge>(count);
-            for (int index = 0; index < count; index++) {
+            for (int index = 0; index < count; index++)
+            {
                 merges._merges[index].CopyTo(this._merges);
             }
         }
         public void CopyRowMerge(int rowIdOld, int rowIdNew)
         {
-            for (int index = 0; index < this._merges.Count; index++) {
+            for (int index = 0; index < this._merges.Count; index++)
+            {
                 ExcelWorksheetMerge merge = this._merges[index];
-                if (merge.BeginsFromRow(rowIdOld)) {
+                if (merge.BeginsFromRow(rowIdOld))
+                {
                     merge.CopyRowMerge(rowIdNew);
                 }
             }
         }
         public void DeleteRowMerge(int rowId)
         {
-            for (int index = 0; index < this._merges.Count; index++) {
+            for (int index = 0; index < this._merges.Count; index++)
+            {
                 ExcelWorksheetMerge merge = this._merges[index];
-                if (merge.BeginsFromRow(rowId)) {
+                if (merge.BeginsFromRow(rowId))
+                {
                     merge.Delete();
                 }
             }
         }
         public void DeleteColumn(string colName)
         {
-            for (int index = 0; index < this._merges.Count; index++) {
+            for (int index = 0; index < this._merges.Count; index++)
+            {
                 ExcelWorksheetMerge merge = this._merges[index];
-                if (!merge.Deleted) {
+                if (!merge.Deleted)
+                {
                     merge.DeleteColumn(colName);
                 }
             }
         }
         public void RenameColumn(string colNameOld, string colNameNew)
         {
-            for (int index = 0; index < this._merges.Count; index++) {
+            for (int index = 0; index < this._merges.Count; index++)
+            {
                 ExcelWorksheetMerge merge = this._merges[index];
-                if (!merge.Deleted) {
+                if (!merge.Deleted)
+                {
                     merge.RenameColumn(colNameOld, colNameNew);
                 }
             }
@@ -77,7 +89,8 @@ namespace sql.builder.Print.Xlsx
         {
             XElement xmerges = new XElement(ns.Main.mergeCells);
             uint count = 0;
-            for (int index = 0; index < this._merges.Count; index++) {
+            for (int index = 0; index < this._merges.Count; index++)
+            {
                 count = count + this._merges[index].CopyTo(xmerges);
             }
             xmerges.Add(new XAttribute(ns.None.count, count.ToString()));
@@ -94,9 +107,11 @@ namespace sql.builder.Print.Xlsx
         public ExcelWorksheetMerge GetContainedMerge(ExcelCellInfo cell)
         {
             //return _merges.Select(m => m.GetContainedMerge(cell)).FirstOrDefault(m => m != null);
-            for (int index = 0; index < this._merges.Count; index++) {
+            for (int index = 0; index < this._merges.Count; index++)
+            {
                 ExcelWorksheetMerge merge = this._merges[index].GetContainedMerge(cell);
-                if (merge != null) {
+                if (merge != null)
+                {
                     return merge;
                 }
             }
@@ -105,9 +120,11 @@ namespace sql.builder.Print.Xlsx
         public void ExtendMergeToColumn(ExcelCellInfo cellFrom, ExcelCellInfo cellTo)
         {
             //foreach (ExcelWorksheetMerge merge in this._merges.Where(cellFrom.IsEndOfMerge)) {
-            for (int index = 0; index < this._merges.Count; index++) {
+            for (int index = 0; index < this._merges.Count; index++)
+            {
                 ExcelWorksheetMerge merge = this._merges[index];
-                if (merge.EndsWith(cellFrom)) {
+                if (merge.EndsWith(cellFrom))
+                {
                     merge.ExtendToColumn(cellTo.ColumnName);
                 }
             }
@@ -121,9 +138,11 @@ namespace sql.builder.Print.Xlsx
         {
             // ���� �� ��������� ��� ������ ����� cellFrom � cellTo, �� ����� ��������� �� ������
             //if (check_exists && (this._merges.Any(m => m.ContainsCell(cellFrom) || m.ContainsCell(cellTo)))) return false;
-            for (int index = 0; index < this._merges.Count; index++) {
+            for (int index = 0; index < this._merges.Count; index++)
+            {
                 ExcelWorksheetMerge merge = this._merges[index];
-                if (merge.ContainsCell(cellFrom) || merge.ContainsCell(cellTo)) {
+                if (merge.ContainsCell(cellFrom) || merge.ContainsCell(cellTo))
+                {
                     return false;
                 }
             }
@@ -133,9 +152,11 @@ namespace sql.builder.Print.Xlsx
         public void RemoveMergesInRange(ExcelCellInfo cellFrom, ExcelCellInfo cellTo)
         {
             var cells = ExcelCellInfo.Range(cellFrom, cellTo).ToList();
-            foreach (ExcelCellInfo cell in cells) {
+            foreach (ExcelCellInfo cell in cells)
+            {
                 ExcelWorksheetMerge merge = this._merges.FirstOrDefault(cell.ContainsIn);
-                if (merge != null) {
+                if (merge != null)
+                {
                     merge = merge.GetContainedMerge(cell);
                     merge.Delete();
                 }
@@ -144,9 +165,12 @@ namespace sql.builder.Print.Xlsx
         public ExcelCellInfo GetNextMergedCell(ExcelCellInfo cell)
         {
             ExcelWorksheetMerge merge = this._merges.FirstOrDefault(cell.ContainsIn);
-            if (merge != null) {
+            if (merge != null)
+            {
                 return merge.GetNextMergedCellInfo(cell);
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
@@ -167,59 +191,89 @@ namespace sql.builder.Print.Xlsx
         }
         public bool StartsWith(ExcelCellInfo cell)
         {
-            if (this._copies != null) {
+            if (this._copies != null)
+            {
                 return this._copies.Any(cell.IsBeginOfMerge);
-            } else if (this.deleted) {
+            }
+            else if (this.deleted)
+            {
                 return false;
-            } else {
+            }
+            else
+            {
                 return this.FirstCell.Equals(cell);
             }
         }
         public bool EndsWith(ExcelCellInfo cell)
         {
-            if (this._copies != null) {
+            if (this._copies != null)
+            {
                 return this._copies.Any(cell.IsEndOfMerge);
-            } else if (this.deleted) {
+            }
+            else if (this.deleted)
+            {
                 return false;
-            } else {
+            }
+            else
+            {
                 return this.LastCell.Equals(cell);
             }
         }
         public bool ContainsCell(ExcelCellInfo cell)
         {
-            if (this._copies != null) {
+            if (this._copies != null)
+            {
                 return this._copies.Any(cell.ContainsIn);
-            } else if (this.deleted) {
+            }
+            else if (this.deleted)
+            {
                 return false;
-            } else {
+            }
+            else
+            {
                 return this._refs.ContainsCell(cell);
             }
         }
         public ExcelWorksheetMerge GetContainedMerge(ExcelCellInfo cell)
         {
-            if (this._copies != null) {
+            if (this._copies != null)
+            {
                 return this._copies.FirstOrDefault(cell.ContainsIn);
-            } else if (this.deleted) {
+            }
+            else if (this.deleted)
+            {
                 return null;
-            } else if (this._refs.ContainsCell(cell)) {
+            }
+            else if (this._refs.ContainsCell(cell))
+            {
                 return this;
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
         public ExcelCellInfo GetNextMergedCellInfo(ExcelCellInfo cell)
         {
-            if (this._copies != null) {
+            if (this._copies != null)
+            {
                 ExcelWorksheetMerge copy = this._copies.FirstOrDefault(cell.ContainsIn);
-                if (copy != null) {
+                if (copy != null)
+                {
                     return copy.GetNextMergedCellInfo(cell);
-                } else {
+                }
+                else
+                {
                     return null;
                 }
-            } else if (this.deleted) {
+            }
+            else if (this.deleted)
+            {
                 // �� ����� ������
                 return null;
-            } else {
+            }
+            else
+            {
                 return this._refs.GetNextCellInfo(cell);
             }
         }
@@ -232,7 +286,8 @@ namespace sql.builder.Print.Xlsx
             ExcelCellInfo first_cell = this.FirstCell;
             ExcelCellInfo last_cell = this.LastCell;
             string refs = first_cell.ColumnName + rowIdNew.ToString() + ":" + last_cell.ColumnName + (last_cell.RowID + (rowIdNew - first_cell.RowID)).ToString();
-            if (this._copies == null) {
+            if (this._copies == null)
+            {
                 this._copies = new List<ExcelWorksheetMerge>(1);
             }
             this._copies.Add(new ExcelWorksheetMerge(refs));
@@ -241,7 +296,8 @@ namespace sql.builder.Print.Xlsx
         {
             this._refs.DeleteColumn(colName);
             // ���� �� �������� ��������� ����� - �������
-            if (this._refs.IsEmpty()) {
+            if (this._refs.IsEmpty())
+            {
                 this.Delete();
             }
         }
@@ -260,15 +316,22 @@ namespace sql.builder.Print.Xlsx
         }
         public void CopyTo(IList<ExcelWorksheetMerge> list)
         {
-            if (this.deleted) {
+            if (this.deleted)
+            {
                 return;
-            } else if (this._copies != null) {
-                for (int index = 0; index < this._copies.Count; index++) {
+            }
+            else if (this._copies != null)
+            {
+                for (int index = 0; index < this._copies.Count; index++)
+                {
                     this._copies[index].CopyTo(list);
                 }
-            } else {
+            }
+            else
+            {
                 string refs = this._refs.GetText();
-                if (refs != null) {
+                if (refs != null)
+                {
                     list.Add(new ExcelWorksheetMerge(refs));
                 }
             }
@@ -276,24 +339,34 @@ namespace sql.builder.Print.Xlsx
         public uint CopyTo(XElement xmerges)
         {
             XElement xmerge;
-            if (this.deleted) {
+            if (this.deleted)
+            {
                 return 0;
-            } else if (this._copies != null) {
+            }
+            else if (this._copies != null)
+            {
                 uint count = 0;
-                for (int index = 0; index < this._copies.Count; index++) {
+                for (int index = 0; index < this._copies.Count; index++)
+                {
                     xmerge = this._copies[index].GetXml();
-                    if (xmerge != null) {
+                    if (xmerge != null)
+                    {
                         xmerges.Add(xmerge);
                         count++;
                     }
                 }
                 return count;
-            } else {
+            }
+            else
+            {
                 xmerge = this.GetXml();
-                if (xmerge != null) {
+                if (xmerge != null)
+                {
                     xmerges.Add(xmerge);
                     return 1;
-                } else {
+                }
+                else
+                {
                     return 0;
                 }
             }
@@ -316,13 +389,19 @@ namespace sql.builder.Print.Xlsx
         }*/
         private XElement GetXml()
         {
-            if (this.deleted) {
+            if (this.deleted)
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 string refs = this._refs.GetText();
-                if (refs != null) {
+                if (refs != null)
+                {
                     return new XElement(ns.Main.mergeCell, new XAttribute(ns.None.ref_, refs));
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             }

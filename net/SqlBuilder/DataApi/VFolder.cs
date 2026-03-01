@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 namespace sql.builder.DataApi
 {
@@ -13,9 +11,12 @@ namespace sql.builder.DataApi
         private static string[] child_nodes = { TextConst.AName.Folder, TextConst.EName.UsePart };
         IList<string> IVParent.AllowedChildNodes()
         {
-            if (this.GetMainParent() is VNavigator) {
+            if (this.GetMainParent() is VNavigator)
+            {
                 return VNavigator.child_nodes;
-            } else {
+            }
+            else
+            {
                 return child_nodes;
             }
         }

@@ -1,11 +1,10 @@
 using System;
-using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.Print.Xlsx
 {
@@ -18,7 +17,7 @@ namespace sql.builder.Print.Xlsx
             do
             {
 
-                print_directory = Path.Combine(sql.builder.Clean.Settings. GetInstance().TempPath, "sql.builder.printing", "report" + postfix++);
+                print_directory = Path.Combine(sql.builder.Clean.Settings.GetInstance().TempPath, "sql.builder.printing", "report" + postfix++);
             } while (Directory.Exists(print_directory));
 
             //Directory.CreateDirectory(print_directory);
@@ -74,20 +73,26 @@ namespace sql.builder.Print.Xlsx
             Contract.Assert(!string.IsNullOrEmpty(cell_name));
             int index = 0;
             column_id = 0;
-            while (true) {
-                if (index == cell_name.Length) {
+            while (true)
+            {
+                if (index == cell_name.Length)
+                {
                     throw new ArgumentOutOfRangeException("cell_name");
                 }
                 char ch = cell_name[index];
-                if (ch >= '0' && ch <= '9') {
+                if (ch >= '0' && ch <= '9')
+                {
                     break;
-                } else if (ch < 'A' || ch > 'Z') {
+                }
+                else if (ch < 'A' || ch > 'Z')
+                {
                     throw new ArgumentOutOfRangeException("cell_name");
                 }
                 column_id = column_id * 26 + (ch - 'A' + 1);
                 index++;
             }
-            if (index == 0) {
+            if (index == 0)
+            {
                 throw new ArgumentOutOfRangeException("cell_name");
             }
             row_id = int.Parse(cell_name.Substring(index));

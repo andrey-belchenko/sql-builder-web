@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 namespace sql.builder.DataApi
 {
@@ -12,9 +10,12 @@ namespace sql.builder.DataApi
         }
         IList<string> IVParent.AllowedChildNodes()
         {
-            if (this.GetAncestorsAndSelf(EName.select).Count != 0) {
+            if (this.GetAncestorsAndSelf(EName.select).Count != 0)
+            {
                 return VGridBand.child_nodes;
-            } else {
+            }
+            else
+            {
                 return VColumns.child_nodes;
             }
         }

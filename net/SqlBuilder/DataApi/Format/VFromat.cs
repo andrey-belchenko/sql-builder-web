@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-
-namespace sql.builder.DataApi
+﻿namespace sql.builder.DataApi
 {
     public sealed class VFormat : VSXElement
     {

@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-//using DevExpress.XtraLayout;
-//using DevExpress.XtraEditors;
-using sql.builder.DataApi;
 //using DevExpress.XtraBars;
 //using DevExpress.XtraLayout.Utils;
 //using DevExpress.XtraEditors.Controls;
 using System.Data;
 using System.Linq;
-using System.Xml.Linq;
+//using DevExpress.XtraLayout;
+//using DevExpress.XtraEditors;
+using sql.builder.DataApi;
 //using System.Windows.Forms;
 
 //using sql.builder.Test;
-using sql.builder.Controls;
 namespace sql.builder.UI
 {
     public partial class UIFormC : IForm
@@ -36,16 +34,16 @@ namespace sql.builder.UI
         }
 
 
-        public bool IsModifiedSelfOrSub() 
+        public bool IsModifiedSelfOrSub()
         {
             return GetRelativeFormsAndSelf().Any(f => f.IsModified());
         }
 
         public event EventHandler ChangeActionComplete = null;
         public void RaiseChangeActionComplete()
-            // когда закончилось какое тодействие по изменению данных в форме
-            // можно было бы завязаться на изменение dataSet, но не придумал как поймать конец массового изменения
-            // обработаны не все случаи, измененине данных вручную не обработано.
+        // когда закончилось какое тодействие по изменению данных в форме
+        // можно было бы завязаться на изменение dataSet, но не придумал как поймать конец массового изменения
+        // обработаны не все случаи, измененине данных вручную не обработано.
         {
             if (ChangeActionComplete != null)
             {
@@ -56,9 +54,9 @@ namespace sql.builder.UI
         private void OnUserChangedData(object sender, DataColumnChangeEventArgs args)
         {
             //_is_modified = true;
-            
+
             UpdateButtonsState();
-            
+
         }
         public void Data_OnTopTableRefreshed(object sender, EventArgs args)
         {
@@ -116,7 +114,7 @@ namespace sql.builder.UI
         }
 
 
-        
+
         public void attachControlStateEvent()
         {
             getVariableDepandantceController().attachControlStateEvent();
@@ -132,15 +130,15 @@ namespace sql.builder.UI
         {
 
             getVariableDepandantceController().UpdateAllControlsStates();
-            
+
         }
 
         public void SetControlVisible(object control, bool val) // new to do
         {
-            getVariableDepandantceController().SetControlVisible(control,val);
+            getVariableDepandantceController().SetControlVisible(control, val);
         }
 
-      
+
     }
     public partial class VVariableDepandantceController
     {
@@ -239,7 +237,7 @@ namespace sql.builder.UI
 
         //private bool controlStateEventAttached = false;
 
-       
+
         public VDataSet DataSource
         {
 
@@ -255,14 +253,14 @@ namespace sql.builder.UI
                     throw new InvalidOperationException();
                 }
             }
-            
+
         }
         public void attachControlStateEvent()
         {
             //if (!controlStateEventAttached)
             //{
-                //controlStateEventAttached = true;
-                //DataSource.VariableChanged += DataSource_OnVariableChanged;
+            //controlStateEventAttached = true;
+            //DataSource.VariableChanged += DataSource_OnVariableChanged;
             if (DataSource != null)
             {
                 DataSource.VariableDepandantceController = this;
@@ -274,12 +272,12 @@ namespace sql.builder.UI
         {
             //if (controlStateEventAttached)
             //{
-                //controlStateEventAttached = false;
+            //controlStateEventAttached = false;
             if (DataSource != null)
             {
                 DataSource.VariableDepandantceController = null;
             }
-                //DataSource.VariableChanged -= DataSource_OnVariableChanged;
+            //DataSource.VariableChanged -= DataSource_OnVariableChanged;
             //}
 
         }
@@ -288,12 +286,16 @@ namespace sql.builder.UI
             string varName = variableName;
             this.UpdateControlsStates(varName);
             VDataSet ds = this.DataSource;
-            if (ds.WasRefresh) {
-                for (int index = 0; index < ds.Tables.Count; index++) {
+            if (ds.WasRefresh)
+            {
+                for (int index = 0; index < ds.Tables.Count; index++)
+                {
                     VDataTable tbl = (VDataTable)ds.Tables[index];
-                    if (tbl.AutoRefresh) {
+                    if (tbl.AutoRefresh)
+                    {
                         HashSet<string> parsNames = tbl.GetParamsNames();
-                        if (parsNames.Contains(varName)) {
+                        if (parsNames.Contains(varName))
+                        {
                             //tbl.Refresh();// !!! Выполняется несколько раз - отследить
                             //tbl.RaiseCurrentRowChanged();
                             tbl.EnqueueRefresh();
@@ -324,7 +326,7 @@ namespace sql.builder.UI
             }
             if (variableStateDependenceList.ContainsKey("!" + varName))
             {
-                list.Add("!"+ varName);
+                list.Add("!" + varName);
             }
             foreach (var varName1 in list)
             {
@@ -351,12 +353,16 @@ namespace sql.builder.UI
         private void SetControlEditable(ControlState controlState, string varName)
         {
             object newVal = this.DataSource.GetVariableValue(varName);
-            if (!newVal.Equals(controlState.State)) {
+            if (!newVal.Equals(controlState.State))
+            {
                 controlState.State = newVal;
                 bool state;
-                if (Cmn.IsNullOrDBNull(newVal)) {
+                if (Cmn.IsNullOrDBNull(newVal))
+                {
                     state = false;
-                } else {
+                }
+                else
+                {
                     state = newVal.ToString() != TextConst.AVBool.False;
                 }
                 SetControlEditable(controlState.Control, state);
@@ -365,12 +371,16 @@ namespace sql.builder.UI
         private void SetControlVisible(ControlState controlState, string varName)
         {
             object newVal = DataSource.GetVariableValue(varName);
-            if (!newVal.Equals(controlState.State)) {
+            if (!newVal.Equals(controlState.State))
+            {
                 controlState.State = newVal;
                 bool state;
-                if (Cmn.IsNullOrDBNull(newVal)) {
+                if (Cmn.IsNullOrDBNull(newVal))
+                {
                     state = false;
-                } else {
+                }
+                else
+                {
                     state = newVal.ToString() != TextConst.AVBool.False;
                 }
                 SetControlVisible(controlState.Control, state);

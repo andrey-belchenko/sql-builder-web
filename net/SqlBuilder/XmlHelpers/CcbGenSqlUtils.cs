@@ -3,12 +3,9 @@ using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Xml.Linq;
-using Devart.Data.Oracle;
 //using DevExpress.Utils.Drawing.Helpers;
 //using DevExpress.XtraBars.Docking2010.Base;
 using sql.builder.DataApi;
-using System.Collections.Generic;
 
 
 namespace sql.builder.XmlHelpers
@@ -16,16 +13,16 @@ namespace sql.builder.XmlHelpers
     public static class CcbGenSqlUtils
     {
 
-		
+
 
         public static void Generate()
         {
             XmlReports.Environment.LoadProject("bar_ccb");
             var queries =
               XmlReports.Environment.GetElements(TextConst.EName.Queries).Where(q => q.P_IdName.StartsWith("vci_"));
-      
 
-        
+
+
             var sb = new StringBuilder();
 
 
@@ -36,8 +33,10 @@ namespace sql.builder.XmlHelpers
             string[] names = Array.Empty<string>();
             // names = new string[] { "vci_hr_point_ini", "vci_hr_point_pu", "vci_hr_pu_u", "vci_hr_point_en" };
             // names = new string[] { "vci_hr_point_ini" };
-            foreach (VQuery qry in queries) {
-                if (names.Length == 0 || names.Contains(qry.XName)) {
+            foreach (VQuery qry in queries)
+            {
+                if (names.Length == 0 || names.Contains(qry.XName))
+                {
 
                     var script = SqlReportPkg.Generate(qry.XName, false, false, false);
 
@@ -47,12 +46,12 @@ namespace sql.builder.XmlHelpers
                     script = script.Replace("ON COMMIT PRESERVE ROWS;", "");
                     script = script.Replace("GLOBAL TEMPORARY", "");
                     var tname = qry.XName.Replace("vci_", "vcl_");
-                    var repExpr = "delete " + tname+";";
-                    if (!script.Contains(repExpr) )
+                    var repExpr = "delete " + tname + ";";
+                    if (!script.Contains(repExpr))
                     {
-                        throw  new Exception();
+                        throw new Exception();
                     }
-                    script = script.Replace(repExpr, repExpr + Environment.NewLine + "vccb_dog_info_load.put_log_begin ('"+tname+"');");
+                    script = script.Replace(repExpr, repExpr + Environment.NewLine + "vccb_dog_info_load.put_log_begin ('" + tname + "');");
 
 
                     repExpr = "END fill_table;";
@@ -61,14 +60,14 @@ namespace sql.builder.XmlHelpers
                         throw new Exception();
                     }
                     script = script.Replace(repExpr, "vccb_dog_info_load.put_log_end ('" + tname + "');" + Environment.NewLine + repExpr);
-                    
-                    
+
+
                     sb.Append(script);
 
                     sb1.AppendLine(qry.XName.Replace("vci_", "vcl_") + "_pkg.fill_table;");
                 }
 
-          
+
             }
             sb1.AppendLine("end;");
 
@@ -81,7 +80,7 @@ namespace sql.builder.XmlHelpers
             Process.Start(filename);
         }
 
-      
+
 
     }
 }

@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using Contract = System.Diagnostics.Contracts.Contract;
-using System.Diagnostics; // Debug, Stopwatch
-using AName_ = sql.builder.DataApi.AName;
-
-namespace sql.builder.DataApi
+﻿namespace sql.builder.DataApi
 {
     /*public sealed partial class VReport
     {

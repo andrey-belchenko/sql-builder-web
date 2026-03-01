@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace sql.builder.UI
+﻿namespace sql.builder.UI
 {
     public class VLayoutLabelInfo : VLayoutItemInfo
     {
 
 
-        
+
 
 
 
         private string text;
-		private string hint;
+        private string hint;
 
         public override void SetText(string value)
         {
@@ -22,30 +17,30 @@ namespace sql.builder.UI
 
             //if (text == "Штраф")
             //{
-                
+
             //}
             if (control != null)
             {
-               
+
                 //GetTypedControl().SetText(GetText());
             }
             (GetParent() as VLayoutGroupInfo).ResetChildValuesInfo();
-            
+
         }
 
-		public override void SetHint(string value)
-		{
-			hint = value;
-			if (control != null)
-			{
+        public override void SetHint(string value)
+        {
+            hint = value;
+            if (control != null)
+            {
 
-				//GetTypedControl().SetHint(value);
-			}
+                //GetTypedControl().SetHint(value);
+            }
 
-		}
+        }
 
         public VLayoutControlContainerInfo Item;
-        
+
         public override bool IsSelfVisible()
         {
             if (Item == null)
@@ -61,10 +56,10 @@ namespace sql.builder.UI
         {
             return text;
         }
-		public string GetHint()
-		{
-			return hint;
-		}
+        public string GetHint()
+        {
+            return hint;
+        }
         public int GetTextWidth()
         {
             return 0;
@@ -72,7 +67,7 @@ namespace sql.builder.UI
         }
         public override decimal GetWidthFixed()
         {
-           // return GetTextWidth();
+            // return GetTextWidth();
             return (GetParent() as VLayoutGroupInfo).GetMaxLabelTextWidth();
         }
 
@@ -85,22 +80,22 @@ namespace sql.builder.UI
         }
 
 
-        public  void ShowLabel()
+        public void ShowLabel()
         {
-           
-                if (isBold != oldIsBold)
-                {
-                    oldIsBold = isBold;
-                    //GetTypedControl().SetBold(isBold);
-                }
 
-                if (IsTextAlignmentLeft() != oldIsTALeft)
-                {
+            if (isBold != oldIsBold)
+            {
+                oldIsBold = isBold;
+                //GetTypedControl().SetBold(isBold);
+            }
 
-                    oldIsTALeft = IsTextAlignmentLeft();
-                    //GetTypedControl().SetTextAlignment(oldIsTALeft);
-                }
-            
+            if (IsTextAlignmentLeft() != oldIsTALeft)
+            {
+
+                oldIsTALeft = IsTextAlignmentLeft();
+                //GetTypedControl().SetTextAlignment(oldIsTALeft);
+            }
+
         }
 
         public override int GetMarginLeft()
@@ -135,7 +130,7 @@ namespace sql.builder.UI
         //}
         public bool IsTextAlignmentLeft()
         {
-            if (isFirstInRow!=true)
+            if (isFirstInRow != true)
             {
                 return false;
             }
@@ -155,6 +150,6 @@ namespace sql.builder.UI
         }
 
     }
-    
-   
+
+
 }

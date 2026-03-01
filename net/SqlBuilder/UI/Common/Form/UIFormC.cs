@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics; // Debug, Stopwatch
-using Contract = System.Diagnostics.Contracts.Contract;
-using System.Drawing;
 using System.Data;
+using System.Diagnostics; // Debug, Stopwatch
 using System.Linq;
 //using System.Windows.Forms;
 using System.Xml.Linq;
+//using infoenergo.ui.win.Base;
+using sql.builder.Controls.FormFields;
 //using DevExpress.DashboardCommon.Native;
 //using DevExpress.XtraEditors;
 //using DevExpress.XtraGrid.Views.Grid;
@@ -14,15 +14,11 @@ using System.Xml.Linq;
 //using DevExpress.XtraBars.Docking2010.Views;
 //using DevExpress.XtraEditors.Controls;
 //using infoenergo.core.Extensions;
-using sql.builder.Controls;
 using sql.builder.DataApi;
 using sql.builder.FieldInfo;
-using sql.builder.WinForms;
-//using infoenergo.ui.win.Base;
-using sql.builder.Controls.FormFields;
 //using sql.builder.Controls.Grids;
 using sql.builder.XmlHelpers;
-using sql.builder.Exceptions;
+using Contract = System.Diagnostics.Contracts.Contract;
 namespace sql.builder.UI
 {
     public partial class UIFormC : IForm

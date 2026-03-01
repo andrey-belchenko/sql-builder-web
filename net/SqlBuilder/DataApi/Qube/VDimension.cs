@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Linq;
 using AName_ = sql.builder.DataApi.AName;
 
@@ -15,8 +14,10 @@ namespace sql.builder.DataApi
             : base(EName.dimension)
         {
         }
-        public override string XName {
-            get {
+        public override string XName
+        {
+            get
+            {
                 XAttribute attr = this.Attribute(AName_.name);
                 return attr.Value;
             }
@@ -28,9 +29,12 @@ namespace sql.builder.DataApi
         public VQuery Query()
         {
             string query_name = this.P_CalledQuery;
-            if (string.IsNullOrEmpty(query_name)) {
+            if (string.IsNullOrEmpty(query_name))
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return XmlReports.Environment.GetQuery(query_name);
             }
         }
@@ -41,9 +45,12 @@ namespace sql.builder.DataApi
         public override List<VSXElement> GetUsedElements()
         {
             VQuery qry = this.Query();
-            if (qry != null) {
+            if (qry != null)
+            {
                 return new List<VSXElement>(1) { qry };
-            } else {
+            }
+            else
+            {
                 return new List<VSXElement>(0);
             }
         }
@@ -51,7 +58,8 @@ namespace sql.builder.DataApi
         {
             XElement col = Factory.NewColumn(tableAlias, columnName);
             XElement el = null;
-            switch (this.P_TimeType) {
+            switch (this.P_TimeType)
+            {
                 case TextConst.AVTimeType.Month:
                     el = GetMonthAttrExpression(col, attrName);
                     break;
@@ -75,18 +83,22 @@ namespace sql.builder.DataApi
         }
         public string GetTimeAttrType(string attrName)
         {
-            if (string.IsNullOrEmpty(attrName)) {
+            if (string.IsNullOrEmpty(attrName))
+            {
                 return string.Empty;
             }
-            switch (this.P_TimeType) {
+            switch (this.P_TimeType)
+            {
                 case TextConst.AVTimeType.Day:
-                    switch (attrName) {
+                    switch (attrName)
+                    {
                         case TextConst.AVTimeAttr.Val:
                             return TextConst.AVDataType.Date;
                     }
                     break;
                 case TextConst.AVTimeType.Month:
-                    switch (attrName) {
+                    switch (attrName)
+                    {
                         case TextConst.AVTimeAttr.Val:
                             return TextConst.AVDataType.Number;
                         case TextConst.AVTimeAttr.Name:
@@ -94,36 +106,41 @@ namespace sql.builder.DataApi
                     }
                     break;
                 case TextConst.AVTimeType.Month2:
-                    switch (attrName) {
+                    switch (attrName)
+                    {
                         case TextConst.AVTimeAttr.Val:
                             return TextConst.AVDataType.Number;
                     }
                     break;
                 case TextConst.AVTimeType.Str:
-                    switch (attrName) {
+                    switch (attrName)
+                    {
                         case TextConst.AVTimeAttr.Val:
                             return TextConst.AVDataType.String;
                     }
                     break;
                 case TextConst.AVTimeType.Num:
-                    switch (attrName) {
+                    switch (attrName)
+                    {
                         case TextConst.AVTimeAttr.Val:
                             return TextConst.AVDataType.Number;
                     }
                     break;
                 case TextConst.AVTimeType.Year:
-                    switch (attrName) {
+                    switch (attrName)
+                    {
                         case TextConst.AVTimeAttr.Val:
                             return TextConst.AVDataType.Number;
                     }
                     break;
-             }
+            }
             return string.Empty;
-         }
+        }
         private static XElement GetMonthAttrExpression(XElement column, string attrName)
         {
             XElement el = null;
-            switch (attrName) {
+            switch (attrName)
+            {
                 case TextConst.AVTimeAttr.Name:
                     el = Factory.NewCall(TextConst.AVFunction.YmToChar, column);
                     break;
@@ -136,7 +153,8 @@ namespace sql.builder.DataApi
         private static XElement GetMonth2AttrExpression(XElement column, string attrName)
         {
             XElement el = null;
-            switch (attrName) {
+            switch (attrName)
+            {
                 case TextConst.AVTimeAttr.Name:
                     el = Factory.NewCall(TextConst.AVFunction.Ym2ToChar, column);
                     break;
@@ -149,7 +167,8 @@ namespace sql.builder.DataApi
         private static XElement GetDayAttrExpression(XElement column, string attrName)
         {
             XElement el = null;
-            switch (attrName) {
+            switch (attrName)
+            {
                 case TextConst.AVTimeAttr.Val:
                     el = column;
                     break;
@@ -159,7 +178,8 @@ namespace sql.builder.DataApi
         private static XElement GetYearAttrExpression(XElement column, string attrName)
         {
             XElement el = null;
-            switch (attrName) {
+            switch (attrName)
+            {
                 case TextConst.AVTimeAttr.Val:
                     el = column;
                     break;
@@ -169,7 +189,8 @@ namespace sql.builder.DataApi
         private static XElement GetStrAttrExpression(XElement column, string attrName)
         {
             XElement el = null;
-            switch (attrName) {
+            switch (attrName)
+            {
                 case TextConst.AVTimeAttr.Val:
                     el = column;
                     break;
@@ -179,7 +200,8 @@ namespace sql.builder.DataApi
         private static XElement GetNumAttrExpression(XElement column, string attrName)
         {
             XElement el = null;
-            switch (attrName) {
+            switch (attrName)
+            {
                 case TextConst.AVTimeAttr.Val:
                     el = column;
                     break;
@@ -187,13 +209,17 @@ namespace sql.builder.DataApi
             return el;
         }
         #region TimeType
-        public override string P_TimeType {
-            get {
+        public override string P_TimeType
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.time_type);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.time_type, value);
-                if (!string.IsNullOrEmpty(value)) {
+                if (!string.IsNullOrEmpty(value))
+                {
                     this.RemoveAttribute(AName_.class_type);
                 }
             }
@@ -214,13 +240,17 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region CalledQuery
-        public override string P_CalledQuery {
-            get {
+        public override string P_CalledQuery
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.class_type);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.class_type, value);
-                if (!string.IsNullOrEmpty(value)) {
+                if (!string.IsNullOrEmpty(value))
+                {
                     this.RemoveAttribute(AName_.timeline);
                     this.RemoveAttribute(AName_.time_type);
                 }
@@ -256,7 +286,8 @@ namespace sql.builder.DataApi
         {
             string s = Bold(this.P_Name) + " " + this.P_CalledQuery;
             string timeline = this.P_Timeline;
-            if (!string.IsNullOrEmpty(timeline)) {
+            if (!string.IsNullOrEmpty(timeline))
+            {
                 s += timeline + ".";
             }
             s += this.P_TimeType;
@@ -264,11 +295,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Timeline
-        public override string P_Timeline {
-            get {
+        public override string P_Timeline
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.timeline);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.timeline, value);
             }
         }
@@ -282,9 +316,11 @@ namespace sql.builder.DataApi
         {
             table.Rows.Clear();
             VQuery query = this.Query();
-            if (query != null) {
+            if (query != null)
+            {
                 IList<VSXElement> cols = query.Columns();
-                for (int index = 0; index < cols.Count; index++) {
+                for (int index = 0; index < cols.Count; index++)
+                {
                     string name = cols[index].XName;
                     table.AddRow(name, name);
                 }

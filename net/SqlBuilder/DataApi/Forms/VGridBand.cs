@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 namespace sql.builder.DataApi
 {
@@ -14,9 +12,12 @@ namespace sql.builder.DataApi
         {
             VGridBand pBand = this.GetParent() as VGridBand;
             string s;
-            if (pBand != null) {
+            if (pBand != null)
+            {
                 s = pBand.GetPath() + "|";
-            } else {
+            }
+            else
+            {
                 s = string.Empty;
             }
             s += this.P_Title;

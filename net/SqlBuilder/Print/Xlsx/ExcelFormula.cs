@@ -18,10 +18,10 @@ namespace sql.builder.Print.Xlsx
 
         //HashSet<string> _cellNames;
         //HashSet<string> _colNames; 
-        
+
         public ExcelFormula(string text, ExcelCell cell)
         {
-            _text = text; 
+            _text = text;
             _cell = cell;
 
             // парсим формулу, выделяя диапозоны ячеек
@@ -58,7 +58,8 @@ namespace sql.builder.Print.Xlsx
         }
         public string GetText()
         {
-            if (_changed) {
+            if (_changed)
+            {
                 _text = string.Join(string.Empty, _tokens.SelectAsArray(t => t.GetText()));
                 _changed = false;
             }
@@ -80,20 +81,21 @@ namespace sql.builder.Print.Xlsx
             int cols_bord2 = ExcelUtils.GetColumnNumber(cols_to_copy[cols_to_copy.Length - 1]);
             // Формула в ячейке среди размазываемых колонок
             bool cell_inside_ref = (cols_bord1 <= _cell.CellInfo.ColumnID && _cell.CellInfo.ColumnID <= cols_bord2);
-            foreach (ExcelRefToken rf in _refs) {
+            foreach (ExcelRefToken rf in _refs)
+            {
                 int ref_bord1 = rf.Cell1.ColumnID;
                 int ref_bord2 = rf.Cell2.ColumnID;
 
                 // Диапазон включает все размазываемые колоноки
                 bool ref_contains_cols = (ref_bord1 <= cols_bord1 && ref_bord2 >= cols_bord2);
 
-                if(rf.IsRange && !cell_inside_ref && ref_contains_cols)
+                if (rf.IsRange && !cell_inside_ref && ref_contains_cols)
                 {
                     // Включаем в диапазон все новые колонки
                     rf.ExtendToColumn(ref_bord2 + cols_to_copy.Length);
                     _changed = true;
                 }
-                else if(ref_bord1 >= cols_bord1)
+                else if (ref_bord1 >= cols_bord1)
                 {
                     rf.Move(cols_to_copy.Length);
                     _changed = true;
@@ -113,12 +115,14 @@ namespace sql.builder.Print.Xlsx
 
                 // проверяем на пересечение диапазонов ячеек и копируемых колонок
                 int[] cols_deleted = Enumerable.Range(ref_bord1, ref_bord2 - ref_bord1 + 1).Intersect(cols).ToArray();
-                if (cols_deleted.Length != 0) {
-                    foreach (var c in cols_deleted) {
+                if (cols_deleted.Length != 0)
+                {
+                    foreach (var c in cols_deleted)
+                    {
                         rf.DeleteColumn(c);
                     }
                     // такого быть не должно
-                    if(rf.IsEmpty()) throw new InvalidOperationException("Из формулы удалён весь диапазон ячеек");
+                    if (rf.IsEmpty()) throw new InvalidOperationException("Из формулы удалён весь диапазон ячеек");
 
                     _changed = true;
                 }

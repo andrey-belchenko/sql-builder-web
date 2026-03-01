@@ -1,6 +1,5 @@
-﻿using System;
+﻿using System.Linq;
 using System.Xml.Linq;
-using System.Linq;
 
 namespace sql.builder.DataApi
 {
@@ -14,20 +13,29 @@ namespace sql.builder.DataApi
         /// <summary>
         /// Текст хранимой процедуры
         /// </summary>
-        public override string P_Text {
-            get {
+        public override string P_Text
+        {
+            get
+            {
                 XElement node = this.Elements(EName.text).FirstOrDefault(EPredicate.IsNotExcuded);
-                if (node != null) {
+                if (node != null)
+                {
                     return node.Value;
-                } else {
+                }
+                else
+                {
                     return this.Value;
                 }
             }
-            set {
+            set
+            {
                 XElement node = this.Elements(EName.text).FirstOrDefault(EPredicate.IsNotExcuded);
-                if (node != null) {
+                if (node != null)
+                {
                     node.Value = value;
-                } else {
+                }
+                else
+                {
                     this.RemoveNodes();
                     this.Add(new XCData(value));
                 }

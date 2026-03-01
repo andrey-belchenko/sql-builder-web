@@ -1,26 +1,15 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Xsl;
-using System.Xml.XPath;
-using System.IO;
-//using System.Windows.Forms;
-using Devart.Data.Oracle;
-using sql.builder.FieldInfo;
 using System.Reflection;
-using sql.builder.DataApi.Documenting;
+using System.Xml.Linq;
+//using System.Windows.Forms;
+using sql.builder.FieldInfo;
 //using sql.builder.TFS;
 using sql.builder.UI;
-using sql.builder.WinForms;
-using sql.builder.XmlHelpers;
 using AName_ = sql.builder.DataApi.AName;
 using Contract = System.Diagnostics.Contracts.Contract;
 
@@ -46,7 +35,7 @@ namespace sql.builder.DataApi
             {
                 if (!node.TreeNodeExpanded) return false;
                 if (node.IsMainElement()) return true;
-               
+
                 node = node.GetParent();
             }
             return false;
@@ -57,37 +46,45 @@ namespace sql.builder.DataApi
         }
         private static XElement getPartParent(XElement parent)
         {
-            if (parent == null) {
+            if (parent == null)
+            {
                 return null;
             }
-            if (parent.Name != EName.part) {
+            if (parent.Name != EName.part)
+            {
                 return parent;
             }
             string name = parent.AttrOrDefault(AName_.id, string.Empty);
-            if (string.IsNullOrEmpty(name)) {
+            if (string.IsNullOrEmpty(name))
+            {
                 name = parent.Elements().First().Attribute(AName_.part_id).Value;
             }
             VUsePart firstUse = VPart.FirstUse(XmlReports.Environment, name);
-            if (firstUse != null) {
+            if (firstUse != null)
+            {
                 return firstUse.Parent;
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
         private static VSXElement Create(XElement other, XElement parent = null)
         {
             Contract.Assert(other != null);
-            if (parent == null) {
+            if (parent == null)
+            {
                 parent = other.Parent;
             }
             VSXElement newElement = null;
             //XElement other1 = new XElement(other.Name);
-            switch (other.Name.LocalName) {
+            switch (other.Name.LocalName)
+            {
                 case TextConst.EName.Query:
                     // !!! Навести порядок, есть лишнее
-                    if (parent != null && 
+                    if (parent != null &&
                         (
-                        (parent.Name == EName.query  ) || // в отчете другие уровни
+                        (parent.Name == EName.query) || // в отчете другие уровни
 
                          (parent.Parent != null && parent.Parent.Name == EName.report) // в отчете первый уровень
                         )
@@ -95,24 +92,36 @@ namespace sql.builder.DataApi
                     {
                         newElement = new VFromQuery();
                     }
-                    else if ((parent != null && parent.Name == EName.part) || parent == null) {
-                        if (other.Attribute(AName_.name) != null && other.Element(EName.select) == null) {
+                    else if ((parent != null && parent.Name == EName.part) || parent == null)
+                    {
+                        if (other.Attribute(AName_.name) != null && other.Element(EName.select) == null)
+                        {
                             newElement = new VFromQuery();
-                        } else {
+                        }
+                        else
+                        {
                             newElement = new VQuery();
                         }
-                    } else {
+                    }
+                    else
+                    {
                         if (parent != null && parent.Parent != null
                             && parent.Name != EName.call
                             && parent.Name != EName.select
                             && parent.Parent.Name != EName.root &&
-                            (other.Attribute(AName_.name) != null || other.Attribute(AName_.@as) == null)) {
-                                if (other.Attribute(AName_.join) == null) {
-                                    newElement = new VFromQuery();
-                            } else {
+                            (other.Attribute(AName_.name) != null || other.Attribute(AName_.@as) == null))
+                        {
+                            if (other.Attribute(AName_.join) == null)
+                            {
+                                newElement = new VFromQuery();
+                            }
+                            else
+                            {
                                 newElement = new VRelation();
                             }
-                        } else {
+                        }
+                        else
+                        {
                             newElement = new VQuery();
                         }
                     }
@@ -130,17 +139,23 @@ namespace sql.builder.DataApi
                     newElement = new VFrom();
                     break;
                 case TextConst.EName.Column:
-                    if (other.GetAncestor(EName.viewcolumns) != null || (other.GetAncestor(EName.columns) != null && other.GetAncestor(EName.query) != null)) {
+                    if (other.GetAncestor(EName.viewcolumns) != null || (other.GetAncestor(EName.columns) != null && other.GetAncestor(EName.query) != null))
+                    {
                         newElement = new VViewColumn();
-                    } else {
+                    }
+                    else
+                    {
                         newElement = new VColumn();
                     }
                     break;
                 case TextConst.EName.Call:
                     var prnt = getPartParent(parent);
-                    if (prnt != null && (prnt.Name == EName.expression_package || prnt.Name == EName.expressions)) {
+                    if (prnt != null && (prnt.Name == EName.expression_package || prnt.Name == EName.expressions))
+                    {
                         newElement = new VExpression();
-                    } else {
+                    }
+                    else
+                    {
                         newElement = new VCall();
                     }
                     break;
@@ -289,9 +304,12 @@ namespace sql.builder.DataApi
                     newElement = new VReportProc();
                     break;
                 case TextConst.EName.Customer:
-                    if (parent != null && parent.Parent.Name == EName.root) {
+                    if (parent != null && parent.Parent.Name == EName.root)
+                    {
                         newElement = new VCustomer();
-                    } else {
+                    }
+                    else
+                    {
                         newElement = new VCustomerUse();
                     }
                     break;
@@ -305,16 +323,22 @@ namespace sql.builder.DataApi
                     newElement = new VSection();
                     break;
                 case TextConst.EName.Columns:
-                    if (other.GetAncestor(EName.grid) != null) {
+                    if (other.GetAncestor(EName.grid) != null)
+                    {
                         newElement = new VGridColumns();
-                    } else {
+                    }
+                    else
+                    {
                         newElement = new VColumns();
                     }
                     break;
                 case TextConst.EName.Band:
-                    if (other.GetAncestor(EName.grid) != null) {
+                    if (other.GetAncestor(EName.grid) != null)
+                    {
                         newElement = new VGridBand();
-                    } else {
+                    }
+                    else
+                    {
                         newElement = new VBand();
                     }
                     break;
@@ -429,20 +453,27 @@ namespace sql.builder.DataApi
         }
         private static VSXElement Parse(XElement other, VEnvironment env = null)
         {
-            if (other == null) {
+            if (other == null)
+            {
                 return null;
             }
             VSXElement newElement = Create(other);
             //newElement.environment = env;
-            if (newElement != null) {
-                foreach (XAttribute attr in other.Attributes()) {
+            if (newElement != null)
+            {
+                foreach (XAttribute attr in other.Attributes())
+                {
                     newElement.Add(new XAttribute(attr));
                 }
-                foreach (XNode el in other.Nodes().ToList()) {
-                    if (el is XElement) {
+                foreach (XNode el in other.Nodes().ToList())
+                {
+                    if (el is XElement)
+                    {
                         VSXElement newEl = VSXElement.Parse((XElement)el);
                         newElement.AddLast(newEl);
-                    } else if (el is XText) {
+                    }
+                    else if (el is XText)
+                    {
                         newElement.Add(new XText((el as XText).Value));
                     }
                 }
@@ -460,7 +491,7 @@ namespace sql.builder.DataApi
         }
         public static VSXElement GetP(XElement other, XElement parent)
         {
-            
+
             VSXElement el;
 
             if (other == null)
@@ -470,7 +501,7 @@ namespace sql.builder.DataApi
 
             if (!(other is VSXElement))
             {
-                el = Create(other,parent);
+                el = Create(other, parent);
 
                 //if (other is VXElement)
                 //{
@@ -530,21 +561,22 @@ namespace sql.builder.DataApi
                 {
                     Row["node"] = newEl;
                 }
-                if (newEl.Row!=null){
+                if (newEl.Row != null)
+                {
                     //(newEl.Row.Table as VDataTable).UnsuppressChangeEvent();
                     //newEl.UpdateDataRow();
                     //(newEl.Row.Table as VDataTable).ResumeChangeEvent();
                     (newEl.Row.Table as VDataTable).RaiseCurrentRowChanged();
 
                 }
-           
+
             }
             else
             {
                 newEl = this;
             }
 
-           
+
             return newEl;
         }
         protected virtual bool ChildDependant { get { return false; } }
@@ -558,7 +590,8 @@ namespace sql.builder.DataApi
         public void RaiseParensChange()
         {
             VSXElement parent = this.Parent as VSXElement;
-            if (parent != null && parent.ChildDependant) {
+            if (parent != null && parent.ChildDependant)
+            {
                 // parent.dataChangeProcessing = true;
                 parent.UpdateDataRow();
                 parent.RaiseParensChange();
@@ -575,13 +608,16 @@ namespace sql.builder.DataApi
         }
         public IList<string> GetPropNames()
         {
-            if (propNames == null) {
+            if (propNames == null)
+            {
                 List<string> list = new List<string>();
                 PropertyInfo[] pis = this.GetType().GetProperties();
-                for (int i1 = 0; i1 < pis.Length; i1++) {
+                for (int i1 = 0; i1 < pis.Length; i1++)
+                {
                     PropertyInfo pi = pis[i1];
                     string property = pi.Name;
-                    if (property.StartsWith(PropPfx) && property.IndexOf('_', PropPfx.Length) < 0) {
+                    if (property.StartsWith(PropPfx) && property.IndexOf('_', PropPfx.Length) < 0)
+                    {
                         list.Add(property.Substring(PropPfx.Length));
                     }
                 }
@@ -611,17 +647,21 @@ namespace sql.builder.DataApi
         private static void onDataChanged(object sender, EventArgs e)
         {
             DataRow row = (DataRow)Cmn.GetProperty(e, "Row");
-            if (row.RowState == DataRowState.Detached || row.RowState == DataRowState.Deleted) {
+            if (row.RowState == DataRowState.Detached || row.RowState == DataRowState.Deleted)
+            {
                 return;
             }
-            if (Cmn.IsNullOrDBNull(row["node"])) {
+            if (Cmn.IsNullOrDBNull(row["node"]))
+            {
                 return;
             }
-            if ((row.Table as VDataTable).NewCurRowApplying) {
+            if ((row.Table as VDataTable).NewCurRowApplying)
+            {
                 return;
             }
             VSXElement element = (VSXElement)row["node"];
-            if (element.IsChangeEventSuppressed()) {
+            if (element.IsChangeEventSuppressed())
+            {
                 return;
             }
             element.SuppressChangeEvent();
@@ -632,22 +672,29 @@ namespace sql.builder.DataApi
             //    return;
             //}
             //element.dataChangeProcessing = true;
-            if (col != null) {
-                if (VDataColumn.HasBoundControl(col)) { // !!! Заплатка чтобы не обрабатывать служебные колонки. Не универсально
-                    if (VFieldInfo.Exists(element, PropPfx + col.ColumnName)) {
+            if (col != null)
+            {
+                if (VDataColumn.HasBoundControl(col))
+                { // !!! Заплатка чтобы не обрабатывать служебные колонки. Не универсально
+                    if (VFieldInfo.Exists(element, PropPfx + col.ColumnName))
+                    {
                         object val = Cmn.GetProperty(element, PropPfx + col.ColumnName); // вроде как повторное получение свойства, тоже замедление
-                        if (!val.Equals(row[col])) {
+                        if (!val.Equals(row[col]))
+                        {
                             //Cmn.SetProperty(element, PropPfx + col.ColumnName, row[col]);
                             //element = (VSXElement)row["node"];// В случае смены типа элемент заменяется на новый 
                             //element.dataChangeProcessing = true;
                             //element.UpdateDataRow();// !!! Может сильно замедлять. Обновление всех полей при изменении любого
                             element = (VSXElement)row["node"];
-                            if (VFieldInfo.Editable(element, PropPfx + col.ColumnName)) {
+                            if (VFieldInfo.Editable(element, PropPfx + col.ColumnName))
+                            {
                                 Cmn.SetProperty(element, PropPfx + col.ColumnName, row[col]);
                                 element = (VSXElement)row["node"]; // В случае смены типа элемент заменяется на новый 
                                 //element.dataChangeProcessing = true;
                                 element.UpdateDataRow();// !!! Может сильно замедлять. Обновление всех полей при изменении любого
-                            } else {
+                            }
+                            else
+                            {
                                 element.UpdateDataCell(col.ColumnName);
                             }
                         }
@@ -669,7 +716,8 @@ namespace sql.builder.DataApi
             el.RemoveAttribute(AName_.file);
             // Делаем timestamp последним атрибутом
             XAttribute attr = el.Attribute(AName_.timestamp);
-            if (attr != null && attr.NextAttribute != null) {
+            if (attr != null && attr.NextAttribute != null)
+            {
                 attr.Remove();
                 el.Add(attr);
             }
@@ -695,7 +743,7 @@ namespace sql.builder.DataApi
         public static string AddPathToFilename(string filename)
         {
             return XmlReports.GetRootPath() + "\\" + filename;
-           
+
         }
         public void SaveInDefSourceFile()
         {
@@ -753,7 +801,8 @@ namespace sql.builder.DataApi
             VDataColumn col = new VDataColumn(propName, typeof(string));
             string name = PropPfx + propName;
             string controlType = VFieldInfo.ControlType(this, name);
-            if (controlType == typeof(UICombo).Name || controlType == typeof(UIList).Name) {
+            if (controlType == typeof(UICombo).Name || controlType == typeof(UIList).Name)
+            {
                 col.SelectionList = VFieldInfo.GetList(this, name);
                 col.SelectionList.OwnerColumn = col;
                 col.SelectionList.CustomRefresh = VFieldInfo.RefreshListMethod;
@@ -764,7 +813,8 @@ namespace sql.builder.DataApi
         }
         private static void AddSpecColumns(DataTable table)
         {
-            if (!table.Columns.Contains("id")) {
+            if (!table.Columns.Contains("id"))
+            {
                 table.Columns.Add(new VDataColumn("id"));
                 table.Columns.Add(new VDataColumn("parent_id"));
                 VDataColumn coln = new VDataColumn("node", typeof(VSXElement));
@@ -778,12 +828,13 @@ namespace sql.builder.DataApi
             //!!! Запретить повторный перевод в DataTable
 
             VDataTable table = new VDataTable(true);
-           // table.SuppressChangeEvent();
+            // table.SuppressChangeEvent();
 
             AddSpecColumns(table);
             table.AddColumn("ord", typeof(decimal));
             var propNames = GetPropNames();
-            for (int i = 0; i < propNames.Count; i++) {
+            for (int i = 0; i < propNames.Count; i++)
+            {
                 VDataColumn col = this.CreateColumn(propNames[i]);
                 table.Columns.Add(col);
                 table.CustomFieldInfoProc = VFieldInfo.GetFieldInfoForDataTableOfVSXElementCell;
@@ -810,7 +861,7 @@ namespace sql.builder.DataApi
 
             if (this.Row != null)
             {
-               // (this.Row.Table as VDataTable).SuppressChangeEvent();
+                // (this.Row.Table as VDataTable).SuppressChangeEvent();
                 int i = 0;
                 foreach (VSXElement child in Childs())
                 {
@@ -818,7 +869,7 @@ namespace sql.builder.DataApi
                     row["ord"] = i;
                     i++;
                 }
-               // (this.Row.Table as VDataTable).ResumeChangeEvent();
+                // (this.Row.Table as VDataTable).ResumeChangeEvent();
             }
         }
         private static VSXElement Create()
@@ -850,7 +901,8 @@ namespace sql.builder.DataApi
             }
             VSXElement child1 = VSXElement.Get(child);
 
-            foreach (XElement element in child1.DescendantsAndSelf().ToList().SelectAsArray(VSXElement.Get)) {
+            foreach (XElement element in child1.DescendantsAndSelf().ToList().SelectAsArray(VSXElement.Get))
+            {
                 Append((element.Parent as VSXElement), element, updateOrder);
             }
             return child1;
@@ -924,15 +976,15 @@ namespace sql.builder.DataApi
 
         public void Append(VSXElement parent, XElement child, bool updateOrder = true)
         {
-           
+
             VSXElement child1 = VSXElement.Get(child);
             if (parent.Row != null)
             {
-               
+
                 DataRow row = child1.ToDataRow(parent.Row.Table);
-               // (row.Table as VDataTable).SuppressChangeEvent();
+                // (row.Table as VDataTable).SuppressChangeEvent();
                 row["parent_id"] = parent.Row["id"];
-               // (row.Table as VDataTable).ResumeChangeEvent();
+                // (row.Table as VDataTable).ResumeChangeEvent();
             }
             if (updateOrder)
             {
@@ -976,33 +1028,39 @@ namespace sql.builder.DataApi
             {
                 element = element.GetParent();
             }
-           return element.Row.Table;
+            return element.Row.Table;
 
 
         }
         private DataRow ToDataRow(DataTable table)
         {
-            #if DEBUG
+#if DEBUG
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            #endif
+#endif
             // (table as VDataTable).SuppressChangeEvent();
             DataRow row = table.Rows.Add();
             IList<string> names = this.GetPropNames();
-            for (int index = 0; index < names.Count; index++) {
+            for (int index = 0; index < names.Count; index++)
+            {
                 string name = names[index];
                 VDataColumn col = (VDataColumn)table.Columns[name];
-                if (col.Visible) {
+                if (col.Visible)
+                {
                     string property = PropPfx + name;
-                    if (VFieldInfo.Exists(this, property)) {
+                    if (VFieldInfo.Exists(this, property))
+                    {
                         row[col] = VFieldInfo.GetValue(this, property);
-                    } else {
+                    }
+                    else
+                    {
                         row[col] = null;
                     }
                 }
             }
             row["node"] = this;
-            if (ElementId < 0) {
+            if (ElementId < 0)
+            {
                 ElementId = idCounter;
                 idCounter++;
             }
@@ -1010,10 +1068,10 @@ namespace sql.builder.DataApi
             idCounter++;
             this.Row = row;
             // (table as VDataTable).ResumeChangeEvent();
-            #if DEBUG
+#if DEBUG
             sw.Stop();
             // Debug.WriteLine("VSXElement.ToDataRow(): " + sw.ElapsedTicks.ToString() + " тактов = " + sw.ElapsedMilliseconds.ToString() + " мс");
-            #endif
+#endif
             return row;
         }
         /*private DataRow ToDataRowSingle(DataTable table, bool addCol = false, int key = 0)
@@ -1054,14 +1112,17 @@ namespace sql.builder.DataApi
         public void UpdateDataRow()
         {
             DataRow row = this.Row;
-            if (row != null && row.RowState != DataRowState.Detached) {
+            if (row != null && row.RowState != DataRowState.Detached)
+            {
                 // SuppressChangeEvent();
                 IList<string> names = GetPropNames();
-                for (int i = 0; i < names.Count; i++) {
+                for (int i = 0; i < names.Count; i++)
+                {
                     string name = names[i];
                     object new_value = this.getPropertyValue(name);
                     object old_value = row[name];
-                    if (Cmn.Nvl(new_value, string.Empty).ToString() != Cmn.Nvl(old_value, string.Empty).ToString()) {
+                    if (Cmn.Nvl(new_value, string.Empty).ToString() != Cmn.Nvl(old_value, string.Empty).ToString())
+                    {
                         row[name] = new_value;
                     }
                 }
@@ -1071,10 +1132,12 @@ namespace sql.builder.DataApi
         public void UpdateDataCell(string name)
         {
             DataRow row = this.Row;
-            if (row.RowState != DataRowState.Detached) {
+            if (row.RowState != DataRowState.Detached)
+            {
                 object new_value = this.getPropertyValue(name);
                 object old_value = row[name];
-                if (Cmn.Nvl(new_value, string.Empty).ToString() != Cmn.Nvl(old_value, string.Empty).ToString()) {
+                if (Cmn.Nvl(new_value, string.Empty).ToString() != Cmn.Nvl(old_value, string.Empty).ToString())
+                {
                     row[name] = new_value;
                 }
             }
@@ -1082,9 +1145,12 @@ namespace sql.builder.DataApi
         private object getPropertyValue(string name)
         {
             string property = PropPfx + name;
-            if (VFieldInfo.Exists(this, property)) {
+            if (VFieldInfo.Exists(this, property))
+            {
                 return VFieldInfo.GetValue(this, property);
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
@@ -1099,9 +1165,12 @@ namespace sql.builder.DataApi
         }
         protected void SetAttributeNotEmpty(XName name, string value)
         {
-            if (string.IsNullOrEmpty(value)) {
+            if (string.IsNullOrEmpty(value))
+            {
                 this.RemoveAttribute(name);
-            } else {
+            }
+            else
+            {
                 this.SetAttrValue(name, value);
             }
         }
@@ -1116,11 +1185,14 @@ namespace sql.builder.DataApi
             //!!! Может замедлять, если так , сделать кеширование
             //VSXElement query = (VSXElement)this.GetAncestorsAndSelf(new string[] { TextConst.EName.Query, TextConst.EName.Form, /*TextConst.EName.ExcelTemplate, TextConst.EName.NavigationItem,*/ TextConst.EName.Report }).LastOrDefault();
             VSXElement query = this.GetAncestorsAndSelf().LastOrDefault(e => (e.Name == EName.query) || (e.Name == EName.form) || (e.Name == EName.report));
-            if (query == null) {
+            if (query == null)
+            {
                 VPart rootPart = this.RootPart();
-                if (rootPart != null) {
+                if (rootPart != null)
+                {
                     VSXElement partUse = rootPart.FirstUse();
-                    if (partUse != null) {
+                    if (partUse != null)
+                    {
                         query = partUse.RootQuery();
                     }
                 }
@@ -1130,16 +1202,23 @@ namespace sql.builder.DataApi
         public virtual VSourcedElement ExtendedOrRootQuery()
         {
             VSXElement exwhere = this.GetAncestorsAndSelf(EName.extendwhere).FirstOrDefault();
-            if (exwhere != null) {
+            if (exwhere != null)
+            {
                 VQueryCall call = exwhere.GetParent() as VQueryCall;
-                if (call == null) {
+                if (call == null)
+                {
                     return null;
-                } else {
+                }
+                else
+                {
                     return call.Query();
                 }
-            } else {
+            }
+            else
+            {
                 VSXElement qry = this.GetAncestorsAndSelf(EName.query).FirstOrDefault(q => q is VQuery);
-                if (qry == null) {
+                if (qry == null)
+                {
                     qry = RootQuery();
                 }
                 return (VSourcedElement)qry;
@@ -1147,7 +1226,8 @@ namespace sql.builder.DataApi
         }
         public virtual string XName
         {
-            get {
+            get
+            {
                 return this.AttrOrEmpty(AName_.@as);
             }
         }
@@ -1185,13 +1265,20 @@ namespace sql.builder.DataApi
         }
         private static List<XElement> FunctionsListForType(string typ)
         {
-            if (typ == string.Empty) {
+            if (typ == string.Empty)
+            {
                 return XmlReports.Environment.Manager.GetScheme().Elements(EName.functions).Elements(EName.function).ToList();
-            } else if (typ == "any") {
+            }
+            else if (typ == "any")
+            {
                 return XmlReports.Environment.Manager.GetScheme().Elements(EName.functions).Elements(EName.function).Where(e => IsSimpleType(e.AttrOrDefault(AName_.type, string.Empty))).ToList();
-            } else if (!IsSimpleType(typ)) {
+            }
+            else if (!IsSimpleType(typ))
+            {
                 return XmlReports.Environment.Manager.GetScheme().Elements(EName.functions).Elements(EName.function).Where(e => e.AttrOrDefault(AName_.type, string.Empty) == typ).ToList();
-            } else {
+            }
+            else
+            {
                 return XmlReports.Environment.Manager.GetScheme().Elements(EName.functions).Elements(EName.function).Where(e => e.AttrOrDefault(AName_.type, string.Empty) == typ || e.AttrOrDefault(AName_.type, string.Empty) == TextConst.AVDataType.Variant).ToList();
             }
         }
@@ -1211,9 +1298,9 @@ namespace sql.builder.DataApi
         }
         public class ElementUse
         {
-            public ElementUse(VSXElement parent,VSXElement user, string attribute)
+            public ElementUse(VSXElement parent, VSXElement user, string attribute)
             {
-                Parent= parent;
+                Parent = parent;
                 User = user;
                 Attribute = attribute;
             }
@@ -1247,7 +1334,7 @@ namespace sql.builder.DataApi
         public DataTable GetUsesAsDataTable()
         {
             DataTable tbl = new VDataTable();
-           // tbl.Columns.Add(new VDataColumn("file_name"));
+            // tbl.Columns.Add(new VDataColumn("file_name"));
             tbl.Columns.Add(new VDataColumn("etype"));
             tbl.Columns.Add(new VDataColumn("etext"));
             tbl.Columns.Add(new VDataColumn("node_name"));
@@ -1256,33 +1343,34 @@ namespace sql.builder.DataApi
             DataColumn col = new VDataColumn("node", typeof(XElement));
             tbl.Columns.Add(col);
             var uses = SearchUses();
-            foreach (var use in uses) {
+            foreach (var use in uses)
+            {
                 var el = use.User;
                 VSXElement main = el.GetMainParent();
                 tbl.Rows.Add(
-                    main.GetNodeTypeInfo(), 
-                    main.P_IdName, 
+                    main.GetNodeTypeInfo(),
+                    main.P_IdName,
                     el.Name.LocalName,
                     use.Attribute,
-                   // el.GetNodeTypeInfo(),
+                    // el.GetNodeTypeInfo(),
                     el.GetNodeOtherInfo(), el);
             }
             return tbl;
         }
-        public  List<ElementUse> SearchUses()
+        public List<ElementUse> SearchUses()
         {
-          var list = searchUses();
-		  string partId = P_PartId; //get current part name
-		  if (!(partId == ""))
-		  {
-			  List<VSXElement> list1 = XmlReports.Environment.GetUsePartElements(P_PartId);
-			  foreach (var el1 in list1)
-			  {
-				  list.Add(new ElementUse(this, el1, TextConst.AName.Part));
-			  }
-		  }
-       
-          return ElementUse.Distinct(list);
+            var list = searchUses();
+            string partId = P_PartId; //get current part name
+            if (!(partId == ""))
+            {
+                List<VSXElement> list1 = XmlReports.Environment.GetUsePartElements(P_PartId);
+                foreach (var el1 in list1)
+                {
+                    list.Add(new ElementUse(this, el1, TextConst.AName.Part));
+                }
+            }
+
+            return ElementUse.Distinct(list);
         }
         protected virtual List<ElementUse> searchUses()
         {
@@ -1298,9 +1386,12 @@ namespace sql.builder.DataApi
         public string GetAttrForRename()
         {
             string attrName;
-            if (this.IsMainElement()) {
+            if (this.IsMainElement())
+            {
                 attrName = XmlReports.Environment.GetElementTypeKeyAttrName(this.Name.LocalName);
-            } else {
+            }
+            else
+            {
                 attrName = TextConst.AName.As;
             }
             return attrName;
@@ -1311,36 +1402,45 @@ namespace sql.builder.DataApi
             string attrName = GetAttrForRename();
             string oldName = this.AttrOrEmpty(attrName);
             var mainElList = new List<VSXElement>();
-            if (!this.IsMainElement()) {
+            if (!this.IsMainElement())
+            {
                 list.Add(new ElementUse(this, this, attrName));
             }
-            foreach (var use in list) {
+            foreach (var use in list)
+            {
                 string oldName1 = use.User.AttrOrEmpty(use.Attribute);
-                if (!oldName1.StartsWith(oldName)) {
+                if (!oldName1.StartsWith(oldName))
+                {
                     throw new sql.builder.Exceptions.VCompilerException("Переимнование не выполнено. Ошибка в алгоритме поиска ссылок. Перезапустите приложение.", use.User.GetMainParent(), use.User);
                 }
                 string newName1 = newName + oldName1.Substring(oldName.Length, oldName1.Length - oldName.Length);
                 use.User.SetAttributeValue(use.Attribute, newName1);
                 use.User.UpdateDataRow();
-                if (use.User.Row != null) {
+                if (use.User.Row != null)
+                {
                     (use.User.Row.Table as VDataTable).RaiseCurrentRowChanged();
                 }
                 var mp = use.User.GetMainParent();
-                if (!mainElList.Contains(mp)) {
+                if (!mainElList.Contains(mp))
+                {
                     mainElList.Add(mp);
                 }
             }
-            if (this.IsMainElement()) {
-                if (!mainElList.Contains(this)) {
+            if (this.IsMainElement())
+            {
+                if (!mainElList.Contains(this))
+                {
                     mainElList.Add(this);
                 }
                 SetIdName(attrName, newName);
                 UpdateDataRow();
-                if (Row != null) {
+                if (Row != null)
+                {
                     (Row.Table as VDataTable).RaiseCurrentRowChanged();
                 }
             }
-            foreach (var el in mainElList) {
+            foreach (var el in mainElList)
+            {
                 el.SaveInDefSourceFile();
             }
         }
@@ -1350,9 +1450,9 @@ namespace sql.builder.DataApi
             {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as VSXElement);
             }
-            
-           
-                        
+
+
+
             if (this.GetParent() == null)
             {
                 return null;
@@ -1374,7 +1474,7 @@ namespace sql.builder.DataApi
                 }
             }
 
-            var vel= VSXElement.Get(el);
+            var vel = VSXElement.Get(el);
             AddCashValue(vel, MethodBase.GetCurrentMethod().ToString(), null);
             return vel;
         }
@@ -1410,7 +1510,7 @@ namespace sql.builder.DataApi
         public virtual void Delete()
         {
             var t = (VDataTable)this.Row.Table;
-           // t.SuppressChangeEvent();
+            // t.SuppressChangeEvent();
             foreach (VSXElement el in DescendantsAndSelf().Select(VSXElement.Get).ToList())
             {
                 if (el.Row != null && el.Row.RowState != DataRowState.Detached)
@@ -1420,7 +1520,7 @@ namespace sql.builder.DataApi
             }
 
             this.Remove();
-           // t.ResumeChangeEvent();
+            // t.ResumeChangeEvent();
         }
 
         public XElement VirtualParent = null;
@@ -1491,8 +1591,10 @@ namespace sql.builder.DataApi
         {
             List<VSXElement> list = new List<VSXElement>();
             VSXElement el = this;
-            while (el != null) {
-                if (el.Name == name) {
+            while (el != null)
+            {
+                if (el.Name == name)
+                {
                     list.Add(el);
                 }
                 el = el.GetParent();
@@ -1503,7 +1605,8 @@ namespace sql.builder.DataApi
         {
             List<VSXElement> list = new List<VSXElement>();
             VSXElement el = this;
-            while (el != null) {
+            while (el != null)
+            {
                 list.Add(el);
                 el = el.GetParent();
             }
@@ -1520,11 +1623,13 @@ namespace sql.builder.DataApi
         public bool IsMainElement()
         {
             VSXElement parent = this.GetParent();
-            if (parent == null) {
+            if (parent == null)
+            {
                 return false;
             }
             VSXElement grand_parent = parent.GetParent();
-            if (grand_parent == null) {
+            if (grand_parent == null)
+            {
                 return false;
             }
             return grand_parent.Name == EName.root;
@@ -1539,9 +1644,12 @@ namespace sql.builder.DataApi
         }
         private string GetName(string name)
         {
-            if (name == null) {
+            if (name == null)
+            {
                 return this.P_IdName;
-            } else {
+            }
+            else
+            {
                 return name;
             }
         }
@@ -1563,9 +1671,11 @@ namespace sql.builder.DataApi
         {
             VSXElement parent = this.GetParent();
             VPart part = parent as VPart;
-            if (part != null) {
+            if (part != null)
+            {
                 VUsePart fu = part.FirstUse();
-                if (fu != null) {
+                if (fu != null)
+                {
                     return fu.SelfParentOrUsepartParent();
                 }
             }
@@ -1606,18 +1716,23 @@ namespace sql.builder.DataApi
         private VIf IfElementSelf()
         {
             IList<VSXElement> list = this.GetElementsP(EName.@if);
-            if (list.Count == 0) {
+            if (list.Count == 0)
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return (VIf)list[0];
             }
         }
         private VIf IfElement()
         {
             VIf ifEl = this.IfElementSelf();
-            if (ifEl == null && this.P_If != "") {
+            if (ifEl == null && this.P_If != "")
+            {
                 VSXElement IfSource = this.RootQuery().ColumnsWithDublers().FirstOrDefault(e => e.P_If == P_If && e.IfElementSelf() != null);
-                if (IfSource != null) {
+                if (IfSource != null)
+                {
                     return IfSource.IfElementSelf();
                 }
             }
@@ -1663,7 +1778,8 @@ namespace sql.builder.DataApi
         }
         public virtual List<VSXElement> GetFactColumns()
         {
-            if (P_Fact != "") {
+            if (P_Fact != "")
+            {
                 return this.AsList();
             }
             return null;
@@ -1671,9 +1787,12 @@ namespace sql.builder.DataApi
         public DateTime? GetTimeStamp()
         {
             XAttribute atr = this.Attribute(AName_.timestamp);
-            if (atr == null) {
+            if (atr == null)
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return DateTime.ParseExact(atr.Value, "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
             }
         }

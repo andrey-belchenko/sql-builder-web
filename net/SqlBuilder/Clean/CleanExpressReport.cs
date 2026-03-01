@@ -1,9 +1,8 @@
 using System;
-using System.Xml;
-using ParamField = sql.builder.Controls.FormFields.ParamField;
-using sql.builder.WinForms;
 using System.Collections.Generic;
 using sql.builder.DataApi;
+using sql.builder.WinForms;
+using ParamField = sql.builder.Controls.FormFields.ParamField;
 
 namespace sql.builder
 {
@@ -19,7 +18,7 @@ namespace sql.builder
         /// </summary>
         public event EventHandler<CleanExpressReportEventArgs> ReportOpening;
 
-        
+
         #region OnEndedReport
         /// <summary>
         /// Triggers the EndedReport event.
@@ -37,10 +36,10 @@ namespace sql.builder
         /// </summary>
         public CleanExpressReport()
         {
-            _frm = new CleanFrmExpressReport();   
+            _frm = new CleanFrmExpressReport();
         }
 
-       
+
 
         bool _init = false;
         /// <summary>
@@ -68,7 +67,7 @@ namespace sql.builder
 
 
 
-      
+
         public string ExecuteReport(string templateName = null)
         {
             var templateInfo = _frm.GetTemplateInfo(templateName);
@@ -77,7 +76,7 @@ namespace sql.builder
 
         public VDataSet ExecuteReportGetDs()
         {
-          
+
             return _frm.ExecuteReportGetDs();
         }
 

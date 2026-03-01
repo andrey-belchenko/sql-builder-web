@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.Linq;
 //using System.Windows.Forms;
 using System.Xml.Linq;
@@ -13,7 +12,6 @@ using System.Xml.Linq;
 //using infoenergo.core.Extensions;
 using Microsoft.Win32;
 using sql.builder.DataApi;
-using sql.builder.XmlHelpers;
 using sql.builder.Exceptions;
 //using sql.builder.WebReports;
 
@@ -61,15 +59,19 @@ namespace sql.builder.UI
         }
         public bool GetUsed()
         {
-            if (!this.ShowCheck) {
+            if (!this.ShowCheck)
+            {
                 return true;
-            } else {
+            }
+            else
+            {
                 return Used;
             }
         }
         protected void MarkUsed(bool value)
         {
-            if (SourceType == ReturnType.Array) {
+            if (SourceType == ReturnType.Array)
+            {
                 //if (Form.DataSource.ParamsTable.Columns.Contains(FieldName))
                 //{
                 //    (Form.DataSource.ParamsTable.Columns[FieldName] as VDataColumn).ParamUsed = value;
@@ -80,14 +82,17 @@ namespace sql.builder.UI
                 {
                     this.Form.DataSource.ArrayValueTable(this.field_name).ParamUsed = value;
                 }
-               
+
             }
         }
-        public bool Used {
-            get {
+        public bool Used
+        {
+            get
+            {
                 return this.used;
             }
-            set {
+            set
+            {
                 //if (this is UICheck)
                 //{
                 //    ceUsed.Checked = value;
@@ -99,14 +104,19 @@ namespace sql.builder.UI
                 if (!(this is UICheck)) SetChecked(value);
                 bool value1 = this.used;
                 MarkUsed(value1);
-                
+
             }
         }
-        public UIFormC.UseType UseType {
-            get {
-                if (this.Form.FormUseType == UIFormC.UseType.DataEditor && string.IsNullOrEmpty(this.table_name)) {
+        public UIFormC.UseType UseType
+        {
+            get
+            {
+                if (this.Form.FormUseType == UIFormC.UseType.DataEditor && string.IsNullOrEmpty(this.table_name))
+                {
                     return UIFormC.UseType.ParamEditor;
-                } else {
+                }
+                else
+                {
                     return this.Form.FormUseType;
                 }
             }
@@ -174,7 +184,7 @@ namespace sql.builder.UI
         protected Dictionary<string, string> FilterValues;
 
         public bool ChangeSourceImmediately { get { return this.change_source_immediately; } }
-        
+
         #region События
         public delegate XElement NeedMasterValuesHandler(UIBase sender);
         public event NeedMasterValuesHandler NeedMasterValues;
@@ -201,9 +211,12 @@ namespace sql.builder.UI
             this.table_name = this.xfield.AttrOrEmpty(AName.table);
             this.null_as_undefined = this.xfield.AttrOrDefault(AName.null_as_undefined, false);
             //StoreInDB = (XField.AttrOrDef(TextConst.AName.StoreInDB, "0") == "1");
-            if (string.IsNullOrEmpty(this.table_name)) {
+            if (string.IsNullOrEmpty(this.table_name))
+            {
                 this.full_name = this.field_name;
-            } else {
+            }
+            else
+            {
                 this.full_name = this.table_name + "." + this.field_name;
             }
             //this.SetRootName(this.full_name);
@@ -211,23 +224,31 @@ namespace sql.builder.UI
             this.MaxLength = this.xfield.AttrOrDefault(AName.max_length, null);
             //
             XElement xlistquery = this.xfield.Element(EName.listquery);
-            if (xlistquery != null) {
+            if (xlistquery != null)
+            {
                 Cmn.CopyAttributesNoReplace(xlistquery, this.xfield); // val-field-name может быть на listquery
             }
-            if (xlistquery != null) {
+            if (xlistquery != null)
+            {
                 this.query_name = xlistquery.Element(EName.query).AttrOrEmpty(AName.name);
-                if (this.Form.FormUseType == UIFormC.UseType.DataEditor) {
+                if (this.Form.FormUseType == UIFormC.UseType.DataEditor)
+                {
                     this.useColPreset = true; // теперь попробуем для всех DataEditor
                 }
                 //useColPreset = (Cmn.GetAttrValue(xlistquery, TextConst.AName.UseColPreset) == TextConst.AVBool.True);
-            } else {
+            }
+            else
+            {
                 this.query_name = null;
             }
             //
             XElement xdefaultquery = this.xfield.Element(EName.defaultquery);
-            if (xdefaultquery != null) {
+            if (xdefaultquery != null)
+            {
                 this.query_name_default = xdefaultquery.Element(EName.query).AttrOrEmpty(AName.name);
-            } else {
+            }
+            else
+            {
                 this.query_name_default = this.xfield.AttrOrDefault(AName.valuequery, null);
             }
             this.UseDefaultQuery = !string.IsNullOrEmpty(this.query_name_default);
@@ -254,7 +275,7 @@ namespace sql.builder.UI
         private bool ChangeProcessing = false;
         public void Changed()
         {
-            Changed(!HasValue());   
+            Changed(!HasValue());
         }
         public void Changed(bool is_null)
         {
@@ -301,9 +322,12 @@ namespace sql.builder.UI
         }
         protected XElement OnNeedMasterValues(UIBase sender)
         {
-            if (this.NeedMasterValues != null) {
+            if (this.NeedMasterValues != null)
+            {
                 return this.NeedMasterValues(sender);
-            } else {
+            }
+            else
+            {
                 return new XElement(EName.@params);
             }
         }
@@ -332,40 +356,52 @@ namespace sql.builder.UI
         protected void PrepareList(DataTable dt)
         {
             DataColumnCollection cols = dt.Columns;
-            if (cols.Count == 0) {
+            if (cols.Count == 0)
+            {
                 return;
             }
-            if (dt.HasPrimaryKey()) {
+            if (dt.HasPrimaryKey())
+            {
                 this.key_field_name = dt.PrimaryKey[0].ColumnName;
-            } else {
+            }
+            else
+            {
                 this.key_field_name = cols[0].ColumnName;
             }
-            if (this.value_field_name == null) {
+            if (this.value_field_name == null)
+            {
                 this.value_field_name = this.key_field_name;
             }
             this.value_type = cols[this.value_field_name].DataType;
-            if (this.name_field_name == null) {
+            if (this.name_field_name == null)
+            {
                 DataColumn column;
                 int index;
-                for (index = 0; index < cols.Count; index++) {
+                for (index = 0; index < cols.Count; index++)
+                {
                     column = cols[index];
-                    if (UIBase.IsColumnShouldBeVisible(column)) {
+                    if (UIBase.IsColumnShouldBeVisible(column))
+                    {
                         this.name_field_name = column.ColumnName;
                         break;
                     }
                 }
-                if (this.name_field_name == null) {
+                if (this.name_field_name == null)
+                {
                     // первая колонка, которая не является ключевой
-                    for (index = 0; index < cols.Count; index++) {
+                    for (index = 0; index < cols.Count; index++)
+                    {
                         column = cols[index];
-                        if (column.ColumnName != this.key_field_name) {
+                        if (column.ColumnName != this.key_field_name)
+                        {
                             this.name_field_name = column.ColumnName;
                             break;
                         }
                     }
                 }
             }
-            if (this.search_field_name == null) {
+            if (this.search_field_name == null)
+            {
                 this.search_field_name = this.name_field_name;
             }
             // если колонка с именем не строкового типа - преобразуем ее в string
@@ -373,18 +409,21 @@ namespace sql.builder.UI
             //{
             //    GridDesigner.ConvertColumnType(dt, NameFieldName, typeof(string));
             //}
-            if (!dt.Columns.Contains("check")) {
+            if (!dt.Columns.Contains("check"))
+            {
                 DataColumn column = new DataColumn("check", typeof(int));
                 column.Caption = "Выбор";
                 column.DefaultValue = Cmn.INT32_ONE;
                 dt.Columns.Add(column);
             }
-            if (!dt.Columns.Contains("absent")) {
+            if (!dt.Columns.Contains("absent"))
+            {
                 DataColumn column = new DataColumn("absent", typeof(bool));
                 column.DefaultValue = Cmn.BOOLEAN_FALSE;
                 dt.Columns.Add(column);
             }
-            if (this.show_nulls) {
+            if (this.show_nulls)
+            {
                 AddNullValue(dt);
             }
         }
@@ -408,9 +447,12 @@ namespace sql.builder.UI
         private VDataSet createListSourceForQueryEditor()
         {
             var vcol = (VDataColumn)(Form.DataSource.GetTable(this.table_name)).Columns[this.field_name];
-            if (vcol != null) {
+            if (vcol != null)
+            {
                 return vcol.SelectionList;
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
@@ -427,30 +469,43 @@ namespace sql.builder.UI
                 }
             }
 
-            if (this.special_type == TextConst.AVSpecType.ColSets && String.IsNullOrEmpty(this.query_name)) { // colsets
+            if (this.special_type == TextConst.AVSpecType.ColSets && String.IsNullOrEmpty(this.query_name))
+            { // colsets
                 data = this.createListSourceColsets();
-            } else if (this.UseType == UIFormC.UseType.ParamEditor && !String.IsNullOrEmpty(this.query_name)) { // UIList 
+            }
+            else if (this.UseType == UIFormC.UseType.ParamEditor && !String.IsNullOrEmpty(this.query_name))
+            { // UIList 
                 XElement xquery = XmlReports.Environment.Manager.GetScheme().Elements(EName.queries).Elements(EName.query).SearchByAttribute(AName.name, this.query_name);
-                if (xquery == null) {
+                if (xquery == null)
+                {
                     throw new VCompilerException("Не найден запрос с именем \"" + this.query_name + "\".", this.Form.XForm, this.xfield);
                 }
                 IList<XElement> keyCols = xquery.Elements(EName.select).Elements().Where(e => e.AttrOrEmpty(AName.key) == TextConst.AVBool.True).ToList();
-                if (keyCols.Count > 1) {
+                if (keyCols.Count > 1)
+                {
                     throw new VCompilerException("Составной ключ для запроса \"" + this.query_name + "\" не допускается", xquery, keyCols[keyCols.Count - 1]);
                 }
-                if (this.rows_limit > 0) {
+                if (this.rows_limit > 0)
+                {
                     data = XmlReports.Environment.GetPrecompiledReport(VQuery.CreateFilteredQuery(xquery, this.rows_limit)).Result(2, false);
                     // достаем имя параметра с условием, если он есть
                     XElement cond_par = xquery.Elements(EName.@params).Elements(EName.param).SearchByAttribute(AName.param_type, TextConst.AVParamTypes.Condition);
-                    if (cond_par != null) {
+                    if (cond_par != null)
+                    {
                         this.condition_param_name = cond_par.Attribute(AName.name).Value;
                     }
-                } else {
+                }
+                else
+                {
                     data = XmlReports.Environment.GetPrecompiledReport(this.query_name).Result(2, false);
                 }
-            } else if (this.Form.FormUseType != UIFormC.UseType.ParamEditor) { // Редактора запросов
+            }
+            else if (this.Form.FormUseType != UIFormC.UseType.ParamEditor)
+            { // Редактора запросов
                 data = this.createListSourceForQueryEditor();
-            } else {
+            }
+            else
+            {
                 data = null;
             }
             return data;
@@ -459,38 +514,50 @@ namespace sql.builder.UI
         {
             VDataSet data;
             // colsets
-            if (this.special_type == TextConst.AVSpecType.ColSets && String.IsNullOrEmpty(this.query_name)) {
+            if (this.special_type == TextConst.AVSpecType.ColSets && String.IsNullOrEmpty(this.query_name))
+            {
                 data = this.createListSourceColsets();
-            // UIList  
-            } else if (this.UseType == UIFormC.UseType.ParamEditor && !string.IsNullOrEmpty(this.query_name)) {
+                // UIList  
+            }
+            else if (this.UseType == UIFormC.UseType.ParamEditor && !string.IsNullOrEmpty(this.query_name))
+            {
                 VQuery qry = XmlReports.Environment.GetQuery(this.query_name);
                 XElement xquery = qry.AsListQuery();
                 var keyCols = xquery.Elements(EName.select).Elements().Where(e => e.AttrOrDefault(AName.key, false));
-                if (keyCols.Count() > 1) {
+                if (keyCols.Count() > 1)
+                {
                     throw new VCompilerException("Составной ключ для данного запроса не допускается", xquery, keyCols.Last());
                 }
-                if (this.rows_limit > 0) { // не проверено
+                if (this.rows_limit > 0)
+                { // не проверено
                     xquery = VQuery.CreateFilteredQuery(xquery, this.rows_limit);
                     // достаем имя параметра с условием, если он есть
                     XElement cond_par = xquery.Elements(EName.@params).Elements(EName.param).FirstOrDefault(p => p.AttrOrDefault(AName.param_type, null) == TextConst.AVParamTypes.Condition);
-                    if (cond_par != null) {
+                    if (cond_par != null)
+                    {
                         this.condition_param_name = cond_par.Attribute(AName.name).Value;
                     }
                 }
                 data = XmlReports.Environment.GetPrecompiledReport(xquery).Result(2, false);
-            } else if (Form.FormUseType != UIFormC.UseType.ParamEditor) {             // Редактора запросов
+            }
+            else if (Form.FormUseType != UIFormC.UseType.ParamEditor)
+            {             // Редактора запросов
                 data = createListSourceForQueryEditor();
-            } else {
+            }
+            else
+            {
                 data = null;
             }
             return data;
         }
         public void PrepareListSource()
         {
-            if (!this.Form.WithBehavior) {
+            if (!this.Form.WithBehavior)
+            {
                 return;
             }
-            if (this.data_set_list != null) {
+            if (this.data_set_list != null)
+            {
                 return;
             }
             this.prepareListSource();
@@ -521,7 +588,8 @@ namespace sql.builder.UI
                 PrepareList(data.Tables[0]);
             }
 
-            if (this.data_set_list != null) {
+            if (this.data_set_list != null)
+            {
                 this.data_set_list.SchemeChanged -= DataSource_SchemeChanged;
                 DataTableList.TableRefreshed -= DataLocal_TableRefreshed;
                 if (SourceType == ReturnType.Array)
@@ -542,13 +610,15 @@ namespace sql.builder.UI
         }
         private void DataLocal_TableRefreshed(object sender, EventArgs event_args)
         {
-            if (this.show_nulls) {
+            if (this.show_nulls)
+            {
                 AddNullValue(DataTableList);
             }
         }
         public void PrepareDefaultSource()
         {
-            if (!string.IsNullOrEmpty(this.query_name_default)) {
+            if (!string.IsNullOrEmpty(this.query_name_default))
+            {
                 this.data_set_default = XmlReports.Environment.GetPrecompiledReport(this.query_name_default).Result(2, false);
                 //if (WebReportsAdapter.IsWebItem(this.query_name_default))
                 //{
@@ -662,14 +732,16 @@ namespace sql.builder.UI
 
             return xcolsets_query;
         }
-        private void ApplyFilterParams(XElement xparams, bool onlyForselectedValue,IEnumerable<string> names )
+        private void ApplyFilterParams(XElement xparams, bool onlyForselectedValue, IEnumerable<string> names)
         {
             var pars = new List<XElement>();
-            if (names != null) {
+            if (names != null)
+            {
                 xparams.Elements().Remove();
                 XElement parVal = Factory.NewCall(TextConst.AVFunction.Array);
-                foreach (string name in names) {
-                    parVal.Add(new XElement(EName.@const, new XText("'" + name.Replace("'","''") + "'")));
+                foreach (string name in names)
+                {
+                    parVal.Add(new XElement(EName.@const, new XText("'" + name.Replace("'", "''") + "'")));
                 }
                 pars.Add(new XElement(EName.param, new XAttribute(AName.name, TextConst.DBParams.ObjNameParam), parVal));
 
@@ -710,39 +782,40 @@ namespace sql.builder.UI
                         new XElement("const", value)));
                 }
 
-				if (condition_param_name != null)
-				{
+                if (condition_param_name != null)
+                {
                     string value = "rownum <= " + this.rows_limit.ToString() + " ";
-                    if (pars.Count != 0) {
-						value += " and " +
-								 string.Join(" and ",
-									 pars.SelectAsArray(
-										 p =>
-											 string.Format("{0} like '{1}'",
-												 p.Attribute("name").Value.Replace("_filter", ""),
-												 p.Element("const").Value)));
-					}
+                    if (pars.Count != 0)
+                    {
+                        value += " and " +
+                                 string.Join(" and ",
+                                     pars.SelectAsArray(
+                                         p =>
+                                             string.Format("{0} like '{1}'",
+                                                 p.Attribute("name").Value.Replace("_filter", ""),
+                                                 p.Element("const").Value)));
+                    }
 
-					xparams.Add(new XElement("param",
-						new XAttribute("name", condition_param_name),
-						new XElement("const", value)));
-				}
+                    xparams.Add(new XElement("param",
+                        new XAttribute("name", condition_param_name),
+                        new XElement("const", value)));
+                }
 
-				if (names != null)
-				{
-					pars.Add(new XElement("param",
-						new XAttribute("name", TextConst.AVParam.RowsLimit),
-						new XElement("const", int.MaxValue)));
-				}
-				else
-				{
-					pars.Add(new XElement("param",
-						new XAttribute("name", TextConst.AVParam.RowsLimit),
+                if (names != null)
+                {
+                    pars.Add(new XElement("param",
+                        new XAttribute("name", TextConst.AVParam.RowsLimit),
+                        new XElement("const", int.MaxValue)));
+                }
+                else
+                {
+                    pars.Add(new XElement("param",
+                        new XAttribute("name", TextConst.AVParam.RowsLimit),
                         new XElement("const", this.rows_limit)));
-				}
-				//pars.Add(new XElement("param",
-				//	new XAttribute("name", TextConst.AVParam.RowsLimit),
-				//	new XElement("const", RowsLimit)));// RowsLimit
+                }
+                //pars.Add(new XElement("param",
+                //	new XAttribute("name", TextConst.AVParam.RowsLimit),
+                //	new XElement("const", RowsLimit)));// RowsLimit
                 // формируем строку с условием в качестве отдельного параметра
 
             }
@@ -773,7 +846,8 @@ namespace sql.builder.UI
             // ceUsed.Properties.ValueUnchecked = DBNull.Value;
 
 
-            if (this.xfield != null) {
+            if (this.xfield != null)
+            {
                 LoadStateFromRegistry();
             }
             if (!Form.NoData)
@@ -816,9 +890,12 @@ namespace sql.builder.UI
 
         public virtual IEnumerable<string> GetParamsNames()
         {
-            if (this.data_set_default != null) {
+            if (this.data_set_default != null)
+            {
                 return this.data_set_default.GetParNames();
-            } else {
+            }
+            else
+            {
                 return Enumerable.Empty<string>();
             }
         }
@@ -832,7 +909,7 @@ namespace sql.builder.UI
 
         //public virtual RepositoryItem GetRepositoryItem() { return null; }
 
-      
+
         public virtual int GetHeight() { return 20; }
 
         public virtual void DataSource_SchemeChanged(object sender, EventArgs e)
@@ -859,10 +936,10 @@ namespace sql.builder.UI
                 {
                     v = "0";
                 }
-                s+= v;
+                s += v;
             }
-            
-         
+
+
             foreach (var btn in additionalButtons)
             {
                 var vv = "1";
@@ -899,11 +976,16 @@ namespace sql.builder.UI
             key_column.AllowDBNull = true;
             DataRow empty_row = dt.NewRow();
             Type type = key_column.DataType;
-            if (type == typeof(decimal)) {
+            if (type == typeof(decimal))
+            {
                 empty_row[key_column] = Cmn.ToDecimal(TextConst.NullConsts.NNULL);
-            } else if (type == typeof(string)) {
+            }
+            else if (type == typeof(string))
+            {
                 empty_row[key_column] = TextConst.NullConsts.SNULL;
-            } else {
+            }
+            else
+            {
                 throw new ArgumentException("Неподдерживаемый тип пустого значения " + type.FullName);
             }
             empty_row[name_field_name] = TextConst.NullPlaceholder;
@@ -911,13 +993,17 @@ namespace sql.builder.UI
         }
         protected void RefreshAsyncMode()
         {
-            if (DataTableList != null) {
+            if (DataTableList != null)
+            {
                 bool async = (this.rows_limit > 0);
                 DataTableList.AsyncLoad = async;
-                if (async) {
+                if (async)
+                {
                     DataTableList.AsyncLoadComplete += VDataTable_OnAsyncLoadComplete;
                     DataTableList.AsyncLoadCanceled += VDataTable_OnAsyncLoadCanceled;
-                } else {
+                }
+                else
+                {
                     DataTableList.AsyncLoadComplete -= VDataTable_OnAsyncLoadComplete;
                     DataTableList.AsyncLoadCanceled -= VDataTable_OnAsyncLoadCanceled;
                 }

@@ -1,11 +1,10 @@
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 // Cross-platform: System.Windows.Input (WPF) is Windows-only, commented out
 //using System.Windows.Input;
 using System.Xml.Linq;
 using sql.builder.DataApi;
-using System.Collections.Generic;
 
 
 namespace sql.builder.XmlHelpers
@@ -29,7 +28,7 @@ namespace sql.builder.XmlHelpers
             return PrepareReportInfo(rep, isAnonimusBlock);
         }
 
-        
+
 
         public static ReportInfo PrepareReportInfo(XElement report, bool isAnonimusBlock)
         {
@@ -55,11 +54,11 @@ namespace sql.builder.XmlHelpers
             }
             var ds = rep.Result(xpars, 2, null);
             var res = new ReportInfo();
-            if (ds.Tables.Count == 1 && rep.P_UseTemp!=TextConst.AVBool.True)
+            if (ds.Tables.Count == 1 && rep.P_UseTemp != TextConst.AVBool.True)
             {
                 res.TempUsing = false;
             }
-         
+
 
             res.Report = rep;
             res.DataSet = ds;
@@ -73,26 +72,26 @@ namespace sql.builder.XmlHelpers
         public static string Generate(string name, bool isAnonimusBlock, bool hasReturn, bool allowMerge,
             bool isDelete = false)
         {
-            
-            return DoGenerate(name,null, isAnonimusBlock,isAnonimusBlock, hasReturn, allowMerge, isDelete,false,null);
+
+            return DoGenerate(name, null, isAnonimusBlock, isAnonimusBlock, hasReturn, allowMerge, isDelete, false, null);
         }
 
 
-        public static string GenerateInsertStatementForProc(XElement query,string keyVarName)
+        public static string GenerateInsertStatementForProc(XElement query, string keyVarName)
         {
-     
-            var s= DoGenerate(null, query, true,false, false, false, false,false,keyVarName);
+
+            var s = DoGenerate(null, query, true, false, false, false, false, false, keyVarName);
             return s;
         }
 
         public static string GenerateUpdateStatementForProc(XElement query)
         {
 
-            var s = DoGenerate(null, query, true, false, false, false, false, true,null);
+            var s = DoGenerate(null, query, true, false, false, false, false, true, null);
             return s;
         }
 
-        private static string DoGenerate(string name,XElement qry, bool isAnonimusBlock,bool parStyleAnonimus,bool hasReturn,bool allowMerge, bool isDelete,bool isUpdate,string keyVarName)
+        private static string DoGenerate(string name, XElement qry, bool isAnonimusBlock, bool parStyleAnonimus, bool hasReturn, bool allowMerge, bool isDelete, bool isUpdate, string keyVarName)
         {
             ReportInfo ri = null;
             if (qry == null)
@@ -103,7 +102,7 @@ namespace sql.builder.XmlHelpers
             {
                 ri = PrepareReportInfo(qry, parStyleAnonimus);
             }
-          
+
 
             var rep = ri.Report;
             var ds = ri.DataSet;
@@ -111,7 +110,7 @@ namespace sql.builder.XmlHelpers
             var pars = ri.Pars;
             var sb = new StringBuilder();
             var prfx = "sqlb_";
-            var pfname =  prfx+name;
+            var pfname = prfx + name;
 
             if (!isAnonimusBlock)
             {
@@ -139,10 +138,13 @@ namespace sql.builder.XmlHelpers
                         sb.AppendLine("drop public synonym " + tname);
                         sb.AppendLine("/");
                     }
-                    foreach (VDataTable tbl in ds.Tables) {
+                    foreach (VDataTable tbl in ds.Tables)
+                    {
                         var record_fields = new List<string>();
-                        foreach (VDataColumn col in tbl.Columns) {
-                            if (TextConst.AVColumn.IsNotRepDsSysColumn(col.ColumnName)) {
+                        foreach (VDataColumn col in tbl.Columns)
+                        {
+                            if (TextConst.AVColumn.IsNotRepDsSysColumn(col.ColumnName))
+                            {
                                 string colDef = col.ColumnName + " " + Cmn.OracleTypeDefinitionFromType(col.DataType);
                                 record_fields.Add(colDef);
                             }
@@ -167,7 +169,7 @@ namespace sql.builder.XmlHelpers
 
                 if (ds.ProcedureText != null)
                 {
-                    GenerateProcBegin("fill_temp", sb,isAnonimusBlock, parsDefinition.ToArray());
+                    GenerateProcBegin("fill_temp", sb, isAnonimusBlock, parsDefinition.ToArray());
                     sb.AppendLine(string.Format("\t\t{0}", ds.ProcedureText));
                     GenerateProcEnd("fill_temp", sb);
                 }
@@ -189,7 +191,7 @@ namespace sql.builder.XmlHelpers
             {
                 foreach (VDataTable tbl in ds.Tables)
                 {
-                    
+
                     var varName = keyPfx + tbl.TableName;
                     if (keyVarName != null)
                     {
@@ -202,7 +204,7 @@ namespace sql.builder.XmlHelpers
                     }
                 }
             }
-            
+
             GenerateProcBegin("fill_table", sb, isAnonimusBlock, parsDefinition.ToArray(), vars.ToArray());
 
             if (!isAnonimusBlock)
@@ -272,7 +274,7 @@ namespace sql.builder.XmlHelpers
                 {
                     sb1.AppendLine((ds.Tables[0] as VDataTable).DataAdapter.SelectCommand.CommandText);
                 }
-                
+
 
                 var cmnSelText = sb1.ToString();
 
@@ -349,12 +351,14 @@ namespace sql.builder.XmlHelpers
                     string keyInputValue = null;
                     string keyInputValueO = null;
                     string refInputValue = null;
-                    foreach (VDataColumn col in tbl.Columns) {
-                        if (TextConst.AVColumn.IsNotRepDsSysColumn(col.ColumnName)) {
+                    foreach (VDataColumn col in tbl.Columns)
+                    {
+                        if (TextConst.AVColumn.IsNotRepDsSysColumn(col.ColumnName))
+                        {
                             bool use = true;
                             if (vtbl.P_UpdateTarget != "")
                             {
-                                if (keyName == col.ColumnName && uqry.SearchColumn(col.ColumnName) != null && (allowMerge||isUpdate))
+                                if (keyName == col.ColumnName && uqry.SearchColumn(col.ColumnName) != null && (allowMerge || isUpdate))
                                 {
                                     keyInputValue = recAlias + "." + col.TempColumnName;
                                     keyInputValueO = col.TempColumnName;
@@ -389,13 +393,13 @@ namespace sql.builder.XmlHelpers
 
                     var scols = string.Join(",", columns);
                     var stempcols = string.Join(",", tempColumns);
-                    if (isFirst )
+                    if (isFirst)
                     {
                         if (ri.TempUsing)
                         {
                             sb2.Append("if ");
                         }
-                       
+
                     }
                     else
                     {
@@ -428,7 +432,7 @@ namespace sql.builder.XmlHelpers
                         sb2.AppendLine(recAlias + "." + TextConst.DBObjects.TempTableTableIdColumn + " ='" + tbl.QueryName +
                                    "' then");
                     }
-                    
+
                     if (scols1 == "")
                     {
                         sb2.AppendLine(string.Format("{0}:={1};", keysVarNames[tbl.TableName], keyInputValue));
@@ -466,11 +470,11 @@ namespace sql.builder.XmlHelpers
                                 string.Format(
                                     "UPDATE {0} SET ({1}) =(select {2} from dual ) where {3}={4};",
                                     tname, scols1, stempcols1, keyName, keyInputValue));
-                            
-                        }
-                       
 
-                    
+                        }
+
+
+
                         if (keyInputValue != null && allowMerge)
                         {
                             sb2.AppendLine("end if;");
@@ -484,12 +488,12 @@ namespace sql.builder.XmlHelpers
                         {
                             sb2.Append(":" + TextConst.DBParams.PrimaryKeyParam + ":=" + keysVarNames[tbl.TableName] + ";");
                         }
-                        
-                       
+
+
                     }
                     isFirst = false;
                 }
-                
+
                 if (ri.TempUsing)
                 {
                     sb2.AppendLine("end if;");
@@ -508,33 +512,33 @@ namespace sql.builder.XmlHelpers
             }
 
             if (!isAnonimusBlock)
-              {
-                  GenerateProcEnd("fill_table", sb);
-                  GeneratePackageBodyEnd(name, sb);
+            {
+                GenerateProcEnd("fill_table", sb);
+                GeneratePackageBodyEnd(name, sb);
 
 
 
-                  sb.AppendLine("--- Конец автоматически сгенерированного скрипта ---");
-              }
-              else
-              {
-                  sb.AppendLine("end;");
-                  if (!parStyleAnonimus && hasReturn)
-                  {
-                  }
-                  else
-                  {
-                        sb.AppendLine("commit;");
-                  }
-               
-                  sb.AppendLine("end;");
-              }
+                sb.AppendLine("--- Конец автоматически сгенерированного скрипта ---");
+            }
+            else
+            {
+                sb.AppendLine("end;");
+                if (!parStyleAnonimus && hasReturn)
+                {
+                }
+                else
+                {
+                    sb.AppendLine("commit;");
+                }
+
+                sb.AppendLine("end;");
+            }
 
             return sb.ToString();
-         
+
         }
-       
-       
+
+
         private static void GeneratePackageSpecification(string repname, string[] pars, StringBuilder sb)
         {
             sb.AppendLine(string.Format("CREATE OR REPLACE PACKAGE sqlb_{0}", repname));
@@ -552,7 +556,7 @@ namespace sql.builder.XmlHelpers
             {
                 sb.AppendLine("\tPROCEDURE fill_table;");
             }
-            
+
             sb.AppendLine(string.Format("END sqlb_{0};", repname));
             sb.AppendLine("/");
             sb.AppendLine(string.Format("GRANT EXECUTE ON sqlb_{0} TO public;", repname));
@@ -563,7 +567,7 @@ namespace sql.builder.XmlHelpers
         }
         private static void GenerateProcCall(string procName, StringBuilder sb, object[] pars)
         {
-          
+
             sb.AppendLine(procName);
             if (pars.Length != 0)
             {
@@ -572,9 +576,9 @@ namespace sql.builder.XmlHelpers
                 sb.AppendLine("\t)");
             }
             sb.AppendLine("\t;");
-            
+
         }
-        private static void GenerateProcBegin(string procName, StringBuilder sb, bool isAnonimusBlock, string[] pars, string[] vars=null)
+        private static void GenerateProcBegin(string procName, StringBuilder sb, bool isAnonimusBlock, string[] pars, string[] vars = null)
         {
             if (!isAnonimusBlock)
             {
@@ -614,22 +618,22 @@ namespace sql.builder.XmlHelpers
                 sb.AppendLine("\tBEGIN");
             }
         }
-       
-        private static void GeneratePackageBodyBegin(string repname,  StringBuilder sb)
+
+        private static void GeneratePackageBodyBegin(string repname, StringBuilder sb)
         {
             sb.AppendLine(string.Format("CREATE OR REPLACE PACKAGE BODY sqlb_{0}", repname));
             sb.AppendLine("IS");
             sb.AppendLine("---Пакет сгенерирован автоматически с помощью SqlBuilder");
             sb.AppendLine();
-            
+
 
         }
 
         public static void GenerateTempTable(string qname_safe, string[] record_fields, StringBuilder sb)
         {
-           
-          
-           
+
+
+
             sb.AppendLine(string.Format("CREATE GLOBAL TEMPORARY TABLE sqlb_{0}_tbl", qname_safe));
             sb.AppendLine("(");
             sb.AppendLine(string.Join(",\r\n", record_fields));
@@ -645,18 +649,18 @@ namespace sql.builder.XmlHelpers
         private static void GenerateProcEnd(string procName, StringBuilder sb)
         {
 
-             sb.AppendLine("\tEND "+procName+";");
+            sb.AppendLine("\tEND " + procName + ";");
         }
 
         private static void GeneratePackageBodyEnd(string repname, StringBuilder sb)
         {
-          
-          
+
+
             sb.AppendLine(string.Format("END sqlb_{0};", repname));
             sb.AppendLine("/");
             sb.AppendLine();
         }
-        
-      
+
+
     }
 }

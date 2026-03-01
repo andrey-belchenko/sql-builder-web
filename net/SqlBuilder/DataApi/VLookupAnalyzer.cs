@@ -2,11 +2,11 @@
 
 namespace sql.builder.DataApi
 {
-    public class VLookupAnalyzer 
+    public class VLookupAnalyzer
     {
         public VLookupAnalyzer()
         {
-          
+
         }
         public AnalyzerCheckDelegate CheckStop;
         public AnalyzerCheckDelegate CheckReturn;
@@ -21,7 +21,7 @@ namespace sql.builder.DataApi
                 return false;
             }
             AnalyzedElements.Add(element.GetHashCode());
-            if (CheckReturn==null || CheckReturn(element))
+            if (CheckReturn == null || CheckReturn(element))
             {
                 if (Return == null)
                 {
@@ -62,5 +62,5 @@ namespace sql.builder.DataApi
 
     public delegate bool AnalyzerCheckDelegate(VSXElement element);
 
-    public delegate List<VSXElement>   AnalyzerReturnDelegate(VSXElement element);
+    public delegate List<VSXElement> AnalyzerReturnDelegate(VSXElement element);
 }

@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Xml.Linq;
 using sql.builder.Clean;
 using sql.builder.UI;// !!! перенести используемые классы и убрать
-using System.Threading;
-using System.ComponentModel;
 using SqlBuilderLib.DevTools;
 namespace sql.builder.DataApi
 {

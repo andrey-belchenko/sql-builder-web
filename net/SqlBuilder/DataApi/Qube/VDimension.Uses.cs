@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using System.Reflection;
 namespace sql.builder.DataApi
 {
 
 
-    public partial class VDimension : VSXElement 
+    public partial class VDimension : VSXElement
     {
         #region old
         protected override List<ElementUse> searchUses()
@@ -34,13 +31,13 @@ namespace sql.builder.DataApi
                 var list1 = XmlReports.Environment.GetSourcedElements();
                 foreach (var el1 in list1)
                 {
-                   
+
                     var list2 = el1.AllSources();
                     foreach (var el2 in list2)
                     {
                         if ((el2.GetParent() is VQube || el2.GetParent() is VDimSet))
                         {
-                            if (el2.P_CalledQuery==this.P_Name)
+                            if (el2.P_CalledQuery == this.P_Name)
                             {
                                 list.Add(new ElementUse(this, el2, TextConst.AName.Name));
                                 if (el2.XName == el2.P_CalledQuery)
@@ -49,21 +46,21 @@ namespace sql.builder.DataApi
                                     list.AddRange(uses);
                                 }
                             }
-                            
+
                         }
                     }
 
 
                     foreach (var el2 in el1.GetDescedantsP(EName.dimlink))
                     {
-                       
+
                         if (el2.P_CalledQuery == this.P_Name)
                         {
                             list.Add(new ElementUse(this, el2, TextConst.AName.Name));
-                            
+
                         }
 
-                        
+
                     }
 
                     foreach (var exp in el1.Expressions())
@@ -96,6 +93,6 @@ namespace sql.builder.DataApi
         }
         #endregion
 
-       
+
     }
 }

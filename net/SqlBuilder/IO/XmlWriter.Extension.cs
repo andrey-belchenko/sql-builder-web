@@ -1,10 +1,9 @@
-using System;
-using System.Xml;      // XmlWriter
-using System.Xml.Linq; // XElement, XAttribute
-using Contract = System.Diagnostics.Contracts.Contract;
 //using System.Collections.Generic;
 //using System.Text;
 using System.IO;
+using System.Xml;      // XmlWriter
+using System.Xml.Linq; // XElement, XAttribute
+using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder
 {
@@ -42,9 +41,12 @@ namespace sql.builder
             Contract.Ensures(writer.WriteState == WriteState.Attribute);
             string ns_name = name.NamespaceName;
             string local_name = name.LocalName;
-            if (string.IsNullOrEmpty(ns_name) && local_name == "xmlns") {
+            if (string.IsNullOrEmpty(ns_name) && local_name == "xmlns")
+            {
                 writer.WriteStartAttribute(string.Empty, local_name, XNamespace.Xmlns.NamespaceName);
-            } else {
+            }
+            else
+            {
                 string prefix = writer.LookupPrefix(ns_name);
                 writer.WriteStartAttribute(prefix, local_name, ns_name);
             }
@@ -68,7 +70,8 @@ namespace sql.builder
         public static long SerializeToFile(this object obj, string file_name)
         {
             long file_size;
-            using (System.IO.FileStream stream = File.Open(file_name, FileMode.CreateNew, FileAccess.Write, FileShare.Write)) {
+            using (System.IO.FileStream stream = File.Open(file_name, FileMode.CreateNew, FileAccess.Write, FileShare.Write))
+            {
 #pragma warning disable SYSLIB0011 // BinaryFormatter is obsolete
                 System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                 formatter.Serialize(stream, obj);

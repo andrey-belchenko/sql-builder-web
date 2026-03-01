@@ -11,15 +11,20 @@ namespace sql.builder.UI.CommandItems
         public static UIFormC Get(string group_name)
         {
             List<UIFormInfo> forms_info = null;
-            if (!_pool.TryGetValue(group_name, out forms_info)) {
+            if (!_pool.TryGetValue(group_name, out forms_info))
+            {
                 forms_info = new List<UIFormInfo>();
                 _pool[group_name] = forms_info;
             }
             UIFormInfo form_info = forms_info.FirstOrDefault(UIFormInfo.IsUnused);
-            if (form_info == null) {
-                if (forms_info.Count < MaxInGroup) {
+            if (form_info == null)
+            {
+                if (forms_info.Count < MaxInGroup)
+                {
                     return null;
-                } else {
+                }
+                else
+                {
                     form_info = forms_info.OrderBy(UIFormInfo.LastGetTime).First();
                 }
             }
@@ -29,11 +34,13 @@ namespace sql.builder.UI.CommandItems
         public static void Add(UIFormC form)
         {
             List<UIFormInfo> forms_info;
-            if (!_pool.TryGetValue(form.GroupName, out forms_info)) {
+            if (!_pool.TryGetValue(form.GroupName, out forms_info))
+            {
                 forms_info = new List<UIFormInfo>(1);
                 _pool[form.GroupName] = forms_info;
             }
-            if (forms_info.Count >= MaxInGroup) {
+            if (forms_info.Count >= MaxInGroup)
+            {
                 throw new ArgumentOutOfRangeException(string.Format("Число форм типа \"{0}\" не должно превышать {1}", form.GroupName, MaxInGroup));
             }
             var form_info = new UIFormInfo(form, true);
@@ -42,10 +49,13 @@ namespace sql.builder.UI.CommandItems
         public static void Free(UIFormC form)
         {
             List<UIFormInfo> forms_info;
-            if (_pool.TryGetValue(form.GroupName, out forms_info) && forms_info != null) {
-                for (int index = 0; index < forms_info.Count; index++) {
+            if (_pool.TryGetValue(form.GroupName, out forms_info) && forms_info != null)
+            {
+                for (int index = 0; index < forms_info.Count; index++)
+                {
                     UIFormInfo form_info = forms_info[index];
-                    if (form_info.Form == form) {
+                    if (form_info.Form == form)
+                    {
                         form_info.SetUnused();
                         break;
                     }
@@ -55,10 +65,13 @@ namespace sql.builder.UI.CommandItems
         public static void Release(UIFormC form, bool dispose = true)
         {
             List<UIFormInfo> forms_info;
-            if (_pool.TryGetValue(form.GroupName, out forms_info) && forms_info != null) {
-                for (int index = 0; index < forms_info.Count; index++) {
+            if (_pool.TryGetValue(form.GroupName, out forms_info) && forms_info != null)
+            {
+                for (int index = 0; index < forms_info.Count; index++)
+                {
                     UIFormInfo form_info = forms_info[index];
-                    if (form_info.Form == form) {
+                    if (form_info.Form == form)
+                    {
                         forms_info.RemoveAt(index);
                         form_info.Release(dispose);
                         break;
@@ -68,15 +81,18 @@ namespace sql.builder.UI.CommandItems
         }
         public static void Clear()
         {
-           _pool.Clear();
+            _pool.Clear();
         }
         public static void Reset()
         {
-            foreach (List<UIFormInfo> forms_info in _pool.Values) {
-                for (int index = 0; index < forms_info.Count; index++) {
+            foreach (List<UIFormInfo> forms_info in _pool.Values)
+            {
+                for (int index = 0; index < forms_info.Count; index++)
+                {
                     UIFormInfo form_info = forms_info[index];
                     form_info.Form.GroupName = null;
-                    if (UIFormInfo.IsUnused(form_info)) {
+                    if (UIFormInfo.IsUnused(form_info))
+                    {
                         //(form_info.Form.TmpGetControlAsWinFormCtrl() as IDisposable).Dispose();
                     }
                 }
@@ -99,7 +115,8 @@ namespace sql.builder.UI.CommandItems
             }
             public void Release(bool dispose)
             {
-                if (dispose) {
+                if (dispose)
+                {
                     //(this.form.TmpGetControlAsWinFormCtrl() as IDisposable).Dispose();
                 }
                 this.form = null;

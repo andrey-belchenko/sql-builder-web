@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using System.Reflection;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using sql.builder.FieldInfo;
+using System.Linq;
+using System.Reflection;
+using System.Xml.Linq;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-    public abstract partial class VQueryCall : VSXElement 
+    public abstract partial class VQueryCall : VSXElement
     {
         protected VQueryCall(XName name)
             : base(name)
@@ -22,9 +20,11 @@ namespace sql.builder.DataApi
         public string GetRelChildColumnName() // колонка, которая ссылается на родителя, для query в отчете, частный случай для генерации кода
         {
             VSXElement call = this.GetElementsP(EName.call).FirstOrDefault();
-            if (call != null) {
+            if (call != null)
+            {
                 VSXElement col = call.GetDescedantsP(EName.column).FirstOrDefault(c => c.P_Table == this.XName);
-                if (col != null) {
+                if (col != null)
+                {
                     return col.XName;
                 }
             }
@@ -38,36 +38,50 @@ namespace sql.builder.DataApi
         }
         public override string XName
         {
-            get {
+            get
+            {
                 XAttribute attr = this.Attribute(AName_.@as);
-                if (attr == null) {
+                if (attr == null)
+                {
                     attr = this.Attribute(AName_.name);
                 }
-                if (attr != null) {
+                if (attr != null)
+                {
                     return attr.Value;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             }
         }
         public virtual string XTitle
         {
-            get {
+            get
+            {
                 XAttribute attr = this.Attribute(AName_.title);
-                if (attr != null) {
+                if (attr != null)
+                {
                     return attr.Value;
-                } else {
+                }
+                else
+                {
                     VRelation rel = this.GetRelation();
-                    if (rel != null) {
+                    if (rel != null)
+                    {
                         string title = rel.XTitle;
-                        if (!string.IsNullOrEmpty(title)) {
+                        if (!string.IsNullOrEmpty(title))
+                        {
                             return title;
                         }
                     }
                     VQuery query = this.Query();
-                    if (query != null) {
+                    if (query != null)
+                    {
                         return query.Title();
-                    } else {
+                    }
+                    else
+                    {
                         return null;
                     }
                 }
@@ -75,14 +89,18 @@ namespace sql.builder.DataApi
         }
         protected VQuery LinkParentQuery()
         {
-            VSXElement parent = GetParent();          
-            if (parent is VLinks) {
+            VSXElement parent = GetParent();
+            if (parent is VLinks)
+            {
                 return (VQuery)this.RootQuery();
             }
             VQueryCall qc = parent as VQueryCall;
-            if (qc != null) {
+            if (qc != null)
+            {
                 return qc.Query();
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
@@ -104,9 +122,12 @@ namespace sql.builder.DataApi
         public string PName()
         {
             XAttribute attr = this.Attribute(AName_.@as);
-            if (attr != null) {
+            if (attr != null)
+            {
                 return attr.Value;
-            } else {
+            }
+            else
+            {
                 return this.AttrOrEmpty(AName_.name);
             }
         }
@@ -116,12 +137,15 @@ namespace sql.builder.DataApi
         }
         public VQueryCall GetDimensionLink()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as VQueryCall);
             }
             VQueryCall l = (VQueryCall)this.GetAncestorsAndSelf().FirstOrDefault(e => e.GetParent() is VQube || e.GetParent() is VFrom || e.GetParent() is VDimSet);
-            if (l != null) {
-                if (l.GetParent() is VFrom) {
+            if (l != null)
+            {
+                if (l.GetParent() is VFrom)
+                {
                     l = null;
                 }
             }
@@ -131,15 +155,20 @@ namespace sql.builder.DataApi
         public List<VQueryCall> Links(VSourcedElement heir)
         {
             var links = new List<VQueryCall>();
-            foreach (VQueryCall link in this.GetElementsP().Where(e1=> e1 is VQueryCall  & !(e1 is VDimSet))) {
+            foreach (VQueryCall link in this.GetElementsP().Where(e1 => e1 is VQueryCall & !(e1 is VDimSet)))
+            {
                 links.Add(link);
             }
-            if (this is VTable || (this.PreviousNode == null && this.Name == EName.query && this.P_Join == "")) {
-                foreach (VQueryCall link in this.RootQuery().GetNamedSections(TextConst.EName.Links).SelectMany(VSXElement.GetElementsP).Where(e1 => e1 is VQueryCall).ToList()) {
+            if (this is VTable || (this.PreviousNode == null && this.Name == EName.query && this.P_Join == ""))
+            {
+                foreach (VQueryCall link in this.RootQuery().GetNamedSections(TextConst.EName.Links).SelectMany(VSXElement.GetElementsP).Where(e1 => e1 is VQueryCall).ToList())
+                {
                     links.Add(link);
                 }
-                if (heir != null) {
-                    foreach (VQueryCall link in heir.RootQuery().GetNamedSections(TextConst.EName.Links).SelectMany(VSXElement.GetElementsP).Where(e1 => e1 is VQueryCall).ToList()) {
+                if (heir != null)
+                {
+                    foreach (VQueryCall link in heir.RootQuery().GetNamedSections(TextConst.EName.Links).SelectMany(VSXElement.GetElementsP).Where(e1 => e1 is VQueryCall).ToList())
+                    {
                         links.Add(link);
                     }
                 }
@@ -151,7 +180,8 @@ namespace sql.builder.DataApi
             IList<VSXElement> links = this.GetDescedantsP(EName.elink);
             var list = new List<VQueryCall>(links.Count + 1);
             list.Add(this);
-            for (int index = 0; index < links.Count; index++) {
+            for (int index = 0; index < links.Count; index++)
+            {
                 VQueryCall link = (VQueryCall)links[index];
                 list.Add(link);
             }
@@ -161,9 +191,11 @@ namespace sql.builder.DataApi
         {
             IList<VQueryCall> links = this.Links(null);
             var list = new List<VQueryCall>(links.Count);
-            for (int index = 0; index < links.Count; index++) {
+            for (int index = 0; index < links.Count; index++)
+            {
                 VQueryCall link = links[index];
-                if ((link.GetType() != typeof(VELink))) {
+                if ((link.GetType() != typeof(VELink)))
+                {
                     list.Add(link);
                 }
             }
@@ -174,7 +206,8 @@ namespace sql.builder.DataApi
             var list = new List<VQueryCall>(1);
             list.Add(this);
             IList<VQueryCall> links = this.MasterLinks();
-            for (int index = 0; index < links.Count; index++) {
+            for (int index = 0; index < links.Count; index++)
+            {
                 VQueryCall link = links[index];
                 list.AddRange(link.SelfAndAllMasterLinks());
             }
@@ -183,9 +216,11 @@ namespace sql.builder.DataApi
         public virtual List<VQueryCall> AllLinks(VSourcedElement heir)
         {
             var links = new List<VQueryCall>();
-            foreach (VQueryCall link in Links(heir)) {
+            foreach (VQueryCall link in Links(heir))
+            {
                 links.Add(link);
-                foreach (VQueryCall link1 in link.AllLinks(heir)) {
+                foreach (VQueryCall link1 in link.AllLinks(heir))
+                {
                     links.Add(link1);
                 }
             }
@@ -207,12 +242,14 @@ namespace sql.builder.DataApi
         {
             List<VColumn> cols = new List<VColumn>();
             VSourcedElement rootQuery = RootQuery();
-            if (rootQuery == null) {
+            if (rootQuery == null)
+            {
                 return cols;
             }
             IEnumerable<XElement> cols1 = rootQuery.AllUsedColumns().Where(e1 => e1.AttrOrEmpty(AName_.table) == this.XName);
             //.Where(e => !e.Ancestors("query").First(e2=>e2.Element("select")!=null).IsAfter(rootQuery)) 
-            foreach (VColumn col in cols1) {
+            foreach (VColumn col in cols1)
+            {
                 cols.Add(col);
             }
             return cols;
@@ -277,7 +314,7 @@ namespace sql.builder.DataApi
             {
                 return;
             }
-        
+
 
             if (qry != this.RootQuery())
             {
@@ -294,7 +331,7 @@ namespace sql.builder.DataApi
                 {
 
                     var qry2 = qry.MainSource();
-                    if (qry2!=null && qry2.Query() != this.RootQuery())
+                    if (qry2 != null && qry2.Query() != this.RootQuery())
                     {
                         qry2.LookUpNextSources(list, analyzer);
                     }
@@ -302,11 +339,14 @@ namespace sql.builder.DataApi
             }
         }
         #region CalledQuery
-        public override string P_CalledQuery {
-            get {
+        public override string P_CalledQuery
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.name);
             }
-            set {
+            set
+            {
                 this.SetAttrValue(AName_.name, value);
             }
         }
@@ -321,18 +361,26 @@ namespace sql.builder.DataApi
         {
             dt.Rows.Clear();
             HashSet<string> names = new HashSet<string>();
-            foreach (XElement el in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.queries).Elements(EName.query)) {
-                if (el.Attribute(AName_.extend) == null) {
+            foreach (XElement el in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.queries).Elements(EName.query))
+            {
+                if (el.Attribute(AName_.extend) == null)
+                {
                     string name = el.AttrOrEmpty(AName_.name);
-                    if (names.Contains(name)) {
+                    if (names.Contains(name))
+                    {
                         Debug.WriteLine("Запрос c именем \"" + name + "\" дублируется, используйте XPath //queries/query[@name=\"" + name + "\"] для поиска дублей.");
-                    } else {
+                    }
+                    else
+                    {
                         string title = el.AttrOrEmpty(AName_.title);
                         XElement xtable = el.Elements(EName.from).Elements(EName.table).FirstOrDefault();
                         string table;
-                        if (xtable != null) {
+                        if (xtable != null)
+                        {
                             table = xtable.AttrOrEmpty(AName_.name);
-                        } else {
+                        }
+                        else
+                        {
                             table = string.Empty;
                         }
                         dt.AddRow(name, name, title, table);
@@ -353,10 +401,12 @@ namespace sql.builder.DataApi
         {
             VQuery query = this.Query();
             // 12.07.2017 Емцов - на qube dimset и прочих вылетает
-            if (query == null) {
+            if (query == null)
+            {
                 return new List<VSXElement>();
             }
-            if (query != this) {
+            if (query != this)
+            {
                 return query.GetExtensionsAndParentAndMain().Cast<VSXElement>().ToList();
             }
             return null;
@@ -374,45 +424,58 @@ namespace sql.builder.DataApi
         public override string GetNodeOtherInfo()
         {
             string s = Bold(this.AttrOrEmpty(AName_.name));
-            if (this is VRelation) {
-                if ((this as VRelation).ParentQuery() == null) {
+            if (this is VRelation)
+            {
+                if ((this as VRelation).ParentQuery() == null)
+                {
                     s += "[missing]";
-                } else {
+                }
+                else
+                {
                     s += ColorGray("-" + this.P_DXName);
                 }
             }
             string alias = this.AttrOrEmpty(AName_.@as);
-            if (!string.IsNullOrEmpty(alias)) {
+            if (!string.IsNullOrEmpty(alias))
+            {
                 s += " as " + Bold(alias);
             }
             string dimension = this.P_Dimension;
-            if (!string.IsNullOrEmpty(dimension)) {
+            if (!string.IsNullOrEmpty(dimension))
+            {
                 s += " dim " + Bold(dimension);
             }
             string update_target = this.P_UpdateTarget;
-            if (!string.IsNullOrEmpty(update_target)) {
+            if (!string.IsNullOrEmpty(update_target))
+            {
                 s += " into " + Bold(update_target);
             }
             string title = XTitle;
-            if (!string.IsNullOrEmpty(title)) {
+            if (!string.IsNullOrEmpty(title))
+            {
                 s += " " + Italic(title);
             }
-			if (this.P_OnlyForCond == TextConst.AVBool.True) {
-				s += " " + ColorGold("conditions only");
-			}
-			//P_OnlyForCond==TextConst.AVBool.True
-            if (this.P_AutoFilter == TextConst.AVBool.True) {
-				s += " " + ColorGold("autofilter");
-			}
+            if (this.P_OnlyForCond == TextConst.AVBool.True)
+            {
+                s += " " + ColorGold("conditions only");
+            }
+            //P_OnlyForCond==TextConst.AVBool.True
+            if (this.P_AutoFilter == TextConst.AVBool.True)
+            {
+                s += " " + ColorGold("autofilter");
+            }
             return s;
         }
         #endregion
         #region Alias
-        public override string P_Alias {
-            get {
+        public override string P_Alias
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.@as);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.@as, value);
             }
         }
@@ -426,11 +489,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Join
-        public override string P_Join {
-            get {
+        public override string P_Join
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.join);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.join, value);
             }
         }
@@ -441,27 +507,36 @@ namespace sql.builder.DataApi
         }
         public void P_Join_ListRefresh(VDataTable table)
         {
-            if (table.Rows.Count == 0) {
+            if (table.Rows.Count == 0)
+            {
                 VSXElement.FillDataTableFromStringArray(table, new string[] { TextConst.AVJoin.Inner, TextConst.AVJoin.LeftOuter, "right outer", "left inner", TextConst.AVJoin.Cross, "full outer", string.Empty });
             }
         }
         public override bool P_Join_Exists()
         {
-            if (this.Attribute(AName_.join) != null) {
+            if (this.Attribute(AName_.join) != null)
+            {
                 return true;
-            } else if (this.PreviousNode != null && this.IsCall()) {
+            }
+            else if (this.PreviousNode != null && this.IsCall())
+            {
                 return true;
-            } else {
+            }
+            else
+            {
                 return false;
             }
         }
         #endregion
         #region ConstrDelOption
-        public override string P_ConstrDelOption {
-            get {
+        public override string P_ConstrDelOption
+        {
+            get
+            {
                 return this.AttrOrEmpty("ConstrDelOption");
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty("ConstrDelOption", value);
             }
         }
@@ -482,7 +557,7 @@ namespace sql.builder.DataApi
         #region SelfTitle
         public override bool P_SelfTitle_Exists()
         {
-           return true;
+            return true;
         }
         #endregion
         #region ColumnEditable
@@ -504,11 +579,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region MultiSelectColumn
-        public override string P_MultiSelectColumn {
-            get {
+        public override string P_MultiSelectColumn
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.multi_select_column);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.multi_select_column, value);
             }
         }
@@ -525,14 +603,15 @@ namespace sql.builder.DataApi
             table.Rows.Clear();
             IList<VColumn> cols = this.UsedColumns();
             HashSet<string> check = new HashSet<string>();
-            for (int index = 0; index < cols.Count; index++) {
+            for (int index = 0; index < cols.Count; index++)
+            {
                 VColumn col = cols[index];
                 if (!check.Contains(col.XName))
                 {
                     check.Add(col.XName);
                     VSXElement.AddColumnInfoToList(table, col.XName, col);
                 }
-              
+
             }
         }
         public override bool P_MultiSelectColumn_Exists()
@@ -541,11 +620,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region MultiSelectTarged
-        public override string P_MultiSelectTarget {
-            get {
+        public override string P_MultiSelectTarget
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.multi_select_target);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.multi_select_target, value);
             }
         }
@@ -558,7 +640,8 @@ namespace sql.builder.DataApi
             table.Rows.Clear();
             VForm frm = this.RootQuery() as VForm;
             IList<VQueryCall> list = frm.MainAndRelatedQueries();
-            for (int index = 0; index < list.Count; index++) {
+            for (int index = 0; index < list.Count; index++)
+            {
                 VQueryCall qry = list[index];
                 table.AddRow(qry.XName);
             }
@@ -569,26 +652,30 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Column // колонка с кодом на который дается ссылка при multiselect
-        public override void P_Column_ListRefresh(VDataTable table) 
+        public override void P_Column_ListRefresh(VDataTable table)
         {
             table.Rows.Clear();
             IList<VColumn> cols = this.UsedColumns();
-            for (int index = 0; index < cols.Count; index++) {
+            for (int index = 0; index < cols.Count; index++)
+            {
                 VColumn col = cols[index];
                 VSXElement.AddColumnInfoToList(table, col.XName, col);
             }
         }
         public override bool P_Column_Exists()
         {
-           return P_ColumnEditable_Exists();
+            return P_ColumnEditable_Exists();
         }
         #endregion
         #region NewRowsVisForOtherTbls
-        public override string P_NewRowsVisForOtherTbls {
-            get {
+        public override string P_NewRowsVisForOtherTbls
+        {
+            get
+            {
                 return this.AttrOrEmpty(TextConst.AName.NewRowsVisForOtherTbls);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(TextConst.AName.NewRowsVisForOtherTbls, value);
             }
         }
@@ -598,11 +685,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Async
-        public override string P_Async {
-            get {
+        public override string P_Async
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.async);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.async, value);
             }
         }
@@ -612,11 +702,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region AutoRefresh
-        public override string P_AutoRefresh {
-            get {
+        public override string P_AutoRefresh
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.auto_refresh);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.auto_refresh, value);
             }
         }
@@ -626,11 +719,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region OnlyVisibleRefresh
-        public override string P_OnlyVisibleRefresh {
-            get {
+        public override string P_OnlyVisibleRefresh
+        {
+            get
+            {
                 return this.AttrOrEmpty(TextConst.AName.OnlyVisibleRefresh);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(TextConst.AName.OnlyVisibleRefresh, value);
             }
         }
@@ -640,11 +736,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region OnlyForceRefresh
-        public override string P_OnlyForceRefresh {
-            get {
+        public override string P_OnlyForceRefresh
+        {
+            get
+            {
                 return this.AttrOrEmpty(TextConst.AName.OnlyForceRefresh);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(TextConst.AName.OnlyForceRefresh, value);
             }
         }
@@ -654,18 +753,24 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Dimension
-        public override string P_Dimension {
-            get {
-                if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+        public override string P_Dimension
+        {
+            get
+            {
+                if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+                {
                     return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as string);
                 }
                 string t = string.Empty;
-                if (!string.IsNullOrEmpty(this.P_PrDimension)) {
+                if (!string.IsNullOrEmpty(this.P_PrDimension))
+                {
                     VQuery qry = this.Query();
-                    if (qry != null) {
+                    if (qry != null)
+                    {
                         qry = (VQuery)(qry.GetMainE());
                         VDimension dim = qry.GetDimension();
-                        if (dim != null) {
+                        if (dim != null)
+                        {
                             t = dim.P_Name;
                         }
                     }
@@ -680,16 +785,23 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region PrDimension
-        public override string P_PrDimension {
-            get {
-                if (!string.IsNullOrEmpty(this.AttrOrEmpty(AName_.dimension))) {
+        public override string P_PrDimension
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.AttrOrEmpty(AName_.dimension)))
+                {
                     return TextConst.AVBool.True;
-                } else {
+                }
+                else
+                {
                     return string.Empty;
                 }
             }
-            set {
-                if (value != string.Empty && this.AttrOrEmpty(AName_.dimension) != value) {
+            set
+            {
+                if (value != string.Empty && this.AttrOrEmpty(AName_.dimension) != value)
+                {
                     this.SetAttributeNotEmpty(AName_.is_private_dimension, value);
                     this.SetAttributeNotEmpty(AName_.is_final_dimension, value);
                 }
@@ -704,19 +816,25 @@ namespace sql.builder.DataApi
         #region UpdateTarget
         public override bool P_UpdateTarget_Exists()
         {
-            if (this.GetMainParent() is VReport) {
+            if (this.GetMainParent() is VReport)
+            {
                 return true;
-            } else {
+            }
+            else
+            {
                 return base.P_UpdateTarget_Exists();
             }
         }
         #endregion
         #region Updateable
-        public override string P_Updateable {
-            get {
+        public override string P_Updateable
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.updateable);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.updateable, value);
             }
         }

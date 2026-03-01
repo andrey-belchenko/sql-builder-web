@@ -1,22 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Xsl;
-using System.Xml.XPath;
-using System.IO;
 //using System.Windows.Forms;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
-using Devart.Data.Oracle;
+using System.Xml.Linq;
 //using DevExpress.XtraEditors.Controls;
 //using infoenergo.core.Extensions;
-using sql.builder.FieldInfo;
 using sql.builder.UI;
 using AName_ = sql.builder.DataApi.AName;
 
@@ -71,7 +62,8 @@ namespace sql.builder.DataApi
         public static void FillDataTableFromStringArray(DataTable table, string[] arr)
         {
             table.Rows.Clear();
-            for (int row = 0; row < arr.Length; row++) {
+            for (int row = 0; row < arr.Length; row++)
+            {
                 string value = arr[row];
                 table.AddRow(value, value);
             }
@@ -85,12 +77,17 @@ namespace sql.builder.DataApi
         {
             table.Rows.Clear();
             HashSet<string> names = new HashSet<string>();
-            foreach (XElement el in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.queries).Elements(EName.query)) {
-                if (el.Attribute(AName_.extend) == null) {
+            foreach (XElement el in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.queries).Elements(EName.query))
+            {
+                if (el.Attribute(AName_.extend) == null)
+                {
                     string name = el.AttrOrEmpty(AName_.name);
-                    if (names.Contains(name)) {
+                    if (names.Contains(name))
+                    {
                         Debug.WriteLine("Запрос c именем \"" + name + "\" дублируется, используйте XPath //queries/query[@name=\"" + name + "\"] для поиска дублей.");
-                    } else {
+                    }
+                    else
+                    {
                         string title = el.AttrOrEmpty(AName_.title);
                         table.AddRow(name, name, title);
                         names.Add(name);
@@ -103,11 +100,14 @@ namespace sql.builder.DataApi
         {
             return 100;
         }
-        public virtual string P_NodeName {
-            get {
+        public virtual string P_NodeName
+        {
+            get
+            {
                 return this.Name.LocalName;
             }
-            set {
+            set
+            {
                 this.Name = value;
                 this.ChangeType();
             }
@@ -128,12 +128,16 @@ namespace sql.builder.DataApi
         {
             table.Rows.Clear();
             IVParent parent = this.Parent as IVParent;
-            if (parent != null) {
+            if (parent != null)
+            {
                 IList<string> node_names = parent.AllowedChildNodes();
-                for (int index = 0; index < node_names.Count; index++) {
+                for (int index = 0; index < node_names.Count; index++)
+                {
                     table.AddRow(node_names[index]);
                 }
-            } else {
+            }
+            else
+            {
                 table.AddRow(this.Name.LocalName);
             }
         }
@@ -151,18 +155,23 @@ namespace sql.builder.DataApi
         {
             return 50;
         }
-        public virtual string P_NodeText {
-            get {
+        public virtual string P_NodeText
+        {
+            get
+            {
                 string s = this.GetNodeFinalInfo();
-                if (this.P_Exclude == TextConst.AVBool.True) {
+                if (this.P_Exclude == TextConst.AVBool.True)
+                {
                     s = Strike(s);
                 }
-                if (this.P_PartId != string.Empty) {
+                if (this.P_PartId != string.Empty)
+                {
                     s += " " + ColorGreen(P_PartId);
                 }
-                if (this.P_Comment != string.Empty) {
-					s += " " + ColorGold("comments");
-				}
+                if (this.P_Comment != string.Empty)
+                {
+                    s += " " + ColorGold("comments");
+                }
                 return s;
             }
             set { }
@@ -177,41 +186,55 @@ namespace sql.builder.DataApi
             VCashUtils.ClearCashNotErrors();
             var olsEls = _elementsWithError;
             _elementsWithError = elements;
-            if (olsEls != null) {
-                foreach (var el in olsEls) {
+            if (olsEls != null)
+            {
+                foreach (var el in olsEls)
+                {
                     el.UpdateDataRow();
                 }
             }
-            if (_elementsWithError != null) {
-                foreach (var el in _elementsWithError) {
+            if (_elementsWithError != null)
+            {
+                foreach (var el in _elementsWithError)
+                {
                     el.UpdateDataRow();
                 }
             }
         }
         private bool HasError()
         {
-            if (_elementsWithError == null) {
+            if (_elementsWithError == null)
+            {
                 return false;
-            } else {
+            }
+            else
+            {
                 return _elementsWithError.Contains(this);
             }
         }
         private string GetNodeFinalInfo()
         {
             string key;
-            if (this.TreeNodeExpanded) {
+            if (this.TreeNodeExpanded)
+            {
                 key = "2";
-            } else {
+            }
+            else
+            {
                 key = "1";
             }
             string s;
-            if (this.IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), key)) {
+            if (this.IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), key))
+            {
                 s = (this.GetCashValue(MethodBase.GetCurrentMethod().ToString(), key) as string);
-            } else {
-                s = this.GetNodeInfo();
-                 AddCashValue(s, MethodBase.GetCurrentMethod().ToString(), key);
             }
-            if (this.HasError()) {
+            else
+            {
+                s = this.GetNodeInfo();
+                AddCashValue(s, MethodBase.GetCurrentMethod().ToString(), key);
+            }
+            if (this.HasError())
+            {
                 s = ColorRed(s);
             }
             return s;
@@ -282,11 +305,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Function
-        public virtual string P_Function {
-            get {
+        public virtual string P_Function
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.function);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.function, value);
             }
         }
@@ -308,11 +334,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Part
-        public virtual string P_Part {
-            get {
+        public virtual string P_Part
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.part);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.part, value);
             }
         }
@@ -334,10 +363,12 @@ namespace sql.builder.DataApi
             table.Rows.Clear();
             HashSet<string> names = new HashSet<string>();
             IList<VSXElement> parts = XmlReports.Environment.GetParts();
-            for (int index = 0; index < parts.Count; index++) {
+            for (int index = 0; index < parts.Count; index++)
+            {
                 VSXElement el = parts[index];
                 string id = el.PartId();
-                if (!names.Contains(id)) {
+                if (!names.Contains(id))
+                {
                     names.Add(id);
                     table.AddRow(id, id);
                 }
@@ -353,11 +384,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Color (VUseColor)
-        public virtual string P_Color {
-            get {
+        public virtual string P_Color
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -378,7 +412,8 @@ namespace sql.builder.DataApi
         private string applyedName = null;
         private string ApplyedName()
         {
-            if (this.applyedName == null) {
+            if (this.applyedName == null)
+            {
                 this.applyedName = this.P_IdName;
             }
             return applyedName;
@@ -392,7 +427,7 @@ namespace sql.builder.DataApi
         {
             if (SavedKey == "")
             {
-           
+
                 SavedKey = P_IdName;
             }
             if (Renamed != null)
@@ -420,22 +455,30 @@ namespace sql.builder.DataApi
         }
         public void SetIdName(XName name, string value)
         {
-            if (this.RaiseRenamed(value)) {
+            if (this.RaiseRenamed(value))
+            {
                 this.SetAttributeValue(name, value);
-            } else {
+            }
+            else
+            {
                 this.UpdateDataRow();
             }
         }
         public virtual string P_IdName
         {
-            get {
-                if (this.KeyField != null) {
+            get
+            {
+                if (this.KeyField != null)
+                {
                     return this.AttrOrEmpty(this.KeyField);
-                } else {
+                }
+                else
+                {
                     return string.Empty;
                 }
             }
-            set {
+            set
+            {
             }
         }
         public virtual string P_IdName_Title()
@@ -452,12 +495,15 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region CalledQuery
-        public virtual string P_CalledQuery {
-            get {
+        public virtual string P_CalledQuery
+        {
+            get
+            {
                 return string.Empty;
                 //return GetAttrValue("function");
             }
-            set {
+            set
+            {
                 //SetAttribute("function", value);
             }
         }
@@ -471,9 +517,12 @@ namespace sql.builder.DataApi
         }
         public virtual string P_CalledQuery_ValueInfo(object value)
         {
-            if (value == null) {
+            if (value == null)
+            {
                 return string.Empty;
-            } else {
+            }
+            else
+            {
                 return value.ToString();
             }
         }
@@ -502,11 +551,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Table
-        public virtual string P_Table {
-            get {
+        public virtual string P_Table
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.table);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.table, value);
             }
         }
@@ -541,16 +593,21 @@ namespace sql.builder.DataApi
             var mq = this.ExtendedOrRootQuery();
             var mprt = this.GetMainParent();
             var srcs = mq.AllSources().ToList();
-            if (mq != mprt && mprt is VSourcedElement) {
+            if (mq != mprt && mprt is VSourcedElement)
+            {
                 srcs.AddRange((mprt as VSourcedElement).AllSources());
             }
 
-            foreach (VQueryCall el in srcs) {
-                if (!ss.Contains(el.XName)) {
+            foreach (VQueryCall el in srcs)
+            {
+                if (!ss.Contains(el.XName))
+                {
                     ss.Add(el.XName);// При наличии dimset link может повторяться
                     TableListRowFromElement(table, el);
-                    if (el.P_IsTree == TextConst.AVBool.True) {
-                        foreach (string s in TextConst.TreeSourcesArray.All) {
+                    if (el.P_IsTree == TextConst.AVBool.True)
+                    {
+                        foreach (string s in TextConst.TreeSourcesArray.All)
+                        {
                             var s1 = el.XName + "-" + s;
                             table.AddRow(s1, s1, "", "");
                         }
@@ -570,11 +627,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Column
-        public virtual string P_Column {
-            get {
+        public virtual string P_Column
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.column);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.column, value);
             }
         }
@@ -602,9 +662,12 @@ namespace sql.builder.DataApi
         {
             string etype;
             VColumn col = el as VColumn;
-            if (col != null) {
+            if (col != null)
+            {
                 etype = col.EType;
-            } else {
+            }
+            else
+            {
                 etype = string.Empty;
             }
             table.AddRow(name, name, el.P_Title, etype);
@@ -623,11 +686,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Condition (VFact)
-        public virtual string P_Condition {
-            get {
+        public virtual string P_Condition
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -710,16 +776,19 @@ namespace sql.builder.DataApi
 
         public virtual string P_Title_FieldGroup()
         {
-          return  P_SelfTitle_FieldGroup();
-            
+            return P_SelfTitle_FieldGroup();
+
         }
         #endregion
         #region HAlign
-        public virtual string P_HAlign {
-            get {
+        public virtual string P_HAlign
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.halign);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.halign, value);
             }
         }
@@ -750,11 +819,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ViewMode (VReport и VQuery)
-        public virtual string P_ViewMode {
-            get {
+        public virtual string P_ViewMode
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.mode);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.mode, value);
             }
         }
@@ -781,11 +853,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Format 
-        public virtual string P_FormatS {
-            get {
+        public virtual string P_FormatS
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.format);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.format, value);
             }
         }
@@ -805,9 +880,11 @@ namespace sql.builder.DataApi
         public virtual void P_FormatS_ListRefresh(VDataTable table)
         {
             table.Rows.Clear();
-            foreach (XElement package in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.format_packages).Elements(EName.format_package)) {
+            foreach (XElement package in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.format_packages).Elements(EName.format_package))
+            {
                 string package_name = package.AttrOrEmpty(AName_.name);
-                foreach (XElement format in package.Elements(EName.format).Where(EPredicate.IsNotExcuded)) {
+                foreach (XElement format in package.Elements(EName.format).Where(EPredicate.IsNotExcuded))
+                {
                     table.AddRow(format.AttrOrEmpty(AName_.name), package_name);
                 }
             }
@@ -818,11 +895,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region SelfTitle
-        public virtual string P_SelfTitle {
-            get {
+        public virtual string P_SelfTitle
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.title);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.title, value);
             }
         }
@@ -840,9 +920,12 @@ namespace sql.builder.DataApi
         }
         public virtual string P_SelfTitle_FieldGroup()
         {
-            if (this.GetParent() is VOutputElement || this.IsMainElement()) {
+            if (this.GetParent() is VOutputElement || this.IsMainElement())
+            {
                 return TextConst.SchEdirorFieldGr.MainMain;
-            } else {
+            }
+            else
+            {
                 return TextConst.SchEdirorFieldGr.MainOther;
             }
         }
@@ -877,11 +960,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Comment
-        public virtual string P_Comment {
-            get {
+        public virtual string P_Comment
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.comment);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.comment, value);
             }
         }
@@ -939,11 +1025,14 @@ namespace sql.builder.DataApi
         {
             return "Имя If для повторного использования";
         }
-        public virtual string P_If {
-            get {
+        public virtual string P_If
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.@if);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.@if, value);
             }
         }
@@ -982,11 +1071,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ConstComboValue
-        public virtual string P_ConstComboValue {
-            get {
+        public virtual string P_ConstComboValue
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -1004,11 +1096,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ConstListValue
-        public virtual string P_ConstListValue {
-            get {
+        public virtual string P_ConstListValue
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -1026,11 +1121,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ConstValue
-        public virtual string P_ConstValue {
-            get {
+        public virtual string P_ConstValue
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -1052,11 +1150,14 @@ namespace sql.builder.DataApi
         {
             return "Псевдоним";
         }
-        public virtual string P_Alias {
-            get {
+        public virtual string P_Alias
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.@as);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.@as, value);
             }
         }
@@ -1066,9 +1167,12 @@ namespace sql.builder.DataApi
         }
         public virtual string P_Alias_FieldGroup()
         {
-            if (this.GetParent() is VOutputElement) {
+            if (this.GetParent() is VOutputElement)
+            {
                 return TextConst.SchEdirorFieldGr.MainMain;
-            } else {
+            }
+            else
+            {
                 return TextConst.SchEdirorFieldGr.MainOther;
             }
         }
@@ -1078,11 +1182,14 @@ namespace sql.builder.DataApi
         {
             return "Пост обработка";
         }
-        public virtual string P_PostProcess {
-            get {
+        public virtual string P_PostProcess
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -1153,7 +1260,7 @@ namespace sql.builder.DataApi
 
         }
 
-        
+
         public virtual string P_AutoFilter_ControlType()
         {
 
@@ -1168,60 +1275,69 @@ namespace sql.builder.DataApi
 
         }
         #endregion
-		#region AllowSelectMoveColumns
-		public virtual string P_AllowSelectMoveColumns {
-			get {
+        #region AllowSelectMoveColumns
+        public virtual string P_AllowSelectMoveColumns
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.allow_select_move_columns);
-			}
-			set {
-				this.SetAttributeValue(AName_.allow_select_move_columns, value);
-			}
-		}
-		public virtual string P_AllowSelectMoveColumns_Title()
-		{
-			return "Разрешить выбор и перемещение колонок";
-		}
-		public virtual string P_AllowSelectMoveColumns_ControlType()
-		{
-			return typeof(UICheck).Name;
-		}
-		public virtual bool P_AllowSelectMoveColumns_Exists()
-		{
-			return false;
-		}
-		#endregion
-		#region InvisibleInColumnChooser
-		public virtual string P_InvisibleInColumnChooser {
-			get {
+            }
+            set
+            {
+                this.SetAttributeValue(AName_.allow_select_move_columns, value);
+            }
+        }
+        public virtual string P_AllowSelectMoveColumns_Title()
+        {
+            return "Разрешить выбор и перемещение колонок";
+        }
+        public virtual string P_AllowSelectMoveColumns_ControlType()
+        {
+            return typeof(UICheck).Name;
+        }
+        public virtual bool P_AllowSelectMoveColumns_Exists()
+        {
+            return false;
+        }
+        #endregion
+        #region InvisibleInColumnChooser
+        public virtual string P_InvisibleInColumnChooser
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.invisible_in_column_chooser);
-			}
-			set {
-				this.SetAttributeValue(AName_.invisible_in_column_chooser, value);
-			}
-		}
-		public virtual string P_InvisibleInColumnChooser_Title()
-		{
-			return "Запретить отображение колонки при выборе колонок";
-		}
-		public virtual string P_InvisibleInColumnChooser_ControlType()
-		{
-			return typeof(UICheck).Name;
-		}
-		public virtual bool P_InvisibleInColumnChooser_Exists()
-		{
-			return false;
-		}
-		#endregion
+            }
+            set
+            {
+                this.SetAttributeValue(AName_.invisible_in_column_chooser, value);
+            }
+        }
+        public virtual string P_InvisibleInColumnChooser_Title()
+        {
+            return "Запретить отображение колонки при выборе колонок";
+        }
+        public virtual string P_InvisibleInColumnChooser_ControlType()
+        {
+            return typeof(UICheck).Name;
+        }
+        public virtual bool P_InvisibleInColumnChooser_Exists()
+        {
+            return false;
+        }
+        #endregion
         #region AllRows
         public virtual string P_AllRows_Title()
         {
             return "Все строки";
         }
-        public virtual string P_AllRows {
-            get {
+        public virtual string P_AllRows
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.all_rows);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.all_rows, value);
             }
         }
@@ -1304,11 +1420,14 @@ namespace sql.builder.DataApi
 
         #endregion
         #region Group
-        public virtual string P_Group {
-            get {
+        public virtual string P_Group
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.group);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.group, value);
             }
         }
@@ -1327,7 +1446,8 @@ namespace sql.builder.DataApi
         }
         public virtual void P_Group_ListRefresh(VDataTable table)
         {
-            if (table.Rows.Count == 0) {
+            if (table.Rows.Count == 0)
+            {
                 FillDataTableFromStringArray(table, Compiler.aggFuncsNames);
             }
         }
@@ -1341,11 +1461,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Dgroup
-        public virtual string P_Dgroup {
-            get {
+        public virtual string P_Dgroup
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.dgroup);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.dgroup, value);
             }
         }
@@ -1364,7 +1487,8 @@ namespace sql.builder.DataApi
         }
         public virtual void P_Dgroup_ListRefresh(VDataTable table)
         {
-            if (table.Rows.Count == 0) {
+            if (table.Rows.Count == 0)
+            {
                 FillDataTableFromStringArray(table, Compiler.grFuncsNames);
             }
         }
@@ -1374,11 +1498,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ConstrDelOption (VQueryCall)
-        public virtual string P_ConstrDelOption {
-            get {
+        public virtual string P_ConstrDelOption
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -1396,11 +1523,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Join (VQueryCall)
-        public virtual string P_Join {
-            get {
+        public virtual string P_Join
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -1418,11 +1548,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ControlType
-        public virtual string P_ControlType {
-            get {
+        public virtual string P_ControlType
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.controlType);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.controlType, value);
             }
         }
@@ -1453,11 +1586,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region EditMask
-        public virtual string P_EditMask {
-            get {
+        public virtual string P_EditMask
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.edit_mask);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.edit_mask, value);
             }
         }
@@ -1491,11 +1627,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Form
-        public virtual string P_Form {
-            get {
+        public virtual string P_Form
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.form);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.form, value);
             }
         }
@@ -1515,7 +1654,8 @@ namespace sql.builder.DataApi
         public virtual void P_Form_ListRefresh(VDataTable table)
         {
             table.Rows.Clear();
-            foreach (XElement el in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.forms).Elements(EName.form)) {
+            foreach (XElement el in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.forms).Elements(EName.form))
+            {
                 table.AddRow(el.AttrOrEmpty(AName_.name), el.AttrOrEmpty(AName_.title));
             }
         }
@@ -1529,11 +1669,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Report
-        public virtual string P_Report {
-            get {
+        public virtual string P_Report
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.report);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.report, value);
             }
         }
@@ -1584,11 +1727,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Call
-        public virtual string P_Call {
-            get {
+        public virtual string P_Call
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.call);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.call, value);
             }
         }
@@ -1602,11 +1748,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ParName
-        public virtual string P_ParName {
-            get {
+        public virtual string P_ParName
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.parname);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.parname, value);
             }
         }
@@ -1774,11 +1923,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Key
-        public virtual string P_Key {
-            get {
+        public virtual string P_Key
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.key);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.key, value);
             }
         }
@@ -1837,11 +1989,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ParamsCustomization (VReport и VQuery)
-        public virtual string P_ParamsCustomization {
-            get {
+        public virtual string P_ParamsCustomization
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.params_customization);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.params_customization, value);
             }
         }
@@ -1859,11 +2014,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region UseTemp (VReport и VQuery)
-        public virtual string P_UseTemp {
-            get {
+        public virtual string P_UseTemp
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.use_temp);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.use_temp, value);
             }
         }
@@ -1881,11 +2039,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region AllowSave (VReport и VQuery)
-        public virtual string P_AllowSave {
-            get {
+        public virtual string P_AllowSave
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.allow_save);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.allow_save, value);
             }
         }
@@ -1903,11 +2064,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region EditColumns (VReport и VQuery)
-        public virtual string P_EditColumns {
-            get {
+        public virtual string P_EditColumns
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.edit_columns);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.edit_columns, value);
             }
         }
@@ -1925,11 +2089,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Field (VParam и VUseField)
-        public virtual string P_Field {
-            get {
+        public virtual string P_Field
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.field);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.field, value);
             }
         }
@@ -1951,11 +2118,15 @@ namespace sql.builder.DataApi
         {
             table.Rows.Clear();
             HashSet<string> names = new HashSet<string>();
-            foreach (XElement el in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.fields).Elements(EName.field)) {
+            foreach (XElement el in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.fields).Elements(EName.field))
+            {
                 string id = el.AttrOrEmpty(AName_.id);
-                if (names.Contains(id)) {
+                if (names.Contains(id))
+                {
                     Debug.WriteLine("Поле c именем \"" + id + "\" дублируется, используйте XPath //fields/field[@id=\"" + id + "\"] для поиска дублей.");
-                } else {
+                }
+                else
+                {
                     table.AddRow(id, el.AttrOrEmpty(AName_.name), el.AttrOrEmpty(AName_.title));
                     names.Add(id);
                 }
@@ -1967,11 +2138,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region FormalParName
-        public virtual string P_FormalParName {
-            get {
+        public virtual string P_FormalParName
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.name);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.name, value);
             }
         }
@@ -2032,11 +2206,14 @@ namespace sql.builder.DataApi
 
         #endregion
         #region UsedParName
-        public virtual string P_UsedParName {
-            get {
+        public virtual string P_UsedParName
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.name);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.name, value);
             }
         }
@@ -2054,11 +2231,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Exclude
-        public virtual string P_Exclude {
-            get {
+        public virtual string P_Exclude
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.exclude);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.exclude, value);
             }
         }
@@ -2080,11 +2260,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Materialize
-        public virtual string P_Materialize {
-            get {
+        public virtual string P_Materialize
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.materialize);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.materialize, value);
             }
         }
@@ -2102,11 +2285,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Size
-        public virtual string P_Size {
-            get {
+        public virtual string P_Size
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.size);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.size, value);
             }
         }
@@ -2152,20 +2338,26 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region DataSize (VColumn)
-        public virtual string P_DataSize {
-            get {
+        public virtual string P_DataSize
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
         public string XDataSize()
         {
             VSXElement e = this.P_DataSize_Search().FirstOrDefault();
-            if (e == null) {
+            if (e == null)
+            {
                 return string.Empty;
-            } else {
+            }
+            else
+            {
                 return e.P_DataSize;
             }
         }
@@ -2196,11 +2388,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Position
-        public virtual string P_Position {
-            get {
+        public virtual string P_Position
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.position);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.position, value);
             }
         }
@@ -2218,11 +2413,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region WidthPerc
-        public virtual string P_WidthPerc {
-            get {
+        public virtual string P_WidthPerc
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.width_perc);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.width_perc, value);
             }
         }
@@ -2249,11 +2447,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region WidthFixed
-        public virtual string P_WidthFixed {
-            get {
+        public virtual string P_WidthFixed
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.width_fixed);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.width_fixed, value);
             }
         }
@@ -2283,11 +2484,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Updateable (VQueryCall)
-        public virtual string P_Updateable {
-            get {
+        public virtual string P_Updateable
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -2345,11 +2549,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region TextVisible
-        public virtual string P_TextVisible {
-            get {
+        public virtual string P_TextVisible
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.text_visible);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.text_visible, value);
             }
         }
@@ -2416,11 +2623,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region MultiSelectColumn (VQueryCall)
-        public virtual string P_MultiSelectColumn {
-            get {
+        public virtual string P_MultiSelectColumn
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -2444,11 +2654,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region MultiSelectTarget (VQueryCall)
-        public virtual string P_MultiSelectTarget {
-            get {
+        public virtual string P_MultiSelectTarget
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -2472,11 +2685,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Extend
-        public virtual string P_Extend {
-            get {
+        public virtual string P_Extend
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.extend);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.extend, value);
             }
         }
@@ -2504,11 +2720,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Inherit
-        public virtual string P_Inherit {
-            get {
+        public virtual string P_Inherit
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.inherit);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.inherit, value);
             }
         }
@@ -2529,12 +2748,17 @@ namespace sql.builder.DataApi
         public virtual void P_Inherit_ListRefresh(VDataTable table)
         {
             table.Rows.Clear();
-            foreach (VQuery el in XmlReports.Environment.GetElements(TextConst.EName.Queries)) {
-                try {
-                    if (!el.IsExtension()) {
+            foreach (VQuery el in XmlReports.Environment.GetElements(TextConst.EName.Queries))
+            {
+                try
+                {
+                    if (!el.IsExtension())
+                    {
                         table.AddRow(el.P_IdName, el.P_IdName, el.Title());
                     }
-                } catch {
+                }
+                catch
+                {
                 }
             }
 
@@ -2549,11 +2773,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region UpdateTarget
-        public virtual string P_UpdateTarget {
-            get {
+        public virtual string P_UpdateTarget
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.update_target);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.update_target, value);
             }
         }
@@ -2579,18 +2806,25 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Expanded
-        public virtual string P_Expanded {
-            get {
+        public virtual string P_Expanded
+        {
+            get
+            {
                 string value = this.AttrOrDefault(AName_.expanded, TextConst.AVBool.True);
-                if (value == TextConst.AVBool.False) {
+                if (value == TextConst.AVBool.False)
+                {
                     value = string.Empty;
                 }
                 return value;
             }
-            set {
-                if (string.IsNullOrEmpty(value)) {
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
                     value = TextConst.AVBool.False;
-                } else if (value == TextConst.AVBool.True) {
+                }
+                else if (value == TextConst.AVBool.True)
+                {
                     value = null;
                 }
                 this.SetAttributeValue(AName_.expanded, value);
@@ -2614,7 +2848,7 @@ namespace sql.builder.DataApi
         {
             get
             {
-                return GetAttrValue(TextConst.AName.Uncollapsible); 
+                return GetAttrValue(TextConst.AName.Uncollapsible);
             }
             set
             {
@@ -2638,11 +2872,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Optional
-        public virtual string P_Optional {
-            get {
+        public virtual string P_Optional
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.optional);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.optional, value);
             }
         }
@@ -2660,11 +2897,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region UseDataReader (VReport и VQuery)
-        public virtual string P_UseDataReader {
-            get {
+        public virtual string P_UseDataReader
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.datareader);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.datareader, value);
             }
         }
@@ -2754,11 +2994,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region DxExport (VReport, VQuery и VGrid)
-        public virtual string P_DxExport {
-            get {
+        public virtual string P_DxExport
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.dx_export);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.dx_export, value);
             }
         }
@@ -2776,11 +3019,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ActionType
-        public virtual string P_ActionType {
-            get {
+        public virtual string P_ActionType
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.action_type);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.action_type, value);
             }
         }
@@ -2807,11 +3053,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Project
-        public virtual string P_Project {
-            get {
+        public virtual string P_Project
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.project);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.project, value);
             }
         }
@@ -2831,7 +3080,8 @@ namespace sql.builder.DataApi
         public virtual void P_Project_ListRefresh(VDataTable table)
         {
             table.Rows.Clear();
-            foreach (sql.builder.Core.Project p in XmlReports.Environment.Manager.GetAllProjects()) {
+            foreach (sql.builder.Core.Project p in XmlReports.Environment.Manager.GetAllProjects())
+            {
                 string s = p.Name;
                 table.AddRow(s, s);
             }
@@ -2842,11 +3092,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region CalledAction (VUseAction only)
-        public virtual string P_CalledAction {
-            get {
+        public virtual string P_CalledAction
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.name);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.name, value);
             }
         }
@@ -2864,11 +3117,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region CalledObject
-        public virtual string P_CalledObject {
-            get {
+        public virtual string P_CalledObject
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.@object);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.@object, value);
             }
         }
@@ -2922,11 +3178,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region IsReport (VQuery)
-        public virtual string P_IsReport {
-            get {
+        public virtual string P_IsReport
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.is_report);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.is_report, value);
             }
         }
@@ -2944,18 +3203,27 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Invisible
-        public virtual string P_Invisible {
-            get {
-                if (this.AttrOrEmpty(AName_.visible) == TextConst.AVBool.False) {
+        public virtual string P_Invisible
+        {
+            get
+            {
+                if (this.AttrOrEmpty(AName_.visible) == TextConst.AVBool.False)
+                {
                     return TextConst.AVBool.True;
-                } else {
+                }
+                else
+                {
                     return string.Empty;
                 }
             }
-            set {
-                if (value != null && value == TextConst.AVBool.True) {
+            set
+            {
+                if (value != null && value == TextConst.AVBool.True)
+                {
                     value = TextConst.AVBool.False;
-                } else {
+                }
+                else
+                {
                     value = null;
                 }
                 this.SetAttributeValue(AName_.visible, value);
@@ -2975,11 +3243,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Customer
-        public virtual string P_Customer {
-            get {
+        public virtual string P_Customer
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -3032,11 +3303,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region RowsLimit
-        public virtual string P_RowsLimit {
-            get {
+        public virtual string P_RowsLimit
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.rows_limit);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.rows_limit, value);
             }
         }
@@ -3050,11 +3324,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Step
-        public virtual string P_Step {
-            get {
+        public virtual string P_Step
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.step);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.step, value);
             }
         }
@@ -3072,11 +3349,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region MaxLength
-        public virtual string P_MaxLength {
-            get {
+        public virtual string P_MaxLength
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.max_length);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.max_length, value);
             }
         }
@@ -3124,11 +3404,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ParentFieldName
-        public virtual string P_ParentFieldName {
-            get {
+        public virtual string P_ParentFieldName
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.parent_field_name);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.parent_field_name, value);
             }
         }
@@ -3148,7 +3431,8 @@ namespace sql.builder.DataApi
         public virtual void P_ParentFieldName_ListRefresh(VDataTable table)
         {
             table.Rows.Clear();
-            foreach (VSXElement el in Field().ListQuery().Query().Columns()) {
+            foreach (VSXElement el in Field().ListQuery().Query().Columns())
+            {
                 string name = el.XName;
                 table.AddRow(name, name);
             }
@@ -3207,11 +3491,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ClassTitle
-        public virtual string P_ClassTitle {
-            get {
+        public virtual string P_ClassTitle
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.class_title);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.class_title, value);
             }
         }
@@ -3229,12 +3516,17 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ClassTitleS
-        public virtual string P_ClassTitleS {
-            get {
+        public virtual string P_ClassTitleS
+        {
+            get
+            {
                 IList<VSXElement> src = this.P_ClassTitleS_Search();
-                if (src.Count != 0) {
+                if (src.Count != 0)
+                {
                     return (src[0].P_ClassTitle);
-                } else {
+                }
+                else
+                {
                     return string.Empty;
                 }
             }
@@ -3313,11 +3605,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region UseRepository
-        public virtual string P_UseRepository {
-            get {
+        public virtual string P_UseRepository
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.use_repository);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.use_repository, value);
             }
         }
@@ -3335,11 +3630,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Index
-        public virtual string P_Index {
-            get {
+        public virtual string P_Index
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.index);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.index, value);
             }
         }
@@ -3425,11 +3723,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Folder (VReport и VQuery)
-        public virtual string P_Folder {
-            get {
+        public virtual string P_Folder
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.folder);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.folder, value);
             }
         }
@@ -3450,9 +3751,11 @@ namespace sql.builder.DataApi
         {
             table.Rows.Clear();
             var names = new HashSet<string>();
-            foreach (XElement folder in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.folders).Descendants(EName.folder)) {
+            foreach (XElement folder in XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.folders).Descendants(EName.folder))
+            {
                 string name = folder.AttrOrEmpty(AName_.name);
-                if (!names.Contains(name)) {
+                if (!names.Contains(name))
+                {
                     names.Add(name);
                     table.AddRow(name, folder.AttrOrEmpty(AName_.title));
                 }
@@ -3464,12 +3767,17 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region AggregationS
-        public virtual string P_AggregationS {
-            get {
+        public virtual string P_AggregationS
+        {
+            get
+            {
                 string agg = this.AttrOrEmpty(AName_.agg);
-                if (string.IsNullOrEmpty(agg)) {
+                if (string.IsNullOrEmpty(agg))
+                {
                     return this.P_Group;
-                } else {
+                }
+                else
+                {
                     return agg;
                 }
             }
@@ -3497,7 +3805,7 @@ namespace sql.builder.DataApi
             get
             {
 
-                var s =  GetAttrValue(TextConst.AName.AggCml); 
+                var s = GetAttrValue(TextConst.AName.AggCml);
                 if (s == "")
                 {
                     s = P_AggregationS;
@@ -3541,7 +3849,7 @@ namespace sql.builder.DataApi
         {
             get
             {
-               // return GetAttrValue(TextConst.AName.Fact);
+                // return GetAttrValue(TextConst.AName.Fact);
                 var s = P_FactName;
                 if (s != "")
                 {
@@ -3552,9 +3860,9 @@ namespace sql.builder.DataApi
                     return GetMainParent().P_IdName + "_" + XName;
                 }
                 return "";
-               
+
             }
-            
+
 
         }
 
@@ -3593,11 +3901,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region FactName
-        public virtual string P_FactName {
-            get {
+        public virtual string P_FactName
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.fact);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.fact, value);
             }
         }
@@ -3624,16 +3935,20 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Dimension
-        public virtual string P_Dimension {
-            get {
+        public virtual string P_Dimension
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.dimension);
             }
-            set {
-                if (value != string.Empty && this.AttrOrEmpty(AName_.dimension) != value) {
+            set
+            {
+                if (value != string.Empty && this.AttrOrEmpty(AName_.dimension) != value)
+                {
                     this.SetAttributeNotEmpty(AName_.is_private_dimension, value);
                     this.SetAttributeNotEmpty(AName_.is_final_dimension, value);
                 }
-                this.SetAttributeNotEmpty(AName_.dimension, value);                
+                this.SetAttributeNotEmpty(AName_.dimension, value);
             }
         }
         public virtual string P_Dimension_Title()
@@ -3655,17 +3970,24 @@ namespace sql.builder.DataApi
         {
             table.Rows.Clear();
             IList<VDimension> list = XmlReports.Environment.GetDimensions();
-            for (int index = 0; index < list.Count; index++) {
+            for (int index = 0; index < list.Count; index++)
+            {
                 VDimension dim = list[index];
                 string dim_name = dim.P_Name;
-                if (dim.P_TimeType != string.Empty) {
+                if (dim.P_TimeType != string.Empty)
+                {
                     table.AddRow(dim_name, dim_name, null, dim.P_Timeline);
-                } else {
+                }
+                else
+                {
                     string queryName;
                     VQuery qry = dim.Query();
-                    if (qry != null) {
+                    if (qry != null)
+                    {
                         queryName = qry.P_Name;
-                    } else {
+                    }
+                    else
+                    {
                         queryName = "[missing]";
                     }
                     table.AddRow(dim_name, dim_name, queryName, null);
@@ -3686,11 +4008,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region FactDimension
-        public virtual string P_FactDimension {
-            get {
+        public virtual string P_FactDimension
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.fact_dimension);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.fact_dimension, value);
             }
         }
@@ -3720,11 +4045,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Aggregation
-        public virtual string P_Aggregation {
-            get {
+        public virtual string P_Aggregation
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.agg);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.agg, value);
             }
         }
@@ -3755,11 +4083,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region AggCml
-        public virtual string P_AggCml {
-            get {
+        public virtual string P_AggCml
+        {
+            get
+            {
                 return this.GetAttrValue(TextConst.AName.AggCml);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(TextConst.AName.AggCml, value);
             }
         }
@@ -3782,7 +4113,7 @@ namespace sql.builder.DataApi
         }
         public virtual bool P_AggCml_Exists()
         {
-            return P_Fact_Exists() ;
+            return P_Fact_Exists();
         }
         public virtual string P_AggCml_FieldGroup()
         {
@@ -3790,11 +4121,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region PrDimension (VQueryCall)
-        public virtual string P_PrDimension {
-            get {
+        public virtual string P_PrDimension
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -3816,15 +4150,21 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region PrFact
-        public virtual string P_PrFact {
-            get {
-                if (!string.IsNullOrEmpty(this.P_FactName)) {
+        public virtual string P_PrFact
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.P_FactName))
+                {
                     return TextConst.AVBool.True;
-                } else {
+                }
+                else
+                {
                     return this.AttrOrEmpty(AName_.is_fact);
                 }
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.is_fact, value);
             }
         }
@@ -3850,15 +4190,21 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region IsFinalDimension
-        public virtual string P_IsFinalDimension {
-            get {
-                if (!string.IsNullOrEmpty(this.AttrOrEmpty(AName_.is_final_dimension))) {
+        public virtual string P_IsFinalDimension
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.AttrOrEmpty(AName_.is_final_dimension)))
+                {
                     return TextConst.AVBool.True;
-                } else {
+                }
+                else
+                {
                     return string.Empty;
                 }
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.is_final_dimension, value);
             }
         }
@@ -3880,15 +4226,21 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region IsPrivateDimension
-        public virtual string P_IsPrivateDimension {
-            get {
-                if (!string.IsNullOrEmpty(this.AttrOrEmpty(AName_.is_private_dimension))) {
+        public virtual string P_IsPrivateDimension
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.AttrOrEmpty(AName_.is_private_dimension)))
+                {
                     return TextConst.AVBool.True;
-                } else {
+                }
+                else
+                {
                     return string.Empty;
                 }
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.is_private_dimension, value);
             }
         }
@@ -3919,11 +4271,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Name
-        public virtual string P_Name {
-            get {
+        public virtual string P_Name
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.name);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.name, value);
             }
         }
@@ -3945,11 +4300,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Rgb
-        public virtual string P_Rgb {
-            get {
+        public virtual string P_Rgb
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -3963,11 +4321,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Format
-        public virtual string P_Format {
-            get {
+        public virtual string P_Format
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.format);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.format, value);
             }
         }
@@ -3981,11 +4342,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ButtonType (VUICommand)
-        public virtual string P_ButtonType {
-            get {
+        public virtual string P_ButtonType
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -4003,11 +4367,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ShowToolBar
-        public virtual string P_ShowToolBar {
-            get {
+        public virtual string P_ShowToolBar
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.show_toolbar);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.show_toolbar, value);
             }
         }
@@ -4025,11 +4392,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ShowBottomToolBar
-        public virtual string P_ShowBottomToolBar {
-            get {
+        public virtual string P_ShowBottomToolBar
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.show_bottom_toolbar);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.show_bottom_toolbar, value);
             }
         }
@@ -4047,11 +4417,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ShowFooter
-        public virtual string P_ShowFooter {
-            get {
+        public virtual string P_ShowFooter
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.show_footer);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.show_footer, value);
             }
         }
@@ -4069,11 +4442,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ShowAggPanel
-        public virtual string P_ShowAggPanel {
-            get {
+        public virtual string P_ShowAggPanel
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.show_agg_panel);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.show_agg_panel, value);
             }
         }
@@ -4091,11 +4467,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region DeleteValidation
-        public virtual string P_DeleteValidation {
-            get {
+        public virtual string P_DeleteValidation
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.delete_validation);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.delete_validation, value);
             }
         }
@@ -4155,7 +4534,7 @@ namespace sql.builder.DataApi
         }
         public virtual bool P_DataTypeS_Editable()
         {
-            
+
             return false;
 
         }
@@ -4168,11 +4547,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region DataType
-        public virtual string P_DataType {
-            get {
+        public virtual string P_DataType
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.type);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.type, value);
             }
         }
@@ -4199,19 +4581,25 @@ namespace sql.builder.DataApi
         }
         public virtual string P_DataType_FieldGroup()
         {
-            if (this.GetParent() is VOutputElement) {
+            if (this.GetParent() is VOutputElement)
+            {
                 return TextConst.SchEdirorFieldGr.MainMain;
-            } else {
+            }
+            else
+            {
                 return TextConst.SchEdirorFieldGr.MainOther;
             }
         }
         #endregion
         #region Control
-        public virtual string P_Control {
-            get {
+        public virtual string P_Control
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.control);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.control, value);
             }
         }
@@ -4238,11 +4626,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region EditorButtonType
-        public virtual string P_EditorButtonType {
-            get {
+        public virtual string P_EditorButtonType
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.type);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.type, value);
             }
         }
@@ -4269,11 +4660,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region EditorButtonSide
-        public virtual string P_EditorButtonSide {
-            get {
+        public virtual string P_EditorButtonSide
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.side);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.side, value);
             }
         }
@@ -4300,11 +4694,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region EventName
-        public virtual string P_EventName {
-            get {
+        public virtual string P_EventName
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.event_name);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.event_name, value);
             }
         }
@@ -4394,11 +4791,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ShowCheckbox
-        public virtual string P_ShowCheckbox {
-            get {
+        public virtual string P_ShowCheckbox
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.show_checkbox);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.show_checkbox, value);
             }
         }
@@ -4416,16 +4816,23 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region UpdateTargetS
-        public virtual string P_UpdateTargetS {
-            get {
+        public virtual string P_UpdateTargetS
+        {
+            get
+            {
                 string update_target = this.P_UpdateTarget;
-                if (!string.IsNullOrEmpty(update_target)) {
+                if (!string.IsNullOrEmpty(update_target))
+                {
                     return update_target;
-                } else {
+                }
+                else
+                {
                     VAction act = this as VAction;
-                    if (act != null) {
+                    if (act != null)
+                    {
                         VQuery query = act.CalledQuery();
-                        if (query != null) {
+                        if (query != null)
+                        {
                             return query.P_UpdateTarget;
                         }
                     }
@@ -4447,11 +4854,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region TimeType
-        public virtual string P_TimeType {
-            get {
+        public virtual string P_TimeType
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -4516,11 +4926,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Timeline (VDimension)
-        public virtual string P_Timeline {
-            get {
+        public virtual string P_Timeline
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -4536,10 +4949,12 @@ namespace sql.builder.DataApi
         #region IsRet
         public virtual string P_IsRet
         {
-            get {
+            get
+            {
                 return this.AttrOrEmpty(AName_.is_ret);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.is_ret, value);
             }
         }
@@ -4557,11 +4972,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Checked
-        public virtual string P_Checked {
-            get {
+        public virtual string P_Checked
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.@checked);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.@checked, value);
             }
         }
@@ -4578,16 +4996,19 @@ namespace sql.builder.DataApi
             return "Параметр установлен по умолчанию";
         }
         public virtual bool P_Checked_Exists()
-       {
+        {
             return false;
         }
         #endregion
         #region WriteAccess (VUseObject)
-        public virtual string P_WriteAccess {
-            get {
+        public virtual string P_WriteAccess
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -4643,7 +5064,7 @@ namespace sql.builder.DataApi
 
         public virtual void P_SpecTable_ListRefresh(VDataTable table)
         {
-            
+
 
         }
         public virtual bool P_SpecTable_Exists()
@@ -4703,11 +5124,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region AutoMerge (VReport и VQuery)
-        public virtual string P_AutoMerge {
-            get {
+        public virtual string P_AutoMerge
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.auto_merge);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.auto_merge, value);
             }
         }
@@ -4725,11 +5149,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region NoGrid (VReport и VQuery)
-        public virtual string P_NoGrid {
-            get {
+        public virtual string P_NoGrid
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.nogrid);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.nogrid, value);
             }
         }
@@ -4747,11 +5174,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region SaveCompiled (VReport и VQuery)
-        public virtual string P_SaveCompiled {
-            get {
+        public virtual string P_SaveCompiled
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.save_compiled);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.save_compiled, value);
             }
         }
@@ -4805,11 +5235,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region PartId
-        public virtual string P_PartId {
-            get {
+        public virtual string P_PartId
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.part_id);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.part_id, value);
             }
         }
@@ -4831,11 +5264,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region NewRowsVisForOtherTbls (VQueryCall)
-        public virtual string P_NewRowsVisForOtherTbls {
-            get {
+        public virtual string P_NewRowsVisForOtherTbls
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -4853,11 +5289,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Async (VQueryCall)
-        public virtual string P_Async {
-            get {
+        public virtual string P_Async
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -4875,11 +5314,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region AutoRefresh (VQueryCall)
-        public virtual string P_AutoRefresh {
-            get {
+        public virtual string P_AutoRefresh
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -4897,11 +5339,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region OnlyVisibleRefresh (VQueryCall)
-        public virtual string P_OnlyVisibleRefresh {
-            get {
+        public virtual string P_OnlyVisibleRefresh
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -4919,11 +5364,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region OnlyForceRefresh (VQueryCall)
-        public virtual string P_OnlyForceRefresh {
-            get {
+        public virtual string P_OnlyForceRefresh
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -4941,12 +5389,15 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ActionRows
-        public virtual string P_ActionRows {
-            get {
+        public virtual string P_ActionRows
+        {
+            get
+            {
                 return GetAttrValue(TextConst.AName.ActionRows);
             }
-            set {
-                SetAttributeNotEmpty(TextConst.AName.ActionRows,value);
+            set
+            {
+                SetAttributeNotEmpty(TextConst.AName.ActionRows, value);
             }
         }
         public virtual string P_ActionRows_Title()
@@ -4972,11 +5423,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region IsForm
-        public virtual string P_IsForm {
-            get {
+        public virtual string P_IsForm
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.is_form);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.is_form, value);
             }
         }
@@ -4994,11 +5448,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region NoBorder
-        public virtual string P_NoBorder {
-            get {
+        public virtual string P_NoBorder
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.noborder);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.noborder, value);
             }
         }
@@ -5016,19 +5473,28 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region IsLayoutBlock
-        public virtual string P_IsLayoutBlock {
-            get {
+        public virtual string P_IsLayoutBlock
+        {
+            get
+            {
                 string val = this.AttrOrEmpty(AName_.is_layout_block);
-                if (val == TextConst.AVBool.True || val == TextConst.AVBool.False || this.P_NoBorder == TextConst.AVBool.True) {
+                if (val == TextConst.AVBool.True || val == TextConst.AVBool.False || this.P_NoBorder == TextConst.AVBool.True)
+                {
                     return val;
-                } else {
+                }
+                else
+                {
                     return TextConst.AVBool.True;
                 }
             }
-            set {
-                if (this.P_NoBorder == TextConst.AVBool.True || value == TextConst.AVBool.True) {
+            set
+            {
+                if (this.P_NoBorder == TextConst.AVBool.True || value == TextConst.AVBool.True)
+                {
                     this.SetAttributeNotEmpty(AName_.is_layout_block, value);
-                } else {
+                }
+                else
+                {
                     this.SetAttributeNotEmpty(AName_.is_layout_block, TextConst.AVBool.False);
                 }
             }
@@ -5043,7 +5509,7 @@ namespace sql.builder.DataApi
         }
         public virtual bool P_IsLayoutBlock_Exists()
         {
-            return P_NoBorder_Exists() ;
+            return P_NoBorder_Exists();
         }
         public virtual string P_IsLayoutBlock_FieldGroup()
         {
@@ -5051,11 +5517,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region IsVertical
-        public virtual string P_IsVertical {
-            get {
+        public virtual string P_IsVertical
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.is_vertical);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.is_vertical, value);
             }
         }
@@ -5085,19 +5554,27 @@ namespace sql.builder.DataApi
         private VParam GetCalledElementFormalParamByIndex(int index)
         {
             IList<VParam> pars = this.GetCalledElementFormalParams();
-            if (pars == null || index >= pars.Count) {
+            if (pars == null || index >= pars.Count)
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return pars[index];
             }
         }
-        public virtual string P_FormalParamInfo {
-            get {
+        public virtual string P_FormalParamInfo
+        {
+            get
+            {
                 int index = this.ElementsBeforeSelf().Count();
                 VParam fpar = this.GetParent().GetCalledElementFormalParamByIndex(index);
-                if (fpar != null) {
+                if (fpar != null)
+                {
                     return fpar.P_Name;
-                } else {
+                }
+                else
+                {
                     return string.Empty;
                 }
             }
@@ -5120,20 +5597,29 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Text
-        public virtual string P_Text {
-            get {
+        public virtual string P_Text
+        {
+            get
+            {
                 XElement txtNode = this.Element(EName.text);
-                if (txtNode != null) {
+                if (txtNode != null)
+                {
                     return txtNode.Value;
-                } else {
+                }
+                else
+                {
                     return string.Empty;
                 }
             }
-            set {
+            set
+            {
                 XElement txtNode = this.Element(EName.text);
-                if (txtNode == null) {
+                if (txtNode == null)
+                {
                     this.Add(new XElement(EName.text, value));
-                } else {
+                }
+                else
+                {
                     txtNode.Value = value;
                 }
             }
@@ -5157,18 +5643,25 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region MultiSelect (VReport, VQuery и VGrid)
-        public virtual string P_MultiSelect {
-            get {
+        public virtual string P_MultiSelect
+        {
+            get
+            {
                 string value = this.AttrOrDefault(AName_.multi_select, TextConst.AVBool.True);
-                if (value == TextConst.AVBool.False) {
+                if (value == TextConst.AVBool.False)
+                {
                     value = string.Empty;
                 }
                 return value;
             }
-            set {
-                if (string.IsNullOrEmpty(value)) {
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
                     value = TextConst.AVBool.False;
-                } else if (value == TextConst.AVBool.True) {
+                }
+                else if (value == TextConst.AVBool.True)
+                {
                     value = null;
                 }
                 this.SetAttributeValue(AName_.multi_select, value);
@@ -5192,11 +5685,14 @@ namespace sql.builder.DataApi
         {
             return "Пусто если";
         }
-        public virtual string P_NullIf {
-            get {
+        public virtual string P_NullIf
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.nullif);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.nullif, value);
             }
         }
@@ -5212,10 +5708,12 @@ namespace sql.builder.DataApi
         }
         public virtual string P_Nvl
         {
-            get {
+            get
+            {
                 return this.AttrOrEmpty(AName_.nvl);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.nvl, value);
             }
         }
@@ -5225,11 +5723,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ParamType (VParam)
-        public virtual string P_ParamType {
-            get {
+        public virtual string P_ParamType
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -5247,11 +5748,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region FixedSide
-        public virtual string P_FixedSide {
-            get {
+        public virtual string P_FixedSide
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.fixed_side);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.fixed_side, value);
             }
         }
@@ -5311,11 +5815,14 @@ namespace sql.builder.DataApi
         {
             return "Множитель 10 в степени";
         }
-        public virtual string P_Multiplicer {
-            get {
+        public virtual string P_Multiplicer
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.mp);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.mp, value);
             }
         }
@@ -5329,11 +5836,14 @@ namespace sql.builder.DataApi
         {
             return "Группа колонок в отчете";
         }
-        public virtual string P_Colset {
-            get {
+        public virtual string P_Colset
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.colset);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.colset, value);
             }
         }
@@ -5347,11 +5857,14 @@ namespace sql.builder.DataApi
         {
             return "SecurityId";
         }
-        public virtual string P_SecurityId {
-            get {
+        public virtual string P_SecurityId
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.security_id);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.security_id, value);
             }
         }
@@ -5361,11 +5874,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region CustomControl
-        public virtual string P_CustomControl {
-            get {
+        public virtual string P_CustomControl
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.type_name);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.type_name, value);
             }
         }
@@ -5388,11 +5904,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Order (VQueryCall, VQuery и VGrset)
-        public virtual string P_Order {
-            get {
+        public virtual string P_Order
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.order);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.order, value);
             }
         }
@@ -5410,11 +5929,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ShowNulls
-        public virtual string P_ShowNulls {
-            get {
+        public virtual string P_ShowNulls
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.show_nulls);
             }
-            set {
+            set
+            {
                 this.SetAttrValue(AName_.show_nulls, value);
             }
         }
@@ -5432,11 +5954,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ExpandAll
-        public virtual string P_ExpandAll {
-            get {
+        public virtual string P_ExpandAll
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.expand_all);
             }
-            set {
+            set
+            {
                 this.SetAttrValue(AName_.expand_all, value);
             }
         }
@@ -5454,11 +5979,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region AutoCheck
-        public virtual string P_AutoCheck {
-            get {
+        public virtual string P_AutoCheck
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.auto_check);
             }
-            set {
+            set
+            {
                 this.SetAttrValue(AName_.auto_check, value);
             }
         }
@@ -5505,7 +6033,7 @@ namespace sql.builder.DataApi
             return typeof(UICheck).Name;
 
         }
-       
+
         public virtual bool P_MergeDimsets_Exists()
         {
 
@@ -5542,7 +6070,7 @@ namespace sql.builder.DataApi
             return typeof(UICheck).Name;
 
         }
-       
+
         public virtual bool P_StarScheme_Exists()
         {
 
@@ -5631,11 +6159,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region DontPush
-        public virtual string P_DontPush {
-            get {
+        public virtual string P_DontPush
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.dont_push);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.dont_push, value);
             }
         }
@@ -5653,11 +6184,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Prompt (VAction и наследники: VUseAction и VUICommand)
-        public virtual string P_Prompt {
-            get {
+        public virtual string P_Prompt
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -5680,11 +6214,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Message (VAction и наследники: VUseAction и VUICommand)
-        public virtual string P_Message {
-            get {
+        public virtual string P_Message
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -5707,42 +6244,48 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Notification (VAction и наследники: VUseAction и VUICommand)
-        public virtual string P_Notification {
-			get {
-                throw new NotImplementedException();
-			}
-            set {
+        public virtual string P_Notification
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-		}
-		public virtual string P_Notification_Title()
-		{
-			return "Уведомление";
-		}
-		public virtual string P_Notification_ControlType()
-		{
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+        public virtual string P_Notification_Title()
+        {
+            return "Уведомление";
+        }
+        public virtual string P_Notification_ControlType()
+        {
             throw new NotImplementedException();
             //return typeof(UITextEx).Name;
-		}
-		public virtual bool P_Notification_Exists()
-		{
-			return false;
-		}
-		public virtual bool P_Notification_Editable()
-		{
-			return true;
-		}
-		#endregion
-		#region ClientCalulation
-		public virtual string P_ClientCalulation_Title()
+        }
+        public virtual bool P_Notification_Exists()
+        {
+            return false;
+        }
+        public virtual bool P_Notification_Editable()
+        {
+            return true;
+        }
+        #endregion
+        #region ClientCalulation
+        public virtual string P_ClientCalulation_Title()
         {
             return "Вып. выч. на клиенте  (для выр. верхн. ур. и усл. в dimset и для table=не в базе.)";
         }
-        public virtual string P_ClientCalulation {
-            get {
+        public virtual string P_ClientCalulation
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.client_calc);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.client_calc, value);
             }
         }
@@ -5794,11 +6337,14 @@ namespace sql.builder.DataApi
         {
             return "Просмотр Excel";
         }
-        public virtual string P_ClientView {
-            get {
+        public virtual string P_ClientView
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -5812,11 +6358,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region PrintXlsx (VPrintTemplate)
-        public virtual string P_PrintXlsx {
-            get {
+        public virtual string P_PrintXlsx
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -5834,11 +6383,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region UseFlexCel (VPrintTemplate)
-        public virtual string P_UseFlexCel {
-            get {
+        public virtual string P_UseFlexCel
+        {
+            get
+            {
                 throw new NotImplementedException();
             }
-            set {
+            set
+            {
                 throw new NotImplementedException();
             }
         }
@@ -5855,35 +6407,35 @@ namespace sql.builder.DataApi
             return false;
         }
         #endregion
-		#region DetailsUseZeros 
-		public virtual string P_DetailsUseZeros
-		{
-			get
-			{
-				return GetAttrValue(TextConst.AName.DetailsUseZeros);
-			}
-			set
-			{
-				SetAttributeNotEmpty(TextConst.AName.DetailsUseZeros, value);
-			}
-		}
+        #region DetailsUseZeros 
+        public virtual string P_DetailsUseZeros
+        {
+            get
+            {
+                return GetAttrValue(TextConst.AName.DetailsUseZeros);
+            }
+            set
+            {
+                SetAttributeNotEmpty(TextConst.AName.DetailsUseZeros, value);
+            }
+        }
 
-		public virtual string P_DetailsUseZeros_Title()
-		{
-			return "Показывать строки с нулями";
-		}
+        public virtual string P_DetailsUseZeros_Title()
+        {
+            return "Показывать строки с нулями";
+        }
 
-		public virtual string P_DetailsUseZeros_ControlType()
-		{
-			return typeof(UICheck).Name;
-		}
+        public virtual string P_DetailsUseZeros_ControlType()
+        {
+            return typeof(UICheck).Name;
+        }
 
-		public virtual bool P_DetailsUseZeros_Exists()
-		{
-			return false;
-		}
+        public virtual bool P_DetailsUseZeros_Exists()
+        {
+            return false;
+        }
 
-		#endregion
+        #endregion
 
         #region EnableShowHiddenCollumnsOption
         public virtual string P_EnableShowHiddenCollumnsOption
@@ -5915,42 +6467,51 @@ namespace sql.builder.DataApi
 
         #endregion
 
-		#region hint
-		public virtual string P_Hint {
-			get {
+        #region hint
+        public virtual string P_Hint
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.hint);
-			}
-			set {
-				this.SetAttributeNotEmpty(AName_.hint, value);
-			}
-		}
-		public virtual string P_Hint_Title()
-		{
-			return "Подсказка";
-		}
-		public virtual string P_Hint_ControlType()
-		{
+            }
+            set
+            {
+                this.SetAttributeNotEmpty(AName_.hint, value);
+            }
+        }
+        public virtual string P_Hint_Title()
+        {
+            return "Подсказка";
+        }
+        public virtual string P_Hint_ControlType()
+        {
             throw new NotImplementedException();
             //return typeof(UITextEx).Name;
-		}
-		public virtual bool P_Hint_Exists()
-		{
-			return false;
-		}
-		public virtual bool P_Hint_Editable()
-		{
-			return true;
-		}
-		#endregion
-		#region intern
-        public virtual string P_Intern {
-            get {
+        }
+        public virtual bool P_Hint_Exists()
+        {
+            return false;
+        }
+        public virtual bool P_Hint_Editable()
+        {
+            return true;
+        }
+        #endregion
+        #region intern
+        public virtual string P_Intern
+        {
+            get
+            {
                 return this.AttrOrDefault(AName_.intern, TextConst.AVBool.False);
             }
-            set {
-                if (value != TextConst.AVBool.True) {
+            set
+            {
+                if (value != TextConst.AVBool.True)
+                {
                     this.RemoveAttribute(AName_.intern);
-                } else {
+                }
+                else
+                {
                     this.SetAttrValue(AName_.intern, TextConst.AVBool.True);
                 }
             }
@@ -5964,13 +6525,13 @@ namespace sql.builder.DataApi
             return typeof(UICheck).Name;
         }
         public virtual bool P_Intern_Exists()
-		{
-			return false;
-		}
+        {
+            return false;
+        }
         public virtual bool P_Intern_Editable()
         {
             return true;
         }
         #endregion
-	}
+    }
 }

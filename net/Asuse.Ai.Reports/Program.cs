@@ -1,10 +1,7 @@
-using FastReport.DataVisualization.Charting;
-using Microsoft.Extensions.Configuration;
+using System.Text.Json;
+using Asuse.Ai.Reports.Converters;
 using Asuse.Ai.Reports.Services;
 using Asuse.Ai.Reports.Settings;
-using Asuse.Ai.Reports.Converters;
-using System.Runtime;
-using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<ReportingSettings>(builder.Configuration.GetSection("Reporting"));

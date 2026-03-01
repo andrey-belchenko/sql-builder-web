@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using System.Text;
-using sql.builder;
-using System.Data;
+﻿using System.Data;
 namespace sql.builder.DataApi
 {
     public partial class VDataTable : DataTable
     {
-       
+
         public bool IsNonDb = false;
 
         public delegate void VDataTableEventHandler(VDataTable table);
         public delegate void VDataRowEventHandler(DataRow row);
-        public delegate void VDataCellEventHandler(DataRow row,VDataColumn column);
+        public delegate void VDataCellEventHandler(DataRow row, VDataColumn column);
         public event VDataTableEventHandler CustomFill = null;
         public event VDataRowEventHandler CustomRowSave_Added = null;
         public event VDataRowEventHandler CustomRowSave_Modified = null;
@@ -23,7 +17,7 @@ namespace sql.builder.DataApi
         public event VDataRowEventHandler CustomRowRefresh = null;
         private void raiseCustomFill()
         {
-           
+
             if (CustomFill != null)
             {
                 this.BeginLoadData();
@@ -41,7 +35,7 @@ namespace sql.builder.DataApi
             {
                 CustomRowSave_Added(row);
             }
-            
+
         }
         private void raiseCustomRowSave_Modified(DataRow row)
         {
@@ -61,5 +55,5 @@ namespace sql.builder.DataApi
         }
     }
 
-    
+
 }

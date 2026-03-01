@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using System.Reflection;
 
 namespace sql.builder.DataApi
@@ -35,9 +33,9 @@ namespace sql.builder.DataApi
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VQueryCall>);
             }
 
-           
 
-         
+
+
 
 
 
@@ -68,7 +66,7 @@ namespace sql.builder.DataApi
             }
 
 
-     
+
 
             var links = new List<VQueryCall>();
 
@@ -121,7 +119,7 @@ namespace sql.builder.DataApi
             {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), dimsetAlias) as List<VQueryCall>);
             }
-           
+
             var links = new List<VQueryCall>();
 
             var dimSet = GetDimSet(dimsetAlias);

@@ -11,8 +11,8 @@ namespace sql.builder.asuse
             XmlReports.executeNonQuery(sql, con);
 
             sql = string.Format(
-                 "insert into tmp_objfilter (kod_refobject, objid, x_kodp, nump, name, kodd) " + 
-                 "select 2, d.kod_dog, p.kodp, p.nump, p.name, p.kod_d " + 
+                 "insert into tmp_objfilter (kod_refobject, objid, x_kodp, nump, name, kodd) " +
+                 "select 2, d.kod_dog, p.kodp, p.nump, p.name, p.kod_d " +
                  "from {2} t " +
                  "inner join kr_dogovor d on d.kod_dog = t.{1} " +
                  "inner join kr_payer p on p.kodp = d.kodp " +

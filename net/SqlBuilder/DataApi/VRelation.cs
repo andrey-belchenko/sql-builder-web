@@ -30,8 +30,10 @@ namespace sql.builder.DataApi
             XElement query = XmlReports.Environment.GetQuery(this.ParentName);
             return (VQuery)query;
         }
-        public new string ParentName {
-            get {
+        public new string ParentName
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.name);
             }
         }
@@ -56,12 +58,16 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region DXTitle
-        public override string P_DXTitle {
-            get {
+        public override string P_DXTitle
+        {
+            get
+            {
                 string s = this.P_DTitle;
-                if (s == "") {
+                if (s == "")
+                {
                     VSourcedElement qry = this.RootQuery();
-                    if (qry != null) {
+                    if (qry != null)
+                    {
                         s = qry.P_SelfTitle;
                     }
                 }

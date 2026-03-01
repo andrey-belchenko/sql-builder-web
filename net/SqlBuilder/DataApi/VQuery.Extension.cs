@@ -1,12 +1,12 @@
-﻿using System.Linq;
-using System.Xml.Linq;
-//using infoenergo.core.Extensions;
+﻿//using infoenergo.core.Extensions;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using sql.builder.Exceptions;
-using _AName = sql.builder.DataApi.AName;
+using System.Xml.Linq;
 //using sql.builder.WebReports;
 using sql.builder.Clean.Extensions;
+using sql.builder.Exceptions;
+using _AName = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {

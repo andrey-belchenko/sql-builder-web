@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 ////using System.Windows.Forms;
 //using DevExpress.XtraEditors.Controls;
 //using DevExpress.XtraWaitForm;
@@ -19,11 +18,14 @@ namespace sql.builder
         }
         public static void HideCursor()
         {
-           //LastUsedUIHelper.Hide();
+            //LastUsedUIHelper.Hide();
         }
-        public static WaitUIHelper LastUsedUIHelper {
-            get {
-                if (last_used_ui_helper == null) {
+        public static WaitUIHelper LastUsedUIHelper
+        {
+            get
+            {
+                if (last_used_ui_helper == null)
+                {
                     last_used_ui_helper = new WaitUIHelper(null);
                 }
                 return last_used_ui_helper;
@@ -177,13 +179,13 @@ namespace sql.builder
             //}
             //this._formControlStates.Clear();
         }
-       
+
         private class WaitUIInfo
         {
-            public string Caption {get;set;}
-            public WaitUIMode Mode {get;set;}
-            public bool Overlap {get;set;}
-            public string Description {get;set;}
+            public string Caption { get; set; }
+            public WaitUIMode Mode { get; set; }
+            public bool Overlap { get; set; }
+            public string Description { get; set; }
             public static bool IsWaitPanel(WaitUIInfo info)
             {
                 return info.Mode == WaitUIMode.WaitPanel;

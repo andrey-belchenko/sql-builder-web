@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using System.Reflection;
 namespace sql.builder.DataApi
 {
 
 
-    public partial class VQueryCall : VSXElement 
+    public partial class VQueryCall : VSXElement
     {
         #region old
         protected override List<ElementUse> searchUses()
@@ -15,11 +12,11 @@ namespace sql.builder.DataApi
             if (true)
             {
                 var list1 = this.UsedColumns();
-               
+
 
                 foreach (var el1 in list1)
                 {
-                    list.Add(new ElementUse(this,el1, TextConst.AName.Table));
+                    list.Add(new ElementUse(this, el1, TextConst.AName.Table));
                 }
             }
 
@@ -41,9 +38,9 @@ namespace sql.builder.DataApi
                                 var qry = el2.Query();
                                 if (qry != null)
                                 {
-                                    if (qry.P_IdName==this.Query().P_IdName)
+                                    if (qry.P_IdName == this.Query().P_IdName)
                                     {
-                                        list.Add(new ElementUse(this,el2, TextConst.AName.Name));
+                                        list.Add(new ElementUse(this, el2, TextConst.AName.Name));
                                         if (el2.XName == el2.P_CalledQuery)
                                         {
                                             var uses = el2.searchUses();
@@ -62,6 +59,6 @@ namespace sql.builder.DataApi
         }
         #endregion
 
-       
+
     }
 }

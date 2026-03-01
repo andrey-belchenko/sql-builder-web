@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 //using System.Windows.Forms;
 namespace sql.builder.UI
 {
-    public class VLayout: IDisposable
+    public class VLayout : IDisposable
     {
         public enum Dock
         {
@@ -22,7 +20,7 @@ namespace sql.builder.UI
 
         public VLayout()
         {
-          
+
             mainGroup = new VLayoutGroupInfo(this, null);
             GetMainGroup().IsFiller = true;
             GetMainGroup().HasBorder = false;
@@ -157,7 +155,7 @@ namespace sql.builder.UI
 
         }
         private VLayoutGroupInfo mainGroup;
-   
+
         //public IVControlsFactory GetControlsFactory()
         //{
         //    return UIStatic.GetControlsfactory();
@@ -169,7 +167,7 @@ namespace sql.builder.UI
             return mainGroup;
         }
         public bool hasChanges = true;
-        public bool Suspended=false;
+        public bool Suspended = false;
         public void RefreshLayoutIfNeed()
         {
             if (Suspended) return;

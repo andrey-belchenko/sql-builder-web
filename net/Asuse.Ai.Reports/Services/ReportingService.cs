@@ -1,11 +1,10 @@
-using FastReport.Data;
-using FastReport;
-using Npgsql;
 using System.Data;
-using FastReport.Web;
-using Microsoft.AspNetCore.Mvc;
 using Asuse.Ai.Reports.Settings;
+using FastReport;
+using FastReport.Data;
+using FastReport.Web;
 using Microsoft.Extensions.Options;
+using Npgsql;
 
 namespace Asuse.Ai.Reports.Services
 {
@@ -28,14 +27,14 @@ namespace Asuse.Ai.Reports.Services
             webReport.Report.Load(template);
             var dataSet = ExtractDataSetStruct(webReport.Report);
             await _tempDataService.FillDataSet(dataSet, dataSetName, isSingleTable);
-      
+
             foreach (DataTable dataTable in dataSet.Tables)
             {
                 webReport.Report.RegisterData(dataTable, dataTable.TableName);
             }
             return webReport;
         }
-       
+
         private async Task<Stream> ReadTemplate(string templateId)
         {
             await using var conn = new NpgsqlConnection(_settings.PgConnectionString);

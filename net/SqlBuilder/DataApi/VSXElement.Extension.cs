@@ -3,8 +3,8 @@ using System.Linq;
 using System.Xml.Linq;
 //using infoenergo.core.Extensions;
 using sql.builder.Clean.Extensions;
-using sql.builder.UI;
 using sql.builder.Exceptions;
+using sql.builder.UI;
 namespace sql.builder.DataApi
 {
     public partial class VSXElement : VXElement
@@ -15,7 +15,7 @@ namespace sql.builder.DataApi
             var vc = (this as VColumn);
             if (vc != null)
             {
-                if (vc.Source().P_Updateable==TextConst.AVBool.True)
+                if (vc.Source().P_Updateable == TextConst.AVBool.True)
                 {
                     return vc.SourceColumn()[0].GetColumnTempName();
                 }
@@ -26,7 +26,7 @@ namespace sql.builder.DataApi
 
         public virtual VSXElement GetDummyOrSelf()
         {
-            
+
             return this;
         }
         public VField CreateFieldFromQueryColumn()
@@ -47,7 +47,7 @@ namespace sql.builder.DataApi
             //    element.SetAttributeValue(TextConst.AName.EditMask, tcol.AttrOrDef(TextConst.AName.Format, "n2"));
             //}
             // Емцов - UINumber всегда показывает кнопку - переделал на UIText
-            
+
             var format = tcol.XFormat();
             if (format != "")
             {
@@ -103,7 +103,7 @@ namespace sql.builder.DataApi
                 s = col.P_RowsLimit;
 
 
-                
+
             }
 
             if (s != "")
@@ -124,7 +124,7 @@ namespace sql.builder.DataApi
                 return ct;
             }
 
-            VQuery typeQry=null;
+            VQuery typeQry = null;
             VColumn col = null;
             if (this is VColumn)
             {
@@ -160,7 +160,7 @@ namespace sql.builder.DataApi
 
 
             typeQry = col.TypeQuery();
-           
+
             if (typeQry != null)
             {
                 if (typeQry.P_SpecTable == TextConst.AVSpecTable.File)
@@ -180,7 +180,7 @@ namespace sql.builder.DataApi
                     case TextConst.AVDataType.Date: return typeof(UIDate).Name;
                     case TextConst.AVDataType.Clob:
                         throw new NotImplementedException();
-                        //return typeof(UITextEx).Name;
+                    //return typeof(UITextEx).Name;
                     //case TextConst.AVType.Number: return typeof(UINumber).Name;
                     default: return typeof(UIText).Name;
                 }
@@ -195,11 +195,11 @@ namespace sql.builder.DataApi
             while (!el.IsMainElement())
             {
 
-                s = el.ElementsBeforeSelf().Count().ToString() + q+ s;
+                s = el.ElementsBeforeSelf().Count().ToString() + q + s;
                 q = "/";
-              
+
                 el = el.GetParent();
-                
+
             }
             return s;
         }
@@ -213,13 +213,13 @@ namespace sql.builder.DataApi
 
             foreach (string s in ss)
             {
-                if (s =="") break;
+                if (s == "") break;
                 int i = Convert.ToInt32(s);
 
                 if (element.Elements().Count() > i)
                 {
 
-                    element = Get( element.Elements().ElementAt(i));
+                    element = Get(element.Elements().ElementAt(i));
 
                 }
                 else
@@ -240,7 +240,7 @@ namespace sql.builder.DataApi
 
             Cmn.copyAttributes(this, xform);
 
-           
+
             return xform;
         }
 
@@ -264,7 +264,7 @@ namespace sql.builder.DataApi
 
 
 
-   
+
 
 
 

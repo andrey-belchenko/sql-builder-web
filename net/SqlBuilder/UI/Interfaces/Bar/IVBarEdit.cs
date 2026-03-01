@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-namespace sql.builder.UI
+﻿namespace sql.builder.UI
 {
-    public interface IVBarEditContainer : IVControl,IVBarItem
+    public interface IVBarEditContainer : IVControl, IVBarItem
     {
 
         //void AddButton(IVBarItem button, bool beginGroup);

@@ -1,13 +1,8 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml.Linq;
 using infoenergo.sys;
 using sql.builder.DataApi;
-using sql.builder.UI;
 using sql.builder.WinForms;
-using SqlBuilderLib.DevTools;
 
 namespace sql.builder.Clean
 {
@@ -63,13 +58,14 @@ namespace sql.builder.Clean
             ChangeConnection(connection);
         }
 
-        public static void Init(){
+        public static void Init()
+        {
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
             XmlReports.SetGlobalParValue("dep", 3580m);
         }
         public static XElement GetFormConfig(string reportName)
         {
-            var projRep =  CleanFrmExpressReport.GetProjectFromReportName(reportName);
+            var projRep = CleanFrmExpressReport.GetProjectFromReportName(reportName);
             string project = projRep.Item1;
             reportName = projRep.Item2;
             var report = XmlReports.Environment.GetPrecompiledReport(reportName, project);

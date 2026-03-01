@@ -1,17 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
-using Npgsql;
 using sql.builder;
-using sql.builder.Clean;
 using sql.builder.Clean.Extensions;
 using sql.builder.DataApi;
-using sql.builder.UI;
 
 namespace SqlBuilderLib.DevTools
 {
@@ -67,14 +61,14 @@ namespace SqlBuilderLib.DevTools
             var formState = formStates.ContainsKey(form) ? formStates[form] : new FormGenerationState();
 
             var sb = new StringBuilder();
-            
+
             // Generate imports
             GenerateFormImports(sb, formState);
-            
+
             sb.AppendLine();
             sb.AppendLine("export default new Form({");
             sb.AppendLine("    items: [");
-            
+
             // Add items
             for (int i = 0; i < formState.Items.Count; i++)
             {
@@ -88,13 +82,13 @@ namespace SqlBuilderLib.DevTools
                     sb.AppendLine();
                 }
             }
-            
+
             sb.AppendLine("    ],");
             sb.AppendLine("});");
 
             File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
             Console.WriteLine($"Generated form TypeScript file: {filePath}");
-            
+
             // Clean up form state after generation
             formStates.Remove(form);
         }
@@ -103,12 +97,12 @@ namespace SqlBuilderLib.DevTools
         {
             // Form import
             sb.AppendLine("import { Form } from '@/system/reports/types/Form';");
-            
+
             // Field imports (always needed if there are items)
             if (formState.Items.Count > 0)
             {
                 sb.AppendLine("import { Field } from '@/system/reports/types/Field';");
-                
+
                 // Check if any items are FieldGroups (they contain "new FieldGroup")
                 bool hasFieldGroup = formState.Items.Any(item => item.Contains("new FieldGroup"));
                 if (hasFieldGroup)
@@ -116,7 +110,7 @@ namespace SqlBuilderLib.DevTools
                     sb.AppendLine("import { FieldGroup } from '@/system/reports/types/FieldGroup';");
                 }
             }
-            
+
             // Editor imports
             foreach (var editorType in formState.EditorTypes.OrderBy(x => x))
             {
@@ -139,13 +133,13 @@ namespace SqlBuilderLib.DevTools
                         break;
                 }
             }
-            
+
             // Utils imports
             if (formState.NeedsExecQueryByName)
             {
                 sb.AppendLine("import { execQueryByName } from '../../utils';");
             }
-            
+
             if (formState.NeedsGetFirstValue)
             {
                 sb.AppendLine("import { getFirstValue } from '../../utils';");
@@ -155,7 +149,7 @@ namespace SqlBuilderLib.DevTools
         private static void ProcessContentChildren(VForm form, VSXElement parent, CleanExpressReport rep)
         {
             var formState = GetOrCreateFormState(form);
-            
+
             foreach (var element in parent.GetElementsP())
             {
                 if (element is VField field)

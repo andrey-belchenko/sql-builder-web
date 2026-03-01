@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.DataApi
@@ -29,7 +28,7 @@ namespace sql.builder.DataApi
                    (name == AName.quickview) || (name == AName.qv_split) ||
                    (name == AName.c_master) || (name == AName.c_master_key) || (name == AName.colset) ||
                    (name == AName.color) || (name == AName.halign) || (name == AName.merge_key);
-                 
+
         }
         public static bool IsAdditionalAttribute(XAttribute a)
         {

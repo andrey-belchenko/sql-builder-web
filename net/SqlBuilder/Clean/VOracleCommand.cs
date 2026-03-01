@@ -1,6 +1,4 @@
 using System;
-using System.Data;
-using System.Data.Common;
 using Devart.Data.Oracle;
 using SqlBuilderLib.DevTools;
 
@@ -26,7 +24,7 @@ namespace sql.builder.Clean
             {
                 string oldValue = base.CommandText;
                 base.CommandText = value;
-                
+
                 // Raise event when CommandText is set
                 OnCommandTextChanged(oldValue, value);
             }
@@ -58,7 +56,7 @@ namespace sql.builder.Clean
         /// <summary>
         /// Constructor with command text, connection, and transaction
         /// </summary>
-        public VOracleCommand(string commandText, OracleConnection connection, OracleTransaction transaction) 
+        public VOracleCommand(string commandText, OracleConnection connection, OracleTransaction transaction)
             : base(commandText, connection, transaction)
         {
             OnCommandTextChanged(null, commandText);

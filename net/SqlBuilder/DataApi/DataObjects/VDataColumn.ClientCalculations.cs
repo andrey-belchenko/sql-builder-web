@@ -1,14 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using Devart.Data.Oracle;
-using System;
-using System.Xml;
+﻿using System;
 using System.Xml.Linq;
-using System.Xml.Xsl;
-using System.Xml.XPath;
-using System.Linq;
-using System.IO;
-using sql.builder.Print.Xlsx;
 namespace sql.builder.DataApi
 {
     public partial class VDataColumn
@@ -28,9 +19,9 @@ namespace sql.builder.DataApi
             if (XExpression == null)
             {
                 findAndSetAndParseClientCalculationsExpr();
-                var ret=new XElement(TextConst.EName.Root);
+                var ret = new XElement(TextConst.EName.Root);
                 Compiler.eFunction(XExpression, ret, "excel");
-               // Compiler.eFunction(XExpression, ret,"excel");
+                // Compiler.eFunction(XExpression, ret,"excel");
                 excelFormula = ret;
             }
             return excelFormula;
@@ -71,7 +62,7 @@ namespace sql.builder.DataApi
             var xcol = new XElement(xquery.SearchColumn(colName));
             Compiler.processingArrays(xcol);
             XExpression = xcol;
-            
+
 
         }
 
@@ -81,7 +72,7 @@ namespace sql.builder.DataApi
             ParsedExpression = VClientCalculations.ParseCall(XExpression);
 
         }
-        public IClientCalculationCall ParsedExpression = null; 
+        public IClientCalculationCall ParsedExpression = null;
         public XElement XExpression = null;
 
         public void EvaluateExpression(VClientCalculations.DataAccessor dataAccessor)
@@ -98,12 +89,12 @@ namespace sql.builder.DataApi
                 exp = GetTable().GetColumn(OriginalNameForPivotColumn).ParsedExpression;
             }
             var val = exp.Evaluate(dataAccessor);
-            val= Cmn.Nvl( val,DBNull.Value);
+            val = Cmn.Nvl(val, DBNull.Value);
             dataAccessor.SetValue(this.ColumnName, val);
-            
+
         }
 
-        
+
 
 
 

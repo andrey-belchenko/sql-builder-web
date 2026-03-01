@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace sql.builder.Print.Xlsx
@@ -15,12 +12,14 @@ namespace sql.builder.Print.Xlsx
         {
             this._rels = new List<ExcelRel>();
             this.last_id = 0;
-            foreach (XElement xrel in this.xml.Root.Elements(ns.Relsp.Relationship)) {
+            foreach (XElement xrel in this.xml.Root.Elements(ns.Relsp.Relationship))
+            {
                 string rid = xrel.Attribute(ns.None.Id).Value;
                 string type = xrel.Attribute(ns.None.Type).Value;
                 string target = xrel.Attribute(ns.None.Target).Value;
                 int id = int.Parse(rid.Substring(3));
-                if (this.last_id < id) {
+                if (this.last_id < id)
+                {
                     this.last_id = id;
                 }
                 this._rels.Add(new ExcelRel(rid, type, target));

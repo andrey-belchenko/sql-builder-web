@@ -14,7 +14,7 @@ namespace sql.builder.XmlHelpers
     {
         private static DataTable _dt_repositories;
         private static List<string> _excepted_queries;
-       
+
         // !!!ВЕмцов Генерацию Sql пакета и view перенес в класс SqlRepository
 
         public static DataTable GetQueryRepositories(XElement query)
@@ -37,18 +37,18 @@ namespace sql.builder.XmlHelpers
         }
 
 
-        
+
 
         public static string GetSelectSql(string query_name)
         {
-            return ((VDataTable)XmlReports.Environment.GetPrecompiledReport(query_name).Result(2,false).Tables[0]).DataAdapter.SelectCommand.CommandText;
+            return ((VDataTable)XmlReports.Environment.GetPrecompiledReport(query_name).Result(2, false).Tables[0]).DataAdapter.SelectCommand.CommandText;
         }
 
         public static string GetSelectSql(XElement xquery)
         {
             xquery = new XElement(xquery);
-   
-    
+
+
 
             XElement xquery1 = null;
             if (xquery.Elements("select").Elements().Any(e => Cmn.GetAttrValue(e, "stored") == "0") ||
@@ -64,27 +64,27 @@ namespace sql.builder.XmlHelpers
 
                 xquery.SetAttributeValue(TextConst.AName.As, "a");
                 xquery.Attributes("name").Remove();
-                 xquery1 = new XElement(TextConst.EName.Query
-                    , new XElement(TextConst.EName.Select)
-                    , new XElement(TextConst.EName.From
-                   //,  new XElement (TextConst.EName.Query
-                         //,new XAttribute(TextConst.AName.Name,xquery.Attribute(TextConst.AName.Name).Value)
-                         // , new XAttribute(TextConst.AName.As, "a")
-                         //)
-                         , xquery
-                  )
-                    
-                    );
+                xquery1 = new XElement(TextConst.EName.Query
+                   , new XElement(TextConst.EName.Select)
+                   , new XElement(TextConst.EName.From
+                        //,  new XElement (TextConst.EName.Query
+                        //,new XAttribute(TextConst.AName.Name,xquery.Attribute(TextConst.AName.Name).Value)
+                        // , new XAttribute(TextConst.AName.As, "a")
+                        //)
+                        , xquery
+                 )
+
+                   );
 
 
-               
 
-                 foreach (XElement col in xquery2.Elements(TextConst.EName.Select).Elements().ToList())
+
+                foreach (XElement col in xquery2.Elements(TextConst.EName.Select).Elements().ToList())
                 {
                     //if ((new string[] { "kod_ipr", "nzs_itog" }).Contains(col.Attribute(TextConst.AName.As).Value))
-                   
-                     if (! unusedCols.Contains( col.Attribute(TextConst.AName.As).Value))
-                     {
+
+                    if (!unusedCols.Contains(col.Attribute(TextConst.AName.As).Value))
+                    {
                         xquery1.Element(TextConst.EName.Select).Add(new XElement(TextConst.EName.Column
                             , new XAttribute(TextConst.AName.Table, "a")
                                 , new XAttribute(TextConst.AName.Column, col.Attribute(TextConst.AName.As).Value)
@@ -100,8 +100,8 @@ namespace sql.builder.XmlHelpers
             }
             //xquery.Elements("select").Elements().Where(e => Cmn.GetAttrValue(e, "stored") == "0").Remove();
             //xquery.Elements("select").Elements().Where(e => Cmn.GetAttrValue(e, "virtual") == "1").Remove();
-           
-            return ((VDataTable)XmlReports.Environment.GetPrecompiledReport(xquery1).Result(2,false).Tables[0]).DataAdapter.SelectCommand.CommandText;
+
+            return ((VDataTable)XmlReports.Environment.GetPrecompiledReport(xquery1).Result(2, false).Tables[0]).DataAdapter.SelectCommand.CommandText;
         }
         #region Закрытые методы
         private static void FillQueryRepository(XElement query_link, string parent_query_name)
@@ -132,7 +132,7 @@ namespace sql.builder.XmlHelpers
                 if (dt_report_info.Rows.Count == 1)
                 {
                     date_form = dt_report_info.Rows[0]["date_start_upd"];
-                    if(date_form == DBNull.Value) date_form = dt_report_info.Rows[0]["date_start"];
+                    if (date_form == DBNull.Value) date_form = dt_report_info.Rows[0]["date_start"];
                 }
 
                 _dt_repositories.Rows.Add(rep_table, query_name, parent_query_name, query_title, date_form);
@@ -158,7 +158,7 @@ namespace sql.builder.XmlHelpers
                 AddLog(rep_table, "Начало формирования", "");
 
                 // Текст select-а для заполнения хранилища
-                var select_sql = ((VDataTable)XmlReports.Environment.GetPrecompiledReport(query_name).Result(2,false).Tables[0]).DataAdapter.SelectCommand.CommandText;
+                var select_sql = ((VDataTable)XmlReports.Environment.GetPrecompiledReport(query_name).Result(2, false).Tables[0]).DataAdapter.SelectCommand.CommandText;
                 // Список колонок для insert-а в таблицу
                 var into_columns = String.Join(",", XmlReports.Environment.Manager.GetScheme().Elements("queries").Elements()
                                        .First(que => que.Attribute("name").Value == query_name)
@@ -296,7 +296,7 @@ namespace sql.builder.XmlHelpers
                                          .Element("select").Elements()
                                          .Select(col => col.Attribute("as").Value));
 
-         //   string rec_columns;
+            //   string rec_columns;
             string sql = "";
             {
                 // !!! Дописать если понадобится создание простого insert...select всех записей без цикла 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
@@ -22,7 +22,8 @@ namespace sql.builder.DataApi
             list.AddRange(this.GetWhereSections());
             list.AddRange(this.GetHavingSections());
             list.AddRange(this.GetMEIFromSections());
-            if (this is VForm) {
+            if (this is VForm)
+            {
                 list.AddRange(this.GetContentSections());
             }
             return list;
@@ -47,7 +48,8 @@ namespace sql.builder.DataApi
         {
             var list = this.Elements(EName.content).Select(VSXElement.Get).ToList();
             list.AddRange(this.Elements(EName.toolbar).Select(VSXElement.Get).ToList());
-            if (list.Count == 0 && this is VForm) {
+            if (list.Count == 0 && this is VForm)
+            {
                 return this.AsList();
             }
             return list;
@@ -75,42 +77,54 @@ namespace sql.builder.DataApi
         // overrided in VReport
         public virtual List<VQueryCall> AllSources()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VQueryCall>);
             }
             List<VQueryCall> srcs = new List<VQueryCall>();
             VSourcedElement heir = null;
-            if (this.IsInherit()) {
+            if (this.IsInherit())
+            {
                 heir = this;
             }
-            foreach (XElement el in this.GetMEIFromSections().SelectMany(VSXElement.GetElementsP).ToArray()) {
-                if (el is VQueryCall) {
+            foreach (XElement el in this.GetMEIFromSections().SelectMany(VSXElement.GetElementsP).ToArray())
+            {
+                if (el is VQueryCall)
+                {
                     VQueryCall qel = VSXElement.Get<VQueryCall>(el);
                     srcs.Add(qel);
-                    foreach (VQueryCall el1 in qel.AllLinks(heir)) {
-                        if (!(el1 is VDimLink) && !(el1 is VQube)) {
+                    foreach (VQueryCall el1 in qel.AllLinks(heir))
+                    {
+                        if (!(el1 is VDimLink) && !(el1 is VQube))
+                        {
                             srcs.Add(el1);
                         }
                     }
                 }
                 VQube qube = el as VQube;
-                if (qube != null) {
-                    foreach (VQueryCall el1 in qube.FactLinks()) {
+                if (qube != null)
+                {
+                    foreach (VQueryCall el1 in qube.FactLinks())
+                    {
                         srcs.Add(el1);
                     }
                 }
             }
-            foreach (VXElement el in GetNamedSections(TextConst.EName.Params).SelectMany(VSXElement.GetElementsP).ToArray()) {
+            foreach (VXElement el in GetNamedSections(TextConst.EName.Params).SelectMany(VSXElement.GetElementsP).ToArray())
+            {
                 VParam par = el as VParam;
-                if (par != null) {
-                    if (par.IsObject()) {
+                if (par != null)
+                {
+                    if (par.IsObject())
+                    {
                         VQueryCall qel = VSXElement.Get<VQueryCall>(par);
                         srcs.Add(qel);
                         srcs.AddRange(qel.AllLinks(heir));
                     }
                 }
             }
-            foreach (VXElement el in this.GetNamedSections(TextConst.EName.Queries).SelectMany(VSXElement.GetElementsP).ToArray()) {
+            foreach (VXElement el in this.GetNamedSections(TextConst.EName.Queries).SelectMany(VSXElement.GetElementsP).ToArray())
+            {
                 VQueryCall qel = VSXElement.Get<VQueryCall>(el);
                 srcs.Add(qel);
             }
@@ -120,9 +134,11 @@ namespace sql.builder.DataApi
         public virtual VQueryCall MainSource()
         {
             IList<VQueryCall> list = this.AllSources();
-            for (int index = 0; index < list.Count; index++) {
+            for (int index = 0; index < list.Count; index++)
+            {
                 VQueryCall el = list[index];
-                if (string.IsNullOrEmpty(el.P_Join)) {
+                if (string.IsNullOrEmpty(el.P_Join))
+                {
                     return el;
                 }
             }
@@ -134,34 +150,43 @@ namespace sql.builder.DataApi
         }
         public VSourcedElement GetMainIE()
         {
-            if (this.IsExtension()) {
+            if (this.IsExtension())
+            {
                 VQuery qry = XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.queries)
                  .Elements(EName.query).Where(e => e.Attribute(AName_.extend) == null && e.Attribute(AName_.name).Value == this.NameOrExtend())
                  .Select(VSXElement.Get<VQuery>).First();
                 return qry;
-            } else if (this.IsInherit()) {
+            }
+            else if (this.IsInherit())
+            {
                 VQuery qry = XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.queries)
                                  .Elements(EName.query).Where(e => e.Attribute(AName_.extend) == null && e.Attribute(AName_.name).Value == this.AttrOrEmpty(AName_.inherit))
                                  .Select(VSXElement.Get<VQuery>).First();
                 return qry;
-            } else {
+            }
+            else
+            {
                 return this;
             }
         }
         public VSourcedElement GetMainE()
         {
-            if (this.IsExtension()) {
+            if (this.IsExtension())
+            {
                 VQuery qry = XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.queries)
                  .Elements(EName.query).Where(e => e.Attribute(AName_.extend) == null && e.Attribute(AName_.name).Value == this.NameOrExtend())
                  .Select(VSXElement.Get<VQuery>).First();
                 return qry;
-            } else {
+            }
+            else
+            {
                 return this;
             }
         }
         public static string GetSysColDefaultValue(string name)
         {
-            switch (name) {
+            switch (name)
+            {
                 case TextConst.AVColumn.IsNew:
                     return "0";
                 case TextConst.AVColumn.IsNotNew:
@@ -170,25 +195,30 @@ namespace sql.builder.DataApi
                     return null;
             }
         }
-        public static XElement CreateVirtualSysColumnElement(string table ,string name)
+        public static XElement CreateVirtualSysColumnElement(string table, string name)
         {
             XElement col = Factory.NewColumn(table, name);
             col.Add(new XAttribute(AName_.type, TextConst.AVDataType.Number));
             col.Add(new XAttribute(AName_.sys, TextConst.AVBool.True));
-            if (!XmlReports.IsDeveloperMode()) {
+            if (!XmlReports.IsDeveloperMode())
+            {
                 col.Add(new XAttribute(AName_.invisible_in_column_chooser, TextConst.AVBool.True));
             }
             return col;
         }
         private List<VSXElement> virtualSysColumns = null;
-        public List<VSXElement> VirtualSysColumns() 
+        public List<VSXElement> VirtualSysColumns()
         {
-            if (virtualSysColumns == null) {
+            if (virtualSysColumns == null)
+            {
                 virtualSysColumns = new List<VSXElement>();
                 var mnsrc = this.MainSource();
-                if (mnsrc is VTable) {
-                    if (mnsrc.AttrOrEmpty(AName_.view) != TextConst.AVBool.True) {
-                        foreach (string colName in TextConst.AVColumnArray.SysColNamesForEditedObject) {
+                if (mnsrc is VTable)
+                {
+                    if (mnsrc.AttrOrEmpty(AName_.view) != TextConst.AVBool.True)
+                    {
+                        foreach (string colName in TextConst.AVColumnArray.SysColNamesForEditedObject)
+                        {
                             VSXElement col = VSXElement.Get(CreateVirtualSysColumnElement(mnsrc.XName, colName));
                             col.VirtualParent = this;
                             virtualSysColumns.Add(col);
@@ -200,11 +230,13 @@ namespace sql.builder.DataApi
         }
         public virtual List<VSXElement> SelfColumns()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSXElement>);
             }
             List<VSXElement> list = new List<VSXElement>();
-            foreach (VSXElement el in this.GetMESelectSections()) {
+            foreach (VSXElement el in this.GetMESelectSections())
+            {
                 list.AddRange(el.GetElementsP());
             }
             // list.AddRange(VirtualSysColumns());
@@ -213,14 +245,17 @@ namespace sql.builder.DataApi
         }
         public virtual List<VExpression> Expressions()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VExpression>);
             }
             List<VExpression> list = new List<VExpression>();
             var els = this.GetNamedSections(TextConst.EName.Expressions).SelectMany(VSXElement.GetElementsP).ToList();
-            foreach (var el1 in els) {
+            foreach (var el1 in els)
+            {
                 VCall el = el1 as VCall;
-                if (el != null) {
+                if (el != null)
+                {
                     list.Add((VExpression)el);
                 }
             }
@@ -229,11 +264,13 @@ namespace sql.builder.DataApi
         }
         public List<VCustomerUse> Customers()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VCustomerUse>);
             }
             var list = new List<VCustomerUse>();
-            foreach (VCustomerUse el in this.GetNamedSections(TextConst.EName.Customers).SelectMany(VSXElement.GetElementsP)) {
+            foreach (VCustomerUse el in this.GetNamedSections(TextConst.EName.Customers).SelectMany(VSXElement.GetElementsP))
+            {
                 list.Add(el);
             }
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), null);
@@ -241,11 +278,13 @@ namespace sql.builder.DataApi
         }
         public VExpression SearchExpression(string name)
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VExpression);
             }
             VSXElement col = this.Expressions().FirstOrDefault(e => e.XName == name);
-            if (col == null) {
+            if (col == null)
+            {
                 col = this.Columns().SelectMany(VColumn.SelfOrMultipleSource).FirstOrDefault(e => e.XName == name);
             }
             AddCashValue(col as VExpression, MethodBase.GetCurrentMethod().ToString(), name);
@@ -253,11 +292,13 @@ namespace sql.builder.DataApi
         }
         public List<VSXElement> ColumnsWithDublers()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSXElement>);
             }
             List<VSXElement> list = new List<VSXElement>();
-            foreach (VSXElement el in this.GetMEISelectSections()) {
+            foreach (VSXElement el in this.GetMEISelectSections())
+            {
                 list.AddRange(el.GetElementsP());
             }
             list.AddRange(VirtualSysColumns());
@@ -267,12 +308,17 @@ namespace sql.builder.DataApi
         private static void collectBandColumns(VBand band, List<VSXElement> list, List<string> names)
         {
             var cols = band.GetElementsP();
-            foreach (VSXElement col in cols) {
-                if (!(col is VBand)) {
-                    if (!names.Contains(col.XName)) {
+            foreach (VSXElement col in cols)
+            {
+                if (!(col is VBand))
+                {
+                    if (!names.Contains(col.XName))
+                    {
                         list.Add(col);
                     }
-                } else {
+                }
+                else
+                {
                     collectBandColumns((VBand)col, list, names);
                 }
             }
@@ -282,36 +328,47 @@ namespace sql.builder.DataApi
             return !this.GetElementsP().Any(EPredicate.IsNotConst);
         }
         // overrided in VForm
-        public virtual List<VSXElement> Columns() 
+        public virtual List<VSXElement> Columns()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSXElement>);
             }
             List<VSXElement> list = new List<VSXElement>();
             var sList = this.GetMEISelectSections().ToList();
             var inhSect = sList.FirstOrDefault(e => e.RootQuery().IsInherit());
             var names = new List<string>();
-            if (inhSect != null) {
-                foreach (VSXElement el in inhSect.GetElementsP()) {
+            if (inhSect != null)
+            {
+                foreach (VSXElement el in inhSect.GetElementsP())
+                {
                     names.Add(el.XName);
                     list.Add(el);
                 }
                 sList.Remove(inhSect);
             }
-            foreach (VSXElement sel in sList) {
-                foreach (VSXElement el in sel.GetElementsP()) {
+            foreach (VSXElement sel in sList)
+            {
+                foreach (VSXElement el in sel.GetElementsP())
+                {
                     VBand band = el as VBand;
-                    if (band != null) {
+                    if (band != null)
+                    {
                         collectBandColumns(band, list, names);
-                    } else {
-                        if (!names.Contains(el.XName)) {
+                    }
+                    else
+                    {
+                        if (!names.Contains(el.XName))
+                        {
                             list.Add(el);
                         }
                     }
                 }
             }
-            if (list.Count == 0) {
-                if (IsStoredInProj()) {
+            if (list.Count == 0)
+            {
+                if (IsStoredInProj())
+                {
                     var ccols = this.GetElementsP().Where(e => e.P_Alias != "");
                     list.AddRange(ccols);
                 }
@@ -328,7 +385,8 @@ namespace sql.builder.DataApi
         {
             var list = new List<VViewColumn>();
             IList<VColumns> colSections = this.GetNamedSections(TextConst.EName.Columns).Cast<VColumns>().ToList();
-            foreach (VViewColumn el in colSections.SelectMany(cols => cols.GetDescedantsP(EName.column))) {
+            foreach (VViewColumn el in colSections.SelectMany(cols => cols.GetDescedantsP(EName.column)))
+            {
                 list.Add((VViewColumn)el);
             }
             return list;
@@ -336,16 +394,21 @@ namespace sql.builder.DataApi
         public VSXElement SearchColumn(string columnName, VColumn exclude = null)
         {
             List<VSXElement> cols;
-            if (exclude != null) {
-                 cols = this.ColumnsWithDublers();
-            } else {
+            if (exclude != null)
+            {
+                cols = this.ColumnsWithDublers();
+            }
+            else
+            {
                 cols = this.Columns();
             }
             VSXElement col = cols.FirstOrDefault(e => e != exclude && e.XName == columnName);
-            if (col == null) {
+            if (col == null)
+            {
                 col = cols.SelectMany(VColumn.SelfOrMultipleSource).FirstOrDefault(e => e != exclude && e.XName == columnName);
             }
-            if (col == null && VSourcedElement.GetSelfSelectSections(this).Count == 0) {
+            if (col == null && VSourcedElement.GetSelfSelectSections(this).Count == 0)
+            {
                 col = this.GetElementsP().FirstOrDefault(e => e.XName == columnName);
             }
             return col;
@@ -355,17 +418,22 @@ namespace sql.builder.DataApi
             IList<VSXElement> cols = this.Columns();
             int index;
             VSXElement col;
-            for (index = 0; index < cols.Count; index++) {
+            for (index = 0; index < cols.Count; index++)
+            {
                 col = cols[index];
-                if (col.P_Fact == name) {
+                if (col.P_Fact == name)
+                {
                     return col;
                 }
             }
-            for (index = 0; index < cols.Count; index++) {
+            for (index = 0; index < cols.Count; index++)
+            {
                 IList<VSXElement> list = VColumn.SelfOrMultipleSource(cols[index]);
-                for (int index_2 = 0; index_2 < cols.Count; index_2++) {
+                for (int index_2 = 0; index_2 < cols.Count; index_2++)
+                {
                     col = list[index_2];
-                    if (col.P_Fact == name) {
+                    if (col.P_Fact == name)
+                    {
                         return col;
                     }
                 }
@@ -388,8 +456,10 @@ namespace sql.builder.DataApi
             //    return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VColumn>);
             //}
             var list = new List<VColumn>();
-            foreach (VSXElement el in this.GetAllSectionsContainingColumns().SelectMany(VSXElement.GetDescedantsP)) {
-                if (el is VColumn) {
+            foreach (VSXElement el in this.GetAllSectionsContainingColumns().SelectMany(VSXElement.GetDescedantsP))
+            {
+                if (el is VColumn)
+                {
                     list.Add((VColumn)el);
                 }
             }
@@ -400,9 +470,11 @@ namespace sql.builder.DataApi
         {
             // вроде выбираются колонки только из под select -неправильно
             List<VFact> list = new List<VFact>();
-            foreach (VSXElement el in this.GetAllSectionsContainingColumns().SelectMany(VSXElement.GetDescedantsP)) {
-                if (el is VFact) {
-                    list.Add((VFact) el);
+            foreach (VSXElement el in this.GetAllSectionsContainingColumns().SelectMany(VSXElement.GetDescedantsP))
+            {
+                if (el is VFact)
+                {
+                    list.Add((VFact)el);
                 }
             }
             return list;
@@ -418,12 +490,16 @@ namespace sql.builder.DataApi
         public List<VSourcedElement> GetExtensionsAndParentAndMain()
         {
             var list = new List<VSourcedElement>();
-            if (this is VForm) {
+            if (this is VForm)
+            {
                 list.Add(this);
-            } else {
+            }
+            else
+            {
                 list = GetExtensionsAndParent();
                 var main = GetMainIE();
-                if (main != this) {
+                if (main != this)
+                {
                     list.InsertRange(0, main.GetExtensionsAndParent());
                 }
                 list.Insert(0, main);
@@ -441,9 +517,12 @@ namespace sql.builder.DataApi
         }
         private List<VSourcedElement> GetExtensionsAndParent()
         {
-            if (this.IsInherit()) {
+            if (this.IsInherit())
+            {
                 return new List<VSourcedElement>(1) { this };
-            } else {
+            }
+            else
+            {
                 //объединить наследник может иметь extensions
                 return this.GetExtensions();
             }
@@ -451,9 +530,12 @@ namespace sql.builder.DataApi
         private List<VSourcedElement> GetExtensions()
         {
             string name = this.NameOrExtend();
-            if (string.IsNullOrEmpty(name)) {
+            if (string.IsNullOrEmpty(name))
+            {
                 return new List<VSourcedElement>(0);
-            } else {
+            }
+            else
+            {
                 return XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.queries).Elements(EName.query).Where(e => e.AttrOrEmpty(AName_.extend) == name).ToList().SelectAsArray(VSXElement.Get<VSourcedElement>).ToList();
             }
         }
@@ -461,7 +543,8 @@ namespace sql.builder.DataApi
         {
             IList<XElement> list = se.Elements(EName.select).ToList();
             VSXElement[] arr = new VSXElement[list.Count];
-            for (int index = 0; index < list.Count; index++) {
+            for (int index = 0; index < list.Count; index++)
+            {
                 arr[index] = VSXElement.Get(list[index]);
             }
             return arr;
@@ -515,14 +598,14 @@ namespace sql.builder.DataApi
                 //{
 
                 //}
-                
+
 
                 //if (frm != null)
                 //{
                 //    return frm.ParamFields();
                 //}
             }
-            
+
             return list;
         }
         public List<VSXElement> GetSelfNamedSections(string sectionName)
@@ -535,7 +618,8 @@ namespace sql.builder.DataApi
         {
             var list = this.Elements(EName.from).ToList().SelectAsArray(VSXElement.Get).ToList();
             XElement push = Element(EName.push);
-            if (push != null) {
+            if (push != null)
+            {
                 list.Add(VSXElement.Get(push.Element(EName.from)));
             }
             return list;
@@ -543,9 +627,12 @@ namespace sql.builder.DataApi
         public string NameOrExtend()
         {
             XAttribute attr = this.Attribute(AName_.extend);
-            if (attr == null) {
+            if (attr == null)
+            {
                 return this.AttrOrDefault(AName_.name, string.Empty);
-            } else {
+            }
+            else
+            {
                 return attr.Value;
             }
         }
@@ -556,9 +643,11 @@ namespace sql.builder.DataApi
         public VAction GetAction(string name)
         {
             IList<VAction> actions = this.Actions();
-            for (int index = 0; index < actions.Count; index++) {
+            for (int index = 0; index < actions.Count; index++)
+            {
                 VAction action = actions[index];
-                if (action.P_IdName == name) {
+                if (action.P_IdName == name)
+                {
                     return action;
                 }
             }
@@ -569,7 +658,7 @@ namespace sql.builder.DataApi
             return this.GetElementsP(EName.@params).SelectMany(VSXElement.GetElementsP).Cast<VParam>().ToList();
         }
         #region UseRepository
-        
+
 
         public override bool P_UseRepository_Exists()
         {

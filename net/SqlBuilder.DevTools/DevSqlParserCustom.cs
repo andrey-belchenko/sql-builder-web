@@ -171,7 +171,7 @@ namespace SqlBuilderLib.DevTools
                     result.Add(word);
                 }
             }
-            
+
             return result.Where(it => it != "rr_temp").ToHashSet();
         }
 
@@ -199,7 +199,7 @@ namespace SqlBuilderLib.DevTools
                 }
             }
 
-            return result.Where(it=>it!= "kg_common" && it!="ng_account") .ToHashSet();
+            return result.Where(it => it != "kg_common" && it != "ng_account").ToHashSet();
         }
     }
 }

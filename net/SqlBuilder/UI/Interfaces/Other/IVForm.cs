@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text;
 namespace sql.builder.UI
 {
     public interface IVForm : IVControl, IVNormalControl
@@ -18,6 +14,6 @@ namespace sql.builder.UI
         void ShowDialog(object owner);
         void ShowForm();
         void SetController(IForm controller);
-       
+
     }
 }

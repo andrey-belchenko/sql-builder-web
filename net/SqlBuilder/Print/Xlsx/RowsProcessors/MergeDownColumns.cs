@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using sql.builder.DataApi;
 
@@ -10,9 +9,9 @@ namespace sql.builder.Print.Xlsx.RowsProcessors
     /// </summary>
     public class MergeDownColumns
     {
-        public int BeginMergeRowsId {get; private set;}
+        public int BeginMergeRowsId { get; private set; }
 
-        public MergeDownColumn[] Columns {get; private set;}
+        public MergeDownColumn[] Columns { get; private set; }
         public MergeDownColumns(IEnumerable<ExcelRow> rows)
         {
             var list = new List<MergeDownColumn>();
@@ -26,7 +25,7 @@ namespace sql.builder.Print.Xlsx.RowsProcessors
             MergeDownColumn prev = null;
             foreach (var col in cols)
             {
-                bool withStartMarks = col.Any(c => c.Text.StartsWith("[merge_start")); 
+                bool withStartMarks = col.Any(c => c.Text.StartsWith("[merge_start"));
                 // пока usekey только в последней
                 var mark = col.Select(c => c.Text).Last(t => t.StartsWith("[merge_down"));
                 var mdCol = new MergeDownColumn(col.Key, mark, withStartMarks);

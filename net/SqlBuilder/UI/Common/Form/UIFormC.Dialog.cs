@@ -2,13 +2,12 @@
 
 //using System.Windows.Forms;
 
-using sql.builder.WinForms;
 
 
 namespace sql.builder.UI
 {
 
-   
+
     public partial class UIFormC : IForm
     {
 

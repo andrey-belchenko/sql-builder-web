@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Xsl;
-using System.Xml.XPath;
-using System.IO;
 //using System.Windows.Forms;
-using Devart.Data.Oracle;
 using sql.builder.FieldInfo;
-using System.Reflection;
 namespace sql.builder.DataApi
 {
     public partial class VSXElement : VXElement
@@ -24,30 +13,30 @@ namespace sql.builder.DataApi
         public virtual void MakeChildContextLists(XElement xlists)
         {
 
-            
+
         }
 
         public virtual void MakeFunctionList(List<XElement> list, string typ)
         {
-           
+
             foreach (XElement el in FunctionsListForType(typ))
             {
                 list.Add(
                     new XElement("call", new XAttribute("function", Cmn.GetAttrValue(el, "name")))
                     );
             }
-          
+
         }
 
 
-        public virtual void MakeColumnsList(List<XElement> list,bool doNameCheck)
+        public virtual void MakeColumnsList(List<XElement> list, bool doNameCheck)
         {
             NameCheck nameCheck = null;
             if (doNameCheck)
             {
                 nameCheck = new NameCheck(RootQuery().Columns().SelectAsArray(e => e.XName));
             }
-           
+
             foreach (VQueryCall qry in RootQuery().AllSources())
             {
                 VQuery query = qry.Query();
@@ -84,10 +73,10 @@ namespace sql.builder.DataApi
         public XElement CreateContextListElement(XElement xlists, string name)
         {
 
-            var xlist = new XElement("list", new XAttribute("name",name));
+            var xlist = new XElement("list", new XAttribute("name", name));
             xlists.Add(xlist);
             return xlist;
-            
+
 
         }
 
@@ -104,11 +93,14 @@ namespace sql.builder.DataApi
             VContextListsInfo info = null;
             switch (listType)
             {
-                case VContextListsType.Column: info = CL_Column_Info();
+                case VContextListsType.Column:
+                    info = CL_Column_Info();
                     break;
-                case VContextListsType.Call: info = CL_Call_Info();
+                case VContextListsType.Call:
+                    info = CL_Call_Info();
                     break;
-                default: info= null;
+                default:
+                    info = null;
                     break;
             }
             info.ListType = listType;
@@ -118,7 +110,8 @@ namespace sql.builder.DataApi
         public VDataTable GetContextListContent(VContextListsType listType)
         {
             List<XElement> list = new List<XElement>();
-            switch (listType) {
+            switch (listType)
+            {
                 case VContextListsType.Column:
                     CL_Column_Content(list);
                     break;
@@ -129,24 +122,29 @@ namespace sql.builder.DataApi
                     break;
             }
             VDataTable table = new VDataTable();
-            for (int id = 0; id < list.Count; id++) {
+            for (int id = 0; id < list.Count; id++)
+            {
                 VSXElement item = VSXElement.Get(list[id]);
                 item.VirtualParent = this;
                 //DataRow row = item1.ToDataRowSingle(table, true, i);
                 DataRow row = table.Rows.Add();
                 IList<string> names = this.GetPropNames();
-                for (int index = 0; index < names.Count; index++) {
+                for (int index = 0; index < names.Count; index++)
+                {
                     string name = names[index];
                     string property = PropPfx + name;
                     AddSpecColumns(table);
-                    if (VFieldInfo.Exists(item, property)) {
+                    if (VFieldInfo.Exists(item, property))
+                    {
                         VDataColumn col = (VDataColumn)table.Columns[name];
-                        if (col == null) {
+                        if (col == null)
+                        {
                             col = item.CreateColumn(name);
                             table.Columns.Add(col);
                         }
                         col.Visible = VFieldInfo.VisibleInTable(item, property);
-                        if (col.Visible) {
+                        if (col.Visible)
+                        {
                             row[col] = VFieldInfo.GetValue(item, property);
                         }
                         row["id"] = id.ToString();
@@ -157,7 +155,7 @@ namespace sql.builder.DataApi
             }
             return table;
         }
-        public  virtual List<VContextListsType> ContextListAllowedTypes()
+        public virtual List<VContextListsType> ContextListAllowedTypes()
         {
             return new List<VContextListsType>();
         }
@@ -168,7 +166,7 @@ namespace sql.builder.DataApi
         }
         public virtual void CL_Column_Content(List<XElement> list)
         {
-            
+
         }
         public virtual VContextListsInfo CL_Call_Info()
         {
@@ -193,9 +191,9 @@ namespace sql.builder.DataApi
         {
             Name = name;
             Title = title;
-           
+
         }
-        
+
         public VContextListsType ListType;
         public VSXElement Element;
         public string Name;
@@ -204,7 +202,7 @@ namespace sql.builder.DataApi
 
         public VDataTable GetContent()
         {
-            var tbl= Element.GetContextListContent(ListType);
+            var tbl = Element.GetContextListContent(ListType);
             tbl.TableName = Name;
             return tbl;
         }
@@ -216,5 +214,5 @@ namespace sql.builder.DataApi
         Call
     }
 
-    
+
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
@@ -23,11 +20,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Column
-        public override string P_Column {
-            get {
+        public override string P_Column
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.name);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.name, value);
             }
         }
@@ -39,17 +39,21 @@ namespace sql.builder.DataApi
             HashSet<string> names = new HashSet<string>();
             int index;
             string name;
-            for (index = 0; index < view_cols.Count; index++) {
+            for (index = 0; index < view_cols.Count; index++)
+            {
                 name = view_cols[index].P_Column;
-                if (!names.Contains(name)) {
+                if (!names.Contains(name))
+                {
                     names.Add(name);
                 }
             }
             IList<VSXElement> cols = rootQuery.Columns();
-            for (index = 0; index < cols.Count; index++) {
+            for (index = 0; index < cols.Count; index++)
+            {
                 VSXElement el = cols[index];
                 name = el.XName;
-                if (!names.Contains(name)) {
+                if (!names.Contains(name))
+                {
                     AddColumnInfoToList(table, name, el);
                 }
             }
@@ -70,12 +74,16 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Title
-        public override string P_Title {
-            get {
+        public override string P_Title
+        {
+            get
+            {
                 string s = this.P_SelfTitle;
-                if (string.IsNullOrEmpty(s)) {
+                if (string.IsNullOrEmpty(s))
+                {
                     VSXElement col = this.Column();
-                    if (col != null) {
+                    if (col != null)
+                    {
                         s = col.P_Title;
                     }
                 }

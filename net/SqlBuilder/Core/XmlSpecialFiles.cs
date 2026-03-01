@@ -8,27 +8,27 @@ namespace sql.builder.Core
 {
     public static class XmlSpecialFiles
     {
-        private static string[] Files  
+        private static string[] Files
         {
             get
             {
 
                 var ff = new List<string>();
                 string rootPath = XmlReports.GetCurrentSourceFolder();
-                var ptmp=@"common\special\";
+                var ptmp = @"common\special\";
                 var di = new DirectoryInfo(Path.Combine(rootPath, ptmp));
                 foreach (var f in di.GetFiles("*.xml", SearchOption.AllDirectories))
                 {
-                    ff.Add(ptmp+ f.Name);
-                    
+                    ff.Add(ptmp + f.Name);
+
                 }
-              
+
                 return ff.ToArray();
             }
-          
+
         }
 
-      
+
 
 
         private static Dictionary<string, XmlSpecialFile> _files;
@@ -58,7 +58,7 @@ namespace sql.builder.Core
         }
         private static void ReloadIfNeed()
         {
-            if(_files == null)
+            if (_files == null)
             {
                 ReloadAll();
             }
@@ -71,7 +71,7 @@ namespace sql.builder.Core
                     {
                         ReloadFile(fi);
                     }
-                }   
+                }
             }
         }
 

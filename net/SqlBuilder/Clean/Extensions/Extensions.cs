@@ -52,7 +52,7 @@ namespace sql.builder.Clean.Extensions
         public static string GetAttributeValue(this XElement element, string attributeName)
         {
             var attr = element.Attribute(attributeName);
-            if (attr==null) return null;
+            if (attr == null) return null;
             return attr.Value;
         }
 
@@ -63,7 +63,7 @@ namespace sql.builder.Clean.Extensions
             return list;
         }
 
-        
+
     }
 
     public static class XMLExtensions

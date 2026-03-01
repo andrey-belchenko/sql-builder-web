@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using sql.builder.DataApi;
+﻿using System.Linq;
 namespace sql.builder.UI
 {
     public class VLayoutControlContainerInfo : VLayoutItemInfo
     {
         public VLayoutControlContainerInfo(VLayoutGroupInfo parentGroup, object control)
         {
-            
+
             parent = parentGroup;
             containedControl = control;
             if (parent != null)
@@ -26,7 +22,7 @@ namespace sql.builder.UI
         }
 
 
-        
+
 
 
         public VLayout.Dock ControlDock = VLayout.Dock.Fill;
@@ -48,7 +44,7 @@ namespace sql.builder.UI
                 {
                     return lbl.GetWidthAndMarginForClient(0, false);
                 }
-               
+
             }
             return 0;
         }
@@ -70,20 +66,20 @@ namespace sql.builder.UI
 
                 label.Item = this;
 
-             
+
             }
 
             label.SetText(text);
         }
 
-		public override void SetHint(string value)
-		{
-			//if (label != null)
-			//{
-			//	label.SetHint(value);
-			//}
-			//GetTypedControl().SetHint(value);
-		}
+        public override void SetHint(string value)
+        {
+            //if (label != null)
+            //{
+            //	label.SetHint(value);
+            //}
+            //GetTypedControl().SetHint(value);
+        }
 
         private object containedControl;
 
@@ -98,9 +94,9 @@ namespace sql.builder.UI
             //{
             //    (contCtrl as IucTableViewerContainer).SetVisibleInLayout(value);
             //}
-            
 
-            
+
+
         }
         public override void AfterHide()
         {
@@ -117,7 +113,7 @@ namespace sql.builder.UI
             //}
             //ctrl.Show(this);
             //SendVisiblityToSource(true);
-           
+
         }
         public override int GetControlHeight()
         {
@@ -132,7 +128,7 @@ namespace sql.builder.UI
                 return 0;
             }
             return 1;
-           
+
         }
         public override int GetMarginRight()
         {
@@ -140,7 +136,7 @@ namespace sql.builder.UI
             {
                 return 0;
             }
-           
+
             return 1;
         }
         public override int GetMarginTop()
@@ -160,6 +156,6 @@ namespace sql.builder.UI
             return 1;// д быть 1 1 но так выглядит ровнее
         }
     }
-   
-   
+
+
 }

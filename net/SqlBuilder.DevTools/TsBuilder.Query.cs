@@ -10,7 +10,7 @@ namespace SqlBuilderLib.DevTools
 {
     public static partial class TsBuilder
     {
-        
+
         private static string ProcessQuery(string name)
         {
             if (name == null) return null;
@@ -23,8 +23,8 @@ namespace SqlBuilderLib.DevTools
             if (new[] { "ym-end-date" }.Contains(name)) return null;
 
 
-            var query =  XmlReports.Environment.GetElements(TextConst.EName.Queries).Cast<VQuery>()
-                .Where(it => it.P_IdName==name)
+            var query = XmlReports.Environment.GetElements(TextConst.EName.Queries).Cast<VQuery>()
+                .Where(it => it.P_IdName == name)
                 .First();
 
             var fileName = $"query_{ClearName(name)}.sql";

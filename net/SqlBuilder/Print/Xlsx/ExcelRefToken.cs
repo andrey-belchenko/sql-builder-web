@@ -1,7 +1,6 @@
-using System;
-using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
 using System.Linq;
+using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.Print.Xlsx
 {
@@ -21,14 +20,17 @@ namespace sql.builder.Print.Xlsx
             // ref_range ����� ����� ��� ��� A1:D2 ��� � ������ A1
             int colon_pos = ref_range.IndexOf(':');
             ExcelCellInfo cell;
-            if (colon_pos < 0) {
+            if (colon_pos < 0)
+            {
                 this.is_range = false;
                 cell = new ExcelCellInfo(ref_range);
                 this.cell_1 = cell;
                 this.cell_2 = cell;
                 this._refCells = new Dictionary<string, ExcelCellInfo>(1);
                 this._refCells.Add(ref_range, cell);
-            } else {
+            }
+            else
+            {
                 this.is_range = true;
                 string cell_name_1 = ref_range.Substring(0, colon_pos);
                 string cell_name_2 = ref_range.Substring(colon_pos + 1);
@@ -37,14 +39,18 @@ namespace sql.builder.Print.Xlsx
                 ExcelUtils.ParseCellName(cell_name_1, out beg_row, out beg_col, out column_name);
                 ExcelUtils.ParseCellName(cell_name_2, out end_row, out end_col, out column_name);
                 this._refCells = new Dictionary<string, ExcelCellInfo>();
-                for (int row = beg_row; row <= end_row; row++) {
-                    for (int col = beg_col; col <= end_col; col++) {
+                for (int row = beg_row; row <= end_row; row++)
+                {
+                    for (int col = beg_col; col <= end_col; col++)
+                    {
                         cell = new ExcelCellInfo(row, col);
                         this._refCells.Add(cell.CellName, cell);
-                        if (row == beg_row && col == beg_col) {
+                        if (row == beg_row && col == beg_col)
+                        {
                             this.cell_1 = cell;
                         }
-                        if (row == end_row && col == end_col) {
+                        if (row == end_row && col == end_col)
+                        {
                             this.cell_2 = cell;
                         }
                     }
@@ -60,12 +66,16 @@ namespace sql.builder.Print.Xlsx
         {
             //this.changed = false;
             // ��� ������ �� ��������� �������
-            if (this.IsEmpty()) {
+            if (this.IsEmpty())
+            {
                 return null;
             }
-            if (this.is_range) {
+            if (this.is_range)
+            {
                 return this.Cell1.CellName + ":" + this.Cell2.CellName;
-            } else {
+            }
+            else
+            {
                 return this.Cell1.CellName;
             }
         }
@@ -78,8 +88,10 @@ namespace sql.builder.Print.Xlsx
             // �����������
             if (colId < this.cell_1.ColumnID || colId > this.cell_2.ColumnID) return;
             IList<ExcelCellInfo> cells = this._refCells.Values.Where(c => c.ColumnID == colId).ToList();
-            if (cells.Count > 0) {
-                for (int index = 0; index < cells.Count; index++) {
+            if (cells.Count > 0)
+            {
+                for (int index = 0; index < cells.Count; index++)
+                {
                     ExcelCellInfo cell = cells[index];
                     this._refCells.Remove(cell.CellName);
                     //this.changed = true;
@@ -96,7 +108,8 @@ namespace sql.builder.Print.Xlsx
             // �����������
             if (colIdOld < this.cell_1.ColumnID || colIdOld > this.cell_2.ColumnID) return;
             IList<ExcelCellInfo> cells = this._refCells.Values.Where(c => c.ColumnID == colIdOld).ToList();
-            for (int index = 0; index < cells.Count; index++) {
+            for (int index = 0; index < cells.Count; index++)
+            {
                 ExcelCellInfo cell = cells[index];
                 this._refCells.Remove(cell.CellName);
                 cell.ColumnID = colIdNew;
@@ -110,8 +123,10 @@ namespace sql.builder.Print.Xlsx
         }
         public void ExtendToColumn(int col2)
         {
-            for (int i = this.cell_1.RowID; i <= this.cell_2.RowID; i++) {
-                for (int j = this.cell_2.ColumnID + 1; j <= col2; j++) {
+            for (int i = this.cell_1.RowID; i <= this.cell_2.RowID; i++)
+            {
+                for (int j = this.cell_2.ColumnID + 1; j <= col2; j++)
+                {
                     ExcelCellInfo cell = new ExcelCellInfo(i, j);
                     this._refCells.Add(cell.CellName, cell);
                 }
@@ -123,19 +138,24 @@ namespace sql.builder.Print.Xlsx
         {
             // ������ ��������� �� cell ������. ���� cell ��������� ��� �� ��� � ������ - ������ null
             //return _refCells.Values.SkipWhile(r => r.CellName != cell.CellName).Skip(1).FirstOrDefault();
-            if (this.IsEmpty()) {
+            if (this.IsEmpty())
+            {
                 return null;
             }
             int row, col;
             cell.GetRowAndColumn(out row, out col);
             ExcelCellInfo rightCell = new ExcelCellInfo(row, col + 1);
-            if (this._refCells.ContainsKey(rightCell.CellName)) {
+            if (this._refCells.ContainsKey(rightCell.CellName))
+            {
                 return rightCell;
             }
             ExcelCellInfo bottomCell = new ExcelCellInfo(row + 1, this.cell_1.ColumnID);
-            if (this._refCells.ContainsKey(bottomCell.CellName)) {
+            if (this._refCells.ContainsKey(bottomCell.CellName))
+            {
                 return bottomCell;
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
@@ -143,7 +163,8 @@ namespace sql.builder.Print.Xlsx
         {
             IList<ExcelCellInfo> cells = this._refCells.Values.ToList();
             this._refCells.Clear();
-            for (int index = 0; index < cells.Count; index++) {
+            for (int index = 0; index < cells.Count; index++)
+            {
                 ExcelCellInfo cell = cells[index];
                 cell.ColumnID = cell.ColumnID + col_delta;
                 this._refCells.Add(cell.CellName, cell);
@@ -166,11 +187,14 @@ namespace sql.builder.Print.Xlsx
         {
             this.cell_1 = null;
             this.cell_2 = null;
-            foreach (var cell in _refCells.Values) {
-                if (this.cell_1 == null || cell.RowID < this.cell_1.RowID || (cell.ColumnID < this.cell_1.ColumnID && cell.RowID == this.cell_1.RowID)) {
+            foreach (var cell in _refCells.Values)
+            {
+                if (this.cell_1 == null || cell.RowID < this.cell_1.RowID || (cell.ColumnID < this.cell_1.ColumnID && cell.RowID == this.cell_1.RowID))
+                {
                     this.cell_1 = cell;
                 }
-                if (this.cell_2 == null || cell.RowID > this.cell_2.RowID || (cell.ColumnID > this.cell_2.ColumnID && cell.RowID == this.cell_2.RowID)) {
+                if (this.cell_2 == null || cell.RowID > this.cell_2.RowID || (cell.ColumnID > this.cell_2.ColumnID && cell.RowID == this.cell_2.RowID))
+                {
                     this.cell_2 = cell;
                 }
             }

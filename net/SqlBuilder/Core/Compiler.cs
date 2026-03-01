@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Diagnostics; // Debug, Stopwatch
-using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using System.Xml;
 using System.Data;
+using System.Diagnostics; // Debug, Stopwatch
+using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Linq;
+using sql.builder.Clean.Extensions;
 //using infoenergo.core.Extensions;
 using sql.builder.DataApi;
-using sql.builder.XmlHelpers;
 using sql.builder.Exceptions;
-using sql.builder.Clean.Extensions;
+using sql.builder.XmlHelpers;
+using Contract = System.Diagnostics.Contracts.Contract;
 
 //using DevExpress.DashboardCommon.Native;
 
@@ -132,16 +131,24 @@ namespace sql.builder
         private static void collectAdditionalAttrs(XElement el)
         {
             List<XElement> qryWithAttrCols = el.DescendantsAndSelf(EName.query).Where(q => getColumnsWithAdditionalAttr(q).FirstOrDefault() != null).ToList();
-            while (qryWithAttrCols.Count != 0) {
+            while (qryWithAttrCols.Count != 0)
+            {
                 XElement qry1 = qryWithAttrCols[0];
-                foreach (XElement qry2 in getQueryCalls(qry1)) {
-                    foreach (XElement col1 in getColumnsWithAdditionalAttr(qry1).ToList()) {
-                        foreach (XElement col2 in getQueryCallSelColumns(qry2, col1)) {
-                            foreach (XAttribute attr1 in col1.Attributes().Where(APredicate.IsAdditionalAttribute)) {
-                                if (col2.Attribute(attr1.Name) == null) {
+                foreach (XElement qry2 in getQueryCalls(qry1))
+                {
+                    foreach (XElement col1 in getColumnsWithAdditionalAttr(qry1).ToList())
+                    {
+                        foreach (XElement col2 in getQueryCallSelColumns(qry2, col1))
+                        {
+                            foreach (XAttribute attr1 in col1.Attributes().Where(APredicate.IsAdditionalAttribute))
+                            {
+                                if (col2.Attribute(attr1.Name) == null)
+                                {
                                     col2.SetAttributeValue(attr1.Name, attr1.Value);
-                                    if (col2.Parent.Name == EName.select) {
-                                        if (!qryWithAttrCols.Contains(col2.Parent.Parent)) {
+                                    if (col2.Parent.Name == EName.select)
+                                    {
+                                        if (!qryWithAttrCols.Contains(col2.Parent.Parent))
+                                        {
                                             qryWithAttrCols.Add(col2.Parent.Parent);
                                         }
                                     }
@@ -166,19 +173,19 @@ namespace sql.builder
 
             el.Descendants().Where(e => e.Attribute(TextConst.AName.Multiplicer) != null).ToArray().Descendants().Attributes(TextConst.AName.Multiplicer).Distinct().Remove();
         }
-        
+
         private static void processingNestedOver(XElement el)
         {
             //  return;
             int additionId = 1;
             int exprId = 1;
-           
 
 
-         //  el.Descendants().Attributes(TextConst.AName.Group).Where(a => a.Value == TextConst.AVGroup.Inner).Remove();
+
+            //  el.Descendants().Attributes(TextConst.AName.Group).Where(a => a.Value == TextConst.AVGroup.Inner).Remove();
 
 
-          
+
             while (true)
             {
                 List<XElement> queries = el.Descendants(EName.query).Where(q => q.AttrOrDefault(TextConst.AName.Materialize, string.Empty) != "2").Where(e3 =>
@@ -200,7 +207,7 @@ namespace sql.builder
                 foreach (XElement qry in queries)
                 {
 
-                    
+
                     var listaggs = qry.Descendants(TextConst.EName.Call).Where(e => e.Attribute(TextConst.AName.Function).Value == TextConst.AVFunction.Listagg && Cmn.GetAttrValue(e, TextConst.AName.Group) == TextConst.AVGroup.Inner).ToArray();
 
                     foreach (var lagg in listaggs)
@@ -214,8 +221,8 @@ namespace sql.builder
                         }
                         lagg.Attributes(TextConst.AName.Group).Remove();
                     }
-                   
-                    
+
+
                     string qalias = "ovr" + additionId.ToString();
                     additionId++;
                     XElement parentQry = new XElement("query", copyAttribute(qry, "name"), copyAttribute(qry, "materialize"), copyAttribute(qry, "as"), copyAttribute(qry, "hint"), copyAttribute(qry, "join"), copyAttribute(qry, "order"),
@@ -265,7 +272,7 @@ namespace sql.builder
                                (e.Ancestors().Where(EPredicate.IsCallOfWindowFunction)
                                 .Where(e2 => !e2.AncestorsAndSelf().Where(e3 => e3.AttrOrDefault(AName.group, string.Empty) != string.Empty).Any()) // поменял 17.10.16 ,условие  07.10 было некорректным не работал отчет по исполнителю
                                 .Count() == 1
-                                   // && e.Ancestors("call").Where(e1 => getAttrValue(e1, "group") != "").FirstOrDefault() == null // добавил 07.10.16
+                              // && e.Ancestors("call").Where(e1 => getAttrValue(e1, "group") != "").FirstOrDefault() == null // добавил 07.10.16
                               )
 
                             ||
@@ -536,7 +543,7 @@ namespace sql.builder
                 }
             }
 
-            
+
         }
         /* private static void processingWindowWithSiblingsSort(XElement el)// пока не используется
         {
@@ -566,27 +573,35 @@ namespace sql.builder
             Contract.Assert(col != null);
             XElement newCol = null;
             bool isGrSpeCol = false;
-            if (hasGrNode) {
-                if (col.DescendantsAndSelf(EName.call).FirstOrDefault(e => gsetsFuncNames.Contains(e.AttrOrDefault(AName.function, string.Empty))) != null || gsetsSpecColsNames.Contains(col.AttrOrEmpty(AName.@as))) {
+            if (hasGrNode)
+            {
+                if (col.DescendantsAndSelf(EName.call).FirstOrDefault(e => gsetsFuncNames.Contains(e.AttrOrDefault(AName.function, string.Empty))) != null || gsetsSpecColsNames.Contains(col.AttrOrEmpty(AName.@as)))
+                {
                     isGrSpeCol = true;
                 }
             }
-            if (!isGrSpeCol) {
+            if (!isGrSpeCol)
+            {
                 string alias = col.Attribute(AName.@as).Value;
                 newCol = Factory.NewColumn(qalias, alias);
                 newCol.CopyAttributes(col.Attributes(AName.group));
                 newCol.CopyAttributes(col.Attributes(AName.into));
                 copyAttributes(col, newCol, pivAttrsNames);
-                if (newCol.Attribute(AName.group) == null) {
-                    if (alias.EndsWith(cumulNextPfx) || alias.EndsWith(cumulFirstPfx)) {
+                if (newCol.Attribute(AName.group) == null)
+                {
+                    if (alias.EndsWith(cumulNextPfx) || alias.EndsWith(cumulFirstPfx))
+                    {
                         newCol.SetAttrValue(AName.group, "1");
-                    } else if (col.Attribute(AName.agg) != null) {
-                        if (grFuncsNames.Contains(col.Attribute(AName.agg).Value)) {
+                    }
+                    else if (col.Attribute(AName.agg) != null)
+                    {
+                        if (grFuncsNames.Contains(col.Attribute(AName.agg).Value))
+                        {
                             newCol.SetAttrValue(AName.group, col.Attribute(AName.agg).Value);
                         }
                     }
                 }
-                newCol.Add(new XAttribute(AName.@as, alias)); 
+                newCol.Add(new XAttribute(AName.@as, alias));
                 copyAttribute(col, newCol, TextConst.AName.Level);
                 copyAttribute(col, newCol, TextConst.AName.TreeLevelColumn);
                 copyAttribute(col, newCol, TextConst.AName.TreeOriginalColumn);
@@ -595,7 +610,9 @@ namespace sql.builder
                 newCol.CopyAttributes(col.Attributes().Where(APredicate.IsColumnAttributeCanDub));
                 newCol.CopyAttributes(col.Attributes().Where(APredicate.IsAdditionalAttribute));
                 newCol.CopyAttributes(col.Attributes(AName.intern));
-            } else {
+            }
+            else
+            {
                 newCol = col;
                 col.Remove();
                 grSpecCols.Add(newCol);
@@ -606,7 +623,7 @@ namespace sql.builder
         {
             var newQuery = CopyAndAddQueryLevel(query, qalias, fieldsToMoveUp);
 
-           
+
 
             var newElemens = newQuery.Elements().ToArray();
             newElemens.Remove();
@@ -623,9 +640,9 @@ namespace sql.builder
                 fieldsToMoveUp = new string[] { };
             }
             var queryCopy = new XElement(query);
-           
 
-            
+
+
             var newQuery = new XElement(TextConst.EName.Query);
             Cmn.copyAttributes(queryCopy, newQuery);
             var newSelect = new XElement(TextConst.EName.Select);
@@ -652,7 +669,7 @@ namespace sql.builder
                 {
                     newCol = makeColumnCall(col, qalias, false, null);
                     newCol.Attributes(TextConst.AName.Group).Remove();
-                   
+
                 }
                 newSelect.Add(newCol);
 
@@ -675,8 +692,8 @@ namespace sql.builder
             //xcols.Remove();
             newQuery.Add(xcols);
 
-             xcols = query.Elements(TextConst.EName.ViewColumns).ToArray();// нужно при использовании в VGroupingUtils
-           // xcols.Remove();
+            xcols = query.Elements(TextConst.EName.ViewColumns).ToArray();// нужно при использовании в VGroupingUtils
+                                                                          // xcols.Remove();
             newQuery.Add(xcols);
 
             //20171123 Вроде правильно так
@@ -690,7 +707,7 @@ namespace sql.builder
             return newQuery;
         }
 
-       
+
         private static void ClearDoubleGroup(XElement el)
         {
 
@@ -752,16 +769,16 @@ namespace sql.builder
             int matIndex = 0;
             string matPfx = "mat";
 
-            var readyInfo = new SortedList<string,SortedList<string,HashSet<string>>>();
+            var readyInfo = new SortedList<string, SortedList<string, HashSet<string>>>();
             var readyAliaces = new SortedList<string, string>();
             while (qry != null)
             {
                 var qname = getAttrValue(qry, TextConst.AName.Name);
                 string readyAliace = null;
-                  var colsInfo = new HashSet<string>();
+                var colsInfo = new HashSet<string>();
                 if (qname != "")// чтобы не матерализовывать одно и то же
                 {
-                  
+
 
                     foreach (var col in qry.Elements(TextConst.EName.Select).Elements())
                     {
@@ -917,17 +934,21 @@ namespace sql.builder
         private static bool dontUseRepositories = false;
         public static XElement compileReport(XElement element, int useRepository, bool noPivot = false, XElement pars = null)
         {
-            if (element.GetAttributeValue(TextConst.AName.Name)== "54148")
+            if (element.GetAttributeValue(TextConst.AName.Name) == "54148")
             {
 
             }
             Contract.Assert(element != null);
             Reset();
-            if (element.AttrOrDefault("use-repository", false)) { 
-                if (useRepository != 0) {
+            if (element.AttrOrDefault("use-repository", false))
+            {
+                if (useRepository != 0)
+                {
                     useRepositories = true;
                     dontUseRepositories = false;
-                } else {
+                }
+                else
+                {
                     dontUseRepositories = true;
                 }
             }
@@ -996,16 +1017,16 @@ namespace sql.builder
         }
 
 
-        
+
 
 
         public static void ResetAfterError()
         {
-              readyPivots = new SortedList<string, VDataSet>();
-              pivotMatQueriesNames = null;
-              isProcessingPivots = false;
-              isProcessingMatDummies = false;
-              ClearMatSetAndPivotQueriesList();
+            readyPivots = new SortedList<string, VDataSet>();
+            pivotMatQueriesNames = null;
+            isProcessingPivots = false;
+            isProcessingMatDummies = false;
+            ClearMatSetAndPivotQueriesList();
         }
 
         //static bool reportCompilation = false;
@@ -1038,7 +1059,7 @@ namespace sql.builder
 
         private static void PushProcessingCollections()
         {
-           
+
             _processingCollectionsStack.Push(_processingCollections);
             _processingCollections = new ProcessingCollections();
         }
@@ -1047,7 +1068,7 @@ namespace sql.builder
         {
 
             _processingCollections = _processingCollectionsStack.Pop();
-           
+
         }
 
 
@@ -1058,7 +1079,7 @@ namespace sql.builder
             _processingCollections.matOrderForNames = new XElement("root");
             _processingCollections.matQueriesDummies = new SortedList<string, XElement>();
             _processingCollections.storedQueries = new SortedList<string, XElement>();
-          
+
             if (!isProcessingPivots)
             {
                 resetPivotQueriesList();
@@ -1237,9 +1258,12 @@ namespace sql.builder
             XElement queryCall = new XElement(element);
             XElement query;
             XElement queryScheme = null;
-            if (queryCall.Element(EName.select) == null) {
+            if (queryCall.Element(EName.select) == null)
+            {
                 queryScheme = new XElement(getQueryScheme(queryName));
-            } else {
+            }
+            else
+            {
                 queryScheme = new XElement(element);
                 //copyAttribute(queryCall.Element("from").Element("query"), queryScheme, "name");
                 //queryScheme.SetAttributeValue("name", queryScheme.Attribute("as").Value);
@@ -1248,13 +1272,15 @@ namespace sql.builder
             applyDimensions(queryScheme, element, rep, pars);
             ProcessQueryDlinkConditions(queryScheme);
             applyLinks(queryScheme, null);
-            if (element.Parent.Name == EName.query) {
+            if (element.Parent.Name == EName.query)
+            {
                 query = new XElement(EName.query);
                 query.Add(new XAttribute(AName.name, queryName));
                 query.Add(new XAttribute("noname", "1"));
                 query.CopyAttributes(queryScheme.Attributes(AName.order));
                 XElement order = queryScheme.Element("order");
-                if (order != null) {
+                if (order != null)
+                {
                     query.Add(new XElement(order));
                 }
                 XElement select = new XElement(EName.select);
@@ -1278,7 +1304,9 @@ namespace sql.builder
                 query_2.Add(new XElement(queryCall.Element(EName.call)));
                 from.Add(query_2);
                 query.Add(from);
-            } else {
+            }
+            else
+            {
                 query = new XElement(queryScheme);
                 query.Elements(EName.query).Remove();
                 query.Elements(EName.call).Remove();
@@ -1362,7 +1390,7 @@ namespace sql.builder
 
         private static XElement getQueryScheme(string queryName)
         {
-            
+
             if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), queryName))
             {
                 var qs = (GetCashValue(MethodBase.GetCurrentMethod().ToString(), queryName) as Tuple<XElement, string>);
@@ -1370,7 +1398,7 @@ namespace sql.builder
                 {
                     return qs.Item1;
                 }
-                
+
             }
 
             var qry = XmlReports.Environment.Manager.GetScheme().Elements("queries").Elements("query").FirstOrDefault(q => q.Attribute("name").Value == queryName);
@@ -1386,7 +1414,7 @@ namespace sql.builder
 
                 AddCashValue(qs, MethodBase.GetCurrentMethod().ToString(), queryName);
             }
-           
+
             return qry;
         }
 
@@ -1407,29 +1435,38 @@ namespace sql.builder
         {
             addPath(element);
             XElement pars = inPars;
-            if (pars == null) {
+            if (pars == null)
+            {
                 pars = element.Element(EName.withparams);
             }
             XElement query = null;
-            if (element.Attribute(AName.name) != null && getAttrValue(element, "noname") != "1") {
+            if (element.Attribute(AName.name) != null && getAttrValue(element, "noname") != "1")
+            {
                 string queryName = element.Attribute(AName.name).Value;
-                if (hasChangeSources) {
+                if (hasChangeSources)
+                {
                     var chsss = element.Ancestors().Elements(TextConst.EName.ChangeSources).ToList();  //!!! замедляет?
-                    if (chsss.Count != 0) {
+                    if (chsss.Count != 0)
+                    {
                         XElement chs = chsss.Elements().SearchByAttribute(AName.name, queryName);
-                        if (chs != null) {
+                        if (chs != null)
+                        {
                             queryName = chs.Attribute(AName.call).Value;
                         }
                     }
                 }
                 query = new XElement(XmlReports.Environment.Manager.GetScheme().Elements(EName.queries).Elements(EName.query).SearchByAttribute(AName.name, queryName));
-            } else {
+            }
+            else
+            {
                 query = new XElement(element);
             }
             // applyExtensions(query);
-            if (element.Attribute(TextConst.AName.Dimension) != null) {
+            if (element.Attribute(TextConst.AName.Dimension) != null)
+            {
                 var xtable = query.Descendants(TextConst.EName.Table).FirstOrDefault();
-                if (xtable != null) {
+                if (xtable != null)
+                {
                     copyAttribute(element, xtable, TextConst.AName.Dimension);
                 }
             }
@@ -1454,41 +1491,54 @@ namespace sql.builder
             {
                 XElement whereCont;
                 XElement whereEl;
-                if (extwhere.AttrOrDefault(AName.push, string.Empty) != "0") {
+                if (extwhere.AttrOrDefault(AName.push, string.Empty) != "0")
+                {
                     whereCont = query.Element(EName.push);
-                } else {
+                }
+                else
+                {
                     whereCont = null;
                 }
-                if (whereCont == null) {
+                if (whereCont == null)
+                {
                     whereCont = query;
                 }
                 string tgt;
                 XAttribute attr = extwhere.Attribute(AName.target);
-                if (attr != null) {
+                if (attr != null)
+                {
                     tgt = attr.Value;
                     string tgts;
                     int pos = tgt.IndexOf('/');
-                    if (pos < 0) {
+                    if (pos < 0)
+                    {
                         tgts = string.Empty;
-                    } else {
+                    }
+                    else
+                    {
                         tgts = tgt.Substring(pos + 1);
                         tgt = tgt.Substring(0, pos);
                     }
                     XElement tagQry = whereCont.Element(EName.from).Elements().SearchByAttribute(AName.@as, tgt);
                     whereEl = new XElement(EName.extendwhere);
-                    if (tgts != string.Empty) {
-                          whereEl.Add(new XAttribute(AName.target, tgts));
+                    if (tgts != string.Empty)
+                    {
+                        whereEl.Add(new XAttribute(AName.target, tgts));
                     }
                     tagQry.Add(whereEl);
-                } else {
+                }
+                else
+                {
                     whereEl = whereCont.Element(EName.where);
-                    if (whereEl == null) {
+                    if (whereEl == null)
+                    {
                         whereEl = new XElement(EName.where);
                         whereCont.Add(whereEl);
                     }
                 }
                 XElement extlinks = queryCall.Element(EName.extendlinks);
-                if (extlinks != null) {
+                if (extlinks != null)
+                {
                     tgt = extlinks.Attribute(AName.target).Value;
                     XElement tagQry = whereCont.Element(EName.from).Elements().SearchByAttribute(AName.@as, tgt);
                     tagQry.Add(extlinks.Elements());
@@ -1640,7 +1690,7 @@ namespace sql.builder
                                 col = createThisColumn(col, el);
                                 el.ReplaceWith(col);
                             }
-                            
+
 
                         }
                         else
@@ -1678,14 +1728,16 @@ namespace sql.builder
             else
             {
                 string colName = element.Attribute("column").Value;
-                XElement querySub = element.Ancestors().FirstOrDefault(e => (new string[] { "query", "where","start", "select", "connect", "having", "dimension", "measures" }).Contains(e.Name.LocalName)); // в xlt был last 
+                XElement querySub = element.Ancestors().FirstOrDefault(e => (new string[] { "query", "where", "start", "select", "connect", "having", "dimension", "measures" }).Contains(e.Name.LocalName)); // в xlt был last 
                 XElement query = querySub.Ancestors("query").FirstOrDefault(e => e.Element("select") != null);
                 XElement sourceCol = query.Element(EName.select).Elements().SearchByAttribute(AName.@as, colName);
-                if (sourceCol == null) {
+                if (sourceCol == null)
+                {
                     sourceCol = query.Element(EName.select).Elements().SearchByAttribute(AName.column, colName);
                 }
                 // ВЕмцов - если this колонка не найдена - для отладки
-                if (sourceCol == null) {
+                if (sourceCol == null)
+                {
                     throw new VCompilerException("Поле this." + colName + "не найдено", element.Ancestors(TextConst.EName.Query).First(), element);
                 }
 
@@ -1709,12 +1761,12 @@ namespace sql.builder
                 return;
             string s = "";
             string s1 = ".";
-            
+
             foreach (XElement el in element.AncestorsAndSelf("query").Where(e => e.Attribute("as") != null))
             {
                 s = "/" + el.Attribute("as").Value + s;
             }
-            
+
             s = s1 + s;
             element.SetAttrValue("path", s);
 
@@ -1765,7 +1817,7 @@ namespace sql.builder
                     if (_processingCollections.matQueriesDummies.ContainsKey(name))
                     {
                         qry = new XElement(_processingCollections.matQueriesDummies[name]);
-                       // qry.SetAttributeValue(TextConst.AName.Materialize, "2");
+                        // qry.SetAttributeValue(TextConst.AName.Materialize, "2");
                         qry.CopyAttributes(element.Attributes());
                         foreach (XElement el in element.Elements())
                         {
@@ -1774,7 +1826,7 @@ namespace sql.builder
                     }
                 }
             }
-            
+
             return qry;
         }
 
@@ -1802,7 +1854,7 @@ namespace sql.builder
                 return ret1;
             }
 
-          
+
 
             var ret = new XElement("query");
             copyAttributes(element, ret);
@@ -1834,7 +1886,7 @@ namespace sql.builder
             //    }
             //}
 
-           // linkedQueryCall.Add(link.Elements(TextConst.EName.QubeContent));
+            // linkedQueryCall.Add(link.Elements(TextConst.EName.QubeContent));
             foreach (XElement el in element.Elements())
             {
                 ret.Add(expression(el, null));
@@ -2077,13 +2129,17 @@ namespace sql.builder
 
         public static void MarkUnused(XElement element)
         {
-            foreach (XElement el in element.DescendantsAndSelf(EName.select).Elements()) {
-                if (el.Attribute("used") == null) {
+            foreach (XElement el in element.DescendantsAndSelf(EName.select).Elements())
+            {
+                if (el.Attribute("used") == null)
+                {
                     el.Add(new XAttribute("used", "0"));
                 }
             }
-            foreach (XElement el in element.DescendantsAndSelf(EName.query)) {
-                if (el.Attribute("used") == null) {
+            foreach (XElement el in element.DescendantsAndSelf(EName.query))
+            {
+                if (el.Attribute("used") == null)
+                {
                     el.Add(new XAttribute("used", "0"));
                 }
             }
@@ -2111,11 +2167,15 @@ namespace sql.builder
                     setFieldUsed(masterField, query, compiled);
                 }
             }
-            if (column.Name != EName.query) {
+            if (column.Name != EName.query)
+            {
                 column.SetAttrValue("used", "1");
-                if (column.Name == EName.column) {
+                if (column.Name == EName.column)
+                {
                     setColUsed(column, query, compiled);
-                } else {
+                }
+                else
+                {
                     foreach (XElement childCol in getFieldColumns(column))
                     {
                         setColUsed(childCol, query, compiled);
@@ -2191,10 +2251,10 @@ namespace sql.builder
                 return;
             }
 
-            IEnumerable<XElement> sourceQueries = query.Elements("from").Elements().Where(e1=>
-                e1.Name.LocalName!=TextConst.EName.QubeContent 
-                && e1.Name.LocalName!=TextConst.EName.ChangeSources)
-                .Where(e =>  e.Attribute("as").Value == getAttrValue(column, "table")).ToArray();
+            IEnumerable<XElement> sourceQueries = query.Elements("from").Elements().Where(e1 =>
+                e1.Name.LocalName != TextConst.EName.QubeContent
+                && e1.Name.LocalName != TextConst.EName.ChangeSources)
+                .Where(e => e.Attribute("as").Value == getAttrValue(column, "table")).ToArray();
             if (sourceQueries.Any())
             {
                 XElement sourceQuery1 = sourceQueries.First();
@@ -2268,17 +2328,20 @@ namespace sql.builder
         }
         public static void setQueryUsed(XElement query, XElement rep, XElement compiled)
         {
-            if (query == null) {
+            if (query == null)
+            {
                 return;
             }
-            if (query.AttrOrEmpty(AName.used) == "1") {
+            if (query.AttrOrEmpty(AName.used) == "1")
+            {
                 return;
             }
             //if (getAttrValue(query, "name") == "un-dogplat")
             //{
             //    //  string aa = "";
             //}
-            foreach (XElement el in query.Elements(EName.query)) {
+            foreach (XElement el in query.Elements(EName.query))
+            {
                 setQueryUsed(el, null, compiled);
             }
             /*foreach (XElement el in query.Elements("from").Where(e => e.Elements().Where(e1=> getAttrValue(e1, "join") == "cross").Count()>0).Elements("query"))
@@ -2287,69 +2350,92 @@ namespace sql.builder
             }*/
             //  setQueryUsed(query.Elements("from").Elements().FirstOrDefault());
             foreach (XElement col in query.Elements(EName.select).Elements().Where(e => e.AttrOrEmpty(TextConst.AName.Removeable2) == "0" ||
-               e.AttrOrEmpty(AName.removeable) == "0" || (e.AttrOrEmpty("fixed") == "1" && (e.AttrOrEmpty(AName.removeable) != "1" && rep == null))/* ||getAttrValue(e,"key")=="1"*/)) {
+               e.AttrOrEmpty(AName.removeable) == "0" || (e.AttrOrEmpty("fixed") == "1" && (e.AttrOrEmpty(AName.removeable) != "1" && rep == null))/* ||getAttrValue(e,"key")=="1"*/))
+            {
                 setFieldUsed(col, query, compiled);
             }
-            foreach (XElement col in query.Elements("order").Elements()) {
+            foreach (XElement col in query.Elements("order").Elements())
+            {
                 XElement field = query.Elements(EName.select).Elements().SearchByAttribute(AName.@as, col.AttrOrEmpty(AName.column));
-                if (field != null) {
+                if (field != null)
+                {
                     setFieldUsed(field, query, compiled);
                 }
             }
             query.SetAttrValue(AName.used, "1");
-            if ((query.Attribute(AName.@as) == null && query.Ancestors(EName.query).FirstOrDefault() == null) || query.AttrOrEmpty(AName.materialize) == "1" || query.Parent.Name == EName.pivot) {
+            if ((query.Attribute(AName.@as) == null && query.Ancestors(EName.query).FirstOrDefault() == null) || query.AttrOrEmpty(AName.materialize) == "1" || query.Parent.Name == EName.pivot)
+            {
                 IList<XElement> reportColumns = null;
-                if (rep != null) {
+                if (rep != null)
+                {
                     reportColumns = rep.Elements(EName.queries).Descendants(EName.query).Where(q => q.AttrOrEmpty(AName.name) == query.AttrOrEmpty(AName.name)).Elements(EName.columns).Descendants(EName.column).ToList();
-                } else {
+                }
+                else
+                {
                     reportColumns = Array.Empty<XElement>();
                 }
                 foreach (XElement col in query.Elements(EName.select).Elements())
                 {//
                     bool noUseInReport = false;
                     string col_alias = col.AttrOrDefault(AName.@as, null);
-                    if (col_alias == null) {
+                    if (col_alias == null)
+                    {
                         throw new VCompilerException("У выражения должен быть указан псевдоним", query, col);
                     }
-                    if (!gsetsSpecColsNames.Contains(col_alias) && !IsSysColumnName(col_alias) && !fixedColsNames.Contains(col_alias)) {
-                        if (reportColumns.Count > 0) {
-                            if (reportColumns.SearchByAttribute(AName.name, col_alias) == null) {
+                    if (!gsetsSpecColsNames.Contains(col_alias) && !IsSysColumnName(col_alias) && !fixedColsNames.Contains(col_alias))
+                    {
+                        if (reportColumns.Count > 0)
+                        {
+                            if (reportColumns.SearchByAttribute(AName.name, col_alias) == null)
+                            {
                                 noUseInReport = true;
                             }
                         }
                     }
-                    if (!noUseInReport) {
+                    if (!noUseInReport)
+                    {
                         setFieldUsed(col, query, compiled);
                     }
                 }
-            } else {
-                foreach (XElement joinCol in query.Elements(EName.call).Descendants(EName.column).Where(e => e.Attribute(AName.table).Value == query.Attribute(AName.@as).Value)) {
-                    if (query.Element(EName.select) != null) {
+            }
+            else
+            {
+                foreach (XElement joinCol in query.Elements(EName.call).Descendants(EName.column).Where(e => e.Attribute(AName.table).Value == query.Attribute(AName.@as).Value))
+                {
+                    if (query.Element(EName.select) != null)
+                    {
                         XElement col = query.Element(EName.select).Elements().First(e => e.Attribute(AName.@as).Value == joinCol.Attribute(AName.column).Value);
                         setFieldUsed(col, query, compiled);
                     }
                 }
             }
-            foreach (XElement joinCol in query.Elements(EName.call).Descendants(EName.column).Where(e => e.Attribute(AName.table).Value != query.Attribute(AName.@as).Value)) {
-                XElement joinQuery = query.Parent.Elements().FirstOrDefault(e =>e.AttrOrEmpty(AName.@as) == joinCol.Attribute(AName.table).Value);
-                if (joinQuery != null) {
+            foreach (XElement joinCol in query.Elements(EName.call).Descendants(EName.column).Where(e => e.Attribute(AName.table).Value != query.Attribute(AName.@as).Value))
+            {
+                XElement joinQuery = query.Parent.Elements().FirstOrDefault(e => e.AttrOrEmpty(AName.@as) == joinCol.Attribute(AName.table).Value);
+                if (joinQuery != null)
+                {
                     setQueryUsed(joinQuery, null, compiled);
-                    if (joinQuery.Element(EName.select) != null) {
+                    if (joinQuery.Element(EName.select) != null)
+                    {
                         XElement col = joinQuery.Element(EName.select).Elements().First(e => e.Attribute(AName.@as).Value == joinCol.Attribute(AName.column).Value);
                         // если ошибка, возможно требуется прописать измерение для query
                         setFieldUsed(col, joinQuery, compiled);
                     }
                 }
             }
-            foreach (XElement whereCol in query.Elements(EName.select).Elements().Elements(EName.pivot).Elements(EName.column)) {
+            foreach (XElement whereCol in query.Elements(EName.select).Elements().Elements(EName.pivot).Elements(EName.column))
+            {
                 setColUsed(whereCol, query, compiled);
             }
-            foreach (XElement whereCol in query.Elements(EName.select).Elements().Elements(EName.pivot).Elements(EName.call).Descendants(EName.column)) {
+            foreach (XElement whereCol in query.Elements(EName.select).Elements().Elements(EName.pivot).Elements(EName.call).Descendants(EName.column))
+            {
                 setColUsed(whereCol, query, compiled);
             }
             XElement first = query.Elements(EName.from).Elements().FirstOrDefault();
-            if (first != null) {
-                if (Cmn.GetAttrValue(first, TextConst.AName.Name) == TextConst.AVTable.Dual) {
+            if (first != null)
+            {
+                if (Cmn.GetAttrValue(first, TextConst.AName.Name) == TextConst.AVTable.Dual)
+                {
                     setQueryUsed(first, null, compiled);
                 }
             }
@@ -2370,41 +2456,52 @@ namespace sql.builder
              * */
             //убираю после добавления inner join по not null FK
             //вернул
-            foreach (XElement whereCol in query.Elements(EName.connect).Descendants(EName.column)) {
+            foreach (XElement whereCol in query.Elements(EName.connect).Descendants(EName.column))
+            {
                 setColUsed(whereCol, query, compiled);
             }
             //foreach (XElement whereCol in query.Elements("start").Descendants("column"))
             //{
             //    setColUsed(whereCol, query);
             //}
-            foreach (XElement whereCol in query.Elements(EName.having).Descendants(EName.column)) {
+            foreach (XElement whereCol in query.Elements(EName.having).Descendants(EName.column))
+            {
                 setColUsed(whereCol, query, compiled);
             }
             //Для использование dlink pushpred в разделе where, нужно переписать эту часть 
-            foreach (XElement whereCol in getQueryColumnsWhere(query)) {
+            foreach (XElement whereCol in getQueryColumnsWhere(query))
+            {
                 setColUsed(whereCol, query, compiled);
             }
-            foreach (XElement whereCol in getQueryColumnsStart(query)) {
+            foreach (XElement whereCol in getQueryColumnsStart(query))
+            {
                 setColUsed(whereCol, query, compiled);
             }
-            foreach (XElement whereCol in query.Elements(EName.from).Elements(EName.query).Where(e => e.AttrOrEmpty(AName.join) == TextConst.AVJoin.Inner).Elements(EName.call).Descendants(EName.column)) {
+            foreach (XElement whereCol in query.Elements(EName.from).Elements(EName.query).Where(e => e.AttrOrEmpty(AName.join) == TextConst.AVJoin.Inner).Elements(EName.call).Descendants(EName.column))
+            {
                 setColUsed(whereCol, query, compiled);
             }
-            foreach (XElement whereCol in query.Elements(EName.where).Descendants(EName.call).Elements(EName.query).Where(e => !e.Ancestors(EName.query).First().IsAfter(query))) {
+            foreach (XElement whereCol in query.Elements(EName.where).Descendants(EName.call).Elements(EName.query).Where(e => !e.Ancestors(EName.query).First().IsAfter(query)))
+            {
                 setFieldUsed(whereCol, query, compiled);
             }
-            foreach (XElement whereCol in query.Elements(EName.start).Descendants(EName.call).Elements(EName.query).Where(e => !e.Ancestors(EName.query).First().IsAfter(query))) {
+            foreach (XElement whereCol in query.Elements(EName.start).Descendants(EName.call).Elements(EName.query).Where(e => !e.Ancestors(EName.query).First().IsAfter(query)))
+            {
                 setFieldUsed(whereCol, query, compiled);
             }
-            foreach (XElement whereCol in query.Elements(EName.group).Descendants(EName.column)) {
+            foreach (XElement whereCol in query.Elements(EName.group).Descendants(EName.column))
+            {
                 setFieldUsed(whereCol, query, compiled);
             }
-            foreach (XElement el in query.Elements(EName.from).Elements()) {
-                if (el.AttrOrEmpty("fixed") == "1") {
+            foreach (XElement el in query.Elements(EName.from).Elements())
+            {
+                if (el.AttrOrEmpty("fixed") == "1")
+                {
                     setQueryUsed(el, null, compiled);
                 }
             }
-            foreach (XElement whereCol in query.Descendants(EName.extendwhere).Descendants(EName.call).Elements(EName.query).Where(e => !e.Ancestors(EName.query).First().IsAfter(query))) {
+            foreach (XElement whereCol in query.Descendants(EName.extendwhere).Descendants(EName.call).Elements(EName.query).Where(e => !e.Ancestors(EName.query).First().IsAfter(query)))
+            {
                 setFieldUsed(whereCol, query, compiled);
             }
             var query1 = getFullSource(query, compiled);
@@ -2414,7 +2511,7 @@ namespace sql.builder
             }
         }
         public static XElement DeleteUnused(XElement element)
-               {
+        {
             //var qq = element.DescendantsAndSelf().Elements("from").Elements().Where(e => getAttrValue(e, "used") == ("0") && getAttrValue(e, "as") == "kod_dogplat_a_d").ToList();
             //if (qq.Any())
             //{
@@ -2519,7 +2616,7 @@ namespace sql.builder
                     el.SetAttributeValue("format", s);
                 }
 
-                s = searchQueryAttrVal(el,TextConst.AName.HAlign);
+                s = searchQueryAttrVal(el, TextConst.AName.HAlign);
                 if (s != "")
                 {
                     el.SetAttributeValue(TextConst.AName.HAlign, s);
@@ -2569,14 +2666,16 @@ namespace sql.builder
         private static void addType(XElement element)
         {
             string s = searchQueryAttrVal(element, AName.type);
-            if (!string.IsNullOrEmpty(s)) {
+            if (!string.IsNullOrEmpty(s))
+            {
                 element.Add(new XAttribute(AName.type, s));
             }
         }
         private static void addTitle(XElement element)
         {
             string s = searchQueryAttrVal(element, AName.title);
-            if (!string.IsNullOrEmpty(s)) {
+            if (!string.IsNullOrEmpty(s))
+            {
                 element.SetAttributeValue(AName.title, s);
             }
         }
@@ -2584,69 +2683,105 @@ namespace sql.builder
         private static string searchQueryAttrVal(XElement element, XName attrName, bool g = true)
         {
             string ret = string.Empty;
-            if (element == null) {
+            if (element == null)
+            {
                 return string.Empty;
             }
             XAttribute attr = element.Attribute(attrName);
-            if (attr != null) {
+            if (attr != null)
+            {
                 ret = attr.Value;
-            } else {
-                if (IsSysColumnName(element.AttrOrEmpty(AName.@as))) {
+            }
+            else
+            {
+                if (IsSysColumnName(element.AttrOrEmpty(AName.@as)))
+                {
                     ret = string.Empty;
-                } else {
-                    if (element.Name == EName.query) {
+                }
+                else
+                {
+                    if (element.Name == EName.query)
+                    {
                         ret = searchQueryAttrVal(element.Element(EName.select).Elements().First(), attrName);
-                    } else {
-                        if ((element.Name == EName.call) && g) {
+                    }
+                    else
+                    {
+                        if ((element.Name == EName.call) && g)
+                        {
                             string s_function = element.Attribute(AName.function).Value;
                             string val;
-                            if (s_function == TextConst.AVFunction.If || s_function == "no dublers" || s_function == TextConst.AVFunction.Decode) {
+                            if (s_function == TextConst.AVFunction.If || s_function == "no dublers" || s_function == TextConst.AVFunction.Decode)
+                            {
                                 val = searchQueryAttrVal(element.Elements().LastOrDefault(e => !(new String[] { TextConst.EName.Text, TextConst.EName.Pivot }).Contains(e.Name.LocalName)), attrName, g);
-                                if (val != string.Empty) {
+                                if (val != string.Empty)
+                                {
                                     ret = val;
                                 }
-                            } else if (attrName == AName.type && s_function == TextConst.AVFunction.Coalesce) {
+                            }
+                            else if (attrName == AName.type && s_function == TextConst.AVFunction.Coalesce)
+                            {
                                 val = searchQueryAttrVal(element.Elements().FirstOrDefault(e => e.Name != EName.text), attrName, g);
-                                if (val != string.Empty) {
+                                if (val != string.Empty)
+                                {
                                     ret = val;
                                 }
-                            } else {
-                                foreach (XElement col in element.Descendants(EName.column)) {
+                            }
+                            else
+                            {
+                                foreach (XElement col in element.Descendants(EName.column))
+                                {
                                     val = searchQueryAttrVal(col, attrName, g);
-                                    if (val != string.Empty) {
+                                    if (val != string.Empty)
+                                    {
                                         ret = val;
                                         break;
                                     }
                                 }
                             }
-                        } else {
+                        }
+                        else
+                        {
                             attr = element.Attribute(AName.column);
-                            if (attr == null) {
+                            if (attr == null)
+                            {
                                 ret = string.Empty;
-                            } else {
+                            }
+                            else
+                            {
                                 IEnumerable<XElement> colSourceNodes = null;
                                 string column = attr.Value;
-                                if (element.Parent.Parent.Element(EName.dimension) == null || element.Parent.Name != EName.select) {
+                                if (element.Parent.Parent.Element(EName.dimension) == null || element.Parent.Name != EName.select)
+                                {
                                     attr = element.Attribute(AName.table);
-                                    if (attr == null) {
+                                    if (attr == null)
+                                    {
                                         ret = string.Empty;
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         string table = attr.Value;
                                         List<XElement> srcQueries = element.Ancestors(EName.query).First().Element(EName.from).Elements(EName.query).Where(e => e.Attribute(AName.@as).Value == table).ToList();
-                                        if (srcQueries.Count != 0) {
-                                            while (!srcQueries.Elements(EName.select).Any()) {
+                                        if (srcQueries.Count != 0)
+                                        {
+                                            while (!srcQueries.Elements(EName.select).Any())
+                                            {
                                                 srcQueries = srcQueries.Elements(EName.query).ToList();
                                             }
                                             colSourceNodes = srcQueries.Elements(EName.select);
                                         }
                                     }
-                                } else {
+                                }
+                                else
+                                {
                                     colSourceNodes = element.Parent.Parent.Elements().Where(EPredicate.IsDimensionOrMeasures);
                                 }
-                                if (colSourceNodes != null) {
+                                if (colSourceNodes != null)
+                                {
                                     XElement srcColumn = colSourceNodes.Elements().FirstOrDefault(e => (e.AttrOrEmpty(AName.@as) == column) && (e.Attribute(attrName) != null || e.Name != EName.@const));
                                     ret = searchQueryAttrVal(srcColumn, attrName, g);
-                                } else {
+                                }
+                                else
+                                {
                                     ret = string.Empty;
                                 }
                             }
@@ -2654,9 +2789,11 @@ namespace sql.builder
                     }
                 }
             }
-            if (attrName == AName.title) {
+            if (attrName == AName.title)
+            {
                 XElement pivot = element.Element(EName.pivot);
-                if (pivot != null) {
+                if (pivot != null)
+                {
                     ret += pivot.AttrOrDefault(AName.title, string.Empty);
                 }
             }
@@ -2674,21 +2811,30 @@ namespace sql.builder
             //    AND REGEXP_LIKE(column_name, '^[NDST]\d+$')
             // GROUP BY SUBSTR(column_name, 1, 1)
             Dictionary<string, int> col_count = new Dictionary<string, int>(4);
-            foreach (XElement query in element.DescendantsAndSelf(EName.query)) {
-                if (query.AttrOrEmpty(AName.materialize) == "1") {
-                    foreach (XElement col in query.Elements(EName.select).Elements()) {
+            foreach (XElement query in element.DescendantsAndSelf(EName.query))
+            {
+                if (query.AttrOrEmpty(AName.materialize) == "1")
+                {
+                    foreach (XElement col in query.Elements(EName.select).Elements())
+                    {
                         string data_type = col.AttrOrEmpty(AName.type);
                         string alias = col.AttrOrEmpty(AName.@as);
                         string name;
-                        if (IsSysColumnName(alias)) {
+                        if (IsSysColumnName(alias))
+                        {
                             name = alias;
-                        } else {
+                        }
+                        else
+                        {
                             string prefix = getTyprPr(data_type);
                             int pos;
-                            if (col_count.TryGetValue(prefix, out pos)) {
+                            if (col_count.TryGetValue(prefix, out pos))
+                            {
                                 pos = pos + 1;
                                 col_count[prefix] = pos;
-                            } else {
+                            }
+                            else
+                            {
                                 col_count.Add(prefix, 1);
                                 pos = 1;
                             }
@@ -2703,7 +2849,8 @@ namespace sql.builder
         private static string badTypePref = " ";
         public static string getTyprPr(string data_type)
         {
-            switch (data_type) {
+            switch (data_type)
+            {
                 case TextConst.AVDataType.Number:
                 case TextConst.AVDataType.Bool:
                     return "n";
@@ -2715,10 +2862,10 @@ namespace sql.builder
                     return "t";
                 default:
                     return badTypePref;
-                // Емцов. Чтобы вылетал эксепшн в момент компиляции и не строился заведомо инвалидный запрос
-                //default:
-                //    string msg = (string.IsNullOrEmpty(typ)) ? "Не определен тип для колонки rr_temp" : "Неизвестный тип колонки для rr_temp \"" + typ + "\"";
-                //    throw new ArgumentException(msg);
+                    // Емцов. Чтобы вылетал эксепшн в момент компиляции и не строился заведомо инвалидный запрос
+                    //default:
+                    //    string msg = (string.IsNullOrEmpty(typ)) ? "Не определен тип для колонки rr_temp" : "Неизвестный тип колонки для rr_temp \"" + typ + "\"";
+                    //    throw new ArgumentException(msg);
             }
         }
         private static XElement copyCheckKeys(XElement element)
@@ -2810,25 +2957,35 @@ namespace sql.builder
         }
         private static XElement applyPart(XElement element)
         {
-            if (element.Descendants(EName.usepart).Any()) {
+            if (element.Descendants(EName.usepart).Any())
+            {
                 XElement procElement = (XElement)copyApplyPart(element).First();
                 XElement ret = applyPart(procElement);
                 return ret;
-            } else {
+            }
+            else
+            {
                 return new XElement(element);
             }
         }
         private static IEnumerable<XNode> copyApplyPart(XElement element)
         {
-            if (element.Name == EName.usepart) {
+            if (element.Name == EName.usepart)
+            {
                 return usepart(element);
-            } else {
+            }
+            else
+            {
                 XElement newEl = new XElement(element.Name);
                 newEl.CopyAttributes(element.Attributes());
-                foreach (XNode node in element.Nodes()) {
-                    if (node.NodeType == XmlNodeType.Element) {
+                foreach (XNode node in element.Nodes())
+                {
+                    if (node.NodeType == XmlNodeType.Element)
+                    {
                         newEl.Add(copyApplyPart((XElement)node));
-                    } else if (node.NodeType == XmlNodeType.Text) {
+                    }
+                    else if (node.NodeType == XmlNodeType.Text)
+                    {
                         newEl.Add(new XText((XText)node));
                     }
                 }
@@ -2842,66 +2999,84 @@ namespace sql.builder
             string partId = element.AttrOrDefault(AName.part, null);
             XElement usepart = element;
             XElement part;
-            if (!string.IsNullOrEmpty(partId)) {
+            if (!string.IsNullOrEmpty(partId))
+            {
                 part = (XmlReports.Environment.Manager.GetScheme().Elements(EName.parts).Elements(EName.part).Where(el => el.Attribute(AName.id).Value == partId)).FirstOrDefault();
-                if (part == null) {
+                if (part == null)
+                {
                     var partEls = XmlReports.Environment.Manager.GetScheme().Descendants().Where(e => e.AttrOrDefault(AName.part_id, null) == partId);
-                    if (!partEls.Any() && !preColmpiling) {
+                    if (!partEls.Any() && !preColmpiling)
+                    {
                         throw new VCompilerException("Не найдена часть " + partId, element.Ancestors().Where(e => e.Parent != null && e.Parent.Parent != null && e.Parent.Parent.Name == EName.root).FirstOrDefault(), element);
                     }
                     part = new XElement(EName.part);
                     part.Add(partEls);
                     part.Descendants().Attributes(AName.part_id).Remove();
                 }
-            } else {
+            }
+            else
+            {
                 part = usepart.Element(EName.content).Elements().FirstOrDefault();
-                if (part == null) {
+                if (part == null)
+                {
                     return null;
                 }
             }
             XElement factParams = new XElement("fact-params");
-            foreach (XElement el in usepart.Elements()) {
-                if (el.Name != EName.content) {
+            foreach (XElement el in usepart.Elements())
+            {
+                if (el.Name != EName.content)
+                {
                     factParams.Add(applyPart(new XElement(el)));
                 }
             }
             XElement v = new XElement("var");
             XElement firstParam = System.Xml.XPath.Extensions.XPathSelectElement(part, "params/param");
-            if (firstParam != null && firstParam.AttrOrDefault(AName.multiple, false)) {
+            if (firstParam != null && firstParam.AttrOrDefault(AName.multiple, false))
+            {
                 int i = 0;
                 foreach (XElement el in factParams.Elements().FirstOrDefault().Elements())
                 {
                     string index = i.ToString();
                     XElement pars = new XElement(EName.@params);
                     pars.Add(new XElement(el));
-                    foreach (XElement el1 in factParams.Elements().Where(el2 => el2.ElementsBeforeSelf().Any())) {
+                    foreach (XElement el1 in factParams.Elements().Where(el2 => el2.ElementsBeforeSelf().Any()))
+                    {
                         pars.Add(new XElement(el1));
                     }
                     v.Add(applyParamsToPart(part, pars, index));
                     i++;
                 }
-            } else {
+            }
+            else
+            {
                 v.Add(applyParamsToPart(part, factParams, null));
             }
             XAttribute attr = element.Attribute(AName.@as);
-            if (attr != null) {
+            if (attr != null)
+            {
                 v.Elements().FirstOrDefault().SetAttributeValue(AName.@as, attr.Value);
             }
             attr = element.Attribute(AName.group);
-            if (attr != null) {
-                foreach (XElement el in v.Elements()) {
+            if (attr != null)
+            {
+                foreach (XElement el in v.Elements())
+                {
                     el.SetAttributeValue(AName.group, attr.Value);
                 }
             }
             attr = element.Attribute(AName.title);
-            if (attr != null) {
+            if (attr != null)
+            {
                 v.Elements().FirstOrDefault().Add(new XAttribute(AName.title, attr.Value));
             }
             v = applyPart(v);
             List<XNode> ret = new List<XNode>();
-            foreach (XElement el in v.Elements()) {
+            foreach (XElement el in v.Elements())
+            {
                 IEnumerable<XNode> l = expression(el, null);
-                if (l != null) {
+                if (l != null)
+                {
                     ret.AddRange(l);
                 }
             }
@@ -2911,14 +3086,20 @@ namespace sql.builder
         {
             XElement ret = new XElement("ret");
             XElement formalParams = element.Element(EName.@params);
-            if (formalParams != null) {
-                foreach (XElement el in element.Elements()) {
-                    if (el.Name != EName.@params) {
+            if (formalParams != null)
+            {
+                foreach (XElement el in element.Elements())
+                {
+                    if (el.Name != EName.@params)
+                    {
                         ret.Add(applyParamsNext(el, inParams, formalParams, index, true));
                     }
                 }
-            } else {
-                foreach (XElement el in element.Elements()) {
+            }
+            else
+            {
+                foreach (XElement el in element.Elements())
+                {
                     ret.Add(new XElement(el));
                 }
             }
@@ -2977,9 +3158,9 @@ namespace sql.builder
                     case TextConst.EName.QubeContent:
                         ret.Add(element);
                         break;
-                    //case TextConst.EName.DimQuery:
-                    //    ret.Add(element);
-                    //    break;
+                        //case TextConst.EName.DimQuery:
+                        //    ret.Add(element);
+                        //    break;
                 }
             }
 
@@ -2988,9 +3169,12 @@ namespace sql.builder
         private static IEnumerable<XNode> column(XElement element)
         {
             Contract.Assume(element != null);
-            if (element.AttrOrDefault(AName.column, string.Empty) == TextConst.AVColumn.All) {
+            if (element.AttrOrDefault(AName.column, string.Empty) == TextConst.AVColumn.All)
+            {
                 return allColumns(element);
-            } else {
+            }
+            else
+            {
                 return new XElement[1] { singleColumn(element) };
             }
         }
@@ -3059,14 +3243,14 @@ namespace sql.builder
                 }
             }
 
-        
+
             XElement newCol = null;
             foreach (XElement col in columns.Elements())
             {
                 if (element.Parent.Elements().All(e => getAttrValue(e, "as") != getAttrValue(col, "as")))
                 {
-                     newCol = new XElement("column",
-                        new XAttribute("table", queryPname), new XAttribute("column", columnPnameVal(col)), columnPname(col));
+                    newCol = new XElement("column",
+                       new XAttribute("table", queryPname), new XAttribute("column", columnPnameVal(col)), columnPname(col));
                     if (getAttrValue(element, "group") == "inherit")
                     {
                         copyAttribute(col, newCol, "group");
@@ -3082,7 +3266,7 @@ namespace sql.builder
                     columns1.Add(newCol);
                 }
             }
-           
+
             return columns1.Elements();
         }
 
@@ -3111,9 +3295,12 @@ namespace sql.builder
         private static string columnPnameVal(XElement element)
         {
             XAttribute attr = element.Attribute(AName.@as);
-            if (attr != null) {
+            if (attr != null)
+            {
                 return attr.Value;
-            } else {
+            }
+            else
+            {
                 return element.Attribute(AName.column).Value;
             }
         }
@@ -3130,9 +3317,9 @@ namespace sql.builder
             {
                 string queryName = element.Attribute("name").Value;
                 sourceQuery = XmlReports.Environment.Manager.GetScheme().Elements("queries").Elements("query").FirstOrDefault(q => q.Attribute("name").Value == (queryName));
-                if(sourceQuery == null)
+                if (sourceQuery == null)
                 {
-                    sourceQuery = XmlReports.Environment.Manager.GetOldScheme().Elements("queries").Elements("query").FirstOrDefault(q => q.Attribute("name").Value == (queryName)); 
+                    sourceQuery = XmlReports.Environment.Manager.GetOldScheme().Elements("queries").Elements("query").FirstOrDefault(q => q.Attribute("name").Value == (queryName));
                 }
 
 
@@ -3157,8 +3344,8 @@ namespace sql.builder
                             matExists = true;
                         }
                     }
-                   
-                
+
+
                 }
                 if (!matExists)
                 {
@@ -3168,8 +3355,8 @@ namespace sql.builder
                         sourceQuery
 
                         );
-                    applyDimensions(sourceQuery, null, null, null,true);
-                   // applyQube(sourceQuery, null, null, null);
+                    applyDimensions(sourceQuery, null, null, null, true);
+                    // applyQube(sourceQuery, null, null, null);
                 }
                 //applyQube(sourceQuery, null, null, element); // 2 Бельченко 20161031 Это новое, не проверенное , используется только для демонстрации поиска, можно убрать если что
                 return
@@ -3182,7 +3369,8 @@ namespace sql.builder
         {
             XElement column = new XElement(EName.column);
             column.CopyAttributes(element.Attributes());
-            foreach (XElement pivot in element.Elements(EName.pivot)) {
+            foreach (XElement pivot in element.Elements(EName.pivot))
+            {
                 XElement pivot1 = new XElement(pivot);
                 foreach (XElement pqry in pivot1.Elements(EName.query).ToList())
                 {
@@ -3193,7 +3381,8 @@ namespace sql.builder
             //   column.Add(element.Elements("pivot").Select(e => new XElement(e)));
             setAttributes(column, columnPname(element));
             XAttribute attr = element.Attribute(AName.group);
-            if (attr != null) {
+            if (attr != null)
+            {
                 column.SetAttributeValue(AName.group, attr.Value);
             }
             return column;
@@ -3216,49 +3405,63 @@ namespace sql.builder
             //sw.Start();
             //#endif
             XElement function;
-            if (element.Element(EName.text) != null) {
+            if (element.Element(EName.text) != null)
+            {
                 function = new XElement(element);
-            } else {
+            }
+            else
+            {
                 string functionName = element.Attribute(AName.function).Value;
-                if (env != null) {   // временное решение
+                if (env != null)
+                {   // временное решение
                     functionName = env + ":" + functionName;
                 }
                 XElement functionScheme = XmlReports.Environment.Manager.GetScheme().Elements(EName.functions).Elements(EName.function).SearchByAttribute(AName.name, functionName);
-                if (functionScheme == null) {
+                if (functionScheme == null)
+                {
                     throw new VCompilerException("Не найдена функция \"" + functionName + "\"", element, null);
                 }
                 function = new XElement(functionScheme);
                 XAttribute attr = element.Attribute(AName.pth);
-                if (attr != null) {
+                if (attr != null)
+                {
                     ret.Add(new XAttribute(AName.pth, attr.Value));
-                } else {
+                }
+                else
+                {
                     ret.Add(new XAttribute(AName.pth, function.AttrOrDefault(AName.pth, string.Empty)));
                 }
                 ret.CopyAttributes(element.Attributes(AName.optional));
                 ret.CopyAttributes(element.Attributes(AName.pivot));
                 ret.CopyAttributes(element.Attributes(AName.dimname));
                 ret.CopyAttributes(element.Attributes().Where(APredicate.IsAdditionalAttribute));
-                foreach (XElement pivot in element.Elements(EName.pivot)) {
+                foreach (XElement pivot in element.Elements(EName.pivot))
+                {
                     XElement pivot1 = new XElement(pivot);
-                    foreach (XElement pqry in pivot1.Elements(EName.query).ToList()) {
+                    foreach (XElement pqry in pivot1.Elements(EName.query).ToList())
+                    {
                         pqry.ReplaceWith(expression(pqry, null));
                     }
                     ret.Add(pivot1);
                 }
                 string data_type = function.AttrOrDefault(AName.type, TextConst.AVDataType.Variant);
-                if (element.Attribute(AName.type) == null && data_type != TextConst.AVDataType.Variant) {
+                if (element.Attribute(AName.type) == null && data_type != TextConst.AVDataType.Variant)
+                {
                     ret.SetAttrValue(AName.type, data_type);
                 }
                 int i = 0;
                 XElement prevVal = null;
                 IList<XElement> pars = element.Elements().Where(e => (e.Name != EName.undefined) && (e.Name != EName.pivot)).ToList();
                 IList<XElement> funcElements = function.Elements().ToList();
-                if (funcElements.Count > 0) {
-                    foreach (XElement el in pars){
+                if (funcElements.Count > 0)
+                {
+                    foreach (XElement el in pars)
+                    {
                         // Емцов - оптимизировал
                         //XElement val_old = function.Elements().Where(e => e.ElementsBeforeSelf().Count() == i).Elements(EName.Val).FirstOrDefault();
                         XElement val = (funcElements.IsValidIndex(i)) ? funcElements[i].Elements(EName.val).FirstOrDefault() : null;
-                        if (val == null) {
+                        if (val == null)
+                        {
                             XElement parSceme = functionScheme.Elements().Elements(EName.val).Last();
                             prevVal.Parent.AddAfterSelf(new XElement(parSceme.Parent));
                             // Емцов - оптимизировал
@@ -3267,12 +3470,14 @@ namespace sql.builder
                             val = funcElements[i].Elements(EName.val).First();
                         }
                         //if(val != val_old) throw new Exception();
-                        if (el.Attribute(AName.optional) != null) {
+                        if (el.Attribute(AName.optional) != null)
+                        {
                             val.Parent.AddFirst(new XText("{"));
                             val.Parent.Add(new XText("}"));
                         }
                         IEnumerable<XNode> par = expression(el, null, env);
-                        foreach (XElement val1 in val.Parent.Elements(EName.val)) {
+                        foreach (XElement val1 in val.Parent.Elements(EName.val))
+                        {
                             val1.AddAfterSelf(par);
                         }
                         prevVal = val;
@@ -3281,12 +3486,15 @@ namespace sql.builder
                 }
                 function.Elements().Where(e => e.ElementsBeforeSelf().Count() >= pars.Count).Remove();
                 function.Descendants(EName.val).Remove();
-                foreach (XElement el in function.Elements().ToList()) {
+                foreach (XElement el in function.Elements().ToList())
+                {
                     el.ReplaceWith(el.Nodes());
                 }
                 StringBuilder sb = new StringBuilder(256);
-                foreach (XNode txt in function.DescendantNodes().ToList()) {
-                    if (txt.NodeType == XmlNodeType.Text && txt.Parent.Name != EName.text) {
+                foreach (XNode txt in function.DescendantNodes().ToList())
+                {
+                    if (txt.NodeType == XmlNodeType.Text && txt.Parent.Name != EName.text)
+                    {
                         //
                         string text = ((XText)txt).Value;
                         int len = text.Length;
@@ -3302,9 +3510,12 @@ namespace sql.builder
                         sb.Clear();
                         //
                         string tеxt_type;
-                        if (txt.Parent.Name == EName.@const) {
+                        if (txt.Parent.Name == EName.@const)
+                        {
                             tеxt_type = "const";
-                        } else {
+                        }
+                        else
+                        {
                             tеxt_type = "func";
                         }
                         XElement t = new XElement(EName.text);
@@ -3327,9 +3538,12 @@ namespace sql.builder
         {
             XElement ret = new XElement(EName.@const);
             ret.CopyAttributes(element.Attributes());
-            if (element.Element(EName.text) == null) {
+            if (element.Element(EName.text) == null)
+            {
                 ret.Add(new XElement(EName.text, new XText(element.Value)));
-            } else {
+            }
+            else
+            {
                 copyContent(element, ret);
             }
             return ret;
@@ -3337,9 +3551,12 @@ namespace sql.builder
         private static XAttribute eGroup(XElement element)
         {
             XAttribute attr = element.Attribute(AName.group);
-            if (attr != null) {
+            if (attr != null)
+            {
                 return new XAttribute(attr);
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
@@ -3429,7 +3646,8 @@ namespace sql.builder
         {
             XAttribute ret = null;
             XElement aliasSource = element.AncestorsAndSelf().FirstOrDefault(e => e.Attribute(AName.@as) != null);
-            if (aliasSource != null) {
+            if (aliasSource != null)
+            {
                 ret = new XAttribute(aliasSource.Attribute(AName.@as));
             }
             return ret;
@@ -3441,9 +3659,11 @@ namespace sql.builder
             Contract.Assert(tag != null);
             //var aa = tag.Attributes().Select(at2 => at2.Name.LocalName).ToArray();
             //tag.Add(src.Attributes().Where(at1 => !aa.Contains(at1.Name.LocalName)).Select(at => new XAttribute(at.Name.LocalName, at.Value)));
-            foreach (XAttribute attr in src.Attributes()) {
+            foreach (XAttribute attr in src.Attributes())
+            {
                 XName name = attr.Name;
-                if (tag.Attribute(name) == null) {
+                if (tag.Attribute(name) == null)
+                {
                     tag.Add(new XAttribute(name, attr.Value));
                 }
             }
@@ -3457,14 +3677,19 @@ namespace sql.builder
             //var aa = attrs.Select(at1 => at1.Name).ToArray();
             //tag.Attributes().Where(at => aa.Contains(at.Name)).Remove();
             //tag.Add(attrs);
-            for (int index = 0; index < attrNames.Length; index++) {
+            for (int index = 0; index < attrNames.Length; index++)
+            {
                 XName attr_name = attrNames[index];
                 XAttribute src_attr = src.Attribute(attr_name);
-                if (src_attr != null) {
+                if (src_attr != null)
+                {
                     XAttribute dest_attr = tag.Attribute(attr_name);
-                    if (dest_attr != null) {
+                    if (dest_attr != null)
+                    {
                         dest_attr.Value = src_attr.Value;
-                    } else {
+                    }
+                    else
+                    {
                         tag.Add(new XAttribute(attr_name, src_attr.Value));
                     }
                 }
@@ -3472,9 +3697,11 @@ namespace sql.builder
         }
         private static void copyAttribute(XElement src, XElement tag, string name)
         {
-            if (src != null) {
+            if (src != null)
+            {
                 XAttribute attr = src.Attribute(name);
-                if (attr != null) {
+                if (attr != null)
+                {
                     tag.SetAttributeValue(attr.Name, attr.Value);
                 }
             }
@@ -3482,9 +3709,12 @@ namespace sql.builder
         public static XAttribute copyAttribute(XElement src, string name)
         {
             XAttribute attr = src.Attribute(name);
-            if (attr != null) {
+            if (attr != null)
+            {
                 return new XAttribute(attr.Name, attr.Value);
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
@@ -3493,10 +3723,14 @@ namespace sql.builder
         {
             Contract.Assert(src != null);
             Contract.Assert(tag != null);
-            foreach (XNode node in src.Nodes()) {
-                if (node.NodeType == XmlNodeType.Element) {
+            foreach (XNode node in src.Nodes())
+            {
+                if (node.NodeType == XmlNodeType.Element)
+                {
                     tag.Add(new XElement((XElement)node));
-                } else if (node.NodeType == XmlNodeType.Text) {
+                }
+                else if (node.NodeType == XmlNodeType.Text)
+                {
                     tag.Add(new XText(((XText)node).Value));
                 }
             }
@@ -3505,13 +3739,19 @@ namespace sql.builder
         {
             XName name = element.Name;
             XElement el = null;
-            if (name == EName.query) {
+            if (name == EName.query)
+            {
                 el = sourceMain(element);
-            } else if (name == EName.table) {
+            }
+            else if (name == EName.table)
+            {
                 el = table(element);
-            } else if (name == EName.usepart) {
+            }
+            else if (name == EName.usepart)
+            {
                 //return usepart(element).Cast<XElement>().FirstOrDefault();
-                foreach (XNode node in usepart(element)) {
+                foreach (XNode node in usepart(element))
+                {
                     el = node as XElement;
                     if (el != null) break;
                 }
@@ -3557,7 +3797,8 @@ namespace sql.builder
 
                 if (mtr != null)
                 {
-                    if (qry.Attribute("materialize") == null) {
+                    if (qry.Attribute("materialize") == null)
+                    {
                         qry.SetAttrValue(mtr.Name, mtr.Value);
                     }
                 }
@@ -3668,7 +3909,7 @@ namespace sql.builder
         //private static string[] columnAttributesNamesCanDub = new string[] { "type", "agg", "format", TextConst.AName.CMaster, TextConst.AName.CMasterKey, "title", "class-title", "dimname", "pivot", TextConst.AName.IsFactUse };//убрал mp его нельзя повторять
 
         private static int matOrder = 0;
-      
+
         private static bool enableMatOrdering = true;
         private static void setMatOrdreLast(string name)
         {
@@ -3750,7 +3991,8 @@ namespace sql.builder
         {
             XElement compiled = null;
             string storedName = element.Attribute("stored").Value;
-            if (!_processingCollections.storedQueries.ContainsKey(element.Attribute("name").Value)) {
+            if (!_processingCollections.storedQueries.ContainsKey(element.Attribute("name").Value))
+            {
                 element = new XElement(element);
                 element.Attributes("stored").Remove();
                 // element.SetAttributeValue("materialize", "1");
@@ -3761,14 +4003,18 @@ namespace sql.builder
                 isProcessingPivots = true;
                 DateTime changeTime;
                 XAttribute attr = element.Attribute(AName.timestamp);
-                if (attr != null) {
+                if (attr != null)
+                {
                     changeTime = DateTime.Parse(attr.Value);
-                } else {
+                }
+                else
+                {
                     changeTime = DateTime.MaxValue;
                 }
                 string name = element.Attribute(TextConst.AName.Name).Value;
                 compiled = Cache.GetQueryInfoFromCache(name, changeTime, false);
-                if (compiled == null) {
+                if (compiled == null)
+                {
                     compiled = compileQuery(element, false, rep);
                     Cache.SaveQueryInfoToCache(compiled, name);
                 }
@@ -3776,7 +4022,9 @@ namespace sql.builder
                 // compiled.SetAttributeValue("materialize", "1");
                 // matQueries[element.Attribute("name").Value] = compiled;
                 //storedQueries.Add(element.Attribute("name").Value, compiled);  !!! Пока убираю - проблемы если stored запрос встречается несколько раз
-            } else {
+            }
+            else
+            {
                 compiled = _processingCollections.storedQueries[element.Attribute("name").Value];
             }
 
@@ -3845,10 +4093,12 @@ namespace sql.builder
         {
             XElement ret = new XElement(EName.table);
             copyAttributes(element, ret);
-            if (element.AttrOrDefault(AName.view, false)) {
+            if (element.AttrOrDefault(AName.view, false))
+            {
                 string name = element.Attribute(AName.name).Value;
                 XElement view = XmlReports.Environment.Manager.GetScheme().Elements(EName.views).Elements(EName.view).SearchByAttribute(AName.name, name);
-                if (view == null) {
+                if (view == null)
+                {
                     throw new VCompilerException("Представление (view) " + name + " не найдено", element.Ancestors(EName.query).First(), element);
                 }
                 XElement text = new XElement(EName.text);
@@ -3883,7 +4133,7 @@ namespace sql.builder
             el = new XElement("select");
 
             Cmn.copyAttributes(element.Element(TextConst.EName.Select), el);
-            
+
             qry.Add(el);
             columns(element, el);
 
@@ -4026,21 +4276,29 @@ namespace sql.builder
         {
             XElement cont;
             IEnumerable<XElement> ret;
-            if (element.Name == EName.useparam || element.Name == EName.useglobparam) {
+            if (element.Name == EName.useparam || element.Name == EName.useglobparam)
+            {
                 ret = applyParamToNode(element, inParams, inFormalParams, index, isPart);
-            } else {
+            }
+            else
+            {
                 cont = new XElement(element.Name);
-                foreach (XAttribute attr in element.Attributes()) {
+                foreach (XAttribute attr in element.Attributes())
+                {
                     string attrVal = attr.Value;
                     applyParamToAttr(ref attrVal, inParams, inFormalParams);
                     XAttribute newAttr = new XAttribute(attr.Name, attrVal);
                     cont.Add(newAttr);
                 }
-                foreach (XNode node in element.Nodes()) {
-                    if (node.NodeType == XmlNodeType.Element) {
+                foreach (XNode node in element.Nodes())
+                {
+                    if (node.NodeType == XmlNodeType.Element)
+                    {
                         IEnumerable<XNode> nodes = applyParamsNext((XElement)node, inParams, inFormalParams, index, isPart);
                         cont.Add(nodes);
-                    } else if (node.NodeType == XmlNodeType.Text) {
+                    }
+                    else if (node.NodeType == XmlNodeType.Text)
+                    {
                         cont.Add(node);
                     }
                 }
@@ -4052,112 +4310,160 @@ namespace sql.builder
         {
             IList<XElement> inFormalParams1 = new List<XElement>();
             IList<XElement> inParams1 = new List<XElement>();
-            if (inFormalParams != null) {
+            if (inFormalParams != null)
+            {
                 inFormalParams1.Add(inFormalParams);
             }
-            if (inParams != null) {
+            if (inParams != null)
+            {
                 inParams1.Add(inParams);
             }
-            if (element.Name == EName.useglobparam) {
+            if (element.Name == EName.useglobparam)
+            {
                 inParams1 = new List<XElement>();
                 inFormalParams1 = XmlReports.Environment.Manager.GetScheme().Elements(EName.globalparams).ToList();
             }
-            if (inParams1.Count == 0) {
+            if (inParams1.Count == 0)
+            {
                 inParams1 = inFormalParams1;
             }
             string parFullName = element.Attribute(AName.name).Value;
             string parFullIndex = substringBetween(parFullName, '[', ']');
             string parName;
-            if (string.IsNullOrEmpty(parFullIndex)) {
+            if (string.IsNullOrEmpty(parFullIndex))
+            {
                 parName = parFullName;
-            } else {
+            }
+            else
+            {
                 parName = substringBefore(parFullName, '[');
             }
             XElement formalParam = (inFormalParams1.Elements().Where(par => par.Attribute(AName.name).Value == parName)).FirstOrDefault();
             XElement param1 = null;
-            if (!inParams1.Elements().Attributes(AName.parname).Any()) {
-                if (formalParam != null) {
+            if (!inParams1.Elements().Attributes(AName.parname).Any())
+            {
+                if (formalParam != null)
+                {
                     string formalParamPos = formalParam.ElementsBeforeSelf().Count().ToString();
                     param1 = (inParams1.Elements().Where(par => par.ElementsBeforeSelf().Count().ToString() == formalParamPos)).FirstOrDefault();
                 }
-            } else {
+            }
+            else
+            {
                 param1 = (inParams1.Elements().Where(par => par.AttrOrDefault(AName.parname, string.Empty) == parName)).FirstOrDefault();
             }
-            if (param1 == null && isPart) {
+            if (param1 == null && isPart)
+            {
                 // Если в part есть useparam но нет соответствующего param оставляем useparam
                 return new XElement[1] { new XElement(element) };
             }
             //XElement param = new XElement("nodes");
             List<XElement> ret = new List<XElement>(1);
-            if (string.IsNullOrEmpty(parFullIndex)) {
-                if (param1 != null) {
-                    if (element.Name == EName.useglobparam) {
+            if (string.IsNullOrEmpty(parFullIndex))
+            {
+                if (param1 != null)
+                {
+                    if (element.Name == EName.useglobparam)
+                    {
                         ret.Add(Factory.NewConst(TextConst.Pfx.Param + TextConst.Pfx.GlobParam + parName));
-                    } else if (param1.Name == EName.param) {
-                        if (param1.HasElements) {
+                    }
+                    else if (param1.Name == EName.param)
+                    {
+                        if (param1.HasElements)
+                        {
                             ret.AddRange(param1.Elements());
                         }
-                    } else {
+                    }
+                    else
+                    {
                         ret.Add(param1);
                     }
                 }
-            } else {
-                if (parFullIndex.Contains("@")) {
+            }
+            else
+            {
+                if (parFullIndex.Contains("@"))
+                {
                     string attrName = substringAfter(parFullIndex, '@');
                     string attrVal = param1.Attribute(attrName).Value;
                     ret.Add(Factory.NewConst(attrVal));
                     //param.Add(new XElement("const", attrVal));
-                } else {
+                }
+                else
+                {
                     string parBeginIndex1;
-                    if (parFullIndex.Contains("..")) {
+                    if (parFullIndex.Contains(".."))
+                    {
                         parBeginIndex1 = substringBefore(parFullIndex, "..");
-                    } else {
+                    }
+                    else
+                    {
                         parBeginIndex1 = parFullIndex;
                     }
                     string parBeginIndex;
-                    if (parBeginIndex1 == ":index") {
+                    if (parBeginIndex1 == ":index")
+                    {
                         parBeginIndex = index;
-                    } else {
+                    }
+                    else
+                    {
                         parBeginIndex = parBeginIndex1;
                     }
                     string parEndIndex1;
-                    if (parFullIndex.Contains("..")) {
+                    if (parFullIndex.Contains(".."))
+                    {
                         parEndIndex1 = substringAfter(parFullIndex, "..");
-                    } else {
+                    }
+                    else
+                    {
                         parEndIndex1 = parFullIndex;
                     }
                     string parEndIndex;
-                    if (parEndIndex1 == ":index") {
+                    if (parEndIndex1 == ":index")
+                    {
                         parEndIndex = index;
-                    } else {
+                    }
+                    else
+                    {
                         parEndIndex = parEndIndex1;
                     }
                     XElement param2;
-                    if (param1 != null) {
+                    if (param1 != null)
+                    {
                         param2 = param1;
-                    } else {
+                    }
+                    else
+                    {
                         param2 = formalParam;
                     }
-                    foreach (XElement el in param2.Elements()) {
+                    foreach (XElement el in param2.Elements())
+                    {
                         int count = el.ElementsBeforeSelf().Count() + 1;
-                        if (count >= Convert.ToInt16(parBeginIndex.Replace('*', '0')) && count <= Convert.ToInt16(parEndIndex.Replace("*", "10000"))) {
+                        if (count >= Convert.ToInt16(parBeginIndex.Replace('*', '0')) && count <= Convert.ToInt16(parEndIndex.Replace("*", "10000")))
+                        {
                             ret.Add(new XElement(el));
                         }
                     }
                 }
             }
-            if (ret.Count == 0) {
-                if (formalParam == null) {
+            if (ret.Count == 0)
+            {
+                if (formalParam == null)
+                {
                     throw new VCompilerException("Переменная не найдена", inFormalParams1.First().Parent, element);
                 }
-                if (!formalParam.HasElements) {
+                if (!formalParam.HasElements)
+                {
                     formalParam.Add(new XElement(EName.undefined));
                 }
                 ret.AddRange(formalParam.Elements());
             }
-            foreach (XAttribute attr in element.Attributes()) {
-                if (attr.Name == AName.pth || attr.Name == AName.parname) {
-                    foreach (XElement rel in ret) {
+            foreach (XAttribute attr in element.Attributes())
+            {
+                if (attr.Name == AName.pth || attr.Name == AName.parname)
+                {
+                    foreach (XElement rel in ret)
+                    {
                         rel.SetAttributeValue(attr.Name, attr.Value);
                     }
                 }
@@ -4175,27 +4481,35 @@ namespace sql.builder
         /// <param name="inFormalParams">формальные параметры</param>
         private static void applyParamToAttr(ref string attrValue, XElement inParams, XElement inFormalParams)
         {
-            if (string.IsNullOrEmpty(attrValue)) {
+            if (string.IsNullOrEmpty(attrValue))
+            {
                 return;
             }
             string parFullName;
             int pos_1 = 0;
             int pos_2 = 0;
-            while (true) {
+            while (true)
+            {
                 bool prIn = attrValue[0] != ':';
-                if (!prIn) {
-                    if (attrValue.Length == 1) {
+                if (!prIn)
+                {
+                    if (attrValue.Length == 1)
+                    {
                         break;
                     }
                     parFullName = attrValue.Substring(1);
-                } else {
+                }
+                else
+                {
                     pos_1 = attrValue.IndexOf("[:");
-                    if (pos_1 < 0) {
+                    if (pos_1 < 0)
+                    {
                         break;
                     }
                     int pos_param_name = pos_1 + 2;
                     pos_2 = attrValue.IndexOf(']', pos_param_name);
-                    if (pos_2 < 0 || pos_2 == pos_param_name) {
+                    if (pos_2 < 0 || pos_2 == pos_param_name)
+                    {
                         break;
                     }
                     parFullName = attrValue.Substring(pos_param_name, pos_2 - pos_param_name);
@@ -4207,41 +4521,57 @@ namespace sql.builder
                 // то до точки указывается наименование параметра,
                 // а после неё - наименование атрибута, чьим значением его нужно заменить
                 int dot_pos = parFullName.IndexOf('.');
-                if (dot_pos < 0) {
+                if (dot_pos < 0)
+                {
                     parName = parFullName;
                     parChildName = null;
-                } else {
+                }
+                else
+                {
                     parName = parFullName.Substring(0, dot_pos);
                     parChildName = parFullName.Substring(dot_pos + 1);
                 }
                 XElement formalParam = inFormalParams.Elements().SearchByAttribute(AName.name, parName);
-                if (formalParam == null) {
+                if (formalParam == null)
+                {
                     break;
                 }
                 XElement param;
-                if (inParams != null) {
+                if (inParams != null)
+                {
                     int formalParamPos = formalParam.ElementsBeforeSelf().Count();
                     param = inParams.Elements().FirstOrDefault(e => e.ElementsBeforeSelf().Count() == formalParamPos);
-                } else {
+                }
+                else
+                {
                     param = formalParam.Elements().FirstOrDefault();
                 }
                 string param_value;
-                if (param == null) {
+                if (param == null)
+                {
                     param_value = string.Empty;
-                } else if (!string.IsNullOrEmpty(parChildName)) {
+                }
+                else if (!string.IsNullOrEmpty(parChildName))
+                {
                     param_value = param.Attribute(parChildName).Value;
-                } else {
-                    if (param.FirstNode == null) {
+                }
+                else
+                {
+                    if (param.FirstNode == null)
+                    {
                         break;
                     }
                     param_value = param.Value.Replace("'", string.Empty);
                 }
-                if (prIn) {
+                if (prIn)
+                {
                     // Здесь pos_1 содержит позицию символа '[', а pos_2 - символа ']'
                     Contract.Assert(attrValue[pos_1] == '[');
                     Contract.Assert(attrValue[pos_2] == ']');
                     attrValue = attrValue.Substring(0, pos_1) + param_value + attrValue.Substring(pos_2 + 1);
-                } else {
+                }
+                else
+                {
                     attrValue = param_value;
                     break;
                 }
@@ -4252,9 +4582,12 @@ namespace sql.builder
         {
             Contract.Assert(str != null);
             int i = str.IndexOf(ch);
-            if (i >= 0) {
+            if (i >= 0)
+            {
                 return str.Substring(0, i);
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
@@ -4262,33 +4595,44 @@ namespace sql.builder
         {
             Contract.Assert(s1 != null);
             int i = s1.IndexOf(s2);
-            if (i >= 0) {
+            if (i >= 0)
+            {
                 return s1.Substring(0, i);
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
         private static string substringAfter(string str, char ch)
         {
-            if (str == null) {
+            if (str == null)
+            {
                 return null;
             }
             int i = str.IndexOf(ch);
-            if (i >= 0) {
+            if (i >= 0)
+            {
                 return str.Substring(i + 1);
-            } else {
+            }
+            else
+            {
                 return string.Empty;
             }
         }
         private static string substringAfter(string s1, string s2)
         {
-            if (s1 == null) {
+            if (s1 == null)
+            {
                 return null;
             }
             int i = s1.IndexOf(s2);
-            if (i >= 0) {
+            if (i >= 0)
+            {
                 return s1.Substring(i + s2.Length);
-            } else {
+            }
+            else
+            {
                 return string.Empty;
             }
         }
@@ -4306,12 +4650,14 @@ namespace sql.builder
         {
             Contract.Assert(str != null);
             int pos_1 = str.IndexOf(ch_1);
-            if (pos_1 < 0) {
+            if (pos_1 < 0)
+            {
                 return null;
             }
             pos_1 = pos_1 + 1;
             int pos_2 = str.IndexOf(ch_2, pos_1);
-            if (pos_2 < 0) {
+            if (pos_2 < 0)
+            {
                 return null;
             }
             return str.Substring(pos_1, pos_2 - pos_1);
@@ -4321,14 +4667,17 @@ namespace sql.builder
             Contract.Assert(oldValue != null);
             Contract.Assert(newValue == null || newValue.Length != oldValue.Length);
             int len = sb.Length;
-            while (true) {
+            while (true)
+            {
                 sb.Replace(oldValue, newValue);
                 int new_len = sb.Length;
-                if (new_len == len) {
+                if (new_len == len)
+                {
                     break;
                 }
                 len = new_len;
-            };
+            }
+            ;
         }
         public static string normalizeWhitespace(string s)
         {
@@ -4343,9 +4692,11 @@ namespace sql.builder
         private static string getAttrValue(XElement el, XName name_1, XName name_2)
         {
             XAttribute attr = el.Attribute(name_1);
-            if (attr == null) {
+            if (attr == null)
+            {
                 attr = el.Attribute(name_2);
-                if (attr == null) {
+                if (attr == null)
+                {
                     return string.Empty;
                 }
             }
@@ -4353,17 +4704,23 @@ namespace sql.builder
         }
         public static string getAttrValue(XElement el, string attrName)
         {
-            if (el == null) {
+            if (el == null)
+            {
                 return string.Empty;
-            } else {
+            }
+            else
+            {
                 return el.AttrOrEmpty(attrName);
             }
         }
         private static XElement copyElement(XElement el)
         {
-            if (el != null) {
+            if (el != null)
+            {
                 return new XElement(el);
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
@@ -4414,7 +4771,7 @@ namespace sql.builder
 
                     if (linkerQuery.Name.LocalName == TextConst.AName.Table //чтобы обрабатывались линки на связи у наследников, не проверено
 
-                        && query.Attribute("name") != null && query.Attribute("name").Value!="a"/*заплатка такое может быть у списков*/) // была ошибка
+                        && query.Attribute("name") != null && query.Attribute("name").Value != "a"/*заплатка такое может быть у списков*/) // была ошибка
                     {
                         linkerQueryScheme = getQueryScheme(query.Attribute("name").Value);
                     }
@@ -4423,7 +4780,7 @@ namespace sql.builder
                         linkerQueryScheme = getQueryScheme(linkerQuery.Attribute("name").Value);
                     }
 
-                    
+
 
                     string linkerMainQueryAlias = getAttrValue(linkerQueryScheme.Elements("from").Elements().First(), "as");
                     if (link.Name.LocalName == "link")
@@ -4543,10 +4900,12 @@ namespace sql.builder
                         linkedQueryCall.SetAttrValue(AName.@as, link.Attribute(AName.@as).Value);
 
                         //   IEnumerable<XElement> linkedQueryColumns = linkedQuery.Descendants("column").Where(e => e.Attribute("table").Value == link.Attribute("name").Value);
-                        foreach (XElement col in linkerQueryColumns.ToArray()) {
+                        foreach (XElement col in linkerQueryColumns.ToArray())
+                        {
                             col.SetAttrValue(AName.table, linkerQuery.Attribute(AName.@as).Value);
                         }
-                        foreach (XElement col in linkedQueryColumns.ToArray()) {
+                        foreach (XElement col in linkedQueryColumns.ToArray())
+                        {
                             col.SetAttrValue(AName.table, link.Attribute(AName.@as).Value);
                         }
                         linkedQueryCall.Add(link.Elements("link"));
@@ -4591,7 +4950,7 @@ namespace sql.builder
                         link.Remove();
 
 
-                        
+
 
 
                         if (link.Attribute("usenl") != null)
@@ -4605,7 +4964,8 @@ namespace sql.builder
                             }
                         }
                     }
-                    if (link.Name == EName.slink) {
+                    if (link.Name == EName.slink)
+                    {
                         XElement linkExpr = makeSlinkExpr(link);
                         XElement lparent = link.Parent;
                         linkerQuery.AddAfterSelf(linkExpr);
@@ -4649,7 +5009,8 @@ namespace sql.builder
         {
             Contract.Assume(el != null);
             XAttribute attr = el.Attribute(AName.table);
-            if (attr == null) {
+            if (attr == null)
+            {
                 attr = el.Attribute(AName.name);
             }
             return attr.Value;
@@ -4663,7 +5024,8 @@ namespace sql.builder
         {
             Contract.Assume(el != null);
             XAttribute attr = el.Attribute(AName.@as);
-            if (attr == null) {
+            if (attr == null)
+            {
                 attr = el.Attribute(AName.column);
             }
             return attr.Value;
@@ -4677,7 +5039,8 @@ namespace sql.builder
         {
             Contract.Assume(el != null);
             XAttribute attr = el.Attribute(AName.@as);
-            if (attr == null) {
+            if (attr == null)
+            {
                 attr = el.Attribute(AName.name);
             }
             return attr.Value;
@@ -4692,13 +5055,18 @@ namespace sql.builder
             XElement cond = Factory.NewCall(TextConst.AVFunction.And);
             linkExpr.Add(cond);
             XElement parenQueryScheme = getQueryScheme(getLQTableName(link.Parent));
-            if (parenQueryScheme.Elements(EName.select).Elements(EName.column).Any(e => e.AttrOrDefault(AName.column, string.Empty) == TextConst.AVColumn.All)) {
+            if (parenQueryScheme.Elements(EName.select).Elements(EName.column).Any(e => e.AttrOrDefault(AName.column, string.Empty) == TextConst.AVColumn.All))
+            {
                 parenQueryScheme = compileQuery(parenQueryScheme, true, null).Element(EName.query);
-            } else {
+            }
+            else
+            {
                 markQueryKeys(parenQueryScheme);
             }
-            foreach (XElement colPar in parenQueryScheme.Element(EName.select).Elements()) {
-                if (colPar.AttrOrDefault(AName.key, false)) {
+            foreach (XElement colPar in parenQueryScheme.Element(EName.select).Elements())
+            {
+                if (colPar.AttrOrDefault(AName.key, false))
+                {
                     string col_name = colPar.Attribute(AName.@as).Value;
                     XElement call = Factory.NewCall(TextConst.AVFunction.Equal);
                     call.Add(Factory.NewColumn(link.Parent.Attribute(AName.@as).Value, col_name));
@@ -4718,7 +5086,8 @@ namespace sql.builder
         {
             Contract.Assert(link != null);
             IList<XElement> where = link.Elements(EName.where).ToList<XElement>();
-            if (where.Count == 0) {
+            if (where.Count == 0)
+            {
                 return expr;
             }
             Contract.Assert(expr != null);
@@ -4752,9 +5121,9 @@ namespace sql.builder
                            
               }*/
 
-           // Можно переписать с учетом addLinkInfo
-           // 
-           // string inhName = null;
+            // Можно переписать с учетом addLinkInfo
+            // 
+            // string inhName = null;
             if (inhName == null)
             {
                 if (query.Attribute(TextConst.AName.Inherit) != null)
@@ -4797,7 +5166,7 @@ namespace sql.builder
                 {
                     linkedQuery = linkedQueryCall.Parent.Parent.Parent;
                 }
-            
+
             }
             if (linkedQuery != null)// может быть если ссылка на query из другого проекта, костыль, подумать
             {
@@ -4825,10 +5194,12 @@ namespace sql.builder
                                 e.Attribute("table").Value == "this" || e.Attribute("table").Value == "*")
                         .ToArray();
 
-                foreach (XElement col in linkerQueryColumns) {
+                foreach (XElement col in linkerQueryColumns)
+                {
                     col.SetAttrValue(AName.table, linkerQuery.Attribute(AName.@as).Value);
                 }
-                foreach (XElement col in linkedQueryColumns) {
+                foreach (XElement col in linkedQueryColumns)
+                {
                     col.SetAttrValue(AName.table, link.Attribute(AName.@as).Value);
                 }
                 XElement dlinkExpr = new XElement(EName.query);
@@ -4929,7 +5300,8 @@ namespace sql.builder
                     col.SetAttributeValue("column", colAlias);
                 }
 
-                foreach (XElement childLink in link.Descendants().Where(EPredicate.IsLinkOrDLinkOrSLink)) {
+                foreach (XElement childLink in link.Descendants().Where(EPredicate.IsLinkOrDLinkOrSLink))
+                {
                     colNames.Clear();
                     IEnumerable<XElement> childSelCols = getQueryColumns(query).Where(
                         e1 => e1.Attribute("table").Value == childLink.Attribute("as").Value
@@ -5028,8 +5400,10 @@ namespace sql.builder
             List<string> tableAliaces = new List<string>(16);
             tableAliaces.Add(link.Attribute(AName.@as).Value);
             IList<XElement> childLinks = link.Elements().Where(EPredicate.IsLinkOrSLink).ToList();
-            while (childLinks.Count > 0) {
-                foreach (XElement childLink in childLinks) {
+            while (childLinks.Count > 0)
+            {
+                foreach (XElement childLink in childLinks)
+                {
                     tableAliaces.Add(childLink.Attribute(AName.@as).Value);
                 }
                 childLinks = childLinks.Elements().Where(EPredicate.IsLinkOrSLink).ToList();
@@ -5048,9 +5422,12 @@ namespace sql.builder
             XElement linkedQueryCall;
             //XElement linkerQueryScheme;
             //string linkerMainQueryAlias;
-            if (firstLevelLink.Name == EName.slink) {
+            if (firstLevelLink.Name == EName.slink)
+            {
                 linkedQueryCall = makeSlinkExpr(link);
-            } else {
+            }
+            else
+            {
                 /*linkedQueryCall = schemeRoot.Elements("queries").Elements("query").Elements("from").Elements("query").First(e => getAttrValue(e, "dname") == firstLevelLink.Attribute("name").Value && getAttrValue(e, "name") == linkerQuery.Attribute("name").Value);
 
                 linkedQuery = linkedQueryCall.Parent.Parent;
@@ -5096,10 +5473,12 @@ namespace sql.builder
                     childColumns = linkedQueryCall.Descendants("column").Where(e => e.Attribute("table").Value == linkedQueryCall.Attribute("as").Value).ToArray();
                     parentColumns = linkedQueryCall.Descendants("column").Where(e => e.Attribute("table").Value == mainQueryAlias).ToArray();
                 }
-                foreach (XElement col in parentColumns) {
+                foreach (XElement col in parentColumns)
+                {
                     col.SetAttrValue(AName.table, firstLevelLink.Parent.Attribute(AName.@as).Value);
                 }
-                foreach (XElement col in childColumns){
+                foreach (XElement col in childColumns)
+                {
                     col.SetAttrValue(AName.table, firstLevelLink.Attribute(AName.@as).Value);
                 }
             }
@@ -5140,7 +5519,8 @@ namespace sql.builder
 
             SortedList<string, string> aliasDecode = new SortedList<string, string>();
 
-            foreach (XElement nextLinkI in dlinkExprQry.DescendantsAndSelf().Where(EPredicate.IsQueryOrLinkOrDLinkOrSLink).ToList()) {
+            foreach (XElement nextLinkI in dlinkExprQry.DescendantsAndSelf().Where(EPredicate.IsQueryOrLinkOrDLinkOrSLink).ToList())
+            {
                 string linkAlias = nextLinkI.Attribute("as").Value;
 
                 nextLinkI.Attribute("as").Value = nextLinkI.Attribute("as").Value + TextConst.Pfx.DubDlinkPush + nextIndex().ToString();
@@ -5741,7 +6121,7 @@ namespace sql.builder
         private static IEnumerable<XElement> getQueryFieldsSel(XElement query)
         {
             IEnumerable<XElement> selColumns = query.DescendantsAndSelf().Where(EPredicate.IsSelectOrDimensionOrMeasures)
-                // .Descendants("column").Where(e => !e.Ancestors("query").First().IsAfter(query))
+              // .Descendants("column").Where(e => !e.Ancestors("query").First().IsAfter(query))
               .Elements();
             return selColumns;
         }
@@ -5950,7 +6330,8 @@ namespace sql.builder
 
                 var andToDel = query1.Descendants(TextConst.EName.Where).Descendants(TextConst.EName.Call).Where(e => e.Attribute(TextConst.AName.Function).Value == TextConst.AVFunction.And && !e.Elements().Any()).ToList();
 
-                while (andToDel.Count != 0) {
+                while (andToDel.Count != 0)
+                {
                     andToDel.Remove();
                     andToDel = query1.Descendants(TextConst.EName.Where).Descendants(TextConst.EName.Call).Where(e => e.Attribute(TextConst.AName.Function).Value == TextConst.AVFunction.And && !e.Elements().Any()).ToList();
                 }
@@ -5958,11 +6339,14 @@ namespace sql.builder
                 foreach (XElement xwhere in query1.Descendants(TextConst.EName.Where).ToList())
                 {
                     var els = xwhere.Elements().ToList();
-                    if (xwhere.Elements().Count() > 1) {
+                    if (xwhere.Elements().Count() > 1)
+                    {
                         els.Remove();
                         xwhere.Add(new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunction.And)));
                         xwhere.Elements().First().Add(els);
-                    } else if (els.Count == 0) {
+                    }
+                    else if (els.Count == 0)
+                    {
                         xwhere.Remove();
                     }
                 }
@@ -6044,7 +6428,8 @@ namespace sql.builder
 
                     colsToDel.AddRange(factsToDel);
                     var exprTmpl = new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunction.Dummy), new XElement(TextConst.EName.Const, new XText("null")));
-                    foreach (VSXElement col in colsToDel.SelectAsArray(VSXElement.Get)) {
+                    foreach (VSXElement col in colsToDel.SelectAsArray(VSXElement.Get))
+                    {
                         var expr = new XElement(exprTmpl);
 
                         copyAttributes(col, expr, columnAttributesNames);
@@ -6123,17 +6508,17 @@ namespace sql.builder
                                     var cols = getQueryColumnsWithGr(queryCall.Parent.Parent).ToList();
                                     //if (!cols.Where(c => getAttrValue(c, TextConst.AName.Column) == TextConst.AVColumn.All).Any())
                                     //{
-                                        var cols1 = getQueryJoinColumns(queryCall.Parent.Parent).ToList();
-                                        cols.AddRange(cols1);
-                                        foreach (var col in cols)
-                                        {
-                                            var cname = getAttrValue(col, TextConst.AName.Column);
+                                    var cols1 = getQueryJoinColumns(queryCall.Parent.Parent).ToList();
+                                    cols.AddRange(cols1);
+                                    foreach (var col in cols)
+                                    {
+                                        var cname = getAttrValue(col, TextConst.AName.Column);
 
-                                            usednames.Add(cname);
-                                        }
+                                        usednames.Add(cname);
+                                    }
 
-                                        usednames = usednames.Distinct().ToList();
-                                        check1 = true;
+                                    usednames = usednames.Distinct().ToList();
+                                    check1 = true;
                                     //}
                                 }
                             }
@@ -6152,15 +6537,18 @@ namespace sql.builder
                     //    cols.AddRange(cols1);
                     //}
 
-                    foreach (var el in query3.Elements(EName.select).Elements().Where(e => !usednames.Contains(getAliasOrColumn(e))).ToList()) {
+                    foreach (var el in query3.Elements(EName.select).Elements().Where(e => !usednames.Contains(getAliasOrColumn(e))).ToList())
+                    {
 
                         if (!check1 || Cmn.GetAttrValue(el, TextConst.AName.Group) == "")// химия, нужно выкидывать но не всегда, наличие группировки косвенный призак
                         {
                             bool rem = true;
-                            if (check1) {
+                            if (check1)
+                            {
                                 string alias = getAliasOrColumn(el);
                                 var useByThis = query1.Descendants(EName.column).Where(e => Cmn.GetAttrValue(e, TextConst.AName.Table) == TextConst.AVTable.Ths && Cmn.GetAttrValue(e, TextConst.AName.Column) == alias);
-                                if (useByThis.Any()) {
+                                if (useByThis.Any())
+                                {
                                     // нужно бы проверять используется ли колонка определенноая через this, но это сложновато пока так
                                     // + сейчас проверка по всему запросу с подзапросами, это не правильно.
                                     rem = false;
@@ -6194,7 +6582,8 @@ namespace sql.builder
 
                 }
                 var factPivCols = query3.Descendants(TextConst.EName.Fact).Where(e => e.Elements(TextConst.EName.WithParams).Descendants(TextConst.AName.Column).Any(c => getAttrValue(c, TextConst.AName.Table) == "dim")).ToList();
-                if (factPivCols.Count != 0) {
+                if (factPivCols.Count != 0)
+                {
                     isProcessingPivots = true;
                     foreach (XElement col in factPivCols)
                     {
@@ -6234,7 +6623,7 @@ namespace sql.builder
                 copyAttribute(query1, query, "haskeys");
 
             }
-            
+
         }
 
         public static SortedList<string, XElement> pivotQueries = null;
@@ -6383,7 +6772,8 @@ namespace sql.builder
                 List<string> usedThisNames = new List<string>();
                 usedThisNames.AddRange(usedColsNames);
                 int c1 = 0;
-                while (c1 != usedCols1.Count) {
+                while (c1 != usedCols1.Count)
+                {
                     c1 = usedCols1.Count;
                     List<string> usedThisNames1 = usedCols1.DescendantsAndSelf("column").Where(e => e.Attribute("table").Value == "this").Where(e2 => !usedThisNames.Contains(e2.Attribute("column").Value)).Select(e1 => e1.Attribute("column").Value).ToList();
                     usedThisNames.AddRange(usedThisNames1);
@@ -6393,7 +6783,9 @@ namespace sql.builder
                 usedCols = usedCols1;
                 usedColsNames = usedThisNames;
                 usedColsNames2 = usedCols.Attributes(AName.@as).Select(APredicate.AttributeValue).ToList();
-            } else {
+            }
+            else
+            {
                 usedColsNames2 = query.Elements(EName.select).Elements().Attributes(AName.@as).Select(APredicate.AttributeValue).ToList();
             }
             List<string> usedQueriesNames = query.Elements("select").Elements("column").Where(e1 => usedColsNames2.Contains(e1.Attribute("as").Value) || usedMasterNames.Contains(e1.Attribute("as").Value)).Select(e => e.Attribute("table").Value).ToList();
@@ -6427,7 +6819,8 @@ namespace sql.builder
 
             List<string> cumulNames = new List<string>();
 
-            foreach (XElement col in query.Descendants(EName.column).Where(e => e.Attribute("cumulate") != null).ToList()) {
+            foreach (XElement col in query.Descendants(EName.column).Where(e => e.Attribute("cumulate") != null).ToList())
+            {
                 string timeline = query.Elements(EName.select).Elements().First(e => e.Attribute("as").Value == col.Attribute("cumulate").Value).AttrOrDefault("timeline", string.Empty);
                 List<string> dimColsNames = query.Elements(EName.select).Elements().Where(e => getAttrValue(e, "group") == "1" && e.Attribute("as").Value != col.Attribute("cumulate").Value && (timeline == "" || getAttrValue(e, "timeline") != timeline)).Select(e1 => e1.Attribute("as").Value).ToList();
                 XElement[] dimCols = dimColsNames.SelectAsArray(e => new XElement(EName.column, new XAttribute(AName.table, TextConst.AVTable.Ths), new XAttribute(AName.column, e)));
@@ -6435,7 +6828,8 @@ namespace sql.builder
                 colCopy.RemoveAttribute(AName.cumulate);
                 colCopy.RemoveAttribute(AName.@as);
                 string aggFunc = col.AttrOrEmpty(AName.agg);
-                if (string.IsNullOrEmpty(aggFunc)) {
+                if (string.IsNullOrEmpty(aggFunc))
+                {
                     aggFunc = TextConst.AVFunction.Sum;
                 }
                 XElement overExpr = new XElement(EName.call,
@@ -6477,11 +6871,11 @@ namespace sql.builder
                             )
                        , new XElement("call",
                             new XAttribute("function", "order by 2"),
-                        // new XElement("call", new XAttribute("function", "nulls last"),
-                        //new XElement("call", new XAttribute("function", "desc"),
+                                    // new XElement("call", new XAttribute("function", "nulls last"),
+                                    //new XElement("call", new XAttribute("function", "desc"),
                                     new XElement("column", new XAttribute("table", "this"), new XAttribute("column", col.Attribute("cumulate").Value))
-                        //)
-                        // )
+                            //)
+                            // )
                             )
 
                     );
@@ -6829,7 +7223,7 @@ namespace sql.builder
                         //    relAlias = "kod_smet_sub";
                         //}
 
-                      
+
                         XElement parentColumn = rel.Descendants(
                           TextConst.EName.Column
                           ).First(c => c.Attribute(TextConst.AName.Table) == null || getAttrValue(c, TextConst.AName.Table) == getAttrValue(rel, TextConst.AName.As));
@@ -6904,8 +7298,8 @@ namespace sql.builder
                 string linkAlias = "";
                 for (int i = 1; i < ss.Length; i++)
                 {
-                     linkName = ss[i];
-                     linkAlias = linkName + TextConst.Pfx.ExtValName;
+                    linkName = ss[i];
+                    linkAlias = linkName + TextConst.Pfx.ExtValName;
 
                     XElement link = srcQuery.Elements(TextConst.EName.Link).FirstOrDefault(e => getAttrValue(e, TextConst.AName.As) == linkAlias);
 
@@ -6926,11 +7320,13 @@ namespace sql.builder
         private static void processingParamsLinks(XElement element)
         {
             foreach (XElement param in element.Elements(TextConst.EName.Params).Elements().
-                    Where(e => e.Attribute(TextConst.AName.ClassType) != null).ToList()) {
+                    Where(e => e.Attribute(TextConst.AName.ClassType) != null).ToList())
+            {
                 string paramTableAlias = getAliasOrName(param);
                 XElement fromQuery = element.Elements(EName.from).Descendants().FirstOrDefault(e => TextConst.ENameArray.ALinksAndQuery.Contains(e.Name.LocalName) && getAttrValue(e, TextConst.AName.As) == paramTableAlias);
                 List<XElement> links = param.Elements().Where(e => TextConst.ENameArray.ALinks.Contains(e.Name.LocalName)).ToList();
-                if (fromQuery == null) {
+                if (fromQuery == null)
+                {
                     XElement querySceme = getQueryScheme(param.Attribute(TextConst.AName.ClassType).Value);
 
                     XElement keyCol = querySceme.Element(TextConst.EName.Select).Elements().FirstOrDefault(e => getAttrValue(e, TextConst.AName.Key) == TextConst.AVBool.True);
@@ -7007,11 +7403,15 @@ namespace sql.builder
         private static void removeExcludedElements(XElement element)
         {
             IList<XElement> list = element.Elements().ToList();
-            for (int index = 0; index < list.Count; index++) {
+            for (int index = 0; index < list.Count; index++)
+            {
                 XElement e = list[index];
-                if (e.Attribute(AName.exclude) != null) {
+                if (e.Attribute(AName.exclude) != null)
+                {
                     e.Remove();
-                } else {
+                }
+                else
+                {
                     removeExcludedElements(e);
                 }
             }
@@ -7076,31 +7476,42 @@ namespace sql.builder
         }
         public static void addColumnsAlias(XElement query, bool isOld, bool isSingle)
         {
-            foreach (XElement col in query.Descendants().Where(e => (new string[] { "select", "dimension", "measures", "pivot" }).Contains(e.Name.LocalName)).Elements(EName.column)) {
-                if (col.Attribute(AName.@as) == null) {
+            foreach (XElement col in query.Descendants().Where(e => (new string[] { "select", "dimension", "measures", "pivot" }).Contains(e.Name.LocalName)).Elements(EName.column))
+            {
+                if (col.Attribute(AName.@as) == null)
+                {
                     col.Add(new XAttribute(AName.@as, col.Attribute(AName.column).Value));
                 }
             }
-            foreach (XElement col in query.Descendants().Where(e => (new string[] { "select", "dimension", "measures", "pivot" }).Contains(e.Name.LocalName)).Elements(EName.fact)) {
-                if (col.Attribute(AName.@as) == null) {
+            foreach (XElement col in query.Descendants().Where(e => (new string[] { "select", "dimension", "measures", "pivot" }).Contains(e.Name.LocalName)).Elements(EName.fact))
+            {
+                if (col.Attribute(AName.@as) == null)
+                {
                     col.Add(new XAttribute(AName.@as, col.Attribute(AName.column).Value));
                 }
             }
-            foreach (XElement col in query.Descendants().Where(e => (new string[] { "select", "dimension", "measures", "pivot" }).Contains(e.Name.LocalName)).Elements(EName.column)) {
+            foreach (XElement col in query.Descendants().Where(e => (new string[] { "select", "dimension", "measures", "pivot" }).Contains(e.Name.LocalName)).Elements(EName.column))
+            {
                 XAttribute attr = col.Attribute(AName.@as);
-                if (attr != null && attr.Value.StartsWith("+")) {
+                if (attr != null && attr.Value.StartsWith("+"))
+                {
                     attr.Value = col.Attribute(AName.column).Value + attr.Value.Substring(1);
                 }
             }
-            foreach (XElement col in query.Descendants(EName.select).Elements(EName.fact)) {
+            foreach (XElement col in query.Descendants(EName.select).Elements(EName.fact))
+            {
                 col.SetAttrValue(TextConst.AName.IsFactUse, TextConst.AVBool.True);
             }
-            if (!isOld && isSingle) {
-                foreach (XElement sel1 in query.Descendants(EName.select)) {
+            if (!isOld && isSingle)
+            {
+                foreach (XElement sel1 in query.Descendants(EName.select))
+                {
                     HashSet<string> names = new HashSet<string>();
-                    foreach (XElement col in sel1.Elements(EName.column)) {
+                    foreach (XElement col in sel1.Elements(EName.column))
+                    {
                         var name = col.Attribute(AName.@as).Value;
-                        if (names.Contains(name)) {
+                        if (names.Contains(name))
+                        {
                             throw new VCompilerException("Повторяющееся имя колонки", query, col);
                         }
                         //возможно измерение прописано дважды
@@ -7192,10 +7603,10 @@ namespace sql.builder
         public static void PreCompile(bool isOld, VSXElement compiling)
         {
             Contract.Assert(compiling != null);
-            #if DEBUG
+#if DEBUG
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            #endif
+#endif
             //newColIndex = 1;
 
             if (DontPrecompile) return;
@@ -7203,7 +7614,7 @@ namespace sql.builder
             preColmpiling = true;
 
             removeExcludedElements(compiling);
-           // clearFuncMultiSpaces(compiling);
+            // clearFuncMultiSpaces(compiling);
             var queries = compiling.Elements(EName.queries).Elements(EName.query).ToArray();
 
             foreach (XElement el in queries)
@@ -7311,19 +7722,19 @@ namespace sql.builder
             collectAdditionalAttrs(compiling);
 
             VCashUtils.ClearCash();
-            #if DEBUG
+#if DEBUG
             sw.Stop();
             Debug.WriteLine("Compiler.PreCompile(): " + sw.ElapsedMilliseconds.ToString() + " мс");
-            #endif
+#endif
         }
         public static XElement PreCompileOther(XElement element, bool selfOnly)
         {
             Contract.Assert(element != null);
             Contract.Assert(element.Name != EName.query);
-            #if DEBUG
+#if DEBUG
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            #endif
+#endif
             preColmpiling = true;
             removeExcludedElements(element);
             processingParts(element);
@@ -7331,19 +7742,20 @@ namespace sql.builder
             processingUsing(element);
             processingArrays(element);
             preColmpiling = false;
-            #if DEBUG
+#if DEBUG
             sw.Stop();
             Debug.WriteLine("Compiler.PreCompileOther(): " + sw.ElapsedMilliseconds.ToString() + " мс");
-            #endif
+#endif
             return element;
         }
         public static XElement PreCompileQuery(XElement query, bool selfOnly)
         {
             Contract.Assert(query != null);
             Contract.Assert(query.Name == EName.query);
-            #if DEBUG
+#if DEBUG
             string query_name = query.AttrOrDefault(AName.name, null);
-            if (string.IsNullOrEmpty(query_name)) {
+            if (string.IsNullOrEmpty(query_name))
+            {
                 query_name = query.AttrOrDefault(AName.comment, string.Empty);
                 //if (string.IsNullOrEmpty(query_name)) {
                 //    query_name = query.AttrOrDefault(AName.File, string.Empty);
@@ -7351,7 +7763,7 @@ namespace sql.builder
             }
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            #endif
+#endif
             XElement el = query;
             preColmpiling = true;
             removeExcludedElements(query);
@@ -7371,7 +7783,7 @@ namespace sql.builder
             el = processingRecordSets(el);
             //processingAddNames(el);
             addParamsNodeUsingForm(el);
-          
+
             AddQueryAutoFilterParsAndConds(el);
             processingParamsLinks(el);
 
@@ -7427,25 +7839,25 @@ namespace sql.builder
             // setFormFieldsVisible();
 
             preColmpiling = false;
-            #if DEBUG
+#if DEBUG
             sw.Stop();
             Debug.WriteLine("Compiler.PreCompileQuery(), " + query_name + ": " + sw.ElapsedMilliseconds.ToString() + " мс");
-            #endif
+#endif
             return el;
             // addKeyMarks();
         }
         private static XElement createFormFromQueryContent(XElement cnt)
         {
-           
-            
-                
-                var xfrm = new XElement(TextConst.EName.Form);
-                xfrm.SetAttributeValue(TextConst.AName.Name, cnt.Parent.Attribute(TextConst.AName.Name).Value);
-                copyAttribute(cnt.Parent, xfrm, TextConst.AName.WithBehavior);
-                
-                //cnt.Remove();
-                xfrm.Add(cnt);
-                return xfrm;
+
+
+
+            var xfrm = new XElement(TextConst.EName.Form);
+            xfrm.SetAttributeValue(TextConst.AName.Name, cnt.Parent.Attribute(TextConst.AName.Name).Value);
+            copyAttribute(cnt.Parent, xfrm, TextConst.AName.WithBehavior);
+
+            //cnt.Remove();
+            xfrm.Add(cnt);
+            return xfrm;
         }
         private static void createAndAddToSchemeFormFromQuery(XElement qry, bool isSingle)
         {
@@ -7487,8 +7899,8 @@ namespace sql.builder
                 }
                 //cnt.Remove();// как выяснилось так нельзя
             }
-        
-           
+
+
         }
         private static void preProccessingForm(XElement xfrm)
         {
@@ -7539,7 +7951,7 @@ namespace sql.builder
             }
             foreach (XElement xfrm in compiling.Elements("forms").Elements("form"))
             {
-                
+
                 preProccessingForm(xfrm);
             }
         }
@@ -7560,11 +7972,11 @@ namespace sql.builder
                     var cnt = el.Element(TextConst.EName.Content);
                     if (cnt != null)
                     {
-                        
+
                         form = createFormFromQueryContent(cnt);
                         preProccessingForm(form);
                     }
-                   
+
                 }
 
             }
@@ -7587,7 +7999,7 @@ namespace sql.builder
                     {
 
                         xpar.Attributes(TextConst.AName.Type).Remove(); // !!! Влияет на признак IsSimpleParams. При наличии которого не удаляются опциональные уловия при компиляции
-                       
+
                     }
                     xpars.Add(xpar);
                 }
@@ -7604,16 +8016,21 @@ namespace sql.builder
         private static void addFormInfoQueries(VSXElement compiling)
         {
             XElement queries = compiling.Element(EName.queries);
-            foreach (XElement form in compiling.Elements(EName.forms).Elements(EName.form)) {
+            foreach (XElement form in compiling.Elements(EName.forms).Elements(EName.form))
+            {
                 List<XElement> fields = new List<XElement>();
-                foreach (XElement field in form.Descendants(EName.field)) {
-                    if (field.AttrOrDefault(AName.visible, true) && field.AttrOrDefault(AName.column_visible, true)) {
+                foreach (XElement field in form.Descendants(EName.field))
+                {
+                    if (field.AttrOrDefault(AName.visible, true) && field.AttrOrDefault(AName.column_visible, true))
+                    {
                         fields.Add(field);
                     }
                 }
-                if (fields.Count != 0) {
+                if (fields.Count != 0)
+                {
                     XElement query, select, from, dual, value, field;
-                    if (fields.Count == 1) {
+                    if (fields.Count == 1)
+                    {
                         Factory.NewSelectFromDualQuery(out query, out select, out from, out dual);
                         dual.Add(new XAttribute(AName.@as, TextConst.AVTable.Dual));
                         //
@@ -7635,7 +8052,9 @@ namespace sql.builder
                         value.Add(new XAttribute(AName.@as, "text"));
                         value.Add(new XAttribute(AName.title, "Значение"));
                         select.Add(value);
-                    } else {
+                    }
+                    else
+                    {
                         Factory.NewSelectFromQuery(out query, out select, out from);
                         XElement union_query, union;
                         Factory.NewUnionQuery(out union_query, out union);
@@ -7654,27 +8073,31 @@ namespace sql.builder
                         column.Add(new XAttribute(AName.title, "Значение"));
                         select.Add(column);
                         //
-                        for (int index = 0; index < fields.Count; index++) {
+                        for (int index = 0; index < fields.Count; index++)
+                        {
                             field = fields[index];
                             XElement subquery, subquery_select, subquery_from;
                             Factory.NewSelectFromDualQuery(out subquery, out subquery_select, out subquery_from, out dual);
                             //
                             value = Factory.NewConst("'" + field.AttrOrEmpty(AName.title) + "'");
-                            if (index == 0) {
+                            if (index == 0)
+                            {
                                 value.Add(new XAttribute(AName.type, TextConst.AVDataType.String));
                                 value.Add(new XAttribute(AName.@as, "title"));
                             }
                             subquery_select.Add(value);
                             //
                             value = Factory.NewConst("'" + field.AttrOrEmpty(AName.name) + "'");
-                            if (index == 0) {
+                            if (index == 0)
+                            {
                                 value.Add(new XAttribute(AName.type, TextConst.AVDataType.String));
                                 value.Add(new XAttribute(AName.@as, "name"));
                             }
                             subquery_select.Add(value);
                             //
                             value = Factory.NewConst("NULL");
-                            if (index == 0) {
+                            if (index == 0)
+                            {
                                 value.Add(new XAttribute(AName.type, TextConst.AVDataType.String));
                                 value.Add(new XAttribute(AName.@as, "text"));
                             }
@@ -7700,12 +8123,15 @@ namespace sql.builder
         private static XElement processingRecordSets(XElement element)
         {
             List<XElement> els = element.DescendantsAndSelf(EName.query).Where(e => e.Element(EName.@const) != null).ToList();
-            foreach (XElement el1 in els) {
+            foreach (XElement el1 in els)
+            {
                 // Собираем все <const> с as
                 List<XElement> fields = new List<XElement>(2);
-                foreach (XElement e in el1.Elements()) {
+                foreach (XElement e in el1.Elements())
+                {
                     Contract.Assume(e.Name == EName.@const);
-                    if (e.Attribute(AName.@as) != null) {
+                    if (e.Attribute(AName.@as) != null)
+                    {
                         fields.Add(e);
                     }
                 }
@@ -7725,9 +8151,11 @@ namespace sql.builder
                 XElement subquery = null;
                 XElement subquery_select = null;
                 XElement subquery_from, dual;
-                foreach (XElement cell in el1.Elements()) {
+                foreach (XElement cell in el1.Elements())
+                {
                     Contract.Assume(cell.Name == EName.@const);
-                    if (field == field_count) {
+                    if (field == field_count)
+                    {
                         //row++;
                         Factory.NewSelectFromDualQuery(out subquery, out subquery_select, out subquery_from, out dual);
                         //subquery.Add(new XAttribute(AName.@as, "r" + row.ToString()));
@@ -7737,12 +8165,13 @@ namespace sql.builder
                     subquery_select.Add(new XElement(cell));
                     field++;
                 }
-                if (el1.Parent==null)
+                if (el1.Parent == null)
                 {
                     return qry;
                 }
                 el1.ReplaceWith(qry);
-                if (el1 == element && els.Count == 1) {
+                if (el1 == element && els.Count == 1)
+                {
                     return qry;
                 }
             }
@@ -7827,11 +8256,11 @@ namespace sql.builder
             {
                 //if (ifEl.Parent.Attribute("as")!=null  && ifEl.Parent.Attribute("as").Value == "nzs_sp_pg")
                 //{
-                    
+
                 //}
 
 
-              
+
 
                 XElement col = new XElement(ifEl.Parent);
                 col.Elements("if").Remove();
@@ -7846,7 +8275,7 @@ namespace sql.builder
                 //{
                 //    col.SetAttributeValue(TextConst.AName.Multiplicer, "");
                 //}
-               
+
                 XElement expr = new XElement("call",
 
                             new XAttribute("function", "if"),
@@ -7858,7 +8287,7 @@ namespace sql.builder
                 expr.Attributes("table").Remove();
                 expr.Attributes("column").Remove();
                 expr.Attributes("if").Remove();
-              
+
                 //if (expr.Attributes(TextConst.AName.Multiplicer).Any())
                 //{
                 //    expr.Attributes(TextConst.AName.Multiplicer).Remove();
@@ -7888,26 +8317,32 @@ namespace sql.builder
         private static void processingWindow(XElement query)
         {
             Contract.Assert(query != null);
-            foreach (XElement col in query.Descendants().ToList()) {
+            foreach (XElement col in query.Descendants().ToList())
+            {
                 XAttribute attr_window = col.Attribute(AName.window);
-                if (attr_window != null) {
+                if (attr_window != null)
+                {
                     XAttribute attr_agg = col.Attribute(AName.agg);
                     string func_name;
-                    if (attr_agg != null) {
+                    if (attr_agg != null)
+                    {
                         func_name = attr_agg.Value;            // аггрегатная функция: min, max, sum, avg etc
-                    } else {
+                    }
+                    else
+                    {
                         func_name = TextConst.AVFunction.Sum;  // по умолчанию - сумма
                     }
                     attr_window.Remove();
                     XElement agg_func = Factory.NewCall(func_name);
-                    XElement part_by  = Factory.NewCall(TextConst.AVFunction.PartitionBy);
+                    XElement part_by = Factory.NewCall(TextConst.AVFunction.PartitionBy);
                     XElement overExpr = Factory.NewCall(TextConst.AVFunction.Over, agg_func, part_by);
                     col.Attributes(AName.@as).ChangeParent(overExpr);
                     col.Attributes("virtual").ChangeParent(overExpr);
                     agg_func.Add(new XElement(col));
                     string[] dimColsNames = attr_window.Value.Split(',');
                     attr_window = null;
-                    for (int index = 0; index < dimColsNames.Length; index++) {
+                    for (int index = 0; index < dimColsNames.Length; index++)
+                    {
                         string col_name = string.Intern(dimColsNames[index].Trim());
                         Contract.Assert(!string.IsNullOrWhiteSpace(col_name));
                         XElement partCol = Factory.NewColumn(TextConst.AVTable.Ths, dimColsNames[index]);
@@ -7951,10 +8386,12 @@ namespace sql.builder
             List<XElement> cols = new List<XElement>(1) { srcCol };
             XElement cumCol = null;
             XAttribute cumAttr = null;
-            while (cumAttr == null) {
+            while (cumAttr == null)
+            {
                 List<string> names = cols.DescendantsAndSelf().Where(e => e.AttrOrEmpty(AName.table) == TextConst.AVTable.Ths).Select(e1 => e1.AttrOrEmpty(AName.column)).ToList();
                 cols = srcQuery.Element(EName.select).Elements().Where(e => names.Contains(e.Attribute(AName.@as).Value)).ToList();
-                if (cols.Count == 0) {
+                if (cols.Count == 0)
+                {
                     break;
                 }
                 cumCol = cols[0];
@@ -8115,11 +8552,11 @@ namespace sql.builder
                                                 new XElement("column", new XAttribute("table", tablePName), new XAttribute("column", dimName + cumulNextPfx))
                                               )
                                           )
-                            //,new XElement("call", new XAttribute("function", "="),
-                            //      new XElement("column", new XAttribute("table", tablePName), new XAttribute("column", dimName + cumulNextPfx)),
-                            //      new XElement("column", new XAttribute("table", tablePName), new XAttribute("column", dimName))
+                                        //,new XElement("call", new XAttribute("function", "="),
+                                        //      new XElement("column", new XAttribute("table", tablePName), new XAttribute("column", dimName + cumulNextPfx)),
+                                        //      new XElement("column", new XAttribute("table", tablePName), new XAttribute("column", dimName))
 
-                                          //    )
+                                        //    )
                                         ),
                                         new XElement("call", new XAttribute("function", "is null"),
                                             new XElement("column", new XAttribute("table", tablePName), new XAttribute("column", dimName))
@@ -8397,21 +8834,29 @@ namespace sql.builder
         private static void addLinkInfo(XElement root)
         {
             Contract.Assume(root != null);
-            foreach (XElement xfrom in root.Descendants(EName.from)) {
+            foreach (XElement xfrom in root.Descendants(EName.from))
+            {
                 XElement query = xfrom.Ancestors().First();
-                foreach (XElement qry in xfrom.Elements()) {
-                    if (EPredicate.IsQueryOrTable(qry)) {
+                foreach (XElement qry in xfrom.Elements())
+                {
+                    if (EPredicate.IsQueryOrTable(qry))
+                    {
                         XElement classScheme = getQueryScheme(qry.AttrOrDefault(AName.name, string.Empty));
-                        if (classScheme != null) {
+                        if (classScheme != null)
+                        {
                             qry.CopyAttributes(classScheme.Attributes(AName.title));
                         }
-                        foreach (XElement el in qry.Elements()) {
-                            if (EPredicate.IsAnyLink(el)) {
+                        foreach (XElement el in qry.Elements())
+                        {
+                            if (EPredicate.IsAnyLink(el))
+                            {
                                 addLinkInfoI(el, query, null);
                             }
                         }
-                        foreach (XElement el in qry.Elements(TextConst.EName.ExtendLinks).Elements()) {
-                            if (EPredicate.IsAnyLink(el)) {
+                        foreach (XElement el in qry.Elements(TextConst.EName.ExtendLinks).Elements())
+                        {
+                            if (EPredicate.IsAnyLink(el))
+                            {
                                 addLinkInfoI(el, query, null);
                             }
                         }
@@ -8425,84 +8870,114 @@ namespace sql.builder
             Contract.Assume(EPredicate.IsAnyLink(link));
             Contract.Assume(link.Attribute(AName.name) != null);
             string link_name = link.Attribute(AName.name).Value;
-            if (link.Attribute(AName.@as) == null) {
+            if (link.Attribute(AName.@as) == null)
+            {
                 link.Add(new XAttribute(AName.@as, link_name));
             }
             string linkerTableName;
             string linkerTableName1 = null;
             XElement parent = null;
-            if (link.Parent.Name.LocalName == TextConst.EName.ExtendLinks) {
+            if (link.Parent.Name.LocalName == TextConst.EName.ExtendLinks)
+            {
                 // смущает меня это место - модифицируются элементы из схемы
                 XElement query2 = getQueryScheme(link.Parent.Parent.Attribute(AName.name).Value);
                 var froms = query2.Elements(EName.from).ToList();
                 froms.AddRange(query2.Elements(EName.push).Elements(EName.from));
                 parent = froms.Elements(EName.query).First(e => e.AttrOrEmpty(AName.@as) == link.Parent.Attribute(TextConst.AName.Target).Value);
-            } else {
+            }
+            else
+            {
                 parent = link.Parent;
             }
-            if (parent.Name == AName.table && query.Attribute(AName.inherit) != null) {
+            if (parent.Name == AName.table && query.Attribute(AName.inherit) != null)
+            {
                 linkerTableName = query.AttrOrDefault(AName.name, string.Empty);
                 linkerTableName1 = getLQTableName(parent);
-            } else {
+            }
+            else
+            {
                 linkerTableName = getLQTableName(parent);
             }
-            if (link.Name == EName.slink) {
+            if (link.Name == EName.slink)
+            {
                 link.SetAttributeValue(AName.table, link_name);
-            } else {
+            }
+            else
+            {
                 XElement linkerQueryScheme = null;
                 XElement linkedQuery = null;
-                if (link.Attribute("recursive") != null) {
+                if (link.Attribute("recursive") != null)
+                {
                     link.SetAttributeValue("pushpred", 1);
                 }
-                if (link.Name == EName.link) {
+                if (link.Name == EName.link)
+                {
                     linkerQueryScheme = getQueryScheme(linkerTableName);
-                    if (linkerQueryScheme != null) {
+                    if (linkerQueryScheme != null)
+                    {
                         linkedQuery = linkerQueryScheme.Elements(EName.from).Elements(EName.query).FirstOrDefault(e => e.Attribute(AName.@as).Value == link_name);
-                        if (linkedQuery == null) {
+                        if (linkedQuery == null)
+                        {
                             linkedQuery = linkerQueryScheme.Elements(EName.push).Elements(EName.from).Elements(EName.query).FirstOrDefault(e => e.Attribute(AName.@as).Value == link_name);
                         }
-                        if (linkedQuery == null) {
+                        if (linkedQuery == null)
+                        {
                             throw new VCompilerException("Не найдена связь ", query, link);
                         }
                         linkedQuery = new XElement(linkedQuery);
                         link.SetAttributeValue(AName.table, linkedQuery.Attribute(AName.name).Value);
                     }
-                } else {
+                }
+                else
+                {
                     //var tabName = link.Attribute("table").Value;
-                    if (getAttrValue(query, "pushpred") == "1") {
+                    if (getAttrValue(query, "pushpred") == "1")
+                    {
                         link.SetAttributeValue("pushpred", 1);
                     }
-                    if (linkerTableName1 == null) {
+                    if (linkerTableName1 == null)
+                    {
                         var qscheme = getQueryScheme(linkerTableName);
-                        if (qscheme.Attribute(AName.inherit) != null) {
+                        if (qscheme.Attribute(AName.inherit) != null)
+                        {
                             linkerTableName1 = qscheme.Attribute(AName.inherit).Value;
                         }
                     }
-                    if (linkerTableName1 != null) {
+                    if (linkerTableName1 != null)
+                    {
                         linkedQuery = XmlReports.Environment.Manager.GetScheme().Elements(EName.queries).Elements(EName.query).Elements(EName.from).Elements(EName.query).FirstOrDefault(e => e.AttrOrDefault(TextConst.AName.DName, string.Empty) == link_name && e.AttrOrDefault(AName.name, string.Empty) == linkerTableName);
-                        if (linkedQuery == null) {
+                        if (linkedQuery == null)
+                        {
                             linkerTableName = linkerTableName1;
                         }
                     }
-                    if (linkedQuery == null) {
+                    if (linkedQuery == null)
+                    {
                         linkedQuery = XmlReports.Environment.Manager.GetScheme().Elements(EName.queries).Elements(EName.query).Where(q => q.Attribute(AName.inherit) == null).Elements(EName.from).Elements(EName.query).FirstOrDefault(e => e.AttrOrDefault(TextConst.AName.DName, string.Empty) == link_name && e.AttrOrDefault(AName.name, string.Empty) == linkerTableName);
                     }
-                    if (linkedQuery == null) {
+                    if (linkedQuery == null)
+                    {
                         linkedQuery = XmlReports.Environment.Manager.GetScheme().Elements(EName.queries).Elements(EName.query).Elements(EName.from).Elements(EName.query).FirstOrDefault(e => e.AttrOrDefault(AName.dname, string.Empty) == link_name && e.AttrOrDefault(AName.name, string.Empty) == linkerTableName);
                     }
-                    if (linkedQuery == null) {
+                    if (linkedQuery == null)
+                    {
                         linkedQuery = XmlReports.Environment.Manager.GetScheme().Elements(EName.queries).Elements(EName.query).Elements(EName.push).Elements(EName.from).Elements(EName.query).FirstOrDefault(e => e.AttrOrDefault(AName.dname, string.Empty) == link_name && e.AttrOrDefault(AName.name, string.Empty) == linkerTableName);
-                        if (linkedQuery != null) {
+                        if (linkedQuery != null)
+                        {
                             linkerQueryScheme = linkedQuery.Parent.Parent.Parent;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         linkerQueryScheme = linkedQuery.Parent.Parent;
                     }
-                    if (linkerQueryScheme != null) {
+                    if (linkerQueryScheme != null)
+                    {
                         link.SetAttributeValue(AName.table, linkerQueryScheme.Attribute(AName.name).Value);
                     }
                 }
-                if (linkedQuery != null) {
+                if (linkedQuery != null)
+                {
                     link.SetAttributeValue("child", linkerQueryScheme.Attribute(AName.name).Value);
                     link.SetAttributeValue("field", linkedQuery.Attribute(AName.@as).Value);
                     link.SetAttributeValue("parent", linkedQuery.Attribute(AName.name).Value);
@@ -8510,21 +8985,28 @@ namespace sql.builder
                 }
             }
             XAttribute tattr = link.Attribute(AName.table);
-            if (tattr != null) {
+            if (tattr != null)
+            {
                 XElement classScheme = getQueryScheme(tattr.Value);
-                if (classScheme != null) {
+                if (classScheme != null)
+                {
                     link.CopyAttributes(classScheme.Attributes(AName.title));
                 }
-                if (link.Parent.Attribute(AName.title) != null) {
-                    foreach (XElement vidCol in classScheme.Elements(EName.select).Elements().Where(e => getAttrValue(e, "vid") == "1")) {
-                        if (selColumns == null) {
+                if (link.Parent.Attribute(AName.title) != null)
+                {
+                    foreach (XElement vidCol in classScheme.Elements(EName.select).Elements().Where(e => getAttrValue(e, "vid") == "1"))
+                    {
+                        if (selColumns == null)
+                        {
                             selColumns = getQueryColumnsSel(query);
                         }
                     }
                 }
             }
-            foreach (XElement el in link.Elements()) {
-                if (EPredicate.IsAnyLink(el)) {
+            foreach (XElement el in link.Elements())
+            {
+                if (EPredicate.IsAnyLink(el))
+                {
                     addLinkInfoI(el, query, selColumns);
                 }
             }
@@ -8538,21 +9020,27 @@ namespace sql.builder
         public static void processingArrays(XElement root)
         {
             Contract.Assert(root != null);
-            IList<XElement> arrays = root.Descendants(EName.array).ToList(); 
-            for (int index = 0; index < arrays.Count; index++) {
+            IList<XElement> arrays = root.Descendants(EName.array).ToList();
+            for (int index = 0; index < arrays.Count; index++)
+            {
                 XElement el = arrays[index];
                 XElement call = Factory.NewCall(TextConst.AVFunction.Array);
-                if (!el.HasElements) {
+                if (!el.HasElements)
+                {
                     // переобразование <array>1,2,3</array> в <call function="array"><const>1</const><const>2</const><const>3</const></call>
                     string s = el.Value;
-                    if (!string.IsNullOrEmpty(s)) {
+                    if (!string.IsNullOrEmpty(s))
+                    {
                         el.Value = string.Empty;
                         string[] items = s.Split(',');
-                        for (int index_2 = 0; index_2 < items.Length; index_2++) {
+                        for (int index_2 = 0; index_2 < items.Length; index_2++)
+                        {
                             call.Add(Factory.NewConst(items[index_2].Trim()));
                         }
                     }
-                } else {
+                }
+                else
+                {
                     el.Elements().ChangeParent(call);
                 }
                 el.ReplaceWith(call);
@@ -8562,26 +9050,31 @@ namespace sql.builder
         {
             Contract.Assert(element != null);
             IList<XElement> usings = element.Descendants(EName.@using).ToList();
-            for (int index = 0; index < usings.Count; index++) {
+            for (int index = 0; index < usings.Count; index++)
+            {
                 XElement el = usings[index];
                 string alias;
                 XElement query = el.Parent;
                 Contract.Assert(query != null && query.Name == EName.query);
                 XElement from = query.Parent;
                 Contract.Assert(from != null && from.Name == EName.from);
-                if (from.Parent.Name != EName.push) {
+                if (from.Parent.Name != EName.push)
+                {
                     // алиас первого query в том же from
                     alias = from.Elements().First().Attribute(AName.@as).Value;
-                } else {
+                }
+                else
+                {
                     alias = "*";
                 }
                 string alias_2 = query.Attribute(AName.@as).Value;
                 XElement call = Factory.NewCall(TextConst.AVFunction.And);
-                foreach (XElement el_col in el.Elements()) {
+                foreach (XElement el_col in el.Elements())
+                {
                     string col_name = el_col.Attribute(AName.column).Value;
                     XElement call_col = Factory.NewCall(TextConst.AVFunction.Equal,
                         Factory.NewColumn(table: alias_2, column: col_name),
-                        Factory.NewColumn(table: alias,   column: col_name)
+                        Factory.NewColumn(table: alias, column: col_name)
                     );
                     call.Add(call_col);
                 }
@@ -8594,13 +9087,15 @@ namespace sql.builder
             IList<XElement> list = root.Descendants(EName.form).Where(e => e.Descendants(EName.usepart).Any()).ToList();
             int index;
             XElement el;
-            for (index = 0; index < list.Count; index++) {
+            for (index = 0; index < list.Count; index++)
+            {
                 el = list[index];
                 IEnumerable<XNode> el1 = copyApplyPart(el);
                 el.ReplaceWith(el1);
             }
             list = root.Descendants(EName.usepart).Where(e => !e.Descendants(EName.useparam).Any() && !e.Descendants(EName.usepart).Any()).ToList();
-            for (index = 0; index < list.Count; index++) {
+            for (index = 0; index < list.Count; index++)
+            {
                 el = list[index];
                 IEnumerable<XNode> el1 = usepart(el);
                 el.ReplaceWith(el1);
@@ -8615,15 +9110,19 @@ namespace sql.builder
         private static void processingUseColor(XElement root)
         {
             IList<XElement> list = root.Descendants(EName.use_color).ToList();
-            if (list.Count > 0) {
+            if (list.Count > 0)
+            {
                 IDictionary<string, string> colors = new Dictionary<string, string>();
-                for (int index = 0; index < list.Count; index++) {
+                for (int index = 0; index < list.Count; index++)
+                {
                     XElement el = list[index];
                     string color = el.Attribute(AName.color).Value;
                     string rbg;
-                    if (!colors.TryGetValue(color, out rbg)) {
+                    if (!colors.TryGetValue(color, out rbg))
+                    {
                         XElement xclr = XmlReports.Environment.Manager.GetNativeScheme().Elements(EName.color_packages).Elements(EName.color_package).Elements(EName.color).SearchByAttribute(AName.name, color);
-                        if (xclr == null) {
+                        if (xclr == null)
+                        {
                             throw new VCompilerException("Не найден цвет \"" + color + "\".", null, el);
                         }
                         rbg = xclr.Attribute(AName.rgb).Value;
@@ -8636,7 +9135,8 @@ namespace sql.builder
         }
         private static void fakeParams(XElement query)
         {
-            if (query.Element(EName.@params) == null && query.Descendants(EName.useglobparam).Any()) {
+            if (query.Element(EName.@params) == null && query.Descendants(EName.useglobparam).Any())
+            {
                 query.Add(new XElement(EName.@params));
             }
         }
@@ -8696,7 +9196,7 @@ namespace sql.builder
 
         }
 
-        private static void ProcessQueryBandsLevel(XElement parent, XElement viewColsParent, List<XElement> selCols) 
+        private static void ProcessQueryBandsLevel(XElement parent, XElement viewColsParent, List<XElement> selCols)
         {
             foreach (var el in parent.Elements())
             {
@@ -9043,7 +9543,7 @@ namespace sql.builder
                 {
                     extensionScheme = getQueryScheme(query.Attribute("inherit").Value);
                 }
-            
+
                 if (query.Element("select") == null)
                 {
                     query.Add(new XElement("select"));
@@ -9061,44 +9561,44 @@ namespace sql.builder
                 SortedList<string, XElement> usedNames = new SortedList<string, XElement>();
                 foreach (XElement fld in query.Element(TextConst.EName.Select).Elements())
                 {
-                   
+
                     if (usedNames.ContainsKey(fld.Attribute(TextConst.AName.As).Value))
                     {
                         throw new VCompilerException("Повторяющееся имя колонки", query, fld);
                     }
                     usedNames.Add(fld.Attribute(TextConst.AName.As).Value, fld);
                 }
-                
-               List<XElement> colsToAdd = new List<XElement>();
-               foreach (XElement el1 in extensionScheme.Elements("select").Elements().ToArray())
-               {
-                   if (el1.Attribute(TextConst.AName.As) == null)
-                   {
+
+                List<XElement> colsToAdd = new List<XElement>();
+                foreach (XElement el1 in extensionScheme.Elements("select").Elements().ToArray())
+                {
+                    if (el1.Attribute(TextConst.AName.As) == null)
+                    {
                         throw new VCompilerException("Недопустимый элемент", extensionScheme, el1);
-                   }
-                   if (!usedNames.ContainsKey(el1.Attribute(TextConst.AName.As).Value))
-                   {
-                       colsToAdd.Add(el1);
-                   }
-                   else
-                   {
-                       var trgCol = usedNames[el1.Attribute(TextConst.AName.As).Value];
-                       if (Cmn.GetAttrValue(trgCol, TextConst.AName.Table) == TextConst.AVTable.Ths)
-                       {
-                           trgCol.Remove();
-                           var col = new XElement(el1);
-                          trgCol.Attributes(TextConst.AName.Table).Remove();
-                          trgCol.Attributes(TextConst.AName.Column).Remove();
-                   
-                          col.CopyAttributes(trgCol.Attributes());
-                          colsToAdd.Add(col);
-                      
-                       }
-                   }
-               }
-               
+                    }
+                    if (!usedNames.ContainsKey(el1.Attribute(TextConst.AName.As).Value))
+                    {
+                        colsToAdd.Add(el1);
+                    }
+                    else
+                    {
+                        var trgCol = usedNames[el1.Attribute(TextConst.AName.As).Value];
+                        if (Cmn.GetAttrValue(trgCol, TextConst.AName.Table) == TextConst.AVTable.Ths)
+                        {
+                            trgCol.Remove();
+                            var col = new XElement(el1);
+                            trgCol.Attributes(TextConst.AName.Table).Remove();
+                            trgCol.Attributes(TextConst.AName.Column).Remove();
+
+                            col.CopyAttributes(trgCol.Attributes());
+                            colsToAdd.Add(col);
+
+                        }
+                    }
+                }
+
                 query.Element("select").AddFirst(colsToAdd);
-                 
+
                 if (query.Element("from") == null)
                 {
                     query.Add(new XElement("from"));
@@ -9217,11 +9717,14 @@ namespace sql.builder
                         //while (nvl(sourceQuery.Element("query"), sourceQuery.Element("union")) != null)
                         //    sourceQuery = (XElement)nvl(sourceQuery.Element("query"), sourceQuery.Element("union"));
                         //}
-                        while (true) {
+                        while (true)
+                        {
                             XElement e = sourceQuery.Element(EName.query);
-                            if (e == null) {
+                            if (e == null)
+                            {
                                 e = sourceQuery.Element("union");
-                                if (e == null) {
+                                if (e == null)
+                                {
                                     break;
                                 }
                             }
@@ -9500,13 +10003,13 @@ namespace sql.builder
                 isSimple = false;
             }
 
-            
-                if (element.Attribute(TextConst.AName.As) == null)
-                {
-                    element.SetAttributeValue(TextConst.AName.As, "grpd");
-                }
-            
-            
+
+            if (element.Attribute(TextConst.AName.As) == null)
+            {
+                element.SetAttributeValue(TextConst.AName.As, "grpd");
+            }
+
+
 
             XElement query = new XElement("query",
 
@@ -9517,13 +10020,13 @@ namespace sql.builder
                     ,
                 new XElement("from")
                     , element.Elements("where")
-                    .Where(e=>!e.Descendants(TextConst.EName.Fact).Any())// добавил условие т.к. при наличии фактов они не могут обработаться в верхнем запросе, скорее всего это копирование вообще не нужно, т.к. where остается и в подзапросе
+                    .Where(e => !e.Descendants(TextConst.EName.Fact).Any())// добавил условие т.к. при наличии фактов они не могут обработаться в верхнем запросе, скорее всего это копирование вообще не нужно, т.к. where остается и в подзапросе
                    , queryScheme.Elements("having")
 
                 );
 
 
-           
+
 
             copyAttribute(element, query, "join");
             //!!! having НЕ проверено для query с grouplevel
@@ -9561,7 +10064,9 @@ namespace sql.builder
                     {
                         newCol.Elements().Attributes("group").Remove();
                     }
-                } else {
+                }
+                else
+                {
                     string col_name = col.Attribute(AName.@as).Value;
                     newCol = Factory.NewColumn(element.Attribute(AName.@as).Value, col_name);
                     newCol.Add(new XAttribute(AName.@as, col_name));
@@ -9800,17 +10305,21 @@ namespace sql.builder
             string qalias = query.Element(EName.from).Element(EName.query).Attribute(AName.@as).Value;
             XElement xgrsets = element.Element(TextConst.EName.Grsets);
             bool isOnColumns = false;
-            if (xgrsets.Elements(TextConst.EName.OnRows).Any()) {
+            if (xgrsets.Elements(TextConst.EName.OnRows).Any())
+            {
                 var xgrsets1 = new XElement(TextConst.EName.Grsets);
                 Cmn.copyAttributes(xgrsets, xgrsets1);
                 xgrsets1.Add(xgrsets.Elements(TextConst.EName.OnRows).Elements());
-                if (xgrsets.Elements(TextConst.EName.OnColumns).Any()) {
+                if (xgrsets.Elements(TextConst.EName.OnColumns).Any())
+                {
                     isOnColumns = true;
                     var oncolsElement = new XElement(xgrsets.Element(TextConst.EName.OnColumns));
-                    foreach (XElement xgrsetOnRow in xgrsets1.Descendants(TextConst.EName.Grset).ToList()) {
+                    foreach (XElement xgrsetOnRow in xgrsets1.Descendants(TextConst.EName.Grset).ToList())
+                    {
                         var name1 = xgrsetOnRow.Attribute(AName.@as).Value;
                         var oncolsElement1 = new XElement(oncolsElement);
-                        foreach (XElement xgrsetOnCols in oncolsElement1.Descendants(TextConst.EName.Grset).ToList()) {
+                        foreach (XElement xgrsetOnCols in oncolsElement1.Descendants(TextConst.EName.Grset).ToList())
+                        {
                             var name2 = xgrsetOnCols.Attribute(AName.@as).Value;
                             var fullName = name1 + "_" + name2;
                             xgrsetOnCols.SetAttributeValue(AName.@as, fullName);
@@ -9828,11 +10337,16 @@ namespace sql.builder
             //}
             bool ttblMat = getAttrValue(xgrsets, TextConst.AName.MaterializeType) == TextConst.AVMaterializeType.TempTable;
             XAttribute matAttr;
-            if (ttblMat) {
+            if (ttblMat)
+            {
                 matAttr = new XAttribute(AName.materialize, "1");
-            } else if (matName != "max_tr_prop_datavv") { // 73962: добавлено условие, чтобы убрать HINT (сильно тормозит)
+            }
+            else if (matName != "max_tr_prop_datavv")
+            { // 73962: добавлено условие, чтобы убрать HINT (сильно тормозит)
                 matAttr = new XAttribute(AName.hint, TextConst.AVHint.Materialize);
-            } else {
+            }
+            else
+            {
                 matAttr = null;
             }
             XElement qry1 = new XElement(EName.query, new XAttribute(AName.@as, qalias)
@@ -9846,10 +10360,14 @@ namespace sql.builder
                );
 
             query.Element(EName.from).Element(EName.query).ReplaceWith(qry1);
-            if (ttblMat) {
-                if (element.Attribute(AName.name) != null) {
+            if (ttblMat)
+            {
+                if (element.Attribute(AName.name) != null)
+                {
                     addMatrializeId(query, element.Attribute(AName.name).Value);
-                } else {
+                }
+                else
+                {
                     addMatrializeId(query, matName);
                 }
             }
@@ -9916,7 +10434,7 @@ namespace sql.builder
 
             foreach (XElement grSet in grSets)
             {
-               //
+                //
 
 
 
@@ -9931,7 +10449,7 @@ namespace sql.builder
                 //    sParGroupId = grSet.Attribute(TextConst.AName.Parent).Value;
                 //}
                 //else
-                    if (grSet.Parent.Name.LocalName != "grsets")
+                if (grSet.Parent.Name.LocalName != "grsets")
                 {
                     sParGroupId = grSet.Parent.Attribute("id").Value;
                 }
@@ -9958,7 +10476,7 @@ namespace sql.builder
 
                 string grColName = "gr" + sGroupId;
                 string grParColName = "pgr" + sGroupId;
-                
+
 
                 string sGroupOrigId = sGroupId;
                 if (grSet.Attribute(TextConst.AName.Name) != null)
@@ -9978,7 +10496,7 @@ namespace sql.builder
                     , new XAttribute(TextConst.AName.OnRowsGrsetId, sOnRowsGrsetId)
                      , new XAttribute(TextConst.AName.OnColsGrsetId, sOnColsGrsetId),
                     copyAttribute(grSet, "title")
-                    //   , new XElement("column", new XAttribute("table", qalias), new XAttribute("column", grColName))
+                //   , new XElement("column", new XAttribute("table", qalias), new XAttribute("column", grColName))
                 );
 
                 copyAttribute(grSet, gr, TextConst.AName.TreeLevel);
@@ -10052,16 +10570,16 @@ namespace sql.builder
 
 
 
-                
 
-                
+
+
                 string visPref = "vis";
 
                 if (grSet.Element("where") != null)
                 {
-                    
+
                     string visId = grSet.Attribute(TextConst.AName.OrigGrsetId).Value;
-                   
+
                     if (!visibleExps.ContainsKey(visId))
                     {
                         string visColName = visPref + visId;
@@ -10103,7 +10621,7 @@ namespace sql.builder
                 }
 
                 XElement el = grSet;
-                
+
                 while (el.Name.LocalName != "grsets")
                 {
                     //visId
@@ -10118,7 +10636,7 @@ namespace sql.builder
                             //, т.к. условия не включаются в ключ
                             // только условия сформированные автоматически
                             // при необходимости можно доделать
-                               
+
                         }
                         gr.Add(xcol1);
                     }
@@ -10152,15 +10670,15 @@ namespace sql.builder
                     {
                         var gsId = grSet.Attribute("id").Value;
                         var colAlias = col.Attribute("as").Value;
-                     
+
                         if (grSetsColumns[gsId].Contains(colAlias))
                         {
                             bool add = false;
                             if (Cmn.GetAttrValue(grSet, TextConst.AName.Intervals) == TextConst.AVBool.True)
                             {
-                                
-                                    add = true;
-                                    br = true;
+
+                                add = true;
+                                br = true;
 
                             }
                             else
@@ -10170,7 +10688,7 @@ namespace sql.builder
                             }
                             if (add)
                             {
-                               
+
                                 idExprC.Add(new XElement("const", new XText("'#'")));
                                 idExprC.Add(new XElement("call", new XAttribute("function", "to_char"), new XElement(col)));
                                 if (br)
@@ -10194,7 +10712,7 @@ namespace sql.builder
 
             }
             var hOld = query.Elements(TextConst.EName.Having).FirstOrDefault();
-            if (hOld != null && havingExpr!=null)
+            if (hOld != null && havingExpr != null)
             {
                 var ohEls = hOld.Elements().ToArray();
                 ohEls.Remove();
@@ -10255,10 +10773,10 @@ namespace sql.builder
 
 
             string sorder = "";
-            
-           // IEnumerable<XElement> grss = element.Elements("grsets").Elements("grset").ToArray();
+
+            // IEnumerable<XElement> grss = element.Elements("grsets").Elements("grset").ToArray();
             IEnumerable<XElement> grss = xgrsets.Elements("grset").ToArray();
-           
+
             string q = "";
             while (grss.Count() > 0)
             {
@@ -10299,7 +10817,7 @@ namespace sql.builder
                 if (col1.Attribute(TextConst.AName.DontUseForGroupingKey) != null) continue;
                 var colname = col1.Attribute(TextConst.AName.Column).Value;
 
-                
+
                 if (!allGroupColumnsNames.Contains(colname))
                 {
                     allGroupColumnsNames.Add(colname);
@@ -10312,10 +10830,10 @@ namespace sql.builder
                         allGroupColumnsNamesOrig.Add(colname, origname);
                         //}
                     }
-                   
+
                 }
             }
-           // List<string> allGroupColumnsNames = query.Elements("group").Elements("column").Attributes("column").Select(c => c.Value).Distinct().ToList();
+            // List<string> allGroupColumnsNames = query.Elements("group").Elements("column").Attributes("column").Select(c => c.Value).Distinct().ToList();
             int i = 0;
             var allGroupColumnsRev = allGroupColumnsNames.ToList();
             allGroupColumnsRev.Reverse();
@@ -10323,7 +10841,7 @@ namespace sql.builder
                 , new XAttribute("function", TextConst.AVFunction.Concat)
                 //, new XAttribute("as", TextConst.AVSpecColumnGrset.ParentGrRowId)
                 //, new XAttribute("type", "string")
-               // , new XAttribute("title", "")
+                // , new XAttribute("title", "")
                 );
 
             XElement parIdExpr = new XElement("call"
@@ -10342,13 +10860,13 @@ namespace sql.builder
                  , parIdExpr2
                 );
 
-           // var treeExprsCond = new SortedList<string, XElement>();
+            // var treeExprsCond = new SortedList<string, XElement>();
             var treeExprsVal = new SortedList<string, XElement>();
             var treeExprsValPar = new SortedList<string, XElement>();
             foreach (var colname in allGroupColumnsRev)
             {
                 bool isTreeCol = false;
-            
+
                 XElement xcontCall = null;
                 XElement xcontCallPar = null;
                 if (allGroupColumnsNamesOrig.ContainsKey(colname))
@@ -10367,7 +10885,7 @@ namespace sql.builder
                     }
                     xcontCall = treeExprsVal[allGroupColumnsNamesOrig[colname]];
                     xcontCallPar = treeExprsValPar[allGroupColumnsNamesOrig[colname]];
-                  
+
                 }
                 else
                 {
@@ -10382,60 +10900,60 @@ namespace sql.builder
                         , new XAttribute(TextConst.AName.Column, colname)
                         );
                 var charcol = new XElement("call", new XAttribute("function", "to_char"), new XElement(col));
-               
-                   
-                    
-                    var xcolval = new XElement("call", new XAttribute("function", TextConst.AVFunction.Coalesce)
-                            , charcol
-                            , new XElement(TextConst.EName.Const, "' '")
-                            );
-                    var v = i;// allGroupColumns.Count() - i - 1;
-                    var xval = new XElement(TextConst.EName.Const, new XText(Math.Pow(2, i).ToString()));
 
-                    var xif = new XElement(TextConst.EName.Call);
-                    xif.SetAttributeValue(TextConst.AName.Function, TextConst.AVFunction.If);
-                    var xcond = new XElement(TextConst.EName.Call);
-                    xcond.SetAttributeValue(TextConst.AName.Function, TextConst.AVFunction.Equal);
-                    xif.Add(xcond);
-                    xcond.Add(new XElement(TextConst.EName.Const, new XText("0")));
-                    var xcall = new XElement(TextConst.EName.Call);
-                    xcond.Add(xcall);
-                    xcall.SetAttributeValue(TextConst.AName.Function, TextConst.AVFunction.Bitand);
-                    xcall.Add(xval);
-                    var xggcol = new XElement(TextConst.AName.Column
-                       , new XAttribute(TextConst.AName.Table, TextConst.AVTable.Ths)
-                       , new XAttribute(TextConst.AName.Column, TextConst.AVSpecColumnGrset.GroupingId)
-                       );
-                    xcall.Add(
-                         xggcol
+
+
+                var xcolval = new XElement("call", new XAttribute("function", TextConst.AVFunction.Coalesce)
+                        , charcol
+                        , new XElement(TextConst.EName.Const, "' '")
                         );
-                    xif.Add(xcolval);
+                var v = i;// allGroupColumns.Count() - i - 1;
+                var xval = new XElement(TextConst.EName.Const, new XText(Math.Pow(2, i).ToString()));
 
-                    var xif1 = new XElement(xif);
-                   
-                    //idExpr.Add(xif1);
-                    if (isTreeCol)
-                    {
-                        xcontCall.AddFirst(xif1);
-                    }
-                    else
-                    {
-                        xcontCall.Add(xif1);
-                    }
-                    xggcol.SetAttributeValue(TextConst.AName.Column, TextConst.AVSpecColumnGrset.ParentGroupingId);
-                    xif1 = new XElement(xif);
+                var xif = new XElement(TextConst.EName.Call);
+                xif.SetAttributeValue(TextConst.AName.Function, TextConst.AVFunction.If);
+                var xcond = new XElement(TextConst.EName.Call);
+                xcond.SetAttributeValue(TextConst.AName.Function, TextConst.AVFunction.Equal);
+                xif.Add(xcond);
+                xcond.Add(new XElement(TextConst.EName.Const, new XText("0")));
+                var xcall = new XElement(TextConst.EName.Call);
+                xcond.Add(xcall);
+                xcall.SetAttributeValue(TextConst.AName.Function, TextConst.AVFunction.Bitand);
+                xcall.Add(xval);
+                var xggcol = new XElement(TextConst.AName.Column
+                   , new XAttribute(TextConst.AName.Table, TextConst.AVTable.Ths)
+                   , new XAttribute(TextConst.AName.Column, TextConst.AVSpecColumnGrset.GroupingId)
+                   );
+                xcall.Add(
+                     xggcol
+                    );
+                xif.Add(xcolval);
 
-                    if (isTreeCol)
-                    {
-                        xcontCallPar.AddFirst(xif1);
-                    }
-                    else
-                    {
-                        xcontCallPar.Add(xif1);
-                    }
-                    //parIdExpr2.Add(xif1);
-           
-               i++;
+                var xif1 = new XElement(xif);
+
+                //idExpr.Add(xif1);
+                if (isTreeCol)
+                {
+                    xcontCall.AddFirst(xif1);
+                }
+                else
+                {
+                    xcontCall.Add(xif1);
+                }
+                xggcol.SetAttributeValue(TextConst.AName.Column, TextConst.AVSpecColumnGrset.ParentGroupingId);
+                xif1 = new XElement(xif);
+
+                if (isTreeCol)
+                {
+                    xcontCallPar.AddFirst(xif1);
+                }
+                else
+                {
+                    xcontCallPar.Add(xif1);
+                }
+                //parIdExpr2.Add(xif1);
+
+                i++;
             }
             // чтобы не могло быть пробела в конце
             idExpr.Add(new XElement("const", new XText("'#'")));
@@ -10529,29 +11047,29 @@ namespace sql.builder
 
 
                     //var groupingId = groupElementsById[grSet.Attribute(TextConst.AName.Id).Value].Attribute(TextConst.AName.Groupingid).Value;
-               
+
 
                     List<XElement> gids = grSetAr.DescendantsAndSelf("grset").Select(e => new XElement("const"
                         , new XText(
-                           // "'" +
+                            // "'" +
 
                             groupElementsById[e.Attribute(TextConst.AName.Id).Value].Attribute(TextConst.AName.Groupingid).Value
-                            
-                           // + "'"
+
+                            // + "'"
                             )
-                        
-                        
+
+
                         )).ToList();
 
                     havingExpr
-                    //xtraHaving
-                        
+                        //xtraHaving
+
                         .Element("call").Add(
 
                           new XElement("call", new XAttribute("function", "or"),
                                grSet.Element(TextConst.EName.Having).Elements(),
                               new XElement("call", new XAttribute("function", "not in"),
-                        //visibleExpr,
+                                 //visibleExpr,
                                  new XElement("column", new XAttribute("table", "this"), new XAttribute("column", TextConst.AVSpecColumnGrset.GroupingId)),
                                   new XElement("call", new XAttribute("function", "array"), gids)
                               )
@@ -10613,7 +11131,7 @@ namespace sql.builder
             {
                 query.Element("select").Add(treeLevelExpr);
             }
-          
+
             query.Element("select").Add(grOrigIdExpr);
             query.Element("select").AddFirst(grNameExpr);
             if (isOnColumns)
@@ -10686,10 +11204,10 @@ namespace sql.builder
 
             //if (query.DescendantsAndSelf ("query").Where(e=>Cmn.GetAttrValue(e,"name").Contains( "38486")).Any())
             //{
-              
+
             //}
             var fieldsToMoveUp = gsetsSpecColsNames.ToList();
-            
+
             fieldsToMoveUp.Remove(TextConst.AVSpecColumnGrset.GroupingId);
             AddQueryLevel(query, grQueryAlias, fieldsToMoveUp.ToArray());
 
@@ -10703,8 +11221,8 @@ namespace sql.builder
                 fieldsToMoveUp.Remove(TextConst.AVSpecColumnGrset.GrTreeLevel); // ??
                 AddQueryLevel(query, "p2", fieldsToMoveUp.ToArray());
             }
-           
-            
+
+
             if (hasTree)
             {
                 fieldsToMoveUp.Clear();
@@ -10748,7 +11266,7 @@ namespace sql.builder
             return v;
         }
         private static void applyQueryGroupLevel(XElement element, string matName, bool isInReport = false)
-            {
+        {
             //if (Cmn.GetAttrValue(element, TextConst.AName.Name) == "41050-dat")
             //{
 
@@ -10762,7 +11280,7 @@ namespace sql.builder
             element.ReplaceWith(query);
         }
 
-        private static string grkeyPfx="_gr_key";
+        private static string grkeyPfx = "_gr_key";
 
 
 
@@ -10780,7 +11298,8 @@ namespace sql.builder
 
 
                     var callGrp = inQueryCall.Elements(TextConst.EName.Grouping).ToList();
-                    if (callGrp.Count != 0) {
+                    if (callGrp.Count != 0)
+                    {
                         element.Element(TextConst.EName.Grouping).ReplaceWith(callGrp);
                     }
                 }
@@ -10795,7 +11314,7 @@ namespace sql.builder
                 var grPontsList = new SortedList<string, int>();
                 int i = 0;
 
-              
+
                 var gsets = element.Element(TextConst.EName.Grouping).Elements(TextConst.EName.Grset).ToList();
                 if (gsets.Count == 0) // on-columns, on-rows
                 {
@@ -10804,22 +11323,22 @@ namespace sql.builder
                 var levelsKeys = new SortedList<int, string>();
 
 
-                bool addKeys=false;
+                bool addKeys = false;
 
 
-                if (Cmn.GetAttrValue(element,TextConst.AName.EditColumns)!="")
+                if (Cmn.GetAttrValue(element, TextConst.AName.EditColumns) != "")
                 {
-                    addKeys=true;
+                    addKeys = true;
                 }
 
                 VQuery vqry = null;
                 HashSet<string> processedVlinks = new HashSet<string>();
-                List<VQueryCall> allVlinks=null;
+                List<VQueryCall> allVlinks = null;
                 while (gsets.Count != 0)
                 {
                     foreach (XElement gset in gsets)
                     {
-                        
+
 
                         var lev = "";
                         var parLev = "";
@@ -10827,7 +11346,7 @@ namespace sql.builder
                         var pQ = "";
                         foreach (XElement gpoint in gset.Elements(TextConst.EName.Group).Elements())
                         {
-                            
+
                             string name = "";
 
                             if (gpoint.Name.LocalName == TextConst.EName.SourceLink)
@@ -10848,18 +11367,18 @@ namespace sql.builder
                                         }
                                         var vlink = allVlinks.First(e => e.XName == name);
                                         processedVlinks.Add(name);
-                                        var keyName= vlink.Query().KeyColumn().XName;
+                                        var keyName = vlink.Query().KeyColumn().XName;
                                         var newCol = new XElement(TextConst.AName.Column);
 
                                         newCol.SetAttributeValue(TextConst.AName.Table, name);
                                         newCol.SetAttributeValue(TextConst.AName.Column, keyName);
-                                       // newCol.SetAttributeValue(TextConst.AName.As, keyName+grkeyPfx);
+                                        // newCol.SetAttributeValue(TextConst.AName.As, keyName+grkeyPfx);
                                         newCol.SetAttributeValue(TextConst.AName.As, name + grkeyPfx);
-                                        newCol.SetAttributeValue(TextConst.AName.Removeable2,TextConst.AVBool.False);
+                                        newCol.SetAttributeValue(TextConst.AName.Removeable2, TextConst.AVBool.False);
                                         newCol.SetAttributeValue(TextConst.AName.Fixed, TextConst.AVBool.True);
                                         element.Element(TextConst.EName.Select).AddFirst(newCol);
                                     }
-                                 
+
 
                                 }
 
@@ -10906,8 +11425,8 @@ namespace sql.builder
                     if ((field.Name.LocalName == TextConst.EName.Call
 
                         || field.Name.LocalName == TextConst.EName.Column// 20171204 
-                        
-                        ) 
+
+                        )
                         && grPontsList.ContainsKey(Cmn.GetAttrValue(field, TextConst.AName.As)))
                     {
                         isGrExpr = true;
@@ -10924,8 +11443,10 @@ namespace sql.builder
                             {
                                 XElement queryCall = null;
                                 bool isGrouped = true;
-                                while (!grPontsList.ContainsKey(tbln)) {
-                                    if (queryCall == null) {
+                                while (!grPontsList.ContainsKey(tbln))
+                                {
+                                    if (queryCall == null)
+                                    {
                                         queryCall = element.Elements(EName.from).Descendants().First(e => getAttrValue(e, AName.@as, AName.name) == tbln);
                                     }
                                     //if (queryCall.Parent.Name.LocalName == TextConst.EName.From)
@@ -10983,7 +11504,7 @@ namespace sql.builder
                 grsets.Add(element.Element(TextConst.EName.Grouping).Elements());
                 copyAttributes(element.Element(TextConst.EName.Grouping), grsets);
                 element.Element(TextConst.EName.Grouping).ReplaceWith(grsets);
-               
+
                 preProcessingIGroup(element);
 
             }
@@ -11004,8 +11525,8 @@ namespace sql.builder
                     xwhere.Remove();
                     element.SetAttributeValue(TextConst.AName.GroupingSource, TextConst.AVBool.True);
                 }
-                XElement query = getQueryGroupLevel(element, Cmn.GetAttrValue(element, TextConst.AName.Name),true);
-             
+                XElement query = getQueryGroupLevel(element, Cmn.GetAttrValue(element, TextConst.AName.Name), true);
+
 
 
                 var origColsForTreeNames = query.Elements(TextConst.EName.Select).Elements().Attributes(TextConst.AName.TreeOriginalColumn).Select(a => a.Value).Distinct().ToList();
@@ -11053,8 +11574,8 @@ namespace sql.builder
                     }
 
                 }
-               
-               
+
+
                 if (xwhere != null)
                 {
                     var qqq1 = query.Descendants(TextConst.EName.Query).First(e => getAttrValue(e, TextConst.AName.GroupingSource) == TextConst.AVBool.True);
@@ -11070,7 +11591,7 @@ namespace sql.builder
                 }
                 // после того как сделал запрос с groupingsets многоуровневым здесь сломалось, 
                 //вроде теперь тоже самое, не зависимо от количества уровней 
-               // foreach (XElement innerGroupExpr in query.Element(TextConst.EName.From).Element(TextConst.EName.Query).Element(TextConst.EName.From).Element(TextConst.EName.Query).Element(TextConst.EName.Select).Elements().Where
+                // foreach (XElement innerGroupExpr in query.Element(TextConst.EName.From).Element(TextConst.EName.Query).Element(TextConst.EName.From).Element(TextConst.EName.Query).Element(TextConst.EName.Select).Elements().Where
                 var qqq = query.Descendants(TextConst.EName.Query).First(e => getAttrValue(e, TextConst.AName.As) == grQueryAlias);
                 foreach (XElement innerGroupExpr in qqq.Element(TextConst.EName.From).Element(TextConst.EName.Query).Element(TextConst.EName.From).Element(TextConst.EName.Query).Element(TextConst.EName.Select).Elements().Where
 
@@ -11088,7 +11609,8 @@ namespace sql.builder
 
 
                 var xhavings = query.Elements(EName.having).ToList();
-                if (xhavings.Count != 0) {
+                if (xhavings.Count != 0)
+                {
                     // это не понятно что, 
                     //вроде просто оборачивается в and
                     //не понятно как может ,быть having в query
@@ -11294,13 +11816,17 @@ namespace sql.builder
         }
         private static void reassignInto(XElement element)
         {
-            foreach (XElement select in element.Descendants(EName.query).Elements(EName.select).Where(e => e.Elements().Any(e1 => e1.Attribute(AName.into) != null)).ToList()) {
+            foreach (XElement select in element.Descendants(EName.query).Elements(EName.select).Where(e => e.Elements().Any(e1 => e1.Attribute(AName.into) != null)).ToList())
+            {
                 List<string> types = select.Elements().Attributes(AName.type).Select(e => e.Value).Distinct().ToList();
-                foreach (string t in types) {
+                foreach (string t in types)
+                {
                     int i = 1;
                     string prefix = getTyprPr(t);
-                    foreach (XElement col in select.Elements().Where(e => e.AttrOrDefault(AName.type, string.Empty) == t && e.AttrOrDefault(AName.into, string.Empty) != string.Empty).ToList()) {
-                        if (!IsSysColumnName(col.Attribute(AName.into).Value)) {
+                    foreach (XElement col in select.Elements().Where(e => e.AttrOrDefault(AName.type, string.Empty) == t && e.AttrOrDefault(AName.into, string.Empty) != string.Empty).ToList())
+                    {
+                        if (!IsSysColumnName(col.Attribute(AName.into).Value))
+                        {
                             col.SetAttributeValue(AName.into, string.Intern(prefix + i.ToString()));
                             i++;
                         }
@@ -11333,7 +11859,7 @@ namespace sql.builder
                 PushProcessingCollections();
                 VReport rep = XmlReports.Environment.GetPrecompiledReport(dimQuery);
                 ds = rep.Result(2, false);
-              
+
 
 
                 if (ds.MatQueriesNames != null)
@@ -11793,7 +12319,7 @@ namespace sql.builder
                 foreach (XElement childPivotColumn in childPivotContent.Elements())
                 {
                     parentPivotCol.SetAttributeValue(TextConst.EName.Column, childPivotColumn.Attribute("as").Value);
-                     newPivotField = new XElement(pivotField);
+                    newPivotField = new XElement(pivotField);
 
                     string alias = pivotField.Attribute("as").Value;
                     newPivotField.SetAttributeValue("value-column", alias);
@@ -11826,7 +12352,7 @@ namespace sql.builder
                     parentPivotContent.Add(newPivotField);
                 }
 
-               
+
                 pivotField.ReplaceWith(parentPivotContent.Elements());
                 expandPivotNext(parentPivotContent, parentQuery, processed);
             }
@@ -11940,16 +12466,22 @@ namespace sql.builder
             Contract.Assert(query != null);
             XElement xwhere = query.Element(EName.where);
             XElement xcall, xand;
-            if (xwhere == null) {
+            if (xwhere == null)
+            {
                 xwhere = new XElement(EName.where);
                 query.Add(xwhere);
                 xcall = null;
-            } else {
+            }
+            else
+            {
                 xcall = xwhere.Elements(EName.call).FirstOrDefault();
             }
-            if (xcall != null && xcall.AttrOrDefault(AName.function, null) == TextConst.AVFunction.And) {
+            if (xcall != null && xcall.AttrOrDefault(AName.function, null) == TextConst.AVFunction.And)
+            {
                 xand = xcall;
-            } else {
+            }
+            else
+            {
                 xand = Factory.NewCall(TextConst.AVFunction.And);
                 xwhere.Elements().ChangeParent(xand);
                 xwhere.Add(xand);
@@ -11958,21 +12490,26 @@ namespace sql.builder
         }
         public static XElement extendWhereByAnd(XElement whereElement, XElement newCondition)
         {
-            if (whereElement == null) {
+            if (whereElement == null)
+            {
                 whereElement = new XElement(EName.where);
                 whereElement.Add(newCondition);
                 return whereElement;
             }
-            if (!whereElement.HasElements) {
+            if (!whereElement.HasElements)
+            {
                 // Если в where нет условий, то просто дополняем его новым условием
                 whereElement.Add(newCondition);
                 return whereElement;
             }
             XElement xcall = whereElement.Elements(EName.call).FirstOrDefault();
             XElement xand;
-            if (xcall != null && xcall.AttrOrDefault(AName.function, null) == TextConst.AVFunction.And) {
+            if (xcall != null && xcall.AttrOrDefault(AName.function, null) == TextConst.AVFunction.And)
+            {
                 xand = xcall;
-            } else {
+            }
+            else
+            {
                 xand = Factory.NewCall(TextConst.AVFunction.And);
                 whereElement.Elements().ChangeParent(xand);
                 whereElement.Add(xand);
@@ -12120,21 +12657,26 @@ namespace sql.builder
            */
         private static void changeChildAliases(XElement query, string pfx)
         {
-            foreach (XElement childQuery in query.Element(EName.from).Elements()) {
+            foreach (XElement childQuery in query.Element(EName.from).Elements())
+            {
                 XAttribute attr = childQuery.Attribute(AName.@as);
                 string oldAlias = attr.Value;
                 string newAlias = oldAlias + pfx;
                 attr.Value = newAlias;
                 XElement parent = childQuery.Ancestors(EName.query).First();
-                foreach (XElement col in parent.Element(EName.from).Elements().Elements(EName.call).Descendants(EName.column).ToList()) { // !!! проблемы при подзапросах в условиях
+                foreach (XElement col in parent.Element(EName.from).Elements().Elements(EName.call).Descendants(EName.column).ToList())
+                { // !!! проблемы при подзапросах в условиях
                     attr = col.Attribute(AName.table);
-                    if (attr.Value == oldAlias) {
+                    if (attr.Value == oldAlias)
+                    {
                         attr.Value = newAlias;
                     }
                 }
-                foreach (XElement col in getQueryColumns(parent).ToList()) {
+                foreach (XElement col in getQueryColumns(parent).ToList())
+                {
                     attr = col.Attribute(AName.table);
-                    if (attr.Value == oldAlias) {
+                    if (attr.Value == oldAlias)
+                    {
                         attr.Value = newAlias;
                     }
                 }
@@ -12525,7 +13067,7 @@ namespace sql.builder
                     foreach (XElement field1 in sel.Elements())
                     {
 
-                       field1.SetAttributeValue("removeable", "1");
+                        field1.SetAttributeValue("removeable", "1");
 
                         if (Cmn.IsNumeric(getAttrValue(field1, TextConst.AName.Group)))
                         {
@@ -12555,14 +13097,17 @@ namespace sql.builder
                 XmlReports.FindAndExtentdQuery(query, query.Parent);
                 query.Remove();
             }
-            
+
         }
         private static void processingMoveLinks(XElement query)
         {
-            if (query.Attribute(AName.extend) == null && query.Attribute(AName.inherit) == null) {
-                if (query.Element(EName.links) != null) {
+            if (query.Attribute(AName.extend) == null && query.Attribute(AName.inherit) == null)
+            {
+                if (query.Element(EName.links) != null)
+                {
                     XElement mainSource = query.Elements(EName.from).Elements(EName.table).FirstOrDefault();
-                    if (mainSource != null) {
+                    if (mainSource != null)
+                    {
                         IList<XElement> links = query.Elements(EName.links).ToList();
                         links.Remove();
                         mainSource.Add(links.Elements());
@@ -12633,9 +13178,11 @@ namespace sql.builder
         }
         private static void CollectDirectLinksNext(XElement element, List<XElement> list)
         {
-            foreach (XElement link in element.Elements()) {
+            foreach (XElement link in element.Elements())
+            {
                 XName name = link.Name;
-                if (name == EName.link || name == EName.elink || name == EName.slink) {
+                if (name == EName.link || name == EName.elink || name == EName.slink)
+                {
                     list.Add(link);
                     CollectDirectLinksNext(link, list);
                 }
@@ -12643,9 +13190,11 @@ namespace sql.builder
         }
         private static void ProcessQueryDlinkConditions(XElement query)
         {
-            foreach (XElement dlink in query.Descendants(EName.dlink).ToList()) {
+            foreach (XElement dlink in query.Descendants(EName.dlink).ToList())
+            {
                 XElement query1 = dlink.Ancestors(EName.query).First().Ancestors(EName.query).FirstOrDefault();
-                if (query1 != null) {
+                if (query1 != null)
+                {
                     ProcessDlinkConditions(query1, dlink);
                 }
             }

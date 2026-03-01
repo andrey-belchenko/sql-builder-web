@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 ////using System.Windows.Forms;
@@ -14,8 +12,6 @@ using sql.builder.Clean;
 using sql.builder.Core;
 using sql.builder.DataApi;
 //using sql.builder.TFS;
-using sql.builder.XmlHelpers;
-using sql.builder.Clean.Extensions;
 
 //using DevExpress.XtraRichEdit.API.Word;
 
@@ -25,7 +21,7 @@ namespace sql.builder
     {
 
         //private static SortedDictionary<string, object> globalParsValues = new SortedDictionary<string, object>();
-       
+
         public static object GetGlobalParValue(string name)
         {
             //switch (name)
@@ -83,16 +79,20 @@ namespace sql.builder
         {
             get { return _sourceFolder; }
 
-            set {  
-                _sourceFolder= value;
+            set
+            {
+                _sourceFolder = value;
             }
         }
         private static XElement _inputParams;
-        public static XElement InputParams {
-            get {
+        public static XElement InputParams
+        {
+            get
+            {
                 return _inputParams;
             }
-            set {
+            set
+            {
                 _inputParams = value;
             }
         }
@@ -140,15 +140,19 @@ namespace sql.builder
         private static void ProcessGlobalParams(XElement pars)
         {
             XElement globpars = Environment.Manager.GetScheme().Elements(EName.globalparams).First();
-            if (!IsDeveloperMode()) {
+            if (!IsDeveloperMode())
+            {
                 Cmn.setParams(globpars, pars, true);
             }
-            foreach (XElement param in globpars.Elements(EName.param)) {
+            foreach (XElement param in globpars.Elements(EName.param))
+            {
                 string name = param.Attribute(AName.name).Value;
                 object val = DBNull.Value;
-                if (param.HasElements) {
+                if (param.HasElements)
+                {
                     string vals = param.Elements().First().Value;
-                    if (!string.IsNullOrEmpty(vals)) {
+                    if (!string.IsNullOrEmpty(vals))
+                    {
                         val = Cmn.ToDecimal(vals);
                     }
                 }
@@ -240,20 +244,25 @@ namespace sql.builder
         {
             string path = GetDefaultContentFolder();
             FileInfo fi = new FileInfo(Path.Combine(path, scheme + ".old.xml"));
-            if (!fi.Exists) {
+            if (!fi.Exists)
+            {
                 return false;
             }
             DirectoryInfo di = new DirectoryInfo(Path.Combine(path, "oldsource"));
-            if (!di.Exists) {
+            if (!di.Exists)
+            {
                 return false;
             }
             DateTime source_date;
-            using (IEnumerator<FileInfo> enumerator = di.EnumerateFiles("*.xml", SearchOption.AllDirectories).GetEnumerator()) {
-                if (!enumerator.MoveNext()) {
+            using (IEnumerator<FileInfo> enumerator = di.EnumerateFiles("*.xml", SearchOption.AllDirectories).GetEnumerator())
+            {
+                if (!enumerator.MoveNext())
+                {
                     return false;
                 }
                 source_date = enumerator.Current.LastWriteTimeUtc;
-                while (enumerator.MoveNext()) {
+                while (enumerator.MoveNext())
+                {
                     Cmn.GetLastDate(ref source_date, enumerator.Current.LastWriteTimeUtc);
                 }
             }
@@ -267,7 +276,8 @@ namespace sql.builder
         {
             string project_path = Cmn.GetProjectPath(xproject);
             DirectoryInfo di = new DirectoryInfo(project_path);
-            if (!di.Exists) {
+            if (!di.Exists)
+            {
                 return false;
             }
             string name = xproject.Attribute(AName.name).Value;
@@ -275,13 +285,17 @@ namespace sql.builder
             string file_native = Path.Combine(project_path, name + "native.xml");
             DateTime assemble_date = DateTime.MinValue;
             DateTime source_date = DateTime.MinValue;
-            foreach (FileInfo fi in di.EnumerateFiles("*.xml", SearchOption.AllDirectories)) {
+            foreach (FileInfo fi in di.EnumerateFiles("*.xml", SearchOption.AllDirectories))
+            {
                 string file = fi.FullName;
                 DateTime date = fi.LastWriteTimeUtc; // т.к. NTFS хранит время в формате UTC см. https://learn.microsoft.com/en-us/windows/win32/sysinfo/file-times
                 if (string.Equals(file, file_compiled, StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(file, file_native, StringComparison.OrdinalIgnoreCase)) {
+                    string.Equals(file, file_native, StringComparison.OrdinalIgnoreCase))
+                {
                     Cmn.GetLastDate(ref assemble_date, date);
-                } else {
+                }
+                else
+                {
                     Cmn.GetLastDate(ref source_date, date);
                 }
             }
@@ -426,7 +440,8 @@ namespace sql.builder
             {
                 SortProject(ref_name, projects);
             }
-            if (projects_referenced.Length != 0) {
+            if (projects_referenced.Length != 0)
+            {
                 cur.Priority = projects_referenced.Max(n => projects[n].Priority) + 1;
             }
         }
@@ -435,24 +450,32 @@ namespace sql.builder
             private XElement xml;
             private bool processed;
             private int priority;
-            public XElement Xml {
-                get {
+            public XElement Xml
+            {
+                get
+                {
                     return this.xml;
                 }
             }
-            public bool Processed {
-                get {
+            public bool Processed
+            {
+                get
+                {
                     return this.processed;
                 }
-                set {
+                set
+                {
                     this.processed = value;
                 }
             }
-            public int Priority {
-                get {
+            public int Priority
+            {
+                get
+                {
                     return this.priority;
                 }
-                set {
+                set
+                {
                     this.priority = value;
                 }
             }
@@ -487,18 +510,24 @@ namespace sql.builder
         {
             bool changed_old;
             IList<XElement> changed_projects = GetSortedProjects();
-            if (force_reload) {
+            if (force_reload)
+            {
                 changed_old = true;
-            } else {
+            }
+            else
+            {
                 changed_old = IsOldSchemeChanged(schemeName);
-                for (int index = changed_projects.Count - 1; index >= 0; index--) {
-                    if (!IsProjectChanged(changed_projects[index])) {
+                for (int index = changed_projects.Count - 1; index >= 0; index--)
+                {
+                    if (!IsProjectChanged(changed_projects[index]))
+                    {
                         changed_projects.RemoveAt(index);
                     }
                 }
             }
             var filesToSave = new Dictionary<string, XElement>();
-            if (changed_old) {
+            if (changed_old)
+            {
                 #region Пути
                 string[] folders_old = new string[] { SourceFolderName + @"\common", @"oldsource\scheme\[scheme]", @"oldsource\reports\[scheme]" };
                 #endregion
@@ -515,12 +544,14 @@ namespace sql.builder
                 _environment = null;
                 filesToSave.Add(Path.Combine(GetDefaultContentFolder(), schemeName + ".old.xml"), scheme);
             }
-            if (changed_projects.Count != 0) {
+            if (changed_projects.Count != 0)
+            {
                 // пересобираем изменившиеся проекты
                 XmlProject[] projects = AssembleXmlProjects(changed_projects).ToArray();
                 // создаю фэйковую environment в которой в NativeScheme есть все пересобранное
                 _environment = new VEnvironment(db.Connection);
-                foreach (XmlProject project in projects) {
+                foreach (XmlProject project in projects)
+                {
                     // компилируем только сам проект
                     VSXElement native_scheme = VSXElement.Get(new XElement(project.Xml));
                     VSXElement scheme = VSXElement.Get(new XElement(project.Xml));
@@ -538,8 +569,10 @@ namespace sql.builder
                     //foreach (string pn in unused_project_names) {
                     //    _environment.Manager.HideProject(pn);
                     //}
-                    foreach (var p in _environment.Manager.GetVisibleProjects()) {
-                        if (!project_names.Contains(p.Name)) {
+                    foreach (var p in _environment.Manager.GetVisibleProjects())
+                    {
+                        if (!project_names.Contains(p.Name))
+                        {
                             _environment.Manager.HideProject(p.Name);
                         }
                     }
@@ -550,7 +583,8 @@ namespace sql.builder
                 }
                 _environment = null;
             }
-            if (filesToSave.Count != 0) {
+            if (filesToSave.Count != 0)
+            {
                 // сначала делаем CheckOut
                 //using (var tfs = new TFSServer()) {
                 //    tfs.CheckOutFile(filesToSave.Keys.ToArray());
@@ -565,7 +599,7 @@ namespace sql.builder
             string base_file_name = "main.xml";
             string[] scheme_files =
             {
-                "common.xml", 
+                "common.xml",
                 "common.native.xml",
                 scheme + ".old.xml"
             };
@@ -586,7 +620,8 @@ namespace sql.builder
             // подгружаем основной файл
             XElement xRoot = XElement.Load(base_file_path);
             // перебираем пути файлов
-            foreach (string file_path in all_file_paths) {
+            foreach (string file_path in all_file_paths)
+            {
                 string fn = Path.GetFileName(file_path);
                 if (scheme_files.Contains(fn)) continue;
                 LoadFile(file_path, xRoot);
@@ -609,7 +644,7 @@ namespace sql.builder
                 string project_path = Cmn.GetProjectPath(xproject);
                 string[] scheme_files =
                 {
-                    project_name + ".xml", 
+                    project_name + ".xml",
                     project_name + ".native.xml"
                 };
                 if (!Directory.Exists(project_path)) continue;
@@ -678,9 +713,12 @@ namespace sql.builder
         {
             string name;
             XAttribute attr = xchild.Attribute(AName.extend);
-            if (attr != null) {
+            if (attr != null)
+            {
                 name = attr.Value;
-            } else {
+            }
+            else
+            {
                 name = xchild.Attribute(AName.name).Value;
             }
             return xmaingroup.Elements(EName.query).FirstOrDefault(qry => qry.Attribute(AName.name).Value == name);
@@ -754,9 +792,12 @@ namespace sql.builder
         public static string GetXElementTitle(XElement xElement)
         {
             string title = xElement.AttrOrDefault(AName.title, null);
-            if (!string.IsNullOrEmpty(title)) {
+            if (!string.IsNullOrEmpty(title))
+            {
                 return title;
-            } else {
+            }
+            else
+            {
                 return GetXElementName(xElement);
             }
             //return GetXAttributeValue(xElement, "title") != ""
@@ -766,13 +807,17 @@ namespace sql.builder
         public static string GetXElementName(XElement xElement)
         {
             string alias = xElement.AttrOrDefault(AName.@as, null);
-            if (!string.IsNullOrEmpty(alias)) {
+            if (!string.IsNullOrEmpty(alias))
+            {
                 return alias;
             }
             string name = xElement.AttrOrDefault(AName.name, null);
-            if (!string.IsNullOrEmpty(name)) {
+            if (!string.IsNullOrEmpty(name))
+            {
                 return name;
-            } else {
+            }
+            else
+            {
                 return xElement.AttrOrDefault(AName.column, null);
             }
             //return GetXAttributeValue(xElement, "as") != ""
@@ -821,7 +866,8 @@ namespace sql.builder
         public static XElement GetOrCreateXElement(this XElement parent, XName child_name)
         {
             XElement child = parent.Element(child_name);
-            if (child == null) {
+            if (child == null)
+            {
                 child = new XElement(child_name);
                 parent.Add(child);
             }
@@ -859,12 +905,16 @@ namespace sql.builder
             {
                 // если имя узла, после которого добавлять элемент не определен
                 // просто добавляем в начало
-                if (prev_element_name == null) {
+                if (prev_element_name == null)
+                {
                     dest.AddFirst(src_element);
-                } else {
+                }
+                else
+                {
                     // достает элемент, за которым должен следовать обновленный элемент
                     var prev_element = dest;
-                    foreach (var child_name in prev_element_name.Split('/')) {
+                    foreach (var child_name in prev_element_name.Split('/'))
+                    {
                         prev_element = prev_element.Element(child_name);
                         if (prev_element == null) break;
                     }
@@ -885,9 +935,12 @@ namespace sql.builder
         {
             XAttribute src_attr = src.Attribute(attr_name);
             XAttribute dest_attr = dest.Attribute(attr_name);
-            if (dest_attr == null && src_attr != null) {
+            if (dest_attr == null && src_attr != null)
+            {
                 dest.Add(src_attr);
-            } else if (dest_attr != null && src_attr != null) {
+            }
+            else if (dest_attr != null && src_attr != null)
+            {
                 dest_attr.Value = src_attr.Value;
             }
         }
@@ -896,20 +949,24 @@ namespace sql.builder
         {
             private string name;
             private XElement xml;
-            public string Name {
-                get {
+            public string Name
+            {
+                get
+                {
                     return this.name;
                 }
             }
-            public XElement Xml {
-                get {
+            public XElement Xml
+            {
+                get
+                {
                     return this.xml;
                 }
             }
             public XmlProject(string name, XElement xml)
             {
                 this.name = name;
-                this.xml  = xml;
+                this.xml = xml;
             }
         }
     }

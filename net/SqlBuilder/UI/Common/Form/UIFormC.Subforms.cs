@@ -1,15 +1,13 @@
-﻿using System.Collections.Concurrent;
-using System.Xml.Linq;
-//using DevExpress.XtraLayout;
+﻿//using DevExpress.XtraLayout;
 using System.Collections.Generic;
-//using infoenergo.core.Extensions;
-using sql.builder.DataApi;
 //using System.Windows.Forms;
 using System.Data;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+//using infoenergo.core.Extensions;
+using sql.builder.DataApi;
 //using DevExpress.XtraEditors;
 //using sql.builder.Test;
-using sql.builder.XmlHelpers;
 
 namespace sql.builder.UI
 {
@@ -22,7 +20,7 @@ namespace sql.builder.UI
         public List<UIFormC> SubForms { get; set; }
 
         public Task task { get; set; }
-            
+
         public void PrepareAsync(XElement xuseform, UIFormC parent)
         {
             task = Task.Factory.StartNew(() => Prepare(xuseform, parent));
@@ -56,7 +54,7 @@ namespace sql.builder.UI
             {
                 col = ContainerForm.DataSource.GetParamColumn(xuseform.Element(EName.useparam).Attribute(AName.name).Value);
             }
-           
+
             DataRow r = null;
             // Обработаны только частные случаи
             if (col != null)

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
@@ -36,11 +34,14 @@ namespace sql.builder.DataApi
             table.Rows.Clear();
             IList<VSXElement> list = XmlReports.Environment.GetSecurityObjects();
             HashSet<string> names = new HashSet<string>();
-            for (int index = 0; index < list.Count; index++) {
+            for (int index = 0; index < list.Count; index++)
+            {
                 VQueryCall el = list[index] as VQueryCall;
-                if (el != null) {
+                if (el != null)
+                {
                     string id = el.P_SecurityId;
-                    if (!names.Contains(id)) {
+                    if (!names.Contains(id))
+                    {
                         table.AddRow(id);
                         names.Add(id);
                     }
@@ -56,22 +57,27 @@ namespace sql.builder.DataApi
         public override string GetNodeOtherInfo()
         {
             string s = Bold(this.P_CalledObject);
-            if (this.P_WriteAccess == TextConst.AVBool.True) {
+            if (this.P_WriteAccess == TextConst.AVBool.True)
+            {
                 s += " write";
             }
             VSXElement uo = this.UsedObject();
-            if (uo != null) {
+            if (uo != null)
+            {
                 s += " " + Italic(uo.P_Title);
             }
             return s;
         }
         #endregion
         #region WriteAccess
-        public override string P_WriteAccess {
-            get {
+        public override string P_WriteAccess
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.editable);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.editable, value);
             }
         }

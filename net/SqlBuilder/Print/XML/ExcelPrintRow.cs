@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using System.Text;
-using Contract = System.Diagnostics.Contracts.Contract;
 using sql.builder.ExcelApi;
+using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.Print.XML
 {
@@ -38,13 +37,18 @@ namespace sql.builder.Print.XML
             List<XElement> list = row.Descendants(VExcelNS.SpreadSheet.Data).ToList();
             XElement xval;
             StringBuilder sb = null;
-            for (int index = 0; index < list.Count; index++) {
+            for (int index = 0; index < list.Count; index++)
+            {
                 xval = list[index];
                 string str = xval.Value;
-                if (str.Contains("[:")) {
+                if (str.Contains("[:"))
+                {
                     this.values.Add(ExcelPrintValue.Create(xval, this));
-                } else if (str.IndexOf('\n') >= 0) {
-                    if (sb == null) {
+                }
+                else if (str.IndexOf('\n') >= 0)
+                {
+                    if (sb == null)
+                    {
                         sb = new StringBuilder(str.Length);
                     }
                     sb.Append(str);
@@ -60,19 +64,24 @@ namespace sql.builder.Print.XML
         public void Print(XmlWriter writer, DataSet dataset, DataRow row, bool print_big_data)
         {
             this.sheet.NextRow();
-            for (int index = 0; index < this.values.Count; index++) {
+            for (int index = 0; index < this.values.Count; index++)
+            {
                 this.values[index].Print();
             }
-            if (writer == null) {
+            if (writer == null)
+            {
                 ExcelEnvironment.Writer.Write(this.ToXlsxRow(this.row));
-            } else {
+            }
+            else
+            {
                 this.row.WriteTo(writer);
                 this.sheet.AddBreakIfNeeded(this.row_index);
             }
         }
         public void ClearData()
         {
-            for (int index = 0; index < this.values.Count; index++) {
+            for (int index = 0; index < this.values.Count; index++)
+            {
                 this.values[index].Clear();
             }
         }
@@ -80,10 +89,13 @@ namespace sql.builder.Print.XML
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(@"<row>");
-            foreach (XElement xval in row.Descendants(VExcelNS.SpreadSheet.Cell)) {
+            foreach (XElement xval in row.Descendants(VExcelNS.SpreadSheet.Cell))
+            {
                 XElement xdata = xval.Element(VExcelNS.SpreadSheet.Data);
-                if (xdata != null) {
-                    switch (xdata.Attribute(VExcelNS.SpreadSheet.Type).Value) {
+                if (xdata != null)
+                {
+                    switch (xdata.Attribute(VExcelNS.SpreadSheet.Type).Value)
+                    {
                         case "String":
                             sb.Append(string.Format(@"<c s=""{0}"" t=""s""><v>{1}</v></c>",
                                 (int)ExcelEnvironment.BigDataFormats.String,
@@ -105,7 +117,9 @@ namespace sql.builder.Print.XML
                                 ExcelEnvironment.InternStringAndGetIndex(xdata.Value)));
                             break;
                     }
-                } else {
+                }
+                else
+                {
                     sb.Append("<c/>");
                 }
             }

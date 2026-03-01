@@ -1,27 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
 //using System.Windows.Forms;
-using System.Xml.Linq;
 // Cross-platform: Drawing2D and Imaging are Windows-only, commented out
 //using System.Drawing.Drawing2D;
 //using System.Drawing.Imaging;
-using Microsoft.Win32;
-using sql.builder.DataApi;
 //using sql.builder.Properties;
-using sql.builder.XmlHelpers;
 //using sql.builder.Controls.Grids;
-using sql.builder.WinForms;
-
 namespace sql.builder.UI
 {
     // В этом файле временная реализация , в процессе перехода на класс не привязанный к winforms

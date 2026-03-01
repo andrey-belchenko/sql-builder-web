@@ -50,7 +50,8 @@ namespace SqlBuilderLib.DevTools
 
             string cacheKey = objectName.ToUpper();
 
-            if (objectName=="vv_day"){
+            if (objectName == "vv_day")
+            {
 
             }
 
@@ -67,7 +68,7 @@ namespace SqlBuilderLib.DevTools
             try
             {
                 TableInfo info = QueryTableInfo(objectName);
-                
+
                 // Cache the result
                 lock (_lockObject)
                 {
@@ -109,7 +110,7 @@ namespace SqlBuilderLib.DevTools
             try
             {
                 PackageInfo info = QueryPackageInfo(packageName);
-                
+
                 // Cache the result
                 lock (_lockObject)
                 {
@@ -141,7 +142,7 @@ namespace SqlBuilderLib.DevTools
                 FROM all_mviews 
                 WHERE mview_name = UPPER(:object_name) 
                   AND owner = USER";
-            
+
             DataTable mviewDt = DataHelper.SqlGetTable(mviewSql, parameters, db.Connection, false);
             string owner = null;
             if (mviewDt != null && mviewDt.Rows.Count > 0)
@@ -173,7 +174,7 @@ namespace SqlBuilderLib.DevTools
             }
 
             DataTable dt = DataHelper.SqlGetTable(sql, parameters, db.Connection, false);
-            
+
             if (dt == null || dt.Rows.Count == 0)
             {
                 throw new InvalidOperationException($"Object '{objectName}' not found in current schema");
@@ -196,13 +197,13 @@ namespace SqlBuilderLib.DevTools
                     new OracleParameter("object_name", OracleDbType.VarChar, actualObjectName, ParameterDirection.Input),
                     new OracleParameter("owner", OracleDbType.VarChar, owner, ParameterDirection.Input)
                 };
-                
+
                 string tempCheckSql = @"
                     SELECT temporary 
                     FROM all_tables 
                     WHERE table_name = UPPER(:object_name) 
                       AND owner = :owner";
-                
+
                 DataTable tempDt = DataHelper.SqlGetTable(tempCheckSql, tempParams, db.Connection, false);
                 if (tempDt != null && tempDt.Rows.Count > 0)
                 {
@@ -272,7 +273,7 @@ namespace SqlBuilderLib.DevTools
                   AND object_type = 'PACKAGE BODY'";
 
             DataTable dt = DataHelper.SqlGetTable(sql, parameters, db.Connection, false);
-            
+
             if (dt == null || dt.Rows.Count == 0)
             {
                 throw new InvalidOperationException($"Package '{packageName}' not found in current schema");
@@ -326,7 +327,7 @@ namespace SqlBuilderLib.DevTools
             try
             {
                 PackageInfo info = QueryProcedureInfo(procedureName);
-                
+
                 // Cache the result
                 lock (_lockObject)
                 {
@@ -360,7 +361,7 @@ namespace SqlBuilderLib.DevTools
                   AND object_type = 'PROCEDURE'";
 
             DataTable dt = DataHelper.SqlGetTable(sql, parameters, db.Connection, false);
-            
+
             if (dt == null || dt.Rows.Count == 0)
             {
                 throw new InvalidOperationException($"Procedure '{procedureName}' not found in current schema");

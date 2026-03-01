@@ -1,27 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace sql.builder.UI
+﻿namespace sql.builder.UI
 {
     public class VLayoutTabsInfo : VLayoutContainerInfo
     {
         public VLayoutTabsInfo(VLayout controller, VLayoutGroupInfo parentGroup)
-            :base(controller,parentGroup)
+            : base(controller, parentGroup)
         {
             IsFiller = true;
-            
+
         }
         public override void ResetTabs()
         {
-           
+
             //if (control != null)
             //{
             //    GetTypedControl().SelectFirst();
             //}
             //base.ResetTabs();
-           
+
         }
 
         //public IVLayoutTabs GetTypedControl()
@@ -38,7 +33,7 @@ namespace sql.builder.UI
             node.IsFiller = true;
             (node as VLayoutGroupInfo).HasBorder = false;
         }
-        public  bool IsTabSelected(VLayoutGroupInfo tab)
+        public bool IsTabSelected(VLayoutGroupInfo tab)
         {
             return false;
             //if (UIStatic.IsWeb())
@@ -53,7 +48,7 @@ namespace sql.builder.UI
         }
         public override void ResetAndCalculateChilds()
         {
-           
+
             foreach (VLayoutGroupInfo node in Nodes)
             {
                 if (node.IsExpanded())
@@ -62,12 +57,12 @@ namespace sql.builder.UI
 
 
                     //node.width = GetClientWidth()-GetTypedControl().BorderWidth();
-                   
+
                     //не учтен magrin групп находящихся в nodes
                     node.ResetAndCalculateChilds();
                 }
             }
-            
+
         }
 
         public void SelectedTabChanged()
@@ -99,5 +94,5 @@ namespace sql.builder.UI
         }
     }
 
-    
+
 }

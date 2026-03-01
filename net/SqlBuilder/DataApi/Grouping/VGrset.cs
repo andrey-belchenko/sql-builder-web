@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 namespace sql.builder.DataApi
 {
@@ -19,9 +16,12 @@ namespace sql.builder.DataApi
         {
             List<VSourceLink> list;
             VGroup grEl = this.GroupElement();
-            if (grEl == null) {
+            if (grEl == null)
+            {
                 list = new List<VSourceLink>();
-            } else {
+            }
+            else
+            {
                 list = grEl.GroupLinks();
             }
             return list;
@@ -55,11 +55,13 @@ namespace sql.builder.DataApi
         {
             string s = string.Empty;
             IList<VSourceLink> grl = this.GroupLinks();
-            if (grl.Count != 0) {
+            if (grl.Count != 0)
+            {
                 s += "(";
                 string q = string.Empty;
-                foreach (VSourceLink l in grl) {
-                    s+= q + l.P_Table;
+                foreach (VSourceLink l in grl)
+                {
+                    s += q + l.P_Table;
                     q = ",";
                 }
                 s += ")";

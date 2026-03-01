@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Xml.Linq;
-using System.Linq;
 //using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Data;
+using System.Xml.Linq;
 //using DevExpress.XtraLayout;
 //using DevExpress.XtraBars;
 //using DevExpress.XtraLayout.Utils;
 //using infoenergo.core.Extensions;
 using sql.builder.DataApi;
-using sql.builder.Controls;
 //using sql.builder.Controls.Grids;
 
 namespace sql.builder.UI
@@ -52,7 +50,7 @@ namespace sql.builder.UI
                 OnButtonClick(this, xinfo);
             }
         }
-        public void UpdateEvents( XElement xevents)
+        public void UpdateEvents(XElement xevents)
         {
             if (xevents == null)
             {
@@ -79,7 +77,7 @@ namespace sql.builder.UI
             Row = row;
             Table = table;
             Column = column;
-        }         
+        }
     }
     public delegate bool UIEventHandler(object sender, UIEventArgs e);
 }

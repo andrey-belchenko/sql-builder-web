@@ -7,14 +7,17 @@ namespace sql.builder
 {
     public partial class Compiler
     {
-        private static void AddQueryAutoFilterParsAndConds(XElement xquery) 
-            // предположительно ресурсоемкая операция, может замедлить precompile
+        private static void AddQueryAutoFilterParsAndConds(XElement xquery)
+        // предположительно ресурсоемкая операция, может замедлить precompile
         {
-            if (xquery.AttrOrDefault(AName.auto_filter, string.Empty) != TextConst.AVBool.True) {
+            if (xquery.AttrOrDefault(AName.auto_filter, string.Empty) != TextConst.AVBool.True)
+            {
                 return;
             }
-            if (!xquery.Elements(EName.select).Elements().Any(e => e.AttrOrDefault(AName.auto_filter, false))) {
-                if (!xquery.Elements(EName.from).Descendants().Any(e => e.AttrOrDefault(AName.auto_filter, false))) {
+            if (!xquery.Elements(EName.select).Elements().Any(e => e.AttrOrDefault(AName.auto_filter, false)))
+            {
+                if (!xquery.Elements(EName.from).Descendants().Any(e => e.AttrOrDefault(AName.auto_filter, false)))
+                {
                     return;
                 }
             }
@@ -26,46 +29,59 @@ namespace sql.builder
             //XElement q = XmlReports.Environment.Manager.Elements("queries").Elements("query").FirstOrDefault(e => e.Attribute("name").Value == name);
             //var query = (VQuery)VSXElement.Get(q);
             var xpars = xquery.Element(EName.@params);
-            if (xpars == null) {
+            if (xpars == null)
+            {
                 xpars = new XElement(EName.@params);
                 xquery.AddFirst(xpars);
             }
             XElement xqubeWhere = null;
             var xqube = xquery.Elements(EName.from).Elements(TextConst.EName.Qube).FirstOrDefault();
-            if (xqube != null) {
+            if (xqube != null)
+            {
                 xqubeWhere = xqube.Element(EName.where);
-                if (xqubeWhere == null) {
+                if (xqubeWhere == null)
+                {
                     xqubeWhere = new XElement(EName.where);
                     xqube.Add(xqubeWhere);
                 }
             }
             var xwhere = xquery.Element(EName.where);
             XElement[] wExprs = null;
-            if (xwhere == null) {
+            if (xwhere == null)
+            {
                 xwhere = new XElement(EName.where);
                 xquery.Add(xwhere);
-            } else {
+            }
+            else
+            {
                 wExprs = xwhere.Elements().ToArray();
                 wExprs.Remove();
             }
             XElement xand = Factory.NewCall(TextConst.AVFunction.And, Factory.NewCall(TextConst.AVFunction.True));
-            if (wExprs != null) {
+            if (wExprs != null)
+            {
                 xand.Add(wExprs);
             }
             xwhere.Add(xand);
-            if (xqubeWhere == null) {
+            if (xqubeWhere == null)
+            {
                 xqubeWhere = xand;
             }
             var elsForFilter = query.ElementsForAutoFilter();
-            foreach (var el in elsForFilter) {
+            foreach (var el in elsForFilter)
+            {
                 IList<XElement> xpar = null;
                 IList<XElement> xcond = null;
                 bool isfact = false;
-                if (el is VQueryCall) {
+                if (el is VQueryCall)
+                {
                     xpar = createListParams(el);
                     xcond = createListCond(el);
-                } else {
-                    switch (el.XDataType()) {
+                }
+                else
+                {
+                    switch (el.XDataType())
+                    {
                         case TextConst.AVDataType.Date:
                             xpar = createRangeParams(el);
                             xcond = createRangeCond(el);
@@ -83,14 +99,18 @@ namespace sql.builder
                             xcond = createStringCond(el);
                             break;
                     }
-                    if (el.GetDescedantsAndSelfP(EName.fact).Count != 0) {
+                    if (el.GetDescedantsAndSelfP(EName.fact).Count != 0)
+                    {
                         isfact = true;
                     }
                 }
                 xpars.Add(xpar);
-                if (isfact) {
+                if (isfact)
+                {
                     xand.Add(xcond);
-                } else {
+                }
+                else
+                {
                     xqubeWhere.Add(xcond);
                 }
             }
@@ -125,9 +145,12 @@ namespace sql.builder
             VSXElement keyCol = qry.KeyColumn();
             string parName = TextConst.Pfx.ParamVar + el.XName;
             string funcName;
-            if (keyCol.XDataType() == TextConst.AVDataType.String) {
+            if (keyCol.XDataType() == TextConst.AVDataType.String)
+            {
                 funcName = TextConst.AVFunction.InSNull;
-            } else {
+            }
+            else
+            {
                 funcName = TextConst.AVFunction.InNNull;
             }
             XElement xcall = Factory.NewCall(funcName);

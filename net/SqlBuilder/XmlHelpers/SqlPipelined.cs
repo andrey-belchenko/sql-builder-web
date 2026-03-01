@@ -37,7 +37,7 @@ namespace sql.builder.XmlHelpers
             sb.AppendLine("--- Скрипт сгенерирован автоматически с помощью SqlBuilder ---");
             if (with_temp_table) GenerateTempTable(qname_safe, record_fields, sb);
             GeneratePackageSpecification(qname_safe, xquery, pars, record_fields, sb, with_temp_table);
-            GeneratePackageBody(qname_safe, selectText,procText, pars, columns, sb, with_temp_table);
+            GeneratePackageBody(qname_safe, selectText, procText, pars, columns, sb, with_temp_table);
             GenerateGrants(qname_safe, sb, with_temp_table);
             GenerateSynonyms(qname_safe, sb, with_temp_table);
             sb.AppendLine("--- Конец автоматически сгенерированного скрипта ---");
@@ -91,7 +91,7 @@ namespace sql.builder.XmlHelpers
                     sb.AppendLine("\tPROCEDURE fill_table");
                     sb.AppendLine("\t(");
                     sb.AppendLine(string.Join(",\r\n", pars));
-                    sb.AppendLine("\t);");   
+                    sb.AppendLine("\t);");
                 }
                 else
                 {
@@ -103,7 +103,7 @@ namespace sql.builder.XmlHelpers
             sb.AppendLine("/");
             sb.AppendLine();
         }
-        private static void GeneratePackageBody(string qname_safe, string selectText,string procText, string[] pars, string[] columns, StringBuilder sb, bool with_temp_table)
+        private static void GeneratePackageBody(string qname_safe, string selectText, string procText, string[] pars, string[] columns, StringBuilder sb, bool with_temp_table)
         {
             sb.AppendLine(string.Format("CREATE OR REPLACE PACKAGE BODY sqlb_{0}", qname_safe));
             sb.AppendLine("IS");
@@ -193,7 +193,7 @@ namespace sql.builder.XmlHelpers
         private static void GenerateSynonyms(string qname_safe, StringBuilder sb, bool with_temp_table)
         {
             sb.AppendLine(string.Format("CREATE OR REPLACE PUBLIC SYNONYM sqlb_{0} FOR sqlb_{0};", qname_safe));
-            
+
             sb.AppendLine("/");
             sb.AppendLine();
         }

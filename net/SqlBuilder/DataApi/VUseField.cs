@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
@@ -26,7 +24,8 @@ namespace sql.builder.DataApi
         public override string XDataType()
         {
             string dt = this.DataType();
-            if (string.IsNullOrEmpty(dt)) {
+            if (string.IsNullOrEmpty(dt))
+            {
                 dt = this.Field().DataType();
             }
             return dt;
@@ -58,7 +57,7 @@ namespace sql.builder.DataApi
             get
             {
 
-               
+
                 var s = P_FormalParName;
                 if (s == "")
                 {
@@ -85,7 +84,7 @@ namespace sql.builder.DataApi
             return true;
 
         }
-       
+
         #endregion
         #region Field
         public override bool P_Field_Exists()
@@ -112,12 +111,16 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Title
-        public override string P_Title {
-            get {
+        public override string P_Title
+        {
+            get
+            {
                 string title = this.P_SelfTitle;
-                if (string.IsNullOrEmpty(title)) {
+                if (string.IsNullOrEmpty(title))
+                {
                     VField fld = this.Field();
-                    if (fld != null) {
+                    if (fld != null)
+                    {
                         title = fld.P_SelfTitle;
                     }
                 }
@@ -202,11 +205,15 @@ namespace sql.builder.DataApi
         #region ControlType
         public override string P_ControlType
         {
-            get { 
+            get
+            {
                 VField fld = this.Field();
-                if (fld != null) {
+                if (fld != null)
+                {
                     return fld.P_ControlType;
-                } else {
+                }
+                else
+                {
                     return string.Empty;
                 }
             }
@@ -249,19 +256,27 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ShowCheckbox
-        public override string P_ShowCheckbox {
-            get {
-                if (string.IsNullOrEmpty(this.AttrOrEmpty(AName_.show_checkbox))) {
+        public override string P_ShowCheckbox
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(this.AttrOrEmpty(AName_.show_checkbox)))
+                {
                     return TextConst.AVBool.True;
                 }
-                else {
+                else
+                {
                     return string.Empty;
                 }
             }
-            set {
-                if (string.IsNullOrEmpty(value)) {
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
                     value = TextConst.AVBool.False;
-                } else {
+                }
+                else
+                {
                     value = null;
                 }
                 this.SetAttributeValue(AName_.show_checkbox, value);
@@ -325,11 +340,11 @@ namespace sql.builder.DataApi
         //    return (P_ControlType == TextConst.AVControlType.List);
         //}
         //#endregion
-		#region Hint
-		public override bool P_Hint_Exists()
-		{
-			return true;
-		}
-		#endregion
+        #region Hint
+        public override bool P_Hint_Exists()
+        {
+            return true;
+        }
+        #endregion
     }
 }

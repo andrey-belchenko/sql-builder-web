@@ -1,6 +1,4 @@
-﻿using System;
-using System.Data;
-using System.Globalization;
+﻿using System.Data;
 //using System.Windows.Forms;
 using System.Xml.Linq;
 //using DevExpress.XtraEditors.Controls;
@@ -41,13 +39,15 @@ namespace sql.builder.UI
         }
         public override void RefreshData()
         {
-            if (this.UseDefaultQuery && this.data_set_default != null) {
+            if (this.UseDefaultQuery && this.data_set_default != null)
+            {
                 XElement master_values = this.OnNeedMasterValues(this);
                 this.data_set_default.Refresh(master_values);
                 DataRowCollection rows = this.data_set_default.Tables[0].Rows;
-                if (rows.Count > 0) {
+                if (rows.Count > 0)
+                {
                     this.setValue(rows[0][0]);
-                   // seControl.EditValue = DataTableDefault.Rows[0][0];
+                    // seControl.EditValue = DataTableDefault.Rows[0][0];
                 }
             }
             base.RefreshData();
@@ -72,7 +72,7 @@ namespace sql.builder.UI
         public override void SetError(string text, int index = 1)
         {
             SetErr(text);
-           // SetError(seControl, text);
+            // SetError(seControl, text);
             //seControl.ErrorText = text;
         }
         void seControl_Cleared()

@@ -7,7 +7,7 @@ namespace sql.builder.DataApi
     {
         public List<VUseAction> RowActions()
         {
-            return  Queries().SelectMany(e => e.RowActions()).ToList();
+            return Queries().SelectMany(e => e.RowActions()).ToList();
 
         }
     }

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using Contract = System.Diagnostics.Contracts.Contract;
 using sql.builder.ExcelApi;
-using sql.builder.DataApi;
-using XmlSerializer = sql.builder.Print.XML.XmlSerializer;
+using Contract = System.Diagnostics.Contracts.Contract;
 using ExcelPrintErrors = sql.builder.ExcelPrintDocument.ExcelPrintErrors;
 
 namespace sql.builder.Print.XML
@@ -17,7 +13,7 @@ namespace sql.builder.Print.XML
     /// <summary>
     /// Класс печати Excel по шаблону в формате *.xml
     /// </summary>
-    public partial class ExcelPrintDocument 
+    public partial class ExcelPrintDocument
     {
         #region поля
         private XDocument template;
@@ -44,7 +40,8 @@ namespace sql.builder.Print.XML
         public ExcelPrintDocument(string template_file_name)
         {
             XDocument template;
-            using (var stream = File.Open(template_file_name, FileMode.Open, FileAccess.Read)) {
+            using (var stream = File.Open(template_file_name, FileMode.Open, FileAccess.Read))
+            {
                 template = XDocument.Load(stream);
                 stream.Close();
             }
@@ -60,11 +57,14 @@ namespace sql.builder.Print.XML
             this.worksheet_marker = new XElement(VExcelNS.SpreadSheet.Worksheet);
             list[0].AddBeforeSelf(this.worksheet_marker); // как маркер для вставки листов
             ExcelPrintSheet prev_sheet = null;
-            for (int index = 0; index < list.Count; index++) {
+            for (int index = 0; index < list.Count; index++)
+            {
                 XElement worksheet = list[index];
-                if (worksheet.Elements(VExcelNS.SpreadSheet.Table).Elements(VExcelNS.SpreadSheet.Row).Any()) {
+                if (worksheet.Elements(VExcelNS.SpreadSheet.Table).Elements(VExcelNS.SpreadSheet.Row).Any())
+                {
                     ExcelPrintSheet sheet = ExcelPrintSheet.Create(worksheet, this, prev_sheet);
-                    if (this.first_sheet == null) {
+                    if (this.first_sheet == null)
+                    {
                         this.first_sheet = sheet;
                     }
                     prev_sheet = sheet;
@@ -75,7 +75,8 @@ namespace sql.builder.Print.XML
         private void MarkUnprinted()
         {
             ExcelPrintSheet sheet = this.first_sheet;
-            while (sheet != null) {
+            while (sheet != null)
+            {
                 sheet.MarkUnprinted();
                 sheet = sheet.NextSheet;
             }
@@ -91,25 +92,35 @@ namespace sql.builder.Print.XML
         /// <returns>Значение из перечисления: None - данные напечатаны, NoData - нет данных для печати</returns>
         public ExcelPrintErrors Print(string fileName, DataSet dataset, bool print_big_data = false, bool convertToOpenXml = false)
         {
-            if (!convertToOpenXml) {
+            if (!convertToOpenXml)
+            {
                 Contract.Assume(!string.IsNullOrEmpty(fileName));
                 this.WriteInXMLFormat(fileName, dataset, print_big_data);
-                if (this.printed_sheets_count > 0) {
+                if (this.printed_sheets_count > 0)
+                {
                     return ExcelPrintErrors.None;
-                } else {
+                }
+                else
+                {
                     return ExcelPrintErrors.NoData;
                 }
-            } else {
+            }
+            else
+            {
                 Contract.Assume(string.IsNullOrEmpty(fileName));
             }
             this.MarkUnprinted();
             ExcelPrintSheet sheet = this.first_sheet;
-            while (sheet != null) {
+            while (sheet != null)
+            {
                 sheet = sheet.Print(dataset, print_big_data);
             }
-            if (this.printed_sheets_count > 0) {
+            if (this.printed_sheets_count > 0)
+            {
                 return ExcelPrintErrors.None;
-            } else {
+            }
+            else
+            {
                 return ExcelPrintErrors.NoData;
             }
         }
@@ -120,7 +131,8 @@ namespace sql.builder.Print.XML
             writer.WriteStartElement(element.Name);
             // Записываем аттрибуты
             XAttribute attr = element.FirstAttribute;
-            while (attr != null) {
+            while (attr != null)
+            {
                 writer.WriteAttributeString(attr);
                 attr = attr.NextAttribute;
             }
@@ -131,21 +143,28 @@ namespace sql.builder.Print.XML
         private void WriteNodes(sql.builder.Print.XML.XmlSerializer serializer, XContainer container)
         {
             XNode node = container.FirstNode;
-            while (node != null) {
+            while (node != null)
+            {
                 this.Write(serializer, node);
                 node = node.NextNode;
             }
         }
         private void Write(sql.builder.Print.XML.XmlSerializer serializer, XNode node)
         {
-            if (object.ReferenceEquals(node, this.worksheet_marker)) {
+            if (object.ReferenceEquals(node, this.worksheet_marker))
+            {
                 ExcelPrintSheet sheet = this.first_sheet;
-                while (sheet != null) {
+                while (sheet != null)
+                {
                     sheet = sheet.Print(serializer);
                 }
-            } else if (node.NodeType == XmlNodeType.Element) {
+            }
+            else if (node.NodeType == XmlNodeType.Element)
+            {
                 this.Write(serializer, (XElement)node);
-            } else {
+            }
+            else
+            {
                 node.WriteTo(serializer.Writer);
             }
         }
@@ -154,7 +173,8 @@ namespace sql.builder.Print.XML
             Contract.Assert(!string.IsNullOrEmpty(file_name));
             Contract.Assert(dataset != null);
             this.MarkUnprinted();
-            using (XmlSerializer serializer = new XmlSerializer(file_name, dataset, print_big_data)) {
+            using (XmlSerializer serializer = new XmlSerializer(file_name, dataset, print_big_data))
+            {
                 XmlWriter writer = serializer.Writer;
                 writer.WriteStartDocument();
                 this.WriteNodes(serializer, this.template);

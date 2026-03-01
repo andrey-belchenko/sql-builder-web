@@ -1,8 +1,7 @@
-using System;
-using Contract = System.Diagnostics.Contracts.Contract;
 using System.Linq;
 using System.Xml.Linq;
 using sql.builder.DataApi;
+using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.Print.Xlsx
 {
@@ -16,9 +15,12 @@ namespace sql.builder.Print.Xlsx
         public string GetNativeWorksheetName(string rid)
         {
             XElement xsheet = this.xml.Root.Element(ns.Main.sheets).Elements(ns.Main.sheet).SearchByAttribute(ns.Relsd.id, rid);
-            if (xsheet != null) {
+            if (xsheet != null)
+            {
                 return xsheet.Attribute(ns.None.name).Value;
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
@@ -26,14 +28,17 @@ namespace sql.builder.Print.Xlsx
         {
             XElement root = this.XmlChanged.Root;
             XElement xsheet = root.Element(ns.Main.sheets).Elements(ns.Main.sheet).SearchByAttribute(ns.Relsd.id, rid);
-            if (xsheet != null) {
+            if (xsheet != null)
+            {
                 XAttribute attr = xsheet.Attribute(ns.None.name);
                 string oldName = attr.Value;
                 attr.Value = name;
                 oldName += "'!";
-                foreach (XElement dn in root.Elements(ns.Main.definedNames).Elements()) {
+                foreach (XElement dn in root.Elements(ns.Main.definedNames).Elements())
+                {
                     string val = dn.Value;
-                    if (val.Contains(oldName)) {
+                    if (val.Contains(oldName))
+                    {
                         string newName = name + "'!";
                         string newVal = val.Replace(oldName, newName);
                         dn.Value = newVal;
@@ -50,21 +55,28 @@ namespace sql.builder.Print.Xlsx
             xsheet.Add(new XAttribute(ns.None.sheetId, sheet_id));
             xsheet.Add(new XAttribute(ns.Relsd.id, rid));
             XElement xsheet_prev;
-            if (rid_prev != null) {
+            if (rid_prev != null)
+            {
                 xsheet_prev = xsheets.Elements(ns.Main.sheet).SearchByAttribute(ns.Relsd.id, rid_prev);
-            } else {
+            }
+            else
+            {
                 xsheet_prev = null;
             }
-            if (xsheet_prev == null) {
+            if (xsheet_prev == null)
+            {
                 xsheets.Add(xsheet);
-            } else {
+            }
+            else
+            {
                 xsheet_prev.AddAfterSelf(xsheet);
             }
         }
         public void DeleteWorksheet(string rid)
         {
             XElement xsheet = this.XmlChanged.Root.Element(ns.Main.sheets).Elements(ns.Main.sheet).SearchByAttribute(ns.Relsd.id, rid);
-            if (xsheet != null) {
+            if (xsheet != null)
+            {
                 xsheet.Remove();
             }
         }

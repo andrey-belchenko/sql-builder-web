@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Linq;
 using AName_ = sql.builder.DataApi.AName;
 
@@ -17,11 +16,14 @@ namespace sql.builder.DataApi
             return child_nodes;
         }
         #region CalledQuery
-        public override string P_CalledQuery {
-            get {
+        public override string P_CalledQuery
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.call);
             }
-            set {
+            set
+            {
                 this.SetAttributeNotEmpty(AName_.call, value);
             }
         }
@@ -53,9 +55,12 @@ namespace sql.builder.DataApi
         {
             string called_query = this.P_CalledQuery;
             string s;
-            if (!string.IsNullOrEmpty(called_query)) {
+            if (!string.IsNullOrEmpty(called_query))
+            {
                 s = " (fetch using " + Bold(called_query) + ")";
-            } else {
+            }
+            else
+            {
                 s = string.Empty;
             }
             return s;
@@ -73,11 +78,11 @@ namespace sql.builder.DataApi
         }
         public override void CL_Column_Content(List<XElement> list)
         {
-            MakeColumnsList(list,true);
+            MakeColumnsList(list, true);
         }
         public override List<VContextListsType> ContextListAllowedTypes()
         {
-            return new List<VContextListsType>() { 
+            return new List<VContextListsType>() {
                 VContextListsType.Call,
                 VContextListsType.Column
             };

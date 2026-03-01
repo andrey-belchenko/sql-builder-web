@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 using System.Data;
 
 namespace sql.builder.DataApi
@@ -40,26 +38,32 @@ namespace sql.builder.DataApi
             table.Rows.Clear();
             VExpression expr = this.GetSubMainParent() as VExpression;
             int index;
-            if (expr != null) {
+            if (expr != null)
+            {
                 IList<VParam> parameters = expr.FormalParams();
-                for (index = 0; index < parameters.Count; index++) {
+                for (index = 0; index < parameters.Count; index++)
+                {
                     table.AddRow(parameters[index].P_FormalParNameS);
                 }
                 return;
             }
             VSourcedElement rootQuery = this.RootQuery();
             IList<VSXElement> list = rootQuery.FormalParams();
-            for (index = 0; index < list.Count; index++) {
+            for (index = 0; index < list.Count; index++)
+            {
                 table.AddRow(list[index].P_FormalParNameS);
             }
             VForm form = rootQuery as VForm;
-            if (form != null) {
+            if (form != null)
+            {
                 list = form.ParamFields();
-                for (index = 0; index < list.Count; index++) {
+                for (index = 0; index < list.Count; index++)
+                {
                     table.AddRow(list[index].P_FormalParNameS);
                 }
                 list = form.VariableColumns();
-                for (index = 0; index < list.Count; index++) {
+                for (index = 0; index < list.Count; index++)
+                {
                     table.AddRow(list[index].P_ParName);
                 }
                 //foreach (string p in TextConst.AVParamArray.FormExtPars) {
@@ -74,7 +78,8 @@ namespace sql.builder.DataApi
                 //    }
                 //}
                 IList<VQueryCall> queries = form.MainAndRelatedQueries();
-                for (index = 0; index < queries.Count; index++) {
+                for (index = 0; index < queries.Count; index++)
+                {
                     string name = queries[index].XName + TextConst.AVParam.HasChanges;
                     table.AddRow(name);
                 }

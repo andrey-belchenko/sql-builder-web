@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Diagnostics; // Debug, Stopwatch
-using Contract = System.Diagnostics.Contracts.Contract;
-using System.Collections.Generic;
 using System.Collections;
-using System.Text;
+using System.Collections.Generic;
+using System.Diagnostics; // Debug, Stopwatch
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Xml.Linq;
+using sql.builder.Exceptions;
 using sql.builder.FieldInfo;
 using sql.builder.XmlHelpers;
-using sql.builder.Exceptions;
 using _AName = sql.builder.DataApi.AName;
-using System.ComponentModel.DataAnnotations; // из-за конфликта с экземплярным методом VForm.AName()
+using Contract = System.Diagnostics.Contracts.Contract;
 //using sql.builder.WebReports;
 
 namespace sql.builder.DataApi
@@ -21,15 +20,19 @@ namespace sql.builder.DataApi
         public static void MultiplicateSources(XElement compiledQuery, VDataSet dataSet, string keyDimension)
         {
             HashSet<string> tabsToMultiplicate = new HashSet<string>();
-            for (int index = 0; index < dataSet.Tables.Count; index++) {
+            for (int index = 0; index < dataSet.Tables.Count; index++)
+            {
                 VDataTable dt = (VDataTable)(dataSet.Tables[index]);
-                if (dt.NewRowsVisForOtherTbls) {
+                if (dt.NewRowsVisForOtherTbls)
+                {
                     tabsToMultiplicate.Add(dt.UpdateableTableName);
                 }
             }
             List<XElement> mpQrys = new List<XElement>();
-            foreach (XElement q in compiledQuery.Descendants(EName.query)) {
-                if (q.AttrOrDefault(_AName.multiplicate_point, false) || q.AttrOrDefault(_AName.link_mp_point, false)) {
+            foreach (XElement q in compiledQuery.Descendants(EName.query))
+            {
+                if (q.AttrOrDefault(_AName.multiplicate_point, false) || q.AttrOrDefault(_AName.link_mp_point, false))
+                {
                     mpQrys.Add(q);
                 }
             }
@@ -47,42 +50,44 @@ namespace sql.builder.DataApi
                     int variantsCount = 1 << tblsColunt;  // комбинация всех вариантов из temp и оригинальной таблицы
                     for (int i = 0; i < variantsCount; i++)
                     {
-                            var qry1 = new XElement(qry);
-                            var bits = new BitArray(BitConverter.GetBytes(i));
-                            for (int j = 0; j < tblsColunt; j++)
+                        var qry1 = new XElement(qry);
+                        var bits = new BitArray(BitConverter.GetBytes(i));
+                        for (int j = 0; j < tblsColunt; j++)
+                        {
+                            // var tbls = qry1.Descendants(TextConst.EName.Table).Where(t => Cmn.GetAttrValue(t, TextConst.AName.Name) == tblNames[j]).ToList();
+                            var qrys = qry1.Descendants(EName.query).Where(q => q.AttrOrDefault(_AName.name, string.Empty) == tblNames[j]).ToArray();
+                            var tbls = qrys.Elements(EName.from).Elements(EName.table).ToList();
+                            foreach (XElement tbl in tbls)
                             {
-                               // var tbls = qry1.Descendants(TextConst.EName.Table).Where(t => Cmn.GetAttrValue(t, TextConst.AName.Name) == tblNames[j]).ToList();
-                                var qrys = qry1.Descendants(EName.query).Where(q => q.AttrOrDefault(_AName.name, string.Empty) == tblNames[j]).ToArray();
-                                var tbls = qrys.Elements(EName.from).Elements(EName.table).ToList();
-                                foreach (XElement tbl in tbls)
-                                {
-                                    tbl.SetAttrValue(_AName.is_from_temp, bits[j]);
-                                }
+                                tbl.SetAttrValue(_AName.is_from_temp, bits[j]);
                             }
-                            if (qry.AttrOrDefault(_AName.link_mp_point, false))
+                        }
+                        if (qry.AttrOrDefault(_AName.link_mp_point, false))
+                        {
+                            string alias = qry.Attribute(_AName.@as).Value;
+                            string newAlias = alias;
+                            if (i > 0)
                             {
-                                string alias = qry.Attribute(_AName.@as).Value;
-                                string newAlias = alias;
-                                if (i > 0)
-                                {
-                                    newAlias = alias + TextConst.Pfx.MpVariant + i.ToString();
-                                    qry1.RemoveAttribute(_AName.link_mp_point);
-                                    qry1.SetAttributeValue(_AName.@as, newAlias);
-                                }
-                                var joinCols = qry1.Elements(EName.call).Descendants(EName.column).Where(e => e.AttrOrDefault(_AName.table, string.Empty) == alias).ToList();
-                                foreach (XElement col in joinCols)
-                                {
-                                    col.SetAttributeValue(_AName.table, newAlias);
-                                }
+                                newAlias = alias + TextConst.Pfx.MpVariant + i.ToString();
+                                qry1.RemoveAttribute(_AName.link_mp_point);
+                                qry1.SetAttributeValue(_AName.@as, newAlias);
                             }
-                            qry.AddAfterSelf(qry1);
+                            var joinCols = qry1.Elements(EName.call).Descendants(EName.column).Where(e => e.AttrOrDefault(_AName.table, string.Empty) == alias).ToList();
+                            foreach (XElement col in joinCols)
+                            {
+                                col.SetAttributeValue(_AName.table, newAlias);
+                            }
+                        }
+                        qry.AddAfterSelf(qry1);
                     }
                     qry.Remove();
                 }
             }
             List<XElement> mpLinkQrys = new List<XElement>();
-            foreach (XElement q in compiledQuery.Descendants(EName.query)) {
-                if (q.AttrOrDefault(_AName.link_mp_point, false)) {
+            foreach (XElement q in compiledQuery.Descendants(EName.query))
+            {
+                if (q.AttrOrDefault(_AName.link_mp_point, false))
+                {
                     mpLinkQrys.Add(q);
                 }
             }
@@ -133,7 +138,7 @@ namespace sql.builder.DataApi
                 }
             }
         }
-        private static XElement CreateDataSetAndFormInfo(string name,  bool use_cache = true)
+        private static XElement CreateDataSetAndFormInfo(string name, bool use_cache = true)
         {
             string cashName = name;
 
@@ -159,7 +164,7 @@ namespace sql.builder.DataApi
             }
             if (xroot == null)
             {
-                VForm vform = XmlReports.Environment.GetFormOrQueryAsForm( name).GetPreprocessed();
+                VForm vform = XmlReports.Environment.GetFormOrQueryAsForm(name).GetPreprocessed();
                 VExceptionController.BeginProcessingElement(vform);
                 xroot = vform.CreateDataSetAndFormInfo();
                 //ds = vform.ProcessAndCreateDataSet();
@@ -171,10 +176,10 @@ namespace sql.builder.DataApi
         }
         private XElement CreateDataSetAndFormInfo()
         {
-            #if DEBUG
+#if DEBUG
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            #endif
+#endif
             string cashName = this.P_IdName;
             //if (!Cache.UseFormsCache || !use_cache)
             //{
@@ -185,7 +190,7 @@ namespace sql.builder.DataApi
             //    return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), cashName) as XElement);
             //}
             // кэш
-            XElement xroot = null; 
+            XElement xroot = null;
             //if (Cache.UseFormsCache && use_cache)
             //{
             //    xroot = Cache.GetActualForm(cashName);
@@ -229,7 +234,7 @@ namespace sql.builder.DataApi
                 WriteColumnBehaviorInfo(fld, xfield, TextConst.DsAName.Visible, false);
                 WriteColumnBehaviorInfo(fld, xfield, TextConst.DsAName.Valid, false);
             }
-            AddNewField(xfields, TextConst.AVParam.FormValid,    TextConst.AVDataType.String);
+            AddNewField(xfields, TextConst.AVParam.FormValid, TextConst.AVDataType.String);
             AddNewField(xfields, TextConst.AVParam.FormValidNot, TextConst.AVDataType.String);
             foreach (VQueryCall qry in this.MainAndRelatedQueries())
             {
@@ -258,7 +263,7 @@ namespace sql.builder.DataApi
             }
             VDataSet dataSet = VForm.CreateDataSetPre(xds);
             var actionsCalls = VSXElement.GetDescedantsP(this).Where(e => e is VAction).ToList();
-            var resetActionsCalls = actionsCalls.Where(e => e.P_ActionType == TextConst.AVActionType.ResetColumn).Select(e1=>e1.P_CalledObject+"."+e1.P_Column).ToArray();
+            var resetActionsCalls = actionsCalls.Where(e => e.P_ActionType == TextConst.AVActionType.ResetColumn).Select(e1 => e1.P_CalledObject + "." + e1.P_Column).ToArray();
             foreach (VQueryCall queryCall in queryCalls.Values)
             {
                 XElement xtable = xtables[queryCall.XName];
@@ -270,21 +275,27 @@ namespace sql.builder.DataApi
                 List<XElement> xkeyColumns = new List<XElement>();
                 List<XElement> xrefreshedColumns = new List<XElement>();
                 List<XElement> xresetedColumns = new List<XElement>();
-                foreach (XElement e in xtable.Element(EName.columns).Elements()) {
-                    if (e.AttrOrDefault(_AName.is_updateable, false)) {
+                foreach (XElement e in xtable.Element(EName.columns).Elements())
+                {
+                    if (e.AttrOrDefault(_AName.is_updateable, false))
+                    {
                         xupdatebleColumns.Add(e);
                     }
-                    if (e.AttrOrDefault(_AName.is_updateable_ext, false)) {
+                    if (e.AttrOrDefault(_AName.is_updateable_ext, false))
+                    {
                         xupdatebleColumnsExt.Add(e);
                     }
                     string col_name = e.AttrOrDefault(_AName.name, string.Empty);
-                    if (col_name == key) {
+                    if (col_name == key)
+                    {
                         xkeyColumns.Add(e);
                     }
-                    if (e.AttrOrDefault(_AName.is_refreshed, false)) {
+                    if (e.AttrOrDefault(_AName.is_refreshed, false))
+                    {
                         xrefreshedColumns.Add(e);
                     }
-                    if (resetActionsCalls.Contains(e.AttrOrDefault(_AName.table, string.Empty) + "." + col_name)) {
+                    if (resetActionsCalls.Contains(e.AttrOrDefault(_AName.table, string.Empty) + "." + col_name))
+                    {
                         xresetedColumns.Add(e);
                     }
                 }
@@ -322,10 +333,10 @@ namespace sql.builder.DataApi
                     keyDimension = qdim.P_IdName;
                     xtable.SetAttributeValue(_AName.key_dimension, keyDimension);
                 }
-                if (vtbl != null || vtbls.Count > 0) 
+                if (vtbl != null || vtbls.Count > 0)
                 {
-                //foreach (var tt in vtbls)
-                //{
+                    //foreach (var tt in vtbls)
+                    //{
                     if (vtbl != null)
                     {
                         tableName = vtbl.P_Name;
@@ -377,14 +388,15 @@ namespace sql.builder.DataApi
                     WriteAttrAsElem(xtable, EName.single_row_refresh_cmd, xml);
                     // table.SingleRowRefreshCommand = VDBSelectCommand.FromXml(xml);
                 #endregion
-                #region ValueRefresh
-                foreach (XElement xcol in xrefreshedColumns)
-                {
+                    #region ValueRefresh
+                    foreach (XElement xcol in xrefreshedColumns)
+                    {
                         string col_name = xcol.Attribute(_AName.name).Value;
                         VColumn col = columns.First(e => e.XName == col_name);
                         XElement colValQuery = createTableQueryForSpcifiedColumn(col, keyColumn);
                         xparams = colValQuery.Element(EName.@params);
-                        if (xparams == null) {
+                        if (xparams == null)
+                        {
                             xparams = new XElement(EName.@params);
                             colValQuery.AddFirst(xparams);
                         }
@@ -433,9 +445,9 @@ namespace sql.builder.DataApi
                         curDataCol.ValueRefreshCommand = cmd;
                         xml = curDataCol.ValueRefreshCommand.ToXml();
                         WriteAttrAsElem(xcol, EName.value_refresh_cmd, xml);
-                }
-                foreach (var xcol in xresetedColumns)
-                {
+                    }
+                    foreach (var xcol in xresetedColumns)
+                    {
                         var col = (VColumn)columns.First(e => e.XName == xcol.Attribute(TextConst.AName.Name).Value);
                         XElement colValQuery = createTableQueryForSpcifiedColumn(col, keyColumn);
                         xparams = colValQuery.Element(EName.@params);
@@ -452,7 +464,7 @@ namespace sql.builder.DataApi
                         var curDataCol = (VDataColumn)table.Columns[col.XName];
                         if (vtbl != null)
                         {
-                            ChangeQueryTableForUsingTemp(compiledColValQuery, tableName, table, curDataCol, true, keyParName, keyDimension,true);
+                            ChangeQueryTableForUsingTemp(compiledColValQuery, tableName, table, curDataCol, true, keyParName, keyDimension, true);
                         }
                         var compiledColValQuery1 = Compiler.FinalProcessingQuery(new XElement(compiledColValQuery));
                         VDBSelectCommand cmd1 = VDBSelectCommand.CreateFromCompiledQuery(new XElement(colValQuery), compiledColValQuery1);
@@ -460,7 +472,7 @@ namespace sql.builder.DataApi
                         var xml1 = curDataCol.ValueResetCommand.ToXml();
                         WriteAttrAsElem(xcol, EName.value_reset_cmd, xml1);
                     }
-                #endregion
+                    #endregion
                 }
             }
             IList<VQueryCall> qCalls = queryCalls.Values;
@@ -472,7 +484,7 @@ namespace sql.builder.DataApi
                 XElement xtable = xtables[queryCallMain.XName];
                 var tableMain = (VDataTable)dataSet.Tables[xtable.Attribute(_AName.name).Value];
                 var xcols = xtable.Element(EName.columns).Elements();
-                foreach (VDataColumn colMain in tableMain.Columns.Cast<VDataColumn>().Where(c =>c.Dependants!=null && c.Dependants.Any()).ToList())
+                foreach (VDataColumn colMain in tableMain.Columns.Cast<VDataColumn>().Where(c => c.Dependants != null && c.Dependants.Any()).ToList())
                 {
                     XElement xcol = xcols.First(e => e.Attribute(_AName.name).Value == colMain.ColumnName);
                     var dependants = colMain.Dependants;
@@ -574,23 +586,23 @@ namespace sql.builder.DataApi
             //    {
             //        Cache.SaveNotActualForm(xroot, cashName);
             //    }
-              
+
             //}
-            #if DEBUG
+#if DEBUG
             sw.Stop();
             Debug.WriteLine("VForm.CreateDataSetAndFormInfo(), " + cashName + ": " + sw.ElapsedMilliseconds.ToString() + " мс");
-            #endif
+#endif
             return xroot;
         }
         private XElement CreateTableInfo(VQueryCall queryCall)
         {
             VQuery srcQuery = queryCall.Query();
             var xtbl = new XElement(EName.table);
-            xtbl.Add(new XAttribute(_AName.name,               queryCall.XName));
-            xtbl.Add(new XAttribute(_AName.auto_refresh,        queryCall.P_AutoRefresh));
-            xtbl.Add(new XAttribute(_AName.async,              queryCall.P_Async));
+            xtbl.Add(new XAttribute(_AName.name, queryCall.XName));
+            xtbl.Add(new XAttribute(_AName.auto_refresh, queryCall.P_AutoRefresh));
+            xtbl.Add(new XAttribute(_AName.async, queryCall.P_Async));
             xtbl.Add(new XAttribute(_AName.only_visible_refresh, queryCall.P_OnlyVisibleRefresh));
-            xtbl.Add(new XAttribute(_AName.only_force_refresh,   queryCall.P_OnlyForceRefresh));
+            xtbl.Add(new XAttribute(_AName.only_force_refresh, queryCall.P_OnlyForceRefresh));
             if (srcQuery.IsNonDb())
             {
                 xtbl.Add(new XAttribute(_AName.non_db, TextConst.AVBool.True));
@@ -666,19 +678,19 @@ namespace sql.builder.DataApi
             var otherUpdateableColumns = new SortedList<string, List<XElement>>();
             var refreshedColumns = new List<VColumn>();
             var updQueries = new SortedList<string, VQueryCall>();
-            var mainQname=queryCall.XName;
+            var mainQname = queryCall.XName;
             var usedUpdColumns = new SortedList<string, List<string>>();
             usedUpdColumns.Add(mainQname, new List<string>());
             updatebleColumns.Add(mainQname, new List<VColumn>());
             updatebleColumnsExt.Add(mainQname, new List<VColumn>());
-            xupdatebleColumnsExt.Add(mainQname,new List<XElement>());
+            xupdatebleColumnsExt.Add(mainQname, new List<XElement>());
             otherUpdateableColumns.Add(mainQname, new List<XElement>());
             updQueries.Add(mainQname, queryCall);
             XElement xcolumns = new XElement(EName.columns);
             xtbl.Add(xcolumns);
-           // SortedList<string, int> typesInd = new SortedList<string, int>();
+            // SortedList<string, int> typesInd = new SortedList<string, int>();
             List<string> jColsNames = srcQuery.AllSources()
-                .Where(e2 => e2.P_Updateable==TextConst.AVBool.True)
+                .Where(e2 => e2.P_Updateable == TextConst.AVBool.True)
                 .SelectMany(q => q.GetElementsP().First().GetDescedantsP(EName.column))
                 .Where(e => e.AttrOrDefault(_AName.table, string.Empty) == TextConst.AVTable.Ths)
                 .Select(e1 => e1.AttrOrDefault(_AName.column, string.Empty)).Distinct().ToList();
@@ -690,18 +702,23 @@ namespace sql.builder.DataApi
                 var srcCol = col.SourceColumn().FirstOrDefault();
                 xcolumns.Add(xcol);
                 string srcName;
-                if (updQry == null) {
+                if (updQry == null)
+                {
                     srcName = mainQname;
-                } else {
+                }
+                else
+                {
                     srcName = updQry.XName;
-                    if (!updQueries.ContainsKey(srcName)) {
+                    if (!updQueries.ContainsKey(srcName))
+                    {
                         usedUpdColumns.Add(srcName, new List<string>());
                         updatebleColumns.Add(srcName, new List<VColumn>());
                         updatebleColumnsExt.Add(srcName, new List<VColumn>());
                         xupdatebleColumnsExt.Add(srcName, new List<XElement>());
                         otherUpdateableColumns.Add(srcName, new List<XElement>());
                         updQueries.Add(srcName, updQry);
-                        if (mainQname != srcName) {
+                        if (mainQname != srcName)
+                        {
                             string keyName = updQry.Query().KeyColumn().XName;
                             xtraKeys.Add(srcName, keyName);
                         }
@@ -748,7 +765,7 @@ namespace sql.builder.DataApi
                     string keyAlias = qc.Value.UsedColumns().First(c => c.Parent.Name == EName.select && c.P_Column == xKeyName).XName;
                     VColumn xkeyCol = queryCall.UsedColumns().First(c => c.P_Column == keyAlias);
                     xtraKeysCol.Add(qc.Key, xkeyCol);
-                    xtbl.Add(new XElement(EName.extra_key, 
+                    xtbl.Add(new XElement(EName.extra_key,
                                  new XAttribute(_AName.table, qc.Value.XName),
                                  new XAttribute(_AName.column, xkeyCol.XName)));
                     // если ошибка, наверное нужно вывести ключ дочерней редактируемой таблицы
@@ -778,14 +795,15 @@ namespace sql.builder.DataApi
                     WriteAttrAsElem(xtbl, EName.update_temp_text, commandText);
                     commandText = VForm.getClearTempText(qc.Value, mainQname);
                     WriteAttrAsElem(xtbl, EName.clear_temp_text, commandText);
-                    hasUpd=true;
+                    hasUpd = true;
                     //var xExtUpdTbl = new XElement(TextConst.EName.Table);
                     //WriteAttrAsElem(xExtUpdTbl, TextConst.DsEName.UpdateText, commandText);
                     //xtbl.Add(xExtUpdTbl);
                 }
                 else if (keyColumn != null)
                 {
-                    if (xupdatebleColumnsExt[qc.Key].Count > 0) {
+                    if (xupdatebleColumnsExt[qc.Key].Count > 0)
+                    {
                         string commandText = VForm.getUpdateText(qc.Value, updatebleColumns[qc.Key], keyColumn).Replace('\r', ' ');
                         updText.Append(commandText);
                         updText.AppendLine(";");
@@ -810,10 +828,13 @@ namespace sql.builder.DataApi
             updText.Clear();
             List<VSXElement> eventsSections = srcQuery.GetNamedSections(TextConst.EName.Events);
             XElement xevents = queryCall.GetElementsP(EName.events).FirstOrDefault();
-            if (xevents != null) {
+            if (xevents != null)
+            {
                 xevents = new XElement(xevents);
                 xtbl.Add(xevents);
-            } else if (eventsSections.Count > 0) {
+            }
+            else if (eventsSections.Count > 0)
+            {
                 xevents = new XElement(EName.events);
                 xtbl.Add(xevents);
             }
@@ -833,7 +854,8 @@ namespace sql.builder.DataApi
             xcol.Add(new XAttribute(_AName.table, col.P_Table));
             xcol.Add(new XAttribute(_AName.type, col.XDataType()));
             xcol.Add(new XAttribute(_AName.title, col.P_Title));
-            if (!string.IsNullOrEmpty(col.P_ParName)) {
+            if (!string.IsNullOrEmpty(col.P_ParName))
+            {
                 xcol.Add(new XAttribute(_AName.parname, col.P_ParName));
             }
             if (jColsNames.Contains(col.XName))
@@ -907,7 +929,7 @@ namespace sql.builder.DataApi
                         }
                     }
                 }
-                if (!isSys) 
+                if (!isSys)
                 {
                     if (isUpdateable)
                     {
@@ -973,7 +995,8 @@ namespace sql.builder.DataApi
                     int i = 0;
                     foreach (VSXElement factPar in clientFactParsElement.GetElementsP())
                     {
-                        if (VSXElement.HasParameterName(factPar)) {
+                        if (VSXElement.HasParameterName(factPar))
+                        {
                             break;
                         }
                         if (formalPars == null)
@@ -1020,8 +1043,8 @@ namespace sql.builder.DataApi
                     //    //(dataTable.Columns[ssrccol] as VDataColumn).AddDependantSelList(col.XName);
                     //    //dataCol.SelectionList.InputParams[Cmn.GetAttrValue(par, TextConst.AName.Name)].SourceColumn = ssrccol;
                     //}
-                } 
-                else 
+                }
+                else
                 {
                     WriteAttrAsElem(xcol, EName.sel_list_cl_fact_pars, clientFactParsElement);
                     // dataCol.SelectionList.FactParamsElement = clientFactParsElement;
@@ -1036,7 +1059,8 @@ namespace sql.builder.DataApi
         }
         private static bool IsPropFalseNot_Cl(XElement xcol, string propName)
         {
-            if (IsPropFalseNot(xcol, propName)) {
+            if (IsPropFalseNot(xcol, propName))
+            {
                 return true;
             }
             string v = xcol.AttrOrDefault(TextConst.Pfx.BehaviorClient + propName, string.Empty);
@@ -1083,11 +1107,12 @@ namespace sql.builder.DataApi
         }
         private static void WriteColumnBehaviorInfo(VColumn col, XElement xcol, string propName, bool isMain)
         {
-            if (!col.IsAddision) {
+            if (!col.IsAddision)
+            {
                 WriteColumnBehaviorInfo((VSXElement)col, xcol, propName, isMain);
             }
         }
-        private static void WriteColumnBehaviorInfo (VSXElement col, XElement xcol, string propName, bool isMain)
+        private static void WriteColumnBehaviorInfo(VSXElement col, XElement xcol, string propName, bool isMain)
         {
             string prop_name = VSXElement.PropPfx + propName + TextConst.Pfx.BehaviorPropRes;
             if (!VFieldInfo.Exists(col, prop_name)) return;
@@ -1095,7 +1120,7 @@ namespace sql.builder.DataApi
             if (string.IsNullOrEmpty(s)) return;
             if (s[0] == '!')
             {
-                xcol.SetAttributeValue(propName  + TextConst.Pfx.BehaviorPropInv, TextConst.AVBool.True);
+                xcol.SetAttributeValue(propName + TextConst.Pfx.BehaviorPropInv, TextConst.AVBool.True);
                 s = s.Substring(1);
             }
             string[] ss = s.Split(':');
@@ -1137,8 +1162,8 @@ namespace sql.builder.DataApi
             Contract.Assert(!string.IsNullOrEmpty(data_type));
             XElement xfield = new XElement(EName.field);
             xfield.Add(new XAttribute(_AName.type, data_type));
-            xfield.Add(new XAttribute(_AName.name,     field_name));
-            xfield.Add(new XAttribute(_AName.parname,  field_name));
+            xfield.Add(new XAttribute(_AName.name, field_name));
+            xfield.Add(new XAttribute(_AName.parname, field_name));
             parent.Add(xfield);
             return xfield;
         }
@@ -1156,7 +1181,7 @@ namespace sql.builder.DataApi
             Contract.Assert(!string.IsNullOrEmpty(param_name));
             Contract.Assert(!string.IsNullOrEmpty(data_type));
             XElement xpar = new XElement(EName.param);
-            xpar.Add(new XAttribute(_AName.name,     param_name));
+            xpar.Add(new XAttribute(_AName.name, param_name));
             xpar.Add(new XAttribute(_AName.type, data_type));
             parent.Add(xpar);
             return xpar;

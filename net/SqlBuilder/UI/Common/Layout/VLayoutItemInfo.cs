@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace sql.builder.UI
+﻿namespace sql.builder.UI
 {
     public class VLayoutItemInfo : VLayoutNodeInfo
     {
@@ -14,8 +9,8 @@ namespace sql.builder.UI
             parent = newParent;
             parent.AddChild(this);
             visibleUndefined = true;
-         
-          //  newParent.GetTypedControl().ShowNode(this);
+
+            //  newParent.GetTypedControl().ShowNode(this);
         }
 
         public virtual int GetControlHeight()
@@ -24,8 +19,8 @@ namespace sql.builder.UI
         }
 
 
-        
-        
+
+
         //public override int GetHeight()
         //{
         //    //int height = GetControlsFactory().RowHeight();
@@ -33,6 +28,6 @@ namespace sql.builder.UI
         //}
 
     }
-    
-    
+
+
 }

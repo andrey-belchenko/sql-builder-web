@@ -26,7 +26,7 @@ namespace sql.builder.XmlHelpers
 
             PrepareQueries(queries);
 
-            var vds_qlikview = queries.Select(que => GenerateQVReport(que).Result(2,false));
+            var vds_qlikview = queries.Select(que => GenerateQVReport(que).Result(2, false));
 
             foreach (VDataSet vds in vds_qlikview)
             {
@@ -53,7 +53,7 @@ namespace sql.builder.XmlHelpers
             var queries = GetQlikViewQueries(qvproject);
 
             PrepareQueries(queries);
-            
+
             //скрипт для загрузки из файлов qvd 
             var scriptdata = new StringBuilder();
 
@@ -95,8 +95,8 @@ namespace sql.builder.XmlHelpers
             // Единый список всех узлов column и call из всех запросов
             var columns = queries
                 .SelectMany(que => que.Element("select").Elements()
-                                    .Where(col => (col.Name.LocalName == "call" || col.Name.LocalName == "column") 
-                                                   && XmlReports.GetXAttributeValue(col,"qlikview") != "0")).ToArray();
+                                    .Where(col => (col.Name.LocalName == "call" || col.Name.LocalName == "column")
+                                                   && XmlReports.GetXAttributeValue(col, "qlikview") != "0")).ToArray();
 
             foreach (var column in columns)
             {
@@ -127,7 +127,7 @@ namespace sql.builder.XmlHelpers
                         qv_tables.Add(ref_column.Parent.Parent.Attribute("name").Value);
                     }
                 }
-                else if (XmlReports.GetXAttributeValue(column, "key") == "1" 
+                else if (XmlReports.GetXAttributeValue(column, "key") == "1"
                       || XmlReports.GetXAttributeValue(column, "title") != ""
                       || XmlReports.GetXAttributeValue(column, "qlikview") == "1")
                 {
@@ -161,7 +161,7 @@ namespace sql.builder.XmlHelpers
             // Копируем все колонки запроса в новый элемент
             var qv_columns = new XElement("qv_columns",
                  query.Element("select").Elements()
-                    .Where(col => (col.Name.LocalName == "column" || col.Name.LocalName == "call") 
+                    .Where(col => (col.Name.LocalName == "column" || col.Name.LocalName == "call")
                                   && XmlReports.GetXAttributeValue(col, "qlikview") == "1"));
 
             // Устанавливаем некоторые атрибуты для скопированых колонок
@@ -172,17 +172,17 @@ namespace sql.builder.XmlHelpers
             }
 
             // Оборачиваем запрос
-            var report_query =  new XElement("query", 
+            var report_query = new XElement("query",
                       new XAttribute("title", XmlReports.GetXAttributeValue(query, "title")),
                       new XAttribute("qlikview", XmlReports.GetXAttributeValue(query, "qlikview")),
                       new XAttribute("qv_title", XmlReports.GetXAttributeValue(query, "qv_title")),
 
-                      new XElement("select", 
-                          qv_columns.Elements().Select(e=>new XElement("column",new XAttribute("table","a"),new XAttribute("column",e.Attribute("as").Value)
+                      new XElement("select",
+                          qv_columns.Elements().Select(e => new XElement("column", new XAttribute("table", "a"), new XAttribute("column", e.Attribute("as").Value)
 
                               , Compiler.copyAttribute(e, "qlikview")
-                              
-                              ))), 
+
+                              ))),
                       new XElement("from",
                          new XElement("query",
                             new XAttribute("name", query.Attribute("name").Value),
@@ -190,7 +190,7 @@ namespace sql.builder.XmlHelpers
 
             // Генерируем отчёт
 
-            
+
 
             var report = XmlReports.Environment.GetPrecompiledReport(report_query);
             // Добавляем отчёту имя 
@@ -237,8 +237,8 @@ namespace sql.builder.XmlHelpers
             script.AppendLine("OLEDB CONNECT32 TO [Provider=OraOLEDB.Oracle.1;Persist Security Info=False;User ID=click;Data Source=alpha;Extended Properties=\"\"] (XPassword is EccFaRRNBbYWWLA);");
             // для Казани
             //script.AppendLine("OLEDB CONNECT32 TO [Provider=OraOLEDB.Oracle.1;Persist Security Info=False;User ID=click;Data Source=asuse_o;Extended Properties=\"\"] (XPassword is EccFaRRNBbYWWLA);");
-            
-            var all_qv_columns = queries.SelectMany(query => new []
+
+            var all_qv_columns = queries.SelectMany(query => new[]
             {
                 query.Element("select").Elements("column")
                     .Where(col => XmlReports.GetXAttributeValue(col, "qlikview") == "1"),
@@ -263,7 +263,7 @@ namespace sql.builder.XmlHelpers
                     var qv_title = XmlReports.GetXAttributeValue(column, "qv_title");
                     if (qv_title.Length > 30)
                     {
-                        rename_fields.Add(qv_title.Substring(0,30), qv_title);
+                        rename_fields.Add(qv_title.Substring(0, 30), qv_title);
                         qv_title = qv_title.Substring(0, 30);
                     }
 
@@ -306,7 +306,7 @@ namespace sql.builder.XmlHelpers
         {
             // Достаем все уникальные имена колонок с атрибутом qv_split = 1
             var split_col_names = columns
-                .Where(el => XmlReports.GetXAttributeValue(el,"qv_split") == "1")
+                .Where(el => XmlReports.GetXAttributeValue(el, "qv_split") == "1")
                 .Select(el => el.Attribute("qv_title").Value)
                 .Distinct();
 
@@ -314,7 +314,7 @@ namespace sql.builder.XmlHelpers
             // (для случая, если колонка в нескольких таблицах)
             var grouped_split_cols = columns
                 .Where(col => split_col_names.Contains(col.Attribute("qv_title").Value))
-                .GroupBy((col) => col.Attribute("qv_title").Value, 
+                .GroupBy((col) => col.Attribute("qv_title").Value,
                          (qv_title, cols) => cols.Where(col => col.Attribute("qv_title").Value == qv_title));
 
             foreach (var split_cols in grouped_split_cols)
@@ -397,13 +397,13 @@ namespace sql.builder.XmlHelpers
             XmlReports.SetXElementAttribute(element, "qv_title", title);
             if (element.Attribute("qlikview") == null)
                 XmlReports.SetXElementAttribute(element, "qlikview", "1");
-            
+
         }
         private static string GetSplitDateTitle(string qv_title, int type)
         {
             // type: 0 - год, 1 - квартал, 2 - месяц, 3 - день
 
-            var names = new[] {"Год", "Квартал", "Месяц", "День"};
+            var names = new[] { "Год", "Квартал", "Месяц", "День" };
             if (type > names.Length - 1) return qv_title;
 
             if (qv_title.Trim().StartsWith("Дата"))
@@ -420,7 +420,7 @@ namespace sql.builder.XmlHelpers
         private static XElement GetQueryXml(string query_name, IEnumerable<VSXElement> scheme)
         {
             // исходный запрос
-            var non_compiled_query = new XElement( XmlReports.Environment.Manager.GetScheme().Elements("queries").Elements().First(que => que.Attribute("name").Value == query_name));
+            var non_compiled_query = new XElement(XmlReports.Environment.Manager.GetScheme().Elements("queries").Elements().First(que => que.Attribute("name").Value == query_name));
 
             // колонки после обработки запроса
             //var compiled_columns = XElement.Parse(XmlReports.getItemProcessedXml("query", query_name, false).InnerXml)
@@ -428,7 +428,7 @@ namespace sql.builder.XmlHelpers
             //    .Where(el => el.Name.LocalName == "column" || el.Name.LocalName == "call")
             //    .OrderBy(col => col.Attribute("as").Value).ToArray();
 
-            var compiled_columns = 
+            var compiled_columns =
                Compiler.compileQuery(query_name, scheme)
                .Element("query").Element("select").Elements()
                .Where(el => el.Name.LocalName == "column" || el.Name.LocalName == "call")
@@ -438,7 +438,7 @@ namespace sql.builder.XmlHelpers
             var non_compiled_columns = non_compiled_query.Element("select").Elements()
                 .Where(el => el.Name.LocalName == "column" || el.Name.LocalName == "call")
                 .OrderBy(col => col.Attribute("as").Value).ToArray();
-            
+
             // так быть не должно
             if (compiled_columns.Length != non_compiled_columns.Length) return null;
 
@@ -466,7 +466,7 @@ namespace sql.builder.XmlHelpers
             //    && XmlReports.GetXAttributeValue(col, "reference") == column.Parent.Parent.Attribute("name").Value && XmlReports.GetXAttributeValue(col, "refcol") == XmlReports.GetXAttributeValue(column, "as")
             //    && all_queries.Select(que => XmlReports.GetXAttributeValue(que, "name")).Contains(XmlReports.GetXAttributeValue(col, "reference")))
             //    .ToArray();
-           
+
             return all_columns.Where(col =>
             {
                 // Запрос, в котором сидит связанная колонка
@@ -475,12 +475,12 @@ namespace sql.builder.XmlHelpers
                 if (column_query == ref_column_query) return false;
 
                 // Все связи с таблицами того запроса, в котором сидит связанная колонка
-                var all_rel_queries = new [] 
+                var all_rel_queries = new[]
                 {
-                    ref_column_query.Element("from") != null 
+                    ref_column_query.Element("from") != null
                         ? ref_column_query.Element("from").Elements("query").Where(que => XmlReports.GetXAttributeValue(que,"qlikview") != "0")
-                        : Enumerable.Empty<XElement>(), 
-                    ref_column_query.Element("push") != null 
+                        : Enumerable.Empty<XElement>(),
+                    ref_column_query.Element("push") != null
                         ? ref_column_query.Element("push").Element("from").Elements("query").Where(que => XmlReports.GetXAttributeValue(que,"qlikview") != "0")
                         : Enumerable.Empty<XElement>()
                 }.SelectMany(que => que);
@@ -488,19 +488,19 @@ namespace sql.builder.XmlHelpers
                 // Если есть наследование - достаем имена родительских запросов
                 var inherit_names = new List<string>();
                 var inherit_query = column_query;
-                while(true)
+                while (true)
                 {
                     var inherit_name = XmlReports.GetXAttributeValue(inherit_query, "inherit");
                     if (inherit_name == "") break;
 
                     inherit_names.Add(inherit_name);
                     inherit_query = XmlReports.Environment.Manager.GetScheme().Elements("queries").Elements().First(que => que.Attribute("name").Value == inherit_name);
-                } 
+                }
 
                 // Описание связи с таблицей (родительской либо текущей) текущей колонки (если есть)
                 var ref_query = all_rel_queries.FirstOrDefault(que => que.Attribute("name").Value == column_query.Attribute("name").Value
-                                                                   || inherit_names.Contains(que.Attribute("name").Value ));
-                if(ref_query != null)
+                                                                   || inherit_names.Contains(que.Attribute("name").Value));
+                if (ref_query != null)
                 {
                     // Проверка происходит ли связь через те самые колонки
                     var rel_cols = ref_query.Descendants("column");

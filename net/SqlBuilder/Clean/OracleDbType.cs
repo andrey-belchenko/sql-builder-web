@@ -1,5 +1,3 @@
-using Devart.Data.Oracle;
-
 namespace sql.builder.Clean
 {
     /// <summary>

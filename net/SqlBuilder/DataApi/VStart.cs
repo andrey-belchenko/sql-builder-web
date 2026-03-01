@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 namespace sql.builder.DataApi
 {
-    public sealed class VStart: VSXElement, IVParent
+    public sealed class VStart : VSXElement, IVParent
     {
         public VStart()
             : base(EName.start)

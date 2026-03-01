@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.DataApi
@@ -113,7 +112,8 @@ namespace sql.builder.DataApi
         {
             // public static string[] windowFuncNames = new string[] { TextConst.AVFunction.Over, TextConst.AVFunction.RowNumber, TextConst.AVFunction.DenseRank };
             Contract.Assert(e != null);
-            if (e.Name != EName.call) {
+            if (e.Name != EName.call)
+            {
                 return false;
             }
             string func = e.AttrOrDefault(AName.function, null);
@@ -130,9 +130,12 @@ namespace sql.builder.DataApi
         {
             // e => (new string[] { "report", "query" }).Contains(e.Parent.Name.LocalName)
             XElement parent = e.Parent;
-            if (parent == null) {
+            if (parent == null)
+            {
                 return false;
-            } else {
+            }
+            else
+            {
                 XName parent_name = parent.Name;
                 return (parent_name == EName.report) || (parent_name == EName.query);
             }

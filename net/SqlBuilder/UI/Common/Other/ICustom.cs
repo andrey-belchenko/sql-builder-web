@@ -46,13 +46,13 @@ namespace sql.builder.UI
 
     public interface ICustomDisplacement
     {
-      
+
 
         /// <summary>
         /// Насколько нужно увеличить ширину по сравнению со штатными контролами
         /// </summary>
         /// <returns></returns>
         int GetWidthDisplacement();
-       
+
     }
 }

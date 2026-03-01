@@ -1,7 +1,5 @@
-﻿using System;
+﻿using System.Xml.Linq;
 using Contract = System.Diagnostics.Contracts.Contract;
-using System.Collections.Generic;
-using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
@@ -118,7 +116,8 @@ namespace sql.builder.DataApi
             XElement col = new XElement(EName.column);
             col.Add(new XAttribute(AName.name, name));
             col.Add(new XAttribute(AName.type, data_type));
-            if (!string.IsNullOrEmpty(title)) {
+            if (!string.IsNullOrEmpty(title))
+            {
                 col.Add(new XAttribute(AName.title, title));
             }
             return col;

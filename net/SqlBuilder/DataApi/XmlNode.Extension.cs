@@ -1,6 +1,4 @@
-﻿using System;
-using System.Xml;
-using System.Collections.Generic;
+﻿using System.Xml;
 //using System.Text;
 using Contract = System.Diagnostics.Contracts.Contract;
 
@@ -23,9 +21,12 @@ namespace sql.builder.DataApi
         {
             Contract.Assert(node != null);
             XmlAttribute attr = node.Attributes[attr_name];
-            if (attr != null) {
+            if (attr != null)
+            {
                 return attr.Value;
-            } else {
+            }
+            else
+            {
                 return default_value;
             }
         }
@@ -41,14 +42,18 @@ namespace sql.builder.DataApi
         {
             Contract.Assert(node != null);
             XmlAttribute attr = node.Attributes[attr_name];
-            if (attr != null) {
+            if (attr != null)
+            {
                 string value = attr.Value;
-                if (value == TextConst.AVBool.True) {
+                if (value == TextConst.AVBool.True)
+                {
                     return true;
-                } else if (value == TextConst.AVBool.False) {
+                }
+                else if (value == TextConst.AVBool.False)
+                {
                     return false;
                 }
-            } 
+            }
             return default_value;
         }
         /// <summary>
@@ -63,7 +68,8 @@ namespace sql.builder.DataApi
             Contract.Assert(node != null);
             Contract.Assert(value != null);
             XmlAttribute attr = node.Attributes[attr_name];
-            if (attr == null) {
+            if (attr == null)
+            {
                 attr = node.OwnerDocument.CreateAttribute(attr_name);
                 node.Attributes.Append(attr);
             }
@@ -78,7 +84,8 @@ namespace sql.builder.DataApi
         {
             Contract.Assert(node != null);
             XmlAttribute attr = node.Attributes[attr_name];
-            if (attr != null) {
+            if (attr != null)
+            {
                 node.Attributes.Remove(attr);
             }
         }

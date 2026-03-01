@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
-	public sealed partial class VPart : VSXElement
+    public sealed partial class VPart : VSXElement
     {
         public VPart()
             : base(EName.part)
@@ -26,26 +25,33 @@ namespace sql.builder.DataApi
         {
             int i = 0;
             if (formalParams == null) return;
-            foreach (XElement formalParam in formalParams.Elements()) {
+            foreach (XElement formalParam in formalParams.Elements())
+            {
                 //  !!! Лишние повторения для каждого элемента. Пределать?
                 string param_name = formalParam.AttrOrDefault(AName_.name, string.Empty);
                 XElement factParam = factParams.Elements().SearchByAttribute(AName_.parname, param_name);
-                if (factParam == null) {
+                if (factParam == null)
+                {
                     factParam = factParams.Elements().ElementAt(i);
                 }
-                foreach (XElement el in element.Descendants(EName.useparam).ToList()) {
-                    if (el.Attribute(AName_.name).Value == param_name) {
+                foreach (XElement el in element.Descendants(EName.useparam).ToList())
+                {
+                    if (el.Attribute(AName_.name).Value == param_name)
+                    {
                         el.ReplaceWith(new XElement(factParam));
                     }
                 }
                 string text = "";
-                if (factParam != null) {
+                if (factParam != null)
+                {
                     text = factParam.Value.Replace("'", "");
                 }
                 string svar = "[:" + param_name + "]";
-                foreach (XAttribute attr in element.DescendantsAndSelf().Attributes()) {
+                foreach (XAttribute attr in element.DescendantsAndSelf().Attributes())
+                {
                     string value = attr.Value;
-                    if (value.Contains(svar)) {
+                    if (value.Contains(svar))
+                    {
                         attr.Value = value.Replace(svar, text);
                     }
                 }
@@ -58,7 +64,8 @@ namespace sql.builder.DataApi
             //List<VSXElement> content = Elements().Where(e => e.Name.LocalName != "params").ToList()
             //    .Select(e1=> VSXElement.Get( new XElement(e1))).ToList();
             List<VSXElement> list = new List<VSXElement>();
-            foreach (VSXElement element in content) {
+            foreach (VSXElement element in content)
+            {
                 XElement newElement = VSXElement.GetP(new XElement(element), this);
                 ApplyParams(newElement, usePart, this.Element(EName.@params));
                 Cmn.CopyAttribute(usePart, newElement, TextConst.AName.As);
@@ -72,12 +79,14 @@ namespace sql.builder.DataApi
             }
             List<VSXElement> list1 = new List<VSXElement>();
             //Кусок ниже не проверен
-            foreach (VSXElement el in list) {
+            foreach (VSXElement el in list)
+            {
                 //if (el is VUsePart)
                 //{
                 //    var el1 = el;
                 //}
-                foreach (VSXElement el1 in VUsePart.PartContentOrSelf(el)) {
+                foreach (VSXElement el1 in VUsePart.PartContentOrSelf(el))
+                {
                     list1.Add(el1);
                     el1.VirtualParent = usePart.GetParent();
                 }
@@ -96,18 +105,24 @@ namespace sql.builder.DataApi
         public static VUsePart FirstUse(VEnvironment env, string name)
         {
             XElement el = env.Manager.GetNativeScheme().Descendants(EName.usepart).SearchByAttribute(AName_.part, name);
-            if (el != null) {
+            if (el != null)
+            {
                 return VSXElement.Get<VUsePart>(el);
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
         #region IdName
-        public override string P_IdName {
-            get {
+        public override string P_IdName
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.id);
             }
-            set {
+            set
+            {
                 this.SetIdName(AName_.id, value);
             }
         }

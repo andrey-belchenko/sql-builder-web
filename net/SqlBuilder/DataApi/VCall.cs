@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Xml.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
@@ -17,7 +16,8 @@ namespace sql.builder.DataApi
         protected override bool ChildDependant { get { return true; } }
         public VFunction Function()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as VFunction);
             }
             VFunction f = XmlReports.Environment.GetFunction(this.AttrOrEmpty(AName_.function));
@@ -32,7 +32,8 @@ namespace sql.builder.DataApi
         {
             var list = new List<VSXElement>();
             VFunction fnc = this.Function();
-            if (fnc != null) {
+            if (fnc != null)
+            {
                 list.Add(fnc);
             }
             return list;
@@ -40,13 +41,17 @@ namespace sql.builder.DataApi
         public override string XDataType()
         {
             string s = this.DataType();
-            if (s == string.Empty) {
+            if (s == string.Empty)
+            {
                 VFunction func = this.Function();
                 s = func.DataType();
-                if (s == TextConst.AVDataType.Variant) {
-                    foreach (VSXElement factPar in this.GetElementsP()) {
+                if (s == TextConst.AVDataType.Variant)
+                {
+                    foreach (VSXElement factPar in this.GetElementsP())
+                    {
                         string s1 = factPar.XDataType();
-                        if (s1 == TextConst.AVDataType.Date || s1 == TextConst.AVDataType.Number || s1 == TextConst.AVDataType.String || s1 == TextConst.AVDataType.Clob || s1 == TextConst.AVDataType.Blob) {
+                        if (s1 == TextConst.AVDataType.Date || s1 == TextConst.AVDataType.Number || s1 == TextConst.AVDataType.String || s1 == TextConst.AVDataType.Clob || s1 == TextConst.AVDataType.Blob)
+                        {
                             s = s1;
                             break;
                         }
@@ -61,11 +66,13 @@ namespace sql.builder.DataApi
         }
         public override void LookUpNextSources(List<VSXElement> list, VLookupAnalyzer analyzer)
         {
-            if (!analyzer.CheckAndReturn(list, this)) {
+            if (!analyzer.CheckAndReturn(list, this))
+            {
                 return;
             }
             IList<VSXElement> els = this.GetElementsP();
-            foreach (VSXElement el in els) {
+            foreach (VSXElement el in els)
+            {
                 el.LookUpNextSources(list, analyzer);
             }
         }
@@ -122,7 +129,7 @@ namespace sql.builder.DataApi
             string s;
             if (TreeNodeExpandedWithParents())
             {
-                s = ColorGray(Bold(   P_Function));
+                s = ColorGray(Bold(P_Function));
             }
             else
             {
@@ -136,7 +143,7 @@ namespace sql.builder.DataApi
 
             var ss = "";
 
-           
+
 
             if (P_Fact != "" && !(GetParent() is VExpressionPackage) && !(GetParent() is VExpressions))
             {
@@ -146,10 +153,11 @@ namespace sql.builder.DataApi
             }
             else
             {
-                
+
             }
             string alias = this.AttrOrEmpty(AName_.@as);
-            if (!string.IsNullOrEmpty(alias)) {
+            if (!string.IsNullOrEmpty(alias))
+            {
                 s += " as " + ColorBrown(Bold(alias));
             }
             s += ss;
@@ -168,7 +176,7 @@ namespace sql.builder.DataApi
             }
             if (P_Title_Exists())
             {
-              
+
 
                 var t = P_Title;
                 if (t != P_SelfTitle)
@@ -189,7 +197,7 @@ namespace sql.builder.DataApi
             }
 
 
-           
+
 
             if (P_Optional == TextConst.AVBool.True || P_UseOnlyWithOther == TextConst.AVBool.True /*|| P_ExcludeIfSet == TextConst.AVBool.True*/)
             {
@@ -207,27 +215,37 @@ namespace sql.builder.DataApi
         {
             VFunction f = this.Function();
             string text = f.AttrOrEmpty("text");
-            if (string.IsNullOrEmpty(text)) {
+            if (string.IsNullOrEmpty(text))
+            {
                 return this.GetCallInfoByStructure();
-            } else if (text == "*") {
+            }
+            else if (text == "*")
+            {
                 return this.GetCallInfoByText(f.MakeText());
-            } else {
+            }
+            else
+            {
                 return this.GetCallInfoByText(text);
-            } 
+            }
         }
         private string GetCallInfoByStructure()
         {
             string s = Bold(this.AttrOrEmpty(AName_.function));
             IList<VSXElement> args = this.Childs();
-            if (args.Count != 0) {
+            if (args.Count != 0)
+            {
                 string q = "(";
-                for (int index = 0; index < args.Count; index++) {
+                for (int index = 0; index < args.Count; index++)
+                {
                     VSXElement el = args[index];
                     VColumn col = el as VColumn;
                     string arg;
-                    if (col != null) {
+                    if (col != null)
+                    {
                         arg = col.GetNodeText(true);
-                    } else {
+                    }
+                    else
+                    {
                         arg = el.P_NodeText;
                     }
                     s = s + q + arg;
@@ -240,8 +258,9 @@ namespace sql.builder.DataApi
         private string GetCallInfoByText(string text)
         {
             string s = text;
-            int i=1;
-            foreach (VSXElement el in this.Childs()) {
+            int i = 1;
+            foreach (VSXElement el in this.Childs())
+            {
                 s = s.Replace("[par" + i.ToString() + "]", el.P_NodeText);
                 i++;
             }
@@ -274,7 +293,8 @@ namespace sql.builder.DataApi
         public void P_Function_ListRefresh(VDataTable table)
         {
             table.Rows.Clear();
-            foreach (XElement el in XmlReports.Environment.Manager.GetScheme().Elements(EName.functions).Elements(EName.function)) {
+            foreach (XElement el in XmlReports.Environment.Manager.GetScheme().Elements(EName.functions).Elements(EName.function))
+            {
                 string name = el.Attribute(AName_.name).Value;
                 table.Rows.Add(name, name, el.AttrOrDefault(AName_.comment, string.Empty));
             }
@@ -297,7 +317,7 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Optional
-  
+
 
         public override bool P_Optional_Exists()
         {
@@ -307,7 +327,7 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region UseOnlyWithOther
-        
+
 
         public override bool P_UseOnlyWithOther_Exists()
         {
@@ -341,7 +361,7 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Valid
-        
+
         public override bool P_Valid_Exists()
         {
 
@@ -398,7 +418,7 @@ namespace sql.builder.DataApi
         #endregion
         #region ClientCalulation
 
-        
+
 
         public override bool P_ClientCalulation_Exists()
         {
@@ -410,7 +430,7 @@ namespace sql.builder.DataApi
         #endregion
         #region ExcelCalulation
 
-       
+
         public override bool P_ExcelCalulation_Exists()
         {
 

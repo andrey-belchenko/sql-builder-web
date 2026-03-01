@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
@@ -13,8 +12,8 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 using Devart.Data.Oracle;
-using SqlBuilderLib.DevTools;
 using sql.builder.Clean;
+using SqlBuilderLib.DevTools;
 
 
 namespace infoenergo.core.Data
@@ -1543,7 +1542,7 @@ namespace infoenergo.core.Data
             {
                 return i;
             }
-             set
+            set
             {
                 i = value;
             }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 namespace sql.builder.DataApi
 {
@@ -34,8 +32,10 @@ namespace sql.builder.DataApi
         {
             table.Rows.Clear();
             var names = new HashSet<string>();
-            foreach (VQueryCall el in this.ExtendedOrRootQuery().AllSources()) {
-                if (!names.Contains(el.XName)) {
+            foreach (VQueryCall el in this.ExtendedOrRootQuery().AllSources())
+            {
+                if (!names.Contains(el.XName))
+                {
                     TableListRowFromElement(table, el);
                     names.Add(el.XName);
                 }

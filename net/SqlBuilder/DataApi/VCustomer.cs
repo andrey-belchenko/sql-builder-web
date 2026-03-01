@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
-using AName_ = sql.builder.DataApi.AName;
+﻿using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {

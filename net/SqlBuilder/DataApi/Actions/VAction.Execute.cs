@@ -1,34 +1,22 @@
 using System;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
+using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Text;
-using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Xsl;
-using System.Xml.XPath;
-using System.IO;
 ////using System.Windows.Forms;
 using sql.builder.Clean;
-using sql.builder.WinForms;
-using sql.builder.XmlHelpers;
 using sql.builder.UI;
-using sql.builder.Controls.FormFields; // ListField
+using sql.builder.XmlHelpers;
 //using DevExpress.XtraBars.Ribbon;
 //using DevExpress.XtraEditors;
-using infoenergo.sys;
-using sql.builder.Controls;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
 {
     public partial class VAction : VSXElement
     {
-        private void ExecuteCustomAction(VDataSet dataSet, UIFormC senderForm, VDataTable table, DataRow row,object[] pars)
+        private void ExecuteCustomAction(VDataSet dataSet, UIFormC senderForm, VDataTable table, DataRow row, object[] pars)
         {
             //IList<VSXElement> actions = this.GetElementsP(EName.useaction);
             //for (int index = 0; index < actions.Count; index++) {
@@ -43,7 +31,8 @@ namespace sql.builder.DataApi
         public VAction ActionOrSelf()
         {
             VAction action = this.Action();
-            if (action == null) {
+            if (action == null)
+            {
                 action = this;
             }
             return action;
@@ -51,12 +40,16 @@ namespace sql.builder.DataApi
         private string ActionType()
         {
             string action_type = this.P_ActionType;
-            if (!string.IsNullOrEmpty(action_type)) {
+            if (!string.IsNullOrEmpty(action_type))
+            {
                 return action_type;
             }
-            if (!string.IsNullOrEmpty(this.P_CalledAction)) {
+            if (!string.IsNullOrEmpty(this.P_CalledAction))
+            {
                 return this.Action().P_ActionType;
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
@@ -65,7 +58,8 @@ namespace sql.builder.DataApi
             var list = new List<object>();
             var factPars = this.Params();
             int ind = 0;
-            foreach (VParam formalParam in this.ActionOrSelf().FormalParams()) {
+            foreach (VParam formalParam in this.ActionOrSelf().FormalParams())
+            {
                 list.Add(formalParam.GetRuntimeValue(factPars, dataSet, row, col, ind));
                 ind++;
             }
@@ -74,22 +68,27 @@ namespace sql.builder.DataApi
         protected VQueryCall GetObject()
         {
             VForm r = (this.RootQuery() as VForm);
-            if (r != null) {
+            if (r != null)
+            {
                 return r.MainAndRelatedQueries().FirstOrDefault(e => e.XName == P_CalledObject);
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
         public List<VSXElement> Params()
         {
             var pars = new List<VSXElement>();
-            if (this.ActionOrSelf().IsRowAction() && this.P_CalledObject != "") {
+            if (this.ActionOrSelf().IsRowAction() && this.P_CalledObject != "")
+            {
                 //<useparam name="ur_dogplat_pp.kod_dogplat" />
                 VSXElement par = VSXElement.Get(new XElement(EName.useparam));
                 VQueryCall obj = this.GetObject();
                 string keyColName = obj.Query().KeyColumn().XName;
                 VColumn col = obj.UsedColumns().FirstOrDefault(e => e.P_Column == keyColName);
-                if (col != null) {
+                if (col != null)
+                {
                     keyColName = col.XName;
                 }
                 par.P_UsedParName = this.P_CalledObject + "." + keyColName;
@@ -113,7 +112,8 @@ namespace sql.builder.DataApi
             //var scheme = XmlReports.Environment.Manager.GetScheme(); // может ли быть Old??
             VDBSelectCommand cmd = this.Action().CalledQuery().GetSelectCommandWithTemp(dataSet, targTbl.KeyDimension);
             IList<DataRow> rows;
-            switch (this.P_ActionRows) {
+            switch (this.P_ActionRows)
+            {
                 case TextConst.AVActionRows.Selected:
                     targTbl.GetDataSet().RaiseNeedSelection();
                     rows = targTbl.SelectedRows;
@@ -127,17 +127,22 @@ namespace sql.builder.DataApi
                 default:
                     targTbl.GetDataSet().RaiseNeedSelection();
                     rows = targTbl.SelectedRows;
-                    if (List.IsNullOrEmpty(rows)) {
-                        if (targTbl.CurrentRow != null) {
+                    if (List.IsNullOrEmpty(rows))
+                    {
+                        if (targTbl.CurrentRow != null)
+                        {
                             rows = new DataRow[1] { targTbl.CurrentRow };
-                        } else {
+                        }
+                        else
+                        {
                             rows = Array.Empty<DataRow>();
                         }
                     }
                     break;
             }
             //var cmd = Action().CalledQuery().GetSelectCommand();
-            foreach (DataRow row in rows) {
+            foreach (DataRow row in rows)
+            {
                 pars[0] = row[targTbl.PrimaryKey[0]];
                 var pars1 = cmd.ObjParsToOraclePars(pars);
                 // pars1.Add(VDBSelectCommand.CreateKeyDBParameter(targTbl, row));
@@ -147,11 +152,16 @@ namespace sql.builder.DataApi
                 //  pars.AddRange(col.ValueRefreshCommand.CreateCurValDBParameters(row));
                 pars1.Add(dataSet.CreateFormIdParametr());
                 var valTbl = cmd.ExecuteDataTable(pars1.ToArray(), dataSet.GetConnection());
-                foreach (DataColumn col in valTbl.Columns) {
-                    if (targTbl.Columns.Contains(col.ColumnName)) {
-                        if (valTbl.Rows.Count > 0) {
+                foreach (DataColumn col in valTbl.Columns)
+                {
+                    if (targTbl.Columns.Contains(col.ColumnName))
+                    {
+                        if (valTbl.Rows.Count > 0)
+                        {
                             row[col.ColumnName] = valTbl.Rows[0][col];
-                        } else {
+                        }
+                        else
+                        {
                             row[col.ColumnName] = DBNull.Value;
                         }
                     }
@@ -199,30 +209,36 @@ namespace sql.builder.DataApi
         }
         private static VOracleConnection GetConnection(VDataSet ds)
         {
-            if (ds != null) {
+            if (ds != null)
+            {
                 return ds.GetConnection();
-            } else {
+            }
+            else
+            {
                 return XmlReports.Environment.Connection;
             }
         }
         // Реализация action-type="execute-update" call="<имя query>" [ update-target="<имя query-table>" ] [ is-ret="0" ]
-		private void executeUpdate(VDataSet dataSet, List<object> pars, VDataTable dataTable, DataRow row)
-		{
+        private void executeUpdate(VDataSet dataSet, List<object> pars, VDataTable dataTable, DataRow row)
+        {
             VAction act = this.ActionOrSelf();
             VQuery query = act.CalledQuery();
             Contract.Assume(query != null);
             string update_target = act.P_UpdateTarget;
-            if (string.IsNullOrEmpty(update_target)) {
+            if (string.IsNullOrEmpty(update_target))
+            {
                 update_target = query.P_UpdateTarget;
             }
             VDBSelectCommand cmd = query.GetUpdateCommand(update_target);
             cmd.ExecuteNonQuery(pars, GetConnection(dataSet));
-		    if (row != null) {
-                if (row.RowState != DataRowState.Deleted && this.P_IsRet == TextConst.AVBool.True) {
+            if (row != null)
+            {
+                if (row.RowState != DataRowState.Deleted && this.P_IsRet == TextConst.AVBool.True)
+                {
                     dataTable.AddCreatedItem(row[dataTable.PrimaryKey[0]]);
                 }
-		    }
-		}
+            }
+        }
         // Реализация action-type="execute-add" call="<имя query>" [ update-target="<имя query-table>" ] [ is-ret="0" ]
         private void executeAdd(VDataSet dataSet, List<object> pars, VDataTable dataTable)
         {
@@ -230,12 +246,14 @@ namespace sql.builder.DataApi
             VQuery query = act.CalledQuery();
             Contract.Assume(query != null);
             string update_target = act.P_UpdateTarget;
-            if (string.IsNullOrEmpty(update_target)) {
+            if (string.IsNullOrEmpty(update_target))
+            {
                 update_target = query.P_UpdateTarget;
             }
             VDBSelectCommand cmd = query.GetInsertCommand(update_target);
             cmd.ExecuteNonQuery(pars, GetConnection(dataSet));
-            if (dataTable != null && this.P_IsRet == TextConst.AVBool.True) {
+            if (dataTable != null && this.P_IsRet == TextConst.AVBool.True)
+            {
                 dataTable.AddCreatedItem(cmd.GetRetValue());
             }
         }
@@ -246,7 +264,8 @@ namespace sql.builder.DataApi
             VQuery query = act.CalledQuery();
             Contract.Assume(query != null);
             string update_target = act.P_UpdateTarget;
-            if (string.IsNullOrEmpty(update_target)) {
+            if (string.IsNullOrEmpty(update_target))
+            {
                 update_target = query.P_UpdateTarget;
             }
             VDBSelectCommand cmd = query.GetDeleteCommand(update_target);
@@ -257,8 +276,9 @@ namespace sql.builder.DataApi
             VAction act = this.ActionOrSelf();
             VDBSelectCommand cmd = (act.CalledReport() as VReport).GetRepInsertCommand();
             cmd.ExecuteNonQuery(pars, dataSet.GetConnection());
-            if (dataTable != null) {
-               // dataTable.AddCreatedItem(cmd.GetRetValue());
+            if (dataTable != null)
+            {
+                // dataTable.AddCreatedItem(cmd.GetRetValue());
                 dataTable.Refresh();
             }
         }
@@ -267,7 +287,8 @@ namespace sql.builder.DataApi
             VAction act = this.ActionOrSelf();
             VDBSelectCommand cmd = (act.CalledReport() as VReport).GetRepInsertCommand();
             cmd.ExecuteNonQuery(pars, dataSet.GetConnection());
-            if (dataTable != null && this.P_IsRet == TextConst.AVBool.True) {
+            if (dataTable != null && this.P_IsRet == TextConst.AVBool.True)
+            {
                 dataTable.AddCreatedItem(cmd.GetRetValue());
             }
         }
@@ -278,9 +299,12 @@ namespace sql.builder.DataApi
             string assembly_name, type_name;
             string method_name = this.AttrOrDefault(AName_.function, null);
             VAction act;
-            if (!string.IsNullOrEmpty(method_name)) {
+            if (!string.IsNullOrEmpty(method_name))
+            {
                 act = this;
-            } else {
+            }
+            else
+            {
                 act = this.Action();
                 method_name = act.AttrOrEmpty(AName_.function);
                 Contract.Assert(!string.IsNullOrEmpty(method_name));
@@ -324,13 +348,14 @@ namespace sql.builder.DataApi
             //var class_name = method.Substring(0, ind);
             //var method_name = method.Substring(ind + 1, method.Length - (ind + 1));
             //var list= (object[])ReflectionHelper.ExecuteStaticMethod(class_name, method_name, pars.ToArray());
-            var list = (object[])executeClientMethod(pars,table.GetDataSet());
+            var list = (object[])executeClientMethod(pars, table.GetDataSet());
             table.Rows.Clear();
-            foreach (Tuple<object, string> row in list) {
+            foreach (Tuple<object, string> row in list)
+            {
                 table.Rows.Add(row.Item1, row.Item2);
             }
         }
     }
 
- 
+
 }

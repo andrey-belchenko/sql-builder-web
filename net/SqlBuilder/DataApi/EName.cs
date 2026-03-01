@@ -173,9 +173,11 @@ namespace sql.builder.DataApi
         public static void InitXNameStaticFields(XNamespace ns, Type type)
         {
             System.Reflection.FieldInfo[] fields = type.GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public);
-            for (int index = 0; index < fields.Length; index++) {
+            for (int index = 0; index < fields.Length; index++)
+            {
                 System.Reflection.FieldInfo field_info = fields[index];
-                if (field_info.GetValue(null) == null) {
+                if (field_info.GetValue(null) == null)
+                {
                     field_info.SetValue(null, ns.GetName(field_info.Name.Replace('_', '-')));
                 }
             }

@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace sql.builder.UI
 {
     public class VLayoutNodeInfo
     {
-       
+
         public int id = -1;
         public object GetId()
         {
             return id;
         }
-       
+
         public virtual void InitControl()
         {
 
@@ -42,7 +40,7 @@ namespace sql.builder.UI
         {
             if (props.ContainsKey(name))
             {
-               return  props[name];
+                return props[name];
             }
             return null;
         }
@@ -75,12 +73,12 @@ namespace sql.builder.UI
         }
         public virtual void SetText(string value)
         {
-            
-        }
-		public virtual void SetHint(string value)
-		{
 
-		}
+        }
+        public virtual void SetHint(string value)
+        {
+
+        }
 
         public List<VLayoutGroupInfo> GetAllParentGroups()
         {
@@ -95,15 +93,15 @@ namespace sql.builder.UI
         }
         public void SetParent(VLayoutContainerInfo value)
         {
-             parent=value;
+            parent = value;
         }
         public int width = 0;
-        public bool? isFirstInRow=null;
+        public bool? isFirstInRow = null;
         public int left = 0;
         public int height = 0;
         public int top = 0;
 
-       
+
         public int oldWidth = 0;
         public int oldLeft = 0;
         public int oldHeight = 0;
@@ -135,12 +133,12 @@ namespace sql.builder.UI
             //    }
             //}
         }
-        public virtual  bool IsSelfVisible()
+        public virtual bool IsSelfVisible()
         {
             return visible;
         }
 
-        
+
         public virtual bool IsVisible()
         {
             var node = this;
@@ -221,7 +219,7 @@ namespace sql.builder.UI
             return node;
         }
 
-        
+
 
         public VLayoutNodeInfo GetPreviousVisible()
         {
@@ -235,11 +233,11 @@ namespace sql.builder.UI
         public bool IsFiller = false;
         public virtual void AfterHide()
         {
-            
+
         }
         public virtual void Show()
         {
-           
+
         }
         public virtual int GetMarginLeft()
         {
@@ -258,20 +256,20 @@ namespace sql.builder.UI
         {
             return 0;
         }
-        
-        
+
+
         public virtual decimal GetWidthAndMarginForClient(decimal clientFreeWidth, bool isSingleInRow)
         {
             decimal val = GetWidthFixed();
             if (val == -1)
             {
                 val = GetProportion(clientFreeWidth, GetWidthPercent());// GetWidthExtraObtained();
-                val-= (GetMarginLeft()+GetMarginRight());
+                val -= (GetMarginLeft() + GetMarginRight());
                 if (!isSingleInRow)
                 {
                     val = GetWidthMinOrVal(val);
                 }
-              
+
             }
             val += (GetMarginLeft() + GetMarginRight());
             return val;
@@ -294,7 +292,7 @@ namespace sql.builder.UI
         }
 
 
-        
+
 
         public decimal sizePercent = 100;
         public decimal sizeTemp = 100;
@@ -311,7 +309,7 @@ namespace sql.builder.UI
         public virtual int GetWidthPercentWithParents()
         {
             var percent = 100m;
-            var node=this;
+            var node = this;
             while (node != null)
             {
                 var perc = (decimal)node.GetWidthPercent();
@@ -319,7 +317,7 @@ namespace sql.builder.UI
                 node = node.GetParent();
             }
 
-            return Convert.ToInt32( Math.Round(percent, 0));
+            return Convert.ToInt32(Math.Round(percent, 0));
 
         }
         public virtual decimal GetWidthPercent()
@@ -329,7 +327,7 @@ namespace sql.builder.UI
             if (fix == -1)
             {
                 val = sizePercent;
-                
+
             }
             else
             {
@@ -360,7 +358,7 @@ namespace sql.builder.UI
             {
                 return 0;
             }
-           
+
         }
 
         public virtual decimal GetWidthMinOrVal(decimal value)
@@ -373,8 +371,8 @@ namespace sql.builder.UI
             {
                 return GetWidthMin();
             }
-            
-           
+
+
         }
 
 
@@ -382,7 +380,7 @@ namespace sql.builder.UI
         {
             return 0;
         }
-        
+
         public virtual decimal GetWidthFixed()
         {
             return sizeFixed;
@@ -400,10 +398,10 @@ namespace sql.builder.UI
         }
 
 
-        public static decimal GetProportion(decimal value , decimal percent)
+        public static decimal GetProportion(decimal value, decimal percent)
         {
             var prop = ((decimal)value * ((decimal)percent / 100));
-           return prop;
+            return prop;
         }
         public static decimal GetPercent(int value, int fullValue)
         {
@@ -426,7 +424,7 @@ namespace sql.builder.UI
         public virtual int GetTop()
         {
             return top;
-          
+
         }
 
         public virtual decimal GetWidthFixedOrZero()
@@ -443,5 +441,5 @@ namespace sql.builder.UI
             return val;
         }
     }
-    
+
 }

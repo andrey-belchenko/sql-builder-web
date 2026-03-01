@@ -2,15 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Linq;
 // Cross-platform: System.Windows.Input (WPF) is Windows-only, commented out
 //using System.Windows.Input;
 using System.Xml.Linq;
+using infoenergo.sys;
 using sql.builder.DataApi;
 using sql.builder.UI.CommandItems;
-using infoenergo.sys;
-using sql.builder.Exceptions;
 //using sql.builder.Test;
 using sql.builder.XmlHelpers;
 namespace sql.builder.UI
@@ -78,14 +76,14 @@ namespace sql.builder.UI
         {
             var form = UIStatic.GetForm(formName, isDialog, true);
             form.DataSource.ClearData();
-         
+
             form.ApplyVisibitlity();
             return form;
         }
 
         public static void LoadProject(string name)
         {
-            XmlReports.Environment.LoadProject( name);
+            XmlReports.Environment.LoadProject(name);
         }
 
         public static UIFormC GetForm(string formName, bool isDialog, bool useOneFormMode,
@@ -115,8 +113,8 @@ namespace sql.builder.UI
                     //}
                     //else
                     //{
-                        form.IsNew = false;
-                        return form;
+                    form.IsNew = false;
+                    return form;
                     //}
                 }
             }
@@ -177,9 +175,9 @@ namespace sql.builder.UI
             return form;
         }
 
-       
 
-        public static bool UpdateForm(UIFormC form, object[] pars, bool isCreation=false, bool checkModified = false)
+
+        public static bool UpdateForm(UIFormC form, object[] pars, bool isCreation = false, bool checkModified = false)
         {
             try
             {
@@ -188,7 +186,7 @@ namespace sql.builder.UI
                 {
                     form.Layout.ResetTabs();
                 }
-                
+
                 var mode = (UIStatic._show_wait_forms) ? WaitUIMode.WaitPanel : WaitUIMode.WaitCursor;
                 WaitUIHelper.LastUsedUIHelper.Show("Загрузка данных", mode);
                 //VForm vform = XmlReports.Environment.GetFormOrQueryAsForm(form.FormName);

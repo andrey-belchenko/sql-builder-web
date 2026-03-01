@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using AName_ = sql.builder.DataApi.AName;
 
 namespace sql.builder.DataApi
@@ -29,18 +28,22 @@ namespace sql.builder.DataApi
         {
             string[] ss = name.Split('.');
             VSXElement expr;
-            if (ss[0] == TextConst.Pfx.QubeQueryAlias) {
+            if (ss[0] == TextConst.Pfx.QubeQueryAlias)
+            {
                 expr = VSXElement.Get(new XElement(EName.fact));
                 //expr.environment = sourceQuery.GetEnvironment();
                 expr.P_Column = ss[1];
-            } else {
+            }
+            else
+            {
                 expr = sourceQuery.SearchColumn(name);
             }
             return expr;
         }
         private List<VAction> GetAllActions()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VAction>);
             }
             List<VAction> list = VSXElement.GetDescedantsP(this).OfType<VAction>().ToList();
@@ -49,7 +52,8 @@ namespace sql.builder.DataApi
         }
         public List<VAction> GetRefreshColumnActions()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VAction>);
             }
             List<VAction> list = new List<VAction>();
@@ -60,36 +64,41 @@ namespace sql.builder.DataApi
         private List<VColumn> getColumns(VQueryCall queryCall)
         {
             string cashName = queryCall.XName;
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), cashName)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), cashName))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), cashName) as List<VColumn>);
             }
             IList<VColumn> list2 = this.GetQueryUsedColumns(queryCall);
             //List<VSXElement> calls = new List<VSXElement>();
-            for (int index = list2.Count - 1; index >= 0; index--) {
-                if (list2[index].GetAncestorsAndSelf(EName.call).Count != 0) {
+            for (int index = list2.Count - 1; index >= 0; index--)
+            {
+                if (list2[index].GetAncestorsAndSelf(EName.call).Count != 0)
+                {
                     list2.RemoveAt(index);
                 }
             }
 
             //calls = calls.Distinct().ToList();
-           
+
 
             List<VColumn> list = new List<VColumn>();
             List<string> names = new List<string>();
-           // var usedBase = list2.Select(e => e.BaseElementOrSelf()).ToList();
+            // var usedBase = list2.Select(e => e.BaseElementOrSelf()).ToList();
             string[] usedIds = list2.SelectAsArray(e => e.P_Table + "." + e.P_Column);
             IList<VSXElement> orderedCols = this.GetElementsP(EName.content).First().GetDescedantsP(EPredicate.IsColumnOrFact).ToList();
-            foreach (VColumn col in orderedCols ) {
-                if (usedIds.Contains(col.P_Table + "." + col.P_Column) && !names.Contains(col.XName)) {
+            foreach (VColumn col in orderedCols)
+            {
+                if (usedIds.Contains(col.P_Table + "." + col.P_Column) && !names.Contains(col.XName))
+                {
                     list.Add(col);
                     names.Add(col.XName);
                 }
             }
 
             var sourceQuery = queryCall.Query();
-            VSXElement parent =null;
+            VSXElement parent = null;
             List<string> addNames = new List<string>();
-        
+
             foreach (VColumn col in list.ToList())
             {
                 VSXElement vidCol = null;
@@ -98,7 +107,7 @@ namespace sql.builder.DataApi
                 var xp = "";
                 if (col.P_TextSourceResult == "")
                 {
-                   
+
                     rel = col.TypeRelation(ref xp);
 
 
@@ -112,7 +121,7 @@ namespace sql.builder.DataApi
 
                         vidCol = rel.ParentQuery().NameColumn();
 
-                        
+
 
                     }
                 }
@@ -144,7 +153,7 @@ namespace sql.builder.DataApi
                     {
                         relName = "." + rel.PName();
                     }
-                    var col1 = addVirtualColToListIfNeed( col.Source().XName +xp + relName, vidCol, list);
+                    var col1 = addVirtualColToListIfNeed(col.Source().XName + xp + relName, vidCol, list);
                     if (setAlias)
                     {
                         col1.P_Alias = col.XName + TextConst.Pfx.ExtValName;
@@ -156,8 +165,8 @@ namespace sql.builder.DataApi
                     col1.IsAddisionForName = true;
                     col1.VirtualParent = parent;
                     col1.TextSourceFor = col.XName;
-					col1.SetAttributeValue(TextConst.AName.InvisibleInColumnChooser, TextConst.AVBool.False);
-					col.SetAttributeValue(TextConst.AName.InvisibleInColumnChooser, TextConst.AVBool.True);
+                    col1.SetAttributeValue(TextConst.AName.InvisibleInColumnChooser, TextConst.AVBool.False);
+                    col.SetAttributeValue(TextConst.AName.InvisibleInColumnChooser, TextConst.AVBool.True);
                     col.IsRelation = true;
 
                     VSXElement srcCol = col.SourceColumn().First();
@@ -221,10 +230,10 @@ namespace sql.builder.DataApi
 
 
                 }
-             
+
             }
 
-            foreach (VColumn col in  sourceQuery.VirtualSysColumns())
+            foreach (VColumn col in sourceQuery.VirtualSysColumns())
             {
                 addNames.Add(col.XName);
             }
@@ -233,7 +242,7 @@ namespace sql.builder.DataApi
             {
                 addNames.Add(sourceQuery.P_DeleteValidation);
             }
-            var qcolName=queryCall.P_Column;
+            var qcolName = queryCall.P_Column;
             if (qcolName != "")// колонка значение в arrayeditvalue
             {
                 if (!names.Contains(qcolName))
@@ -244,61 +253,65 @@ namespace sql.builder.DataApi
 
             foreach (string name in addNames)
             {
-                VSXElement expr = getVirtcolumnExpr(sourceQuery,name);
+                VSXElement expr = getVirtcolumnExpr(sourceQuery, name);
                 var col1 = addVirtualColToListIfNeed(queryCall.XName, expr, list);
                 col1.P_Alias = expr.XName;
-            //    col1.IsAddisionForName = true;
+                //    col1.IsAddisionForName = true;
                 if (parent == null)
                 {
                     parent = list[0].GetParent();
                 }
                 col1.VirtualParent = parent;
             }
-            
 
 
-            
+
+
 
             //if (list.Count() > 0)
             //{
             var keyCol = sourceQuery.KeyColumn();
-                
-                // Добавление ключевой колонки
 
-                if (keyCol != null)
-                {
+            // Добавление ключевой колонки
 
-                    addVirtualColToListIfNeed(queryCall.XName, keyCol, list).IsKey = true;
-                }
+            if (keyCol != null)
+            {
 
-                if (queryCall is VELink)
-                {
-                    keyCol = queryCall.GetRelation().ChildColumnSource();
-                    // Добавление  связующей колонки
-                    addVirtualColToListIfNeed(queryCall.XName, keyCol, list);
-                }
+                addVirtualColToListIfNeed(queryCall.XName, keyCol, list).IsKey = true;
+            }
 
-                //foreach (VQueryCall link in getOtherUpdatebleTables(queryCall))
-                //{
-                //    keyCol =link.Query().KeyColumn();
-                //    addVirtualColToListIfNeed(link.XName, keyCol, list);
-                //}
+            if (queryCall is VELink)
+            {
+                keyCol = queryCall.GetRelation().ChildColumnSource();
+                // Добавление  связующей колонки
+                addVirtualColToListIfNeed(queryCall.XName, keyCol, list);
+            }
+
+            //foreach (VQueryCall link in getOtherUpdatebleTables(queryCall))
+            //{
+            //    keyCol =link.Query().KeyColumn();
+            //    addVirtualColToListIfNeed(link.XName, keyCol, list);
+            //}
 
             //}
 
-                AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), cashName);
+            AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), cashName);
             return list;
         }
 
         private VColumn addVirtualColToListIfNeed(string table, VSXElement col, List<VColumn> list)
         {
             VColumn col1 = list.FirstOrDefault(e => e.P_Table == table && e.P_Column == col.XName);
-            if (col1 == null) {
+            if (col1 == null)
+            {
                 var otherCol = list.FirstOrDefault();
                 VSXElement parentEl;
-                if (otherCol != null) {
+                if (otherCol != null)
+                {
                     parentEl = otherCol.GetParent();
-                } else {
+                }
+                else
+                {
                     parentEl = this.GetContentSections().First();
                 }
                 col1 = createVirtualColumn(parentEl, table, col, null);
@@ -309,15 +322,19 @@ namespace sql.builder.DataApi
         private static VColumn createVirtualColumn(VSXElement parent, string table, VSXElement col, string alias)
         {
             XElement extKeyCol = null;
-            if (col is VColumn) {
+            if (col is VColumn)
+            {
                 extKeyCol = new XElement(col.Name);
-            } else {
+            }
+            else
+            {
                 extKeyCol = new XElement(EName.column);
             }
             extKeyCol.Add(new XAttribute(AName_.table, table));
             extKeyCol.Add(new XAttribute(AName_.column, col.XName));
             extKeyCol.Add(new XAttribute(AName_.invisible_in_column_chooser, TextConst.AVBool.True));
-            if (alias != null) {
+            if (alias != null)
+            {
                 extKeyCol.SetAttributeValue(AName_.@as, alias);
             }
             VColumn col1 = VSXElement.Get<VColumn>(extKeyCol);
@@ -328,8 +345,9 @@ namespace sql.builder.DataApi
         private List<VQueryCall> MainQueries()
         {
             List<VQueryCall> list = GetNamedSections(TextConst.EName.From).SelectMany(VSXElement.GetElementsP).Cast<VQueryCall>().ToList();
-            VSXElement pars = GetNamedSections(TextConst.EName.Params).FirstOrDefault();     
-            if (pars != null) {
+            VSXElement pars = GetNamedSections(TextConst.EName.Params).FirstOrDefault();
+            if (pars != null)
+            {
                 var list1 = pars.GetElementsP().Where(e => (e as VParam).IsObject()).Cast<VQueryCall>().ToList();
                 list.AddRange(list1);
             }
@@ -342,9 +360,12 @@ namespace sql.builder.DataApi
         public VSXElement ContentElement()
         {
             IList<VSXElement> list = this.GetElementsP(EName.content);
-            if (list.Count != 0) {
+            if (list.Count != 0)
+            {
                 return list[list.Count - 1];
-            } else {
+            }
+            else
+            {
                 return this;
             }
         }
@@ -371,7 +392,8 @@ namespace sql.builder.DataApi
         public override List<VSXElement> Columns()
         {
             List<VSXElement> list = new List<VSXElement>();
-            foreach (VSXElement el in this.GetContentSections()) { //.SelectMany(e => e.GetDescedantsP(EPredicate.IsColumnOrFact))) {
+            foreach (VSXElement el in this.GetContentSections())
+            { //.SelectMany(e => e.GetDescedantsP(EPredicate.IsColumnOrFact))) {
                 list.AddRange(el.GetDescedantsP(EPredicate.IsColumnOrFact));
             }
             return list;
@@ -379,7 +401,8 @@ namespace sql.builder.DataApi
         private List<VSXElement> ColumnsAndExpressions()
         {
             List<VSXElement> list = new List<VSXElement>();
-            foreach (VSXElement el in this.GetContentSections()) { //  .SelectMany(e => e.GetDescedantsP(e1 => (e1.Name == EName.column) || (e1.Name == EName.fact) || (e1.Name == EName.call)))) {
+            foreach (VSXElement el in this.GetContentSections())
+            { //  .SelectMany(e => e.GetDescedantsP(e1 => (e1.Name == EName.column) || (e1.Name == EName.fact) || (e1.Name == EName.call)))) {
                 list.AddRange(el.GetDescedantsP(EPredicate.IsColumnOrFact));
                 list.AddRange(el.GetDescedantsP(EName.call));
             }
@@ -396,27 +419,31 @@ namespace sql.builder.DataApi
         public VSXElement SearchVariableSource(string name)
         {
             VSXElement col = this.VariableColumns().FirstOrDefault(e => e.P_ParName == name);
-            if (col == null) {
+            if (col == null)
+            {
                 col = this.Params().FirstOrDefault(e => e.P_FormalParName == name);
             }
             return col;
         }
-        private static string[] child_nodes = { TextConst.EName.Params, TextConst.EName.From, TextConst.EName.Content, TextConst.EName.Where, 
+        private static string[] child_nodes = { TextConst.EName.Params, TextConst.EName.From, TextConst.EName.Content, TextConst.EName.Where,
                                                 TextConst.EName.Field, TextConst.EName.UseField, TextConst.EName.FieldGroup, TextConst.EName.ScrollArea,
-                                                TextConst.EName.Actions, TextConst.EName.Events, TextConst.EName.Toolbar, TextConst.EName.Customers, 
+                                                TextConst.EName.Actions, TextConst.EName.Events, TextConst.EName.Toolbar, TextConst.EName.Customers,
                                                 TextConst.EName.Expressions, TextConst.EName.UsePart };
         IList<string> IVParent.AllowedChildNodes()
         {
-            
+
 
             return child_nodes;
         }
         #region IdName
-        public override string P_IdName {
-            get {
+        public override string P_IdName
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.name);
             }
-            set {
+            set
+            {
                 this.SetIdName(AName_.name, value);
             }
         }
@@ -450,8 +477,10 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Title
-        public override string P_Title {
-            get {
+        public override string P_Title
+        {
+            get
+            {
                 return P_SelfTitle;
             }
         }

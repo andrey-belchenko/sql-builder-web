@@ -1,9 +1,9 @@
 ﻿using System;
-using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using sql.builder.DataApi;
+using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.Print.Xlsx.RowsProcessors
 {

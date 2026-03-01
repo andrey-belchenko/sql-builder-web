@@ -1,7 +1,7 @@
+using System.Data;
+using Asuse.Ai.Reports.Services;
 using FastReport.Web;
 using Microsoft.AspNetCore.Mvc;
-using Asuse.Ai.Reports.Services;
-using System.Data;
 namespace Asuse.Ai.Reports.Controllers
 {
     public class ReportController : Controller
@@ -16,12 +16,12 @@ namespace Asuse.Ai.Reports.Controllers
             _reportingService = reportingService;
         }
 
-       
-        public async Task<IActionResult> DisplayReport(string dataSetName, string templateId, bool? singleTable )
+
+        public async Task<IActionResult> DisplayReport(string dataSetName, string templateId, bool? singleTable)
         {
 
             var webReport = await _reportingService.PrepareReport(dataSetName, templateId, singleTable ?? false);
-            ViewBag.WebReport = webReport;   
+            ViewBag.WebReport = webReport;
             return View("report");
         }
 

@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
-using Contract = System.Diagnostics.Contracts.Contract;
-using sql.builder.DataApi;
 //using sql.builder.ExcelApi;
-using sql.builder.Print.Xlsx;
 
 namespace sql.builder.Print.Xlsx
 {
@@ -32,9 +23,11 @@ namespace sql.builder.Print.Xlsx
             this.sheet = sheet;
             this.row = row;
             this._vals = new Dictionary<ExcelCell, IExcelPrintValue>();
-            for (int index = 0; index < row.Cells.Count; index++) {
+            for (int index = 0; index < row.Cells.Count; index++)
+            {
                 ExcelCell cell = row.Cells[index];
-                if (cell.Text.Contains("[:")) {
+                if (cell.Text.Contains("[:"))
+                {
                     IExcelPrintValue val = ExcelPrintValue.Create(cell, this);
                     this._vals.Add(cell, val);
                 }
@@ -43,13 +36,17 @@ namespace sql.builder.Print.Xlsx
         public IExcelPrintGroup Parent { get { return this.parent; } }
         public SortedList<string, string> GetVarColsIndex()
         {
-            if (this._varCellsNames == null) {
+            if (this._varCellsNames == null)
+            {
                 this._varCellsNames = new SortedList<string, string>();
-                foreach (IExcelPrintValue val in this._vals.Values) {
+                foreach (IExcelPrintValue val in this._vals.Values)
+                {
                     SingleExcelPrintValue single_val = val as SingleExcelPrintValue;
-                    if (single_val != null) {
+                    if (single_val != null)
+                    {
                         string column_name = single_val.ColumnName;
-                        if (!this._varCellsNames.ContainsKey(column_name)) {
+                        if (!this._varCellsNames.ContainsKey(column_name))
+                        {
                             this._varCellsNames.Add(column_name, single_val.ExcelColumnName);
                         }
                     }
@@ -62,11 +59,13 @@ namespace sql.builder.Print.Xlsx
             this.sheet.NextRow();
             var values = new Dictionary<ExcelCell, object>(this._vals.Count);
             var hyTragets = new Dictionary<ExcelCell, string>();
-            foreach (KeyValuePair<ExcelCell, IExcelPrintValue> val in this._vals) {
+            foreach (KeyValuePair<ExcelCell, IExcelPrintValue> val in this._vals)
+            {
                 string hyperlinkTarget;
                 object val1 = val.Value.GetValue(pi, out hyperlinkTarget);
                 values.Add(val.Key, val1);
-                if (!string.IsNullOrEmpty(hyperlinkTarget)) {
+                if (!string.IsNullOrEmpty(hyperlinkTarget))
+                {
                     hyTragets.Add(val.Key, hyperlinkTarget);
                 }
             }

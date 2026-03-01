@@ -37,14 +37,17 @@ namespace sql.builder.UI
         // реализация IBase.ApplyValue()
         public void ApplyValue()
         {
-            if (this.SourceType == ReturnType.Array) {
+            if (this.SourceType == ReturnType.Array)
+            {
                 DataTable dt = this.DataTableList;
                 DataColumn col_check = dt.Columns["check"];
                 DataColumn col_value = dt.Columns[this.value_field_name];
                 List<object> list = new List<object>();
-                for (int index = 0; index < dt.Rows.Count; index++) {
+                for (int index = 0; index < dt.Rows.Count; index++)
+                {
                     DataRow row = dt.Rows[index];
-                    if (Cmn.INT32_ONE.Equals(row[col_check])) {
+                    if (Cmn.INT32_ONE.Equals(row[col_check]))
+                    {
                         list.Add(row[col_value]);
                     }
                 }
@@ -56,8 +59,10 @@ namespace sql.builder.UI
         {
             return this.SourceType == ReturnType.Array;
         }
-        public bool ShowFooterPanel {
-            set {
+        public bool ShowFooterPanel
+        {
+            set
+            {
                 //if (value) {
                 //    listEdit.ShowFooterPanel();
                 //} else {
@@ -107,15 +112,23 @@ namespace sql.builder.UI
         {
             return this.search_field_name;
         }
-        public string ParentFieldName {
-            get {
-                if (this.parent_field_name != null) {
+        public string ParentFieldName
+        {
+            get
+            {
+                if (this.parent_field_name != null)
+                {
                     return this.parent_field_name;
-                } else {
+                }
+                else
+                {
                     VDataTable dt = this.DataTableList;
-                    if (dt != null) {
+                    if (dt != null)
+                    {
                         return dt.TreeParentFieldName;
-                    } else {
+                    }
+                    else
+                    {
                         return null;
                     }
                 }
@@ -128,7 +141,7 @@ namespace sql.builder.UI
             InitControlList();
         }
 
-        
+
 
         private void AddColumn(string columnName, string columnTitle, XElement xviewcolumn)
         {
@@ -136,11 +149,14 @@ namespace sql.builder.UI
         protected override void InitControlList()
         {
             VDataTable dt = this.DataTableList;
-            if (dt == null || dt.Columns.Count == 0) {
+            if (dt == null || dt.Columns.Count == 0)
+            {
                 return;
             }
-            if (this.Form.FormUseType != UIFormC.UseType.SchemeEditor) {
-                if (this._controlListinInted) {
+            if (this.Form.FormUseType != UIFormC.UseType.SchemeEditor)
+            {
+                if (this._controlListinInted)
+                {
                     return;
                 }
                 this._controlListinInted = true;
@@ -148,44 +164,56 @@ namespace sql.builder.UI
             //this.listEdit.GetList().BeginViewUpdate(null);
             //this.listEdit.GetList().SetKeyFieldName(this.key_field_name);
             //this.listEdit.GetList().SetParentFieldName(this.ParentFieldName);
-            if (!string.IsNullOrEmpty(this.ParentFieldName)) {
+            if (!string.IsNullOrEmpty(this.ParentFieldName))
+            {
                 //this.listEdit.GetList().SetShowRoot(true);
             }
             SortedList<string, XElement> viewcolumns = new SortedList<string, XElement>();
-            if (this.DataTableList.Scheme != null) {
-                foreach (XElement xcol in dt.Scheme.Descendants(EName.viewcolumns).Descendants(EName.column)) {
+            if (this.DataTableList.Scheme != null)
+            {
+                foreach (XElement xcol in dt.Scheme.Descendants(EName.viewcolumns).Descendants(EName.column))
+                {
                     viewcolumns.Add(xcol.Attribute(AName.name).Value, xcol);
                 }
             }
             int visibleColumnsCount = 0;
             DataColumn alternativeNameColumn = null;
-            foreach (DataColumn column in dt.Columns) {
+            foreach (DataColumn column in dt.Columns)
+            {
                 string column_name = column.ColumnName;
                 XElement xcol;
                 viewcolumns.TryGetValue(column_name, out xcol);
                 this.AddColumn(column_name, column.Caption, xcol);
-                if (column_name != "check") {
+                if (column_name != "check")
+                {
                     object saved_width;
                     int width;
-                    if (this.UserSettings.TryGetValue("colw_" + column_name, out saved_width)) {
+                    if (this.UserSettings.TryGetValue("colw_" + column_name, out saved_width))
+                    {
                         width = (int)saved_width;
-                    } else {
+                    }
+                    else
+                    {
                         width = 120;
                     }
                     //object lcol = this.listEdit.GetList().GetColumnByFieldName(column_name);
                     //this.listEdit.GetList().SetColumnWidth(lcol, width);
                     bool vis = UIBase.IsColumnShouldBeVisible(column);
-                    if (vis) {
+                    if (vis)
+                    {
                         visibleColumnsCount++;
                     }
                     //this.listEdit.GetList().SetColumnVisible(lcol, vis);
-                    if (column_name != this.key_field_name && column_name != "check" && column_name != "absent" && alternativeNameColumn == null) {
+                    if (column_name != this.key_field_name && column_name != "check" && column_name != "absent" && alternativeNameColumn == null)
+                    {
                         alternativeNameColumn = column;
                     }
                 }
             }
-            if (visibleColumnsCount == 0) {
-                if (alternativeNameColumn == null) {
+            if (visibleColumnsCount == 0)
+            {
+                if (alternativeNameColumn == null)
+                {
                     alternativeNameColumn = dt.Columns[this.key_field_name];
                     this.AddColumn(this.key_field_name, this.key_field_name, null);
                 }
@@ -196,7 +224,8 @@ namespace sql.builder.UI
             //this.listEdit.EndInitList();
             //this.listEdit.GetList().EndViewUpdate(null);
             this.UpdateFooterPanel();
-            if ((this.SourceType == ReturnType.Array)) {
+            if ((this.SourceType == ReturnType.Array))
+            {
                 //this.listEdit.SetMultiselect();
             }
             this.SetData(dt);
@@ -207,7 +236,8 @@ namespace sql.builder.UI
             //IucGrid grid = this.listEdit.GetList();
             //grid.ClearViewContent(null);
             //grid.SetDataSource(null);
-            if (this.SourceType == ReturnType.Array) {
+            if (this.SourceType == ReturnType.Array)
+            {
                 this.ClearSourceValues();
             }
         }
@@ -224,47 +254,63 @@ namespace sql.builder.UI
             string key_field = (getNames) ? name_field_name : key_field_name;
             string name_field = (getNames) && (key_field_name == null || name_field_name != key_field_name) ? "text" : "value";
             // Режим выбора единственной записи
-            if (SourceType == ReturnType.Simple) {
+            if (SourceType == ReturnType.Simple)
+            {
                 object cur_value = DBNull.Value;
                 cur_value = GetSimpleSourceValue();
-                if (cur_value == DBNull.Value) {
+                if (cur_value == DBNull.Value)
+                {
                     return Array.Empty<string>();
                 }
-                if (getNames) {
+                if (getNames)
+                {
                     var nd = "[недопустимое значение]";
                     var name = GetBoundColumn().GetFieldValueName(UseType);
                     //if (name == null && data_set_default!=null && WebReportsAdapter.IsWebItem(data_set_default.DataSetName))
                     //{
                     //    name = WebReportsAdapter.GetDisplayValue(cur_value, data_set_default);
                     //}
-                    if (name == null) {
-                        if (Cmn.Nvl(foundSimpleValue.Item1, string.Empty).ToString() == Cmn.Nvl(cur_value, string.Empty).ToString()) {
+                    if (name == null)
+                    {
+                        if (Cmn.Nvl(foundSimpleValue.Item1, string.Empty).ToString() == Cmn.Nvl(cur_value, string.Empty).ToString())
+                        {
                             name = foundSimpleValue.Item2;
-                        } else {
+                        }
+                        else
+                        {
                             PrepareListSource();
-                            if (_need_refresh && this.rows_limit == 0) {
+                            if (_need_refresh && this.rows_limit == 0)
+                            {
                                 ReloadListData();
                                 UpdateFooterPanel();
                             }
-                            if (DataTableList.HasPrimaryKey()) {
+                            if (DataTableList.HasPrimaryKey())
+                            {
                                 var row = DataTableList.Rows.Find(cur_value);
-                                if (row == null) {
+                                if (row == null)
+                                {
                                     ReloadListData(true);
                                     UpdateFooterPanel();
                                     _need_refresh = true;
                                     row = DataTableList.Rows.Find(cur_value);
                                 }
-                                if (row != null) {
+                                if (row != null)
+                                {
                                     name = row[name_field_name].ToString();
-                                } else {
+                                }
+                                else
+                                {
                                     name = nd;
                                 }
                             }
                         }
                     }
-                    if (name == nd) {
+                    if (name == nd)
+                    {
                         foundSimpleValue = new Tuple<object, string>(null, string.Empty);
-                    } else {
+                    }
+                    else
+                    {
                         foundSimpleValue = new Tuple<object, string>(cur_value, name);
                     }
                     selected_values = new string[1] { name ?? string.Empty };
@@ -291,13 +337,17 @@ namespace sql.builder.UI
                         //    .Select(node => Cmn.Nvl(node[key_field], "").ToString());
 
                         var selected_values1 = new List<string>();
-                        foreach (DataRow node in this.DataTableList.Rows) {
-                            if (Cmn.INT32_ONE.Equals(node["check"])) {
+                        foreach (DataRow node in this.DataTableList.Rows)
+                        {
+                            if (Cmn.INT32_ONE.Equals(node["check"]))
+                            {
                                 DataRow parent = null;
-                                if (!Cmn.IsNullOrDBNull(node[this.ParentFieldName])) {
+                                if (!Cmn.IsNullOrDBNull(node[this.ParentFieldName]))
+                                {
                                     parent = DataTableList.Rows.Find(node[ParentFieldName]);
                                 }
-                                if (parent == null || !Cmn.INT32_ONE.Equals(parent["check"])) {
+                                if (parent == null || !Cmn.INT32_ONE.Equals(parent["check"]))
+                                {
                                     selected_values1.Add(Cmn.Nvl(node[key_field], string.Empty).ToString());
                                 }
                             }
@@ -318,7 +368,9 @@ namespace sql.builder.UI
                             .Where(r => Cmn.INT32_ONE.Equals(r["check"]))
                             .Select(r => Cmn.Nvl(r[key_field], string.Empty).ToString());
                     }
-                } else if (this.array_edit_value != null) {
+                }
+                else if (this.array_edit_value != null)
+                {
                     selected_values = this.array_edit_value.AsEnumerable().Select(row => Cmn.Nvl(row[name_field], string.Empty).ToString());
                 }
             }
@@ -338,7 +390,7 @@ namespace sql.builder.UI
 
             this.FullText = stext;
             //if(stext.Length > 1000) stext = stext.Substring(0, 997) + "...";
-			if (stext.Length > 250) stext = "Выбрано: " + selected_values.Count();
+            if (stext.Length > 250) stext = "Выбрано: " + selected_values.Count();
 
             //if (this.FieldName == "p_kod_direct1")
             //{
@@ -348,10 +400,14 @@ namespace sql.builder.UI
         }
         public void UpdateFooterPanel()
         {
-            if (this.rows_limit > 0) {
-                if (DataTableList.Rows.Count >= this.rows_limit) {
+            if (this.rows_limit > 0)
+            {
+                if (DataTableList.Rows.Count >= this.rows_limit)
+                {
                     //listEdit.SetListRowsLimit(this.rows_limit);
-                } else {
+                }
+                else
+                {
                     //listEdit.SetListRowsLimit(0);
                 }
             }
@@ -369,13 +425,17 @@ namespace sql.builder.UI
         private void UpdateControlSize()
         {
             object value;
-            if (this.UserSettings.TryGetValue("popup_width", out value)) {
+            if (this.UserSettings.TryGetValue("popup_width", out value))
+            {
                 //listEdit.SetPopupWidth((int)value);
             }
             int height;
-            if (this.UserSettings.TryGetValue("popup_height", out value)) {
+            if (this.UserSettings.TryGetValue("popup_height", out value))
+            {
                 height = (int)value;
-            } else {
+            }
+            else
+            {
                 height = 0;
             }
         }
@@ -398,7 +458,8 @@ namespace sql.builder.UI
         #region Обработчики событий
         public override void DataLocal_RowValueChanged(object sender, DataRowChangeEventArgs e)
         {
-            if (this.UseType == UIFormC.UseType.DataEditor) {
+            if (this.UseType == UIFormC.UseType.DataEditor)
+            {
                 return; // для DataEditor применяется при закрытии списка
             }
             //var dt = sender as VDataTable;
@@ -465,7 +526,8 @@ namespace sql.builder.UI
         public void PopupContainerEdit_Closed()
         {
             // чтобы освободить коннекшн если запрос выполняется долго
-            if (this.DataTableList.AsyncLoad) {
+            if (this.DataTableList.AsyncLoad)
+            {
                 this.DataTableList.CancelAsyncExecuteReader();
             }
             this.ApplyValue();
@@ -476,7 +538,8 @@ namespace sql.builder.UI
         }
         public void LoadList()
         {
-            if (this.IsNeedRefresh()) {
+            if (this.IsNeedRefresh())
+            {
                 this.refreshList();
             }
         }
@@ -489,7 +552,7 @@ namespace sql.builder.UI
             this.refreshList(true);
             this._need_refresh = true;
         }
-        private void refreshList(bool onlyForselectedValue = false,IEnumerable<string> names=null)
+        private void refreshList(bool onlyForselectedValue = false, IEnumerable<string> names = null)
         {
             // для репозиториев
             //if (_custom_buttons)
@@ -502,7 +565,7 @@ namespace sql.builder.UI
             //edit.Properties.PopupControl = listEdit.popupContainerControl;
             ///////////////////////////////////////////////////////////////////////
             BeginUpdate();
-            ReloadListData(onlyForselectedValue, names==null, names);
+            ReloadListData(onlyForselectedValue, names == null, names);
 
             UpdateFooterPanel();
             if (SourceType == ReturnType.Array)
@@ -512,7 +575,7 @@ namespace sql.builder.UI
             }
             EndUpdate();
 
-         
+
 
             UpdateTreeView();
         }
@@ -528,53 +591,63 @@ namespace sql.builder.UI
             this.refreshList();
             //ShowPopup();
         }
-		public void ShowPopup()
-		{
+        public void ShowPopup()
+        {
             //if (listEdit is sql.builder.UI.WinForms.VListEdit)
             //{
             //    (listEdit as sql.builder.UI.WinForms.VListEdit).SetUseCurrent();
             //}
             //this.listEdit.PopupShow();
-            if (this.rows_limit > 0 && this.SourceType == ReturnType.Array) {
+            if (this.rows_limit > 0 && this.SourceType == ReturnType.Array)
+            {
                 //this.listEdit.SetFocusToFilter();
-			}
-		}
+            }
+        }
         public void PopupContainerEdit_DeleteValue()
         {
             bool read_only = this.GetSourceReadOnly();
-            if (read_only) {
+            if (read_only)
+            {
                 return;
             }
-            if (!this.mandatory) {
+            if (!this.mandatory)
+            {
                 this.ClearSourceValues();
             }
         }
         public Color GetListCellColor(object rowId, string columnName) // временно. вместо этого нужно обсчитывать цвета заранее и отправлять контролу
         {
             DataTable dt = this.DataTableList;
-            if (dt == null || !dt.HasPrimaryKey()) {
+            if (dt == null || !dt.HasPrimaryKey())
+            {
                 return Color.Empty;
             }
             Color color;
             DataRow row = dt.Rows.Find(rowId);
-            if (Convert.ToBoolean(row["absent"])) {
+            if (Convert.ToBoolean(row["absent"]))
+            {
                 color = Color.DarkRed;
-            } else if (this.UseType == UIFormC.UseType.SchemeEditor && this.FieldName == "Color") {
+            }
+            else if (this.UseType == UIFormC.UseType.SchemeEditor && this.FieldName == "Color")
+            {
                 VColor.ParseRGB((string)row["rgb"], out color);
-            } else {
+            }
+            else
+            {
                 color = Color.Empty;
             }
             return color;
         }
         public void ProcessFilter()
         {
-            if (this.rows_limit > 0) {
+            if (this.rows_limit > 0)
+            {
                 this.StartFiltering(null, null);
             }
         }
         public override void CancelRowsLimit()
         {
-            this.rows_limit = int.MaxValue;          
+            this.rows_limit = int.MaxValue;
         }
         public void LoadAllListRows()
         {
@@ -591,15 +664,17 @@ namespace sql.builder.UI
         }
         public void Tree_ColumnFilterChanged()
         {
-            if (this.rows_limit > 0) {
-                if (!this.cancelRefresh) {
+            if (this.rows_limit > 0)
+            {
+                if (!this.cancelRefresh)
+                {
                     // при сбросе фильтра через интерфейс
                     //if (_auto_filtering) {
-                        //_auto_filtering = false;
-                        //if (tree.VisibleColumns.All(c => tree.Nodes.AutoFilterNode.GetDisplayText(c) == ""))
-                        //{
-                        this.StartFiltering(null, null);
-                        //}
+                    //_auto_filtering = false;
+                    //if (tree.VisibleColumns.All(c => tree.Nodes.AutoFilterNode.GetDisplayText(c) == ""))
+                    //{
+                    this.StartFiltering(null, null);
+                    //}
                     //}
                 }
             }
@@ -608,9 +683,12 @@ namespace sql.builder.UI
         {
             //listEdit.BeginUpdate();
             this.ReloadListData();
-            if (this.DataTableList.AsyncLoad) {
+            if (this.DataTableList.AsyncLoad)
+            {
                 //this.listEdit.SetFocusToFilter();
-            } else {
+            }
+            else
+            {
                 this.processAutoFilterComplete();
             }
         }
@@ -618,11 +696,13 @@ namespace sql.builder.UI
         {
             this.UpdateFooterPanel();
             //listEdit.EndUpdate();
-            if (this.SourceType == ReturnType.Array) {
+            if (this.SourceType == ReturnType.Array)
+            {
                 ApplyArrayValueToControl();
             }
             this.UpdateTreeView();
-            if (this.rows_limit > 0) {
+            if (this.rows_limit > 0)
+            {
                 //this.listEdit.SetFocusToFilter();
             }
             //_auto_filtering = true;
@@ -632,10 +712,10 @@ namespace sql.builder.UI
             this.FilterValues.Clear();
             //this.listEdit.ClearFilter();
         }
-        public override void ReloadListData(bool onlyForselectedValue = false,bool allowAsync=true,IEnumerable<string> names=null)
+        public override void ReloadListData(bool onlyForselectedValue = false, bool allowAsync = true, IEnumerable<string> names = null)
         {
-           
-            
+
+
             if (names != null)
             {
                 cancelRefresh = true;
@@ -643,7 +723,7 @@ namespace sql.builder.UI
                 cancelRefresh = false;
             }
             //listEdit.BeginLoadData();
-            base.ReloadListData(onlyForselectedValue,allowAsync,names);
+            base.ReloadListData(onlyForselectedValue, allowAsync, names);
             //listEdit.GetList().EndUpdateData();
 
         }
@@ -662,7 +742,7 @@ namespace sql.builder.UI
             base.ReloadListCanceled();
             if (this.rows_limit > 0)
             {
-               EndUpdate();
+                EndUpdate();
             }
             //listEdit.EndLoadData();
             prepareListIfNeed();
@@ -675,7 +755,7 @@ namespace sql.builder.UI
             {
                 //listEdit.PrepareList();
                 _needPrepareList = false;
-               
+
             }
         }
 
@@ -704,25 +784,30 @@ namespace sql.builder.UI
                 UpdateFooterPanel();
                 if (SourceType == ReturnType.Array) ApplyArrayValueToControl();
                 //tree.EndUpdate();
-               EndUpdate();
+                EndUpdate();
                 UpdateTreeView();
             }
             return true;
         }
         public void SingeValueSelect(object id)
         {
-            if (this.SourceType == ReturnType.Simple) {
+            if (this.SourceType == ReturnType.Simple)
+            {
                 object val;
-                if (this.key_field_name == this.value_field_name) {
+                if (this.key_field_name == this.value_field_name)
+                {
                     val = id;
-                } else {
+                }
+                else
+                {
                     DataRow row = this.DataTableList.Rows.Find(id);
                     val = row[this.value_field_name];
                 }
                 //this.listEdit.SetValue(val);
 
                 this.SetCtrlValue(val);
-                if (id != null) {
+                if (id != null)
+                {
                     this.SetSourceValue(val);
                 }
                 //this.listEdit.Close_Popup();
@@ -736,12 +821,16 @@ namespace sql.builder.UI
             string stype = xfield.AttrOrDefault(AName.type, string.Empty);
             Type t;
             //Ильина А. 19.06.2022 
-            if (!string.IsNullOrEmpty(stype)) {
+            if (!string.IsNullOrEmpty(stype))
+            {
                 t = Cmn.GetTypeFromStringType(stype, null);
-            } else {
+            }
+            else
+            {
                 t = null;
             }
-            if (source_type == ReturnType.Array) {
+            if (source_type == ReturnType.Array)
+            {
                 // Режим, когда чек родителя означает, что должны быть чекнуты все потомки
                 this.auto_check = xfield.AttrOrDefault(AName.auto_check, false);
                 this.clear_on_list_change = xfield.AttrOrDefault(TextConst.AName.ClearOnListChange, false);
@@ -761,32 +850,45 @@ namespace sql.builder.UI
             {
                 ClearSourceValues();
             }
-            if (this.UseDefaultQuery && this.data_set_default != null) {
+            if (this.UseDefaultQuery && this.data_set_default != null)
+            {
                 XElement master_values = this.OnNeedMasterValues(this);
                 this.data_set_default.Refresh(master_values);
                 DataRowCollection rows = this.data_set_default.Tables[0].Rows;
-                if (this.SourceType == ReturnType.Simple) {
-                    if (rows.Count > 0) {
+                if (this.SourceType == ReturnType.Simple)
+                {
+                    if (rows.Count > 0)
+                    {
                         SetSourceValue(rows[0][0]);
-                    } else if (this.mandatory && !this.Form.WithBehavior) {
+                    }
+                    else if (this.mandatory && !this.Form.WithBehavior)
+                    {
                         // Если дефолтное значение по какой-то причине пришло пустым
-                        if (this.DataTableList.Rows.Count == 0) {
+                        if (this.DataTableList.Rows.Count == 0)
+                        {
                             this.ReloadListData();
                         }
-                        if (this.DataTableList.Rows.Count > 0) {
+                        if (this.DataTableList.Rows.Count > 0)
+                        {
                             SetSourceValue(this.DataTableList.Rows[0][0]);
                         }
                     }
-                } else if (this.SourceType == ReturnType.SimpleRange) {
-                    if (rows.Count > 0) {
+                }
+                else if (this.SourceType == ReturnType.SimpleRange)
+                {
+                    if (rows.Count > 0)
+                    {
                         object value = rows[0][0];
                         SetSourceValue(value, 1);
                         SetSourceValue(value, 2);
                     }
-                } else if (this.SourceType == ReturnType.Array) {
+                }
+                else if (this.SourceType == ReturnType.Array)
+                {
                     var values = new List<object>();
                     var names = new List<string>();
-                    foreach (DataRow row in rows) {
+                    foreach (DataRow row in rows)
+                    {
                         string name = (row.ItemArray.Length > 1 ? row[1].ToString() : row[0].ToString());
                         values.Add(row[0]);
                         names.Add(name);
@@ -795,16 +897,18 @@ namespace sql.builder.UI
                     //// TODO: костыль для web
                     //if (this.array_edit_value != null)
                     //{
-                        this.array_edit_value.SuppressChangeEvent();
-                        var changes = SetArraySourceValueMultiple(values, names, true);
-                        if (changes)
-                        {
-                            RaiseChanged();
-                        }
+                    this.array_edit_value.SuppressChangeEvent();
+                    var changes = SetArraySourceValueMultiple(values, names, true);
+                    if (changes)
+                    {
+                        RaiseChanged();
+                    }
                     //}
-                    
+
                 }
-            } else if (this.mandatory && Form.DefaultParams == null) {
+            }
+            else if (this.mandatory && Form.DefaultParams == null)
+            {
                 ReloadListData();
                 UpdateFooterPanel();
             }
@@ -817,7 +921,7 @@ namespace sql.builder.UI
 
         public override string GetText()
         {
-            if (UseType==UIFormC.UseType.DataEditor)
+            if (UseType == UIFormC.UseType.DataEditor)
             {
                 return this.GetBoundColumn().GetFieldValueName();
             }
@@ -827,10 +931,12 @@ namespace sql.builder.UI
         public override IEnumerable<string> GetParamsNames()
         {
             var names = new List<string>();
-            if (this.data_set_list != null) {
+            if (this.data_set_list != null)
+            {
                 names.AddRange(this.data_set_list.GetParNames());
             }
-            if (this.data_set_default != null) {
+            if (this.data_set_default != null)
+            {
                 names.AddRange(this.data_set_default.GetParNames());
             }
             return names.Distinct();
@@ -848,8 +954,8 @@ namespace sql.builder.UI
             PopupContainerEdit_ComboButtonClick_pr();
             //(listEdit as sql.builder.UI.WinForms.VListEdit).PreparePopup((sender as PopupContainerEdit));
             //(listEdit as sql.builder.UI.WinForms.VListEdit).PopUpProcessing(); 
-           
-        
+
+
         }
 
         bool _needPrepareList = false;
@@ -859,21 +965,22 @@ namespace sql.builder.UI
             {
                 _needPrepareList = true;
                 RefreshList();
-              
+
             }
             else
             {
-                
-              //listEdit.PrepareList();
+
+                //listEdit.PrepareList();
                 ApplyArrayValueToControlDataEditorList();
                 // это какая то химия для редактирования данных моногие ко многим через UIList.  Применялось только а тестовых формах, скорее всего уже сломано
-                
+
             }
         }
         // реализация IList.ApplyArrayValueToControlDataEditorList()
         public void ApplyArrayValueToControlDataEditorList()
         {
-            if (this.UseType == UIFormC.UseType.DataEditor && this.SourceType == ReturnType.Array) {
+            if (this.UseType == UIFormC.UseType.DataEditor && this.SourceType == ReturnType.Array)
+            {
                 this.ApplyArrayValueToControl();
             }
         }
@@ -937,21 +1044,21 @@ namespace sql.builder.UI
         {
             Form.LastActiveField = this;
         }
-        private DataTable _listData=null;
-        private bool _colsInited=false;
+        private DataTable _listData = null;
+        private bool _colsInited = false;
         public void SetData(DataTable data)
         {
-            
+
             if (_listData != data)
             {
-                 //IVTableDataAdapter vtda = new sql.builder.DataApi.TableDataAccessor.Adapters.VTDADataTable(data);
+                //IVTableDataAdapter vtda = new sql.builder.DataApi.TableDataAccessor.Adapters.VTDADataTable(data);
                 //listEdit.GetList().SetDataSource(vtda);
                 if (!_colsInited)
                 {
                     //listEdit.GetList().InitColumnsEditors();
                     _colsInited = true;
                 }
-            
+
             }
         }
 
@@ -976,13 +1083,15 @@ namespace sql.builder.UI
         private void PopupContainerEdit_ComboButtonClick_pr()
         {
             // Емцов - только для комбика? поставил ограничение на SourceType == ReturnType.Simple
-            if (SourceType == ReturnType.Simple) {
+            if (SourceType == ReturnType.Simple)
+            {
                 //tree.ClearColumnsFilter();
                 var col = GetBoundColumn();
                 var tbl = col.GetTable();
                 var row = tbl.CurrentRow;
                 object val = DBNull.Value;
-                if (row != null) {
+                if (row != null)
+                {
                     val = col.GetValue(row);
                 }
                 //listEdit.SetValue(val);// химия чтобы выделялась строка с текущим значением в комбике при работе с гридом

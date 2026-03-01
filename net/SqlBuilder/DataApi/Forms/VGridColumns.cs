@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace sql.builder.DataApi
@@ -23,7 +22,7 @@ namespace sql.builder.DataApi
         //}
         public override void CL_Column_Content(List<XElement> list)
         {
-            MakeColumnsList(list,false);
+            MakeColumnsList(list, false);
         }
         public override List<VContextListsType> ContextListAllowedTypes()
         {

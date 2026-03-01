@@ -1,33 +1,31 @@
 ﻿using System;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using sql.builder;
-using sql.builder.Controls;
-using System.Xml;
 using System.Xml.Linq;
-using System.Collections.Generic;
-using sql.builder.DataApi;
+using sql.builder;
 using sql.builder.UI;
 namespace sql.builder.Exceptions
 {
-  
-    
+
+
 
     class VCompilerException : Exception
     {
 
-        public VCompilerException(string message,XElement elementInfo,XElement nodeInfo)
+        public VCompilerException(string message, XElement elementInfo, XElement nodeInfo)
             : base(message)
         {
-            if (UIStatic.ShowErrorsInSchemeEditor && elementInfo != null) {
-                try {
+            if (UIStatic.ShowErrorsInSchemeEditor && elementInfo != null)
+            {
+                try
+                {
                     var errorInfo = new VErrorInfo();
                     errorInfo.NodeInfo = nodeInfo;
                     errorInfo.ElementInfo = elementInfo;
                     //ucMainSqlBuilder.ShowErrorInSchemeEditor(errorInfo);
-                } catch {
+                }
+                catch
+                {
                     throw new System.Exception("Ошибка при компиляции. Не удалось ошибку в схеме. Сообщение: " + message + " " + nodeInfo + " " + elementInfo);
                 }
             }

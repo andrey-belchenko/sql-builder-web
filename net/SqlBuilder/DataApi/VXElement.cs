@@ -1,9 +1,8 @@
-﻿using System;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 namespace sql.builder.DataApi
 {
-    public class VXElement: XElement
+    public class VXElement : XElement
     {
         private object tag;
         public VXElement(XName name)
@@ -14,11 +13,14 @@ namespace sql.builder.DataApi
             : base(other)
         {
         }
-        public object Tag {
-            get {
+        public object Tag
+        {
+            get
+            {
                 return this.tag;
             }
-            set {
+            set
+            {
                 this.tag = value;
             }
         }
@@ -28,11 +30,11 @@ namespace sql.builder.DataApi
         }
         //public VEnvironment GetEnvironment()
         //{
-            //if (this.environment == null)
-            //{
-            //    this.environment = SearchEnvironment(this);
-            //}
-            //return this.environment;
+        //if (this.environment == null)
+        //{
+        //    this.environment = SearchEnvironment(this);
+        //}
+        //return this.environment;
         //    return XmlReports.Environment;
         //}
         //public VEnvironment environment;

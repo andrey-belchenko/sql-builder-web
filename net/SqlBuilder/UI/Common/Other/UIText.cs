@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Globalization;
 using System.Data;
-using System.Linq;
 //using System.Windows.Forms;
 using System.Xml.Linq;
 //using DevExpress.XtraEditors.Controls;
 //using DevExpress.XtraEditors.Mask;
 //using DevExpress.XtraEditors.Repository;
-using sql.builder.DataApi;
 
 namespace sql.builder.UI
 {
@@ -15,20 +12,20 @@ namespace sql.builder.UI
     {
         public UIText()
         {
-           //InitializeComponent();
+            //InitializeComponent();
         }
 
         public override void Initialize(XElement xfield, UIFormC form)
         {
             InitControl();
             BaseInitialize(xfield, form, ReturnType.Simple, typeof(string), true);
-           
+
         }
 
         protected override void InitControl()
         {
             //beControl.ErrorIconAlignment = ErrorIconAlignment.MiddleRight;
-           // beControl.EditValueChanged += (sender, args) => SetSourceValue(beControl.EditValue);
+            // beControl.EditValueChanged += (sender, args) => SetSourceValue(beControl.EditValue);
             //if (this is UITextArray)
             //{
             //    beControl.SetUsePlaneString();
@@ -54,11 +51,13 @@ namespace sql.builder.UI
         }
         public override void RefreshData()
         {
-            if (this.UseDefaultQuery && this.data_set_default != null) {
+            if (this.UseDefaultQuery && this.data_set_default != null)
+            {
                 XElement master_values = this.OnNeedMasterValues(this);
                 data_set_default.Refresh(master_values);
                 DataRowCollection rows = this.data_set_default.Tables[0].Rows;
-                if (rows.Count > 0) {
+                if (rows.Count > 0)
+                {
                     //this.beControl.SetValue(rows[0][0]);
                     this.SetCtrlValue(rows[0][0]);
                 }
@@ -66,13 +65,13 @@ namespace sql.builder.UI
             base.RefreshData();
         }
 
-        
+
 
         public override void SetError(string text, int index = 1)
         {
             //SetError(beControl, text);
             SetErr(text);
-          //  beControl.ErrorText = text;
+            //  beControl.ErrorText = text;
         }
 
         private void teControl_Enter(object sender, EventArgs e)

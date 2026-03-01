@@ -11,17 +11,13 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
 using Devart.Data.Oracle;
-using infoenergo;
-using infoenergo.core;
 //using DevExpress.DashboardCommon.Native;
 //using DevExpress.XtraEditors;
 
-using infoenergo.core.Data;
 //using infoenergo.core.Extensions;
 //using infoenergo.framework.Extensions.Oracle;
 using sql.builder.Clean;
 using sql.builder.DataApi;
-using sql.builder.UI;
 //using sql.builder.WebReports;
 //using static System.Net.Mime.MediaTypeNames;
 using SqlBuilderLib.DevTools;

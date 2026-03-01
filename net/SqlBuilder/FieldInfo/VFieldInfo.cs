@@ -2,8 +2,8 @@
 using System.Data;
 using System.Linq;
 using System.Reflection;
-using Contract = System.Diagnostics.Contracts.Contract;
 using sql.builder.DataApi;
+using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.FieldInfo
 {
@@ -62,13 +62,19 @@ namespace sql.builder.FieldInfo
             Type type = obj.GetType();
             MethodInfo mi = type.GetMethod(propName + "_" + infoName);
             object ret;
-            if (mi != null) {
+            if (mi != null)
+            {
                 ret = mi.Invoke(obj, null);
-            } else {
+            }
+            else
+            {
                 mi = type.GetMethod("Default_" + infoName);
-                if (mi.GetParameters().Length != 0) {
+                if (mi.GetParameters().Length != 0)
+                {
                     ret = mi.Invoke(obj, new object[] { propName });
-                } else {
+                }
+                else
+                {
                     ret = mi.Invoke(obj, null);
                 }
             }
@@ -88,11 +94,14 @@ namespace sql.builder.FieldInfo
         public static string GetValueInfo(object obj, string propName)
         {
             MethodInfo mi = obj.GetType().GetMethod(propName + "_ValueInfo");
-            if (mi != null) {
+            if (mi != null)
+            {
                 object value = GetValue(obj, propName);
                 object ret = mi.Invoke(obj, new object[] { value });
                 return ret.ToString();
-            } else {
+            }
+            else
+            {
                 //return null;
                 return GetValue(obj, propName).ToString();
             }
@@ -103,10 +112,13 @@ namespace sql.builder.FieldInfo
         }
         public static void SetValue(VSXElement obj, string propName, object value)
         {
-            if (obj.Row != null) {
+            if (obj.Row != null)
+            {
                 string name = VSXElement.RemovePropPfx(propName);
                 obj.Row[name] = value;
-            } else {
+            }
+            else
+            {
                 Cmn.SetProperty(obj, propName, value);
             }
         }
@@ -125,11 +137,13 @@ namespace sql.builder.FieldInfo
             VDataTable dt = new VDataTable();
             dt.TableName = type.FullName + "." + method_name;
             ds.Tables.Add(dt);
-            if (mi == null) {
+            if (mi == null)
+            {
                 return ds;
             }
             mi.Invoke(obj, new object[] { dt });
-            if (!dt.HasPrimaryKey() && dt.Columns.Count != 0) {
+            if (!dt.HasPrimaryKey() && dt.Columns.Count != 0)
+            {
                 dt.PrimaryKey = new DataColumn[] { dt.Columns[0] };
             }
             return ds;
@@ -141,23 +155,27 @@ namespace sql.builder.FieldInfo
             Type type = obj.GetType();
             string propName = VSXElement.PropPfx + dataSet.OwnerColumn.ColumnName;
             MethodInfo list_refresh = type.GetMethod(propName + "_ListRefresh");
-            if (list_refresh != null) {
+            if (list_refresh != null)
+            {
                 VDataTable dt = (VDataTable)dataSet.Tables[0];
                 string list_method = propName + "_List";
                 string table_name = type.FullName + "." + list_method;
-                if (dt.TableName != table_name) {
+                if (dt.TableName != table_name)
+                {
                     MethodInfo list = type.GetMethod(list_method);
                     Contract.Assert(list != null);
                     dt.Rows.Clear();
                     dt.ClearColumns();
                     list.Invoke(obj, new object[] { dt });
                     dt.TableName = table_name;
-                    if (!dt.HasPrimaryKey() && dt.Columns.Count != 0) {
+                    if (!dt.HasPrimaryKey() && dt.Columns.Count != 0)
+                    {
                         dt.PrimaryKey = new DataColumn[] { dt.Columns[0] };
                     }
                 }
                 list_refresh.Invoke(obj, new object[] { dt });
-                if (!dt.HasPrimaryKey() && dt.Columns.Count != 0) {
+                if (!dt.HasPrimaryKey() && dt.Columns.Count != 0)
+                {
                     dt.PrimaryKey = new DataColumn[] { dt.Columns[0] };
                 }
                 dataSet.RaiseSchemeChanged();
@@ -167,19 +185,24 @@ namespace sql.builder.FieldInfo
         {
             var obj = r["node"]; //!! пока только частный случай для VSXElement
             VFieldStateAndOtherInfo fs = new VFieldStateAndOtherInfo();
-            if (getWhat.Contains(InfoTypesToGet.State)) {
+            if (getWhat.Contains(InfoTypesToGet.State))
+            {
                 fs.Exists = Exists(obj, VSXElement.PropPfx + col.ColumnName);
-                if (fs.Exists) {
+                if (fs.Exists)
+                {
                     fs.VisibleInForm = VisibleInForm(obj, VSXElement.PropPfx + col.ColumnName);
                     fs.Editable = Editable(obj, VSXElement.PropPfx + col.ColumnName);
-                } else {
+                }
+                else
+                {
                     fs.VisibleInForm = false;
                     fs.Editable = true;
                 }
             }
-            if (getWhat.Contains(InfoTypesToGet.ValueName)) {
-                fs.ValueName=GetValueInfo(obj, VSXElement.PropPfx + col.ColumnName);
-            }           
+            if (getWhat.Contains(InfoTypesToGet.ValueName))
+            {
+                fs.ValueName = GetValueInfo(obj, VSXElement.PropPfx + col.ColumnName);
+            }
             return fs;
         }
         public enum InfoTypesToGet
@@ -205,7 +228,7 @@ namespace sql.builder.FieldInfo
         public VFieldStateAndOtherInfo(bool exists)
         {
             Exists = exists;
-            VisibleInForm = exists;           
+            VisibleInForm = exists;
         }
     }
     public class VFieldState  // Для хранения

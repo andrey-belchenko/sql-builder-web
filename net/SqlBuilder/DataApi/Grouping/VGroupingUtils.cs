@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Xml.Linq;
-using System.Reflection;
-using System.Data;
-using System;
-using Devart.Data.Oracle;
 
 namespace sql.builder.DataApi
 {
@@ -22,28 +20,37 @@ namespace sql.builder.DataApi
             string detExtaCondAlias = "det_xtra_cond";
             //XElement ifCond = null;
 
-            if (applyReportConds || column != null) {
+            if (applyReportConds || column != null)
+            {
                 var srcQube = groupingQuery.Descendants(TextConst.EName.Qube).FirstOrDefault();
 
-                if (srcQube != null) {
+                if (srcQube != null)
+                {
                     var trgQube = query.Descendants(TextConst.EName.Qube).FirstOrDefault();
-                    if (trgQube != null) {
-                        if (applyReportConds) {
+                    if (trgQube != null)
+                    {
+                        if (applyReportConds)
+                        {
                             var xwhere = srcQube.Elements(TextConst.EName.Where);
-                            if (!trgQube.Elements(TextConst.EName.Where).Any()) {
+                            if (!trgQube.Elements(TextConst.EName.Where).Any())
+                            {
                                 trgQube.Add(xwhere);
                             }
-                            foreach (var srcDimset in srcQube.Elements(TextConst.EName.DimSet)) {
+                            foreach (var srcDimset in srcQube.Elements(TextConst.EName.DimSet))
+                            {
                                 xwhere = srcDimset.Elements(TextConst.EName.Where);
                                 var trgDimset = trgQube.Elements(TextConst.EName.DimSet).FirstOrDefault(e => Cmn.GetAttrValue(e, TextConst.AName.As) == Cmn.GetAttrValue(srcDimset, TextConst.AName.As));
-                                if (trgDimset != null) {
-                                    if (!trgDimset.Elements(TextConst.EName.Where).Any()) {
+                                if (trgDimset != null)
+                                {
+                                    if (!trgDimset.Elements(TextConst.EName.Where).Any())
+                                    {
                                         trgDimset.Add(xwhere);
                                     }
                                 }
                             }
                         }
-                        if (column != null) {
+                        if (column != null)
+                        {
                             trgQube.Parent.Parent.Add(srcQube.Parent.Parent.Elements(TextConst.EName.Expressions));
                         }
                     }
@@ -52,30 +59,40 @@ namespace sql.builder.DataApi
 
             //  var checkPfx1 = "";
             var colCondname = "";
-            if (column != null) {
+            if (column != null)
+            {
 
                 colCondname = column.ColumnName;
                 IList<XElement> flds = query.Elements(EName.select).Elements().ToList();
                 XElement checkExpr = flds.SearchByAttribute(AName.@as, column.ColumnName);
                 string sAnyColumn = "[column]";
-                if (checkExpr == null) {
+                if (checkExpr == null)
+                {
                     checkExpr = flds.SearchByAttribute(AName.@as, sAnyColumn);
-                    if (checkExpr == null) {
+                    if (checkExpr == null)
+                    {
                         checkExpr = flds.FirstOrDefault(e => e.Descendants().Any(e1 => e1.AttrOrEmpty(AName.@as) == sAnyColumn));
-                        if (checkExpr != null) {
+                        if (checkExpr != null)
+                        {
                             colCondname = checkExpr.Attribute(AName.@as).Value;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         checkExpr.SetAttributeValue(AName.@as, column.ColumnName);
                     }
-                    if (checkExpr != null) {
-                        foreach (XElement col in checkExpr.Descendants()) {
-                            if (col.AttrOrEmpty(AName.@as) == sAnyColumn) {
+                    if (checkExpr != null)
+                    {
+                        foreach (XElement col in checkExpr.Descendants())
+                        {
+                            if (col.AttrOrEmpty(AName.@as) == sAnyColumn)
+                            {
                                 col.SetAttributeValue(AName.@as, column.ColumnName);
                             }
                         }
                         XElement column2 = query.Elements(EName.columns).Descendants(EName.column).SearchByAttribute(AName.name, sAnyColumn);
-                        if (column2 != null) {
+                        if (column2 != null)
+                        {
                             column2.SetAttributeValue(AName.name, column.ColumnName);
                         }
                     }
@@ -91,26 +108,33 @@ namespace sql.builder.DataApi
                 colExpr.SetAttributeValue(TextConst.AName.As, column.ColumnName);
                 colExpr.SetAttributeValue(TextConst.AName.Title, "");
                 colExpr.Attributes(TextConst.AName.Removeable).Remove();// откуда то берется
-                if (checkExpr == null) {
+                if (checkExpr == null)
+                {
 
                     query.Element(TextConst.EName.Select).Add(colExpr);
                     var colsInfo = query.Element(TextConst.EName.Columns);
-                    if (colsInfo != null) {
+                    if (colsInfo != null)
+                    {
                         colsInfo.Add(new XElement(TextConst.EName.Column, new XAttribute(TextConst.AName.Name, column.ColumnName)));
                     }
                     checkExpr = colExpr;
                     isCheckExpr = false;
-                } else {
+                }
+                else
+                {
                     isCheckExpr = true;
                     var colsToReplace = checkExpr.Descendants().Where(e => Cmn.GetAttrValue(e, TextConst.AName.As) == column.ColumnName).ToArray();
 
-                    foreach (var col in colsToReplace) {
+                    foreach (var col in colsToReplace)
+                    {
                         col.ReplaceWith(new XElement(colExpr));
                     }
                 }
 
-                if (checkExpr.DescendantsAndSelf().Any(EPredicate.IsCallOfWindowFunction)) {
-                    if (isCheckExpr) {
+                if (checkExpr.DescendantsAndSelf().Any(EPredicate.IsCallOfWindowFunction))
+                {
+                    if (isCheckExpr)
+                    {
                         var xtraCondCol = new XElement(colExpr);
                         xtraCondCol.SetAttributeValue(TextConst.AName.Removeable, TextConst.AVBool.False);
                         xtraCondCol.SetAttributeValue(TextConst.AName.As, detExtaCondAlias);
@@ -137,9 +161,11 @@ namespace sql.builder.DataApi
 
             var grColNames = new List<string>();
 
-            foreach (XElement col in grColumns) {
+            foreach (XElement col in grColumns)
+            {
                 var s = Cmn.GetAttrValue(col, TextConst.AName.As);
-                if (s == "") {
+                if (s == "")
+                {
                     s = Cmn.GetAttrValue(col, TextConst.AName.Column);
                 }
                 grColNames.Add(s);
@@ -150,13 +176,17 @@ namespace sql.builder.DataApi
 
             cond.SetAttributeValue(TextConst.AName.Function, TextConst.AVFunction.And);
             List<XElement> conds = new List<XElement>();
-            foreach (string colName in grColNames) {
+            foreach (string colName in grColNames)
+            {
                 var cond1 = new XElement(TextConst.EName.Call);
 
-                if (row[colName] != DBNull.Value) {
+                if (row[colName] != DBNull.Value)
+                {
                     cond1.SetAttributeValue(TextConst.AName.Function, TextConst.AVFunction.Equal);
 
-                } else {
+                }
+                else
+                {
                     cond1.SetAttributeValue(TextConst.AName.Function, TextConst.AVFunction.IsNull);
                 }
 
@@ -168,13 +198,15 @@ namespace sql.builder.DataApi
 
                 cond.Add(cond1);
 
-                if (row[colName] != DBNull.Value) {
+                if (row[colName] != DBNull.Value)
+                {
                     var cnst = new XElement(TextConst.EName.Const);
                     cnst.Value = (Cmn.ToOracleString(row[colName]));
                     cond1.Add(cnst);
 
                 }
-                if (!query.Elements(TextConst.EName.Where).Any()) {
+                if (!query.Elements(TextConst.EName.Where).Any())
+                {
                     query.Add(new XElement(TextConst.EName.Where));
                 }
 
@@ -188,8 +220,10 @@ namespace sql.builder.DataApi
 
 
 
-            if (newCond.Any()) {
-                foreach (XElement col in newCond.Descendants(TextConst.EName.Column).ToList()) {
+            if (newCond.Any())
+            {
+                foreach (XElement col in newCond.Descendants(TextConst.EName.Column).ToList())
+                {
                     col.SetAttributeValue(TextConst.AName.Table, TextConst.AVTable.Ths);
                 }
                 //query.Element(TextConst.EName.Where).Add(newCond);
@@ -198,14 +232,16 @@ namespace sql.builder.DataApi
             var colCondTargs = new List<Tuple<XElement, string>>();
             if (column != null
                 //  && !isOuterCond
-                ) {
+                )
+            {
                 colCondTargs.Add(new Tuple<XElement, string>(query, colCondname));
             }
 
             var condTarg = query;
 
 
-            if (isOuterCond) {
+            if (isOuterCond)
+            {
 
                 Compiler.AddQueryLevel(query, "a1");
                 condTarg = query.Elements(TextConst.EName.From).Elements().First();
@@ -213,36 +249,45 @@ namespace sql.builder.DataApi
                 //condTarg.SetAttributeValue(TextConst.AName.Hint, TextConst.AVHint.Materialize);
                 condTarg.SetAttributeValue(TextConst.AName.Materialize, TextConst.AVBool.True);
                 // Compiler.addMatrializeId(condTarg);
-                if (isCheckExpr) {
+                if (isCheckExpr)
+                {
                     colCondTargs.Add(new Tuple<XElement, string>(condTarg, detExtaCondAlias));
                 }
             }
-            if (conds.Any()) {
-                if (!condTarg.Elements(TextConst.EName.Where).Any()) {
+            if (conds.Any())
+            {
+                if (!condTarg.Elements(TextConst.EName.Where).Any())
+                {
                     condTarg.Add(new XElement(TextConst.EName.Where));
                 }
                 condTarg.Element(TextConst.EName.Where).Add(conds);
             }
-            foreach (var qc in colCondTargs) {
+            foreach (var qc in colCondTargs)
+            {
                 var qry1 = qc.Item1;
                 var condColName = qc.Item2;
-                if (!qry1.Elements(TextConst.EName.Where).Any()) {
+                if (!qry1.Elements(TextConst.EName.Where).Any())
+                {
                     qry1.Add(new XElement(TextConst.EName.Where));
                 }
                 var colCond = new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunction.IsNotNull));
                 var xcol = new XElement(TextConst.EName.Column);
                 xcol.SetAttributeValue(TextConst.AName.Table, TextConst.AVTable.Ths);
                 xcol.SetAttributeValue(TextConst.AName.Column, condColName);
-                if (!use_zeros) {
+                if (!use_zeros)
+                {
                     var nifCond = new XElement(TextConst.EName.Call, new XAttribute(TextConst.AName.Function, TextConst.AVFunction.NullIf));
                     colCond.Add(nifCond);
                     nifCond.Add(xcol);
                     var sconst = "''";
-                    if (column.DataType == XmlReports.numberType) {
+                    if (column.DataType == XmlReports.numberType)
+                    {
                         sconst = "0";
                     }
                     nifCond.Add(new XElement(TextConst.EName.Const, new XText(sconst)));
-                } else {
+                }
+                else
+                {
                     colCond.Add(xcol);
                 }
                 qry1.Element(TextConst.EName.Where).Add(colCond);

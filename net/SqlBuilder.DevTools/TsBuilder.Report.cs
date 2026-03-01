@@ -1,15 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
-using Npgsql;
 using sql.builder;
 using sql.builder.Clean;
-using sql.builder.Clean.Extensions;
 using sql.builder.DataApi;
 
 namespace SqlBuilderLib.DevTools
@@ -56,7 +51,7 @@ namespace SqlBuilderLib.DevTools
             {
                 if (templates.Count() > 1 || report.P_NoGrid != "1")
                 {
-                    suffix = "_"+ index.ToString();
+                    suffix = "_" + index.ToString();
                 }
                 var reportFileName = GenerateFileReportTypeScript(reportClearedName, formClearedName, reportTitle, repFullName, template.P_Name, template.P_Title, suffix);
                 generatedReportNames.Add(reportFileName);
@@ -83,11 +78,11 @@ namespace SqlBuilderLib.DevTools
         }
 
         private static string GenerateFileReportTypeScript(
-            string reportClearedName, 
-            string formClearedName, 
-            string reportTitle, 
+            string reportClearedName,
+            string formClearedName,
+            string reportTitle,
             string repFullName,
-            string templateName, 
+            string templateName,
             string templateTitle,
             string tsFileSuffix
             )

@@ -4,17 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-
+using sql.builder.Clean.Extensions;
 //using infoenergo.core.Extensions;
 using sql.builder.DataApi;
-using sql.builder.Clean.Extensions;
 
 namespace sql.builder
 {
     public partial class Compiler
     {
 
-       
+
 
         private static void compressTables(XElement xelement)//доработать - пока не используется
         {
@@ -23,22 +22,22 @@ namespace sql.builder
             {
                 var xquery = xtable.Parent.Parent;
                 var xfrom = xtable.Parent;
-             
+
                 if (xfrom.Elements().Count() > 1) continue;
 
                 var allowedSectionsNames = new string[] {
                 TextConst.EName.Select,
                 TextConst.EName.From,
                 TextConst.EName.Call};
-                
-                
+
+
 
                 if (xquery.Elements().Any(e => !allowedSectionsNames.Contains(e.Name.LocalName))) continue;
 
-                if (xquery.Elements(TextConst.EName.Select).Elements().Any(e => e.Name.LocalName!=TextConst.EName.Column)) continue;
-                
+                if (xquery.Elements(TextConst.EName.Select).Elements().Any(e => e.Name.LocalName != TextConst.EName.Column)) continue;
 
-                
+
+
 
                 var tableAlias = xtable.Attribute(TextConst.AName.As).Value;
 
@@ -64,12 +63,12 @@ namespace sql.builder
         #region Step6
         public static void Step6(XElement xelement)
         {
-           // compressTables(xelement);
+            // compressTables(xelement);
             if (xelement.Name.LocalName == "query")
             {
                 GenerateInsertForQueryM(xelement);
                 GenerateGroupForQuery(xelement);
-               // GenerateNullsCast(xelement);
+                // GenerateNullsCast(xelement);
             }
             GenerateOrderBy(xelement);
 
@@ -114,18 +113,18 @@ namespace sql.builder
                 var badTypeCol = cols.FirstOrDefault(e => Cmn.GetAttrValue(e, "into").StartsWith(Compiler.badTypePref));
                 if (badTypeCol != null)
                 {
-                    throw new sql.builder.Exceptions.VCompilerException("Требуется тип данных для колонки " + badTypeCol.Attribute("as").Value,query,badTypeCol);
+                    throw new sql.builder.Exceptions.VCompilerException("Требуется тип данных для колонки " + badTypeCol.Attribute("as").Value, query, badTypeCol);
                 }
                 var existed_cols_array = cols
-                    .Where(e=>Cmn.GetAttrValue(e,TextConst.AName.ClientCalulation)!=TextConst.AVBool.True)
+                    .Where(e => Cmn.GetAttrValue(e, TextConst.AName.ClientCalulation) != TextConst.AVBool.True)
                     .Select(el => new XElement("column",
                         new XAttribute("column", el.Attribute("into").Value),
                         new XAttribute("info", el.Attribute("as").Value)));
 
                 // получаем единый список всех колонок
-                var all_temp_cols = new[] {new_cols_array, existed_cols_array}.SelectMany(col => col);
-    
-               
+                var all_temp_cols = new[] { new_cols_array, existed_cols_array }.SelectMany(col => col);
+
+
                 // добавляем элемент insert
                 query.AddFirst(new XElement("insert",
                                  new XAttribute("into", TextConst.DBObjects.TempTable),
@@ -147,15 +146,15 @@ namespace sql.builder
             var query_cols_group = select.Descendants()
                 .Where(el => el.AttrOrDef("used", "") != "0"
                           && el.AttrOrDef("group", "") == "1"
-                    // группировка под partition by не относится к запросу
-                         // && el.Parent.AttrOrDef("function", "") != "partition by"
-                    // групировка под pivot не относится к запросу
-                        //  && !el.Ancestors("pivot").Any()
-                    // колонки из подзапросов не берем
+                          // группировка под partition by не относится к запросу
+                          // && el.Parent.AttrOrDef("function", "") != "partition by"
+                          // групировка под pivot не относится к запросу
+                          //  && !el.Ancestors("pivot").Any()
+                          // колонки из подзапросов не берем
                           && el.Ancestors("query").First() == query);
             if (query.Descendants("having").Any())
             {
-                
+
             }
 
             // последний дочерний элемент query
@@ -168,7 +167,7 @@ namespace sql.builder
             else
             {
                 last_element.AddAfterSelf(new XElement("group", query_cols_group));
-            }           
+            }
         }
         // явно указываем null-ам тип, если это возможно
         private static void GenerateNullsCast(XElement query)
@@ -177,9 +176,11 @@ namespace sql.builder
 
             // query под select-ом из union запроса
             var uparent = query.Ancestors("query").FirstOrDefault(q => q.AttrOrDef("union", "") == "1");
-            if (uparent != null) {
+            if (uparent != null)
+            {
                 var cols_nulls = query.Element("select").Elements().Where(c => string.Equals(c.Value, "null", StringComparison.OrdinalIgnoreCase)).ToArray();
-                if (cols_nulls.Length != 0) {
+                if (cols_nulls.Length != 0)
+                {
                     uqueries = uparent.Ancestors("query").First().Elements("query").Where(q => q.AttrOrDef("union", "") == "1").ToArray();
                     foreach (var cols_null in cols_nulls)
                     {
@@ -189,7 +190,8 @@ namespace sql.builder
                         // все элементы в колонке с индексом pos
                         var cols = uqueries.Elements("select").Select(s => s.Elements().ElementAtOrDefault(pos)).Where(e => e != null).ToArray();
                         // нет ни одной колонки с таким индексом
-                        if (cols.Length != 0) {
+                        if (cols.Length != 0)
+                        {
                             // определяем тип колонки и явно приводим к нему null если это возможно
                             var type = cols.Attributes("type").Select(a => a.Value).FirstOrDefault();
                             switch (type)
@@ -204,10 +206,11 @@ namespace sql.builder
 
                 return;
             }
-                
+
             // union запрос
             uqueries = query.Elements("query").Where(q => q.AttrOrDef("union", "") == "1").ToArray();
-            if (uqueries.Length != 0) { 
+            if (uqueries.Length != 0)
+            {
                 var i = 0;
                 while (true)
                 {
@@ -252,10 +255,10 @@ namespace sql.builder
             if (xelement.Name.LocalName == "call")
             {
                 var parent_name_atr = xelement.Parent.AttrOrDef("name", "");
-                var parent_order_atr = xelement.Parent.AttrOrDef("order","");
+                var parent_order_atr = xelement.Parent.AttrOrDef("order", "");
                 var parent_materialize_atr = xelement.Parent.AttrOrDef("materialize", "");
 
-                if ((parent_name_atr == "query" || parent_name_atr == "table") 
+                if ((parent_name_atr == "query" || parent_name_atr == "table")
                     && parent_order_atr != "" && parent_materialize_atr != "2")
                 {
                     xelement.Add(new XElement("order"));
@@ -285,7 +288,7 @@ namespace sql.builder
 
             if (!stringsIds.ContainsKey(s))
             {
-                 stringId++;
+                stringId++;
                 stringsIds.Add(s, stringId);
             }
             return stringsIds[s];
@@ -327,7 +330,7 @@ namespace sql.builder
 
         public static void CutIdentifiersTo30(XElement elements)
         {
-           // return;
+            // return;
             CutIdentifiersTo30(
                     elements.Descendants(TextConst.EName.Column).Attributes(TextConst.AName.As)
                     );
@@ -358,14 +361,14 @@ namespace sql.builder
 
         public static void CutIdentifiersTo30(IEnumerable<XAttribute> attrs)
         {
-           
-            foreach (XAttribute attr in attrs.Where(a=>a.Value.Length>30).ToList())
+
+            foreach (XAttribute attr in attrs.Where(a => a.Value.Length > 30).ToList())
             {
 
                 attr.Value = TextConst.Pfx.CutedId + getStringCode(attr.Value).ToString();
-              
 
-               
+
+
             }
         }
 
@@ -382,7 +385,7 @@ namespace sql.builder
         {
             compiledQuery = new XElement(compiledQuery);
             compiledQuery.Elements().Where(e => e.Attribute(TextConst.AName.Materialize) != null).Remove();
-           return  Environment.NewLine+ GetSql(compiledQuery);
+            return Environment.NewLine + GetSql(compiledQuery);
         }
 
         public static string GetQuerProcedureFromCompiledQuery(XElement compiledQuery)
@@ -402,7 +405,7 @@ namespace sql.builder
 
         public static XElement GetCompiledQuery(XElement query)
         {
-            XElement compiledQuery = PreCompileQuery(query,true);
+            XElement compiledQuery = PreCompileQuery(query, true);
             compiledQuery = compileQuery(compiledQuery, true, null);
 
             AddMaterializedToResult(compiledQuery);
@@ -413,19 +416,19 @@ namespace sql.builder
 
         public static XElement GetCompiledAndProcessedQuery(XElement query)
         {
-            XElement compiledQuery = PreCompileQuery(query,true);
+            XElement compiledQuery = PreCompileQuery(query, true);
             compiledQuery = compileQuery(compiledQuery, true, null);
 
             AddMaterializedToResult(compiledQuery);
 
             compiledQuery = XmlReports.finalProcessing(compiledQuery);
-        
+
             return compiledQuery;
         }
 
         public static XElement FinalProcessingQuery(XElement compiledQuery)
         {
-          
+
             compiledQuery = XmlReports.finalProcessing(compiledQuery);
 
             return compiledQuery;
@@ -437,12 +440,12 @@ namespace sql.builder
             {
                 if (node.NodeType == XmlNodeType.Text)
                 {
-                    text.Append(((XText) node).Value);
-                    
+                    text.Append(((XText)node).Value);
+
                 }
-                else if(node.NodeType == XmlNodeType.Element)
+                else if (node.NodeType == XmlNodeType.Element)
                 {
-                    var xelement = (XElement) node;
+                    var xelement = (XElement)node;
 
                     // если узел не помечен, что его и дочерний текст обрабатывать не нужно
                     if (xelement.AttrOrDef("notext", "") != "1")
@@ -514,7 +517,7 @@ namespace sql.builder
                 }
 
                 SqlBefore.AppendLine(")");
-              //  SqlBefore.AppendLine("(");
+                //  SqlBefore.AppendLine("(");
                 SqlAfter.AppendLine(";");
                 //////////
 
@@ -588,7 +591,7 @@ namespace sql.builder
 
                         if (ParentName == "with")
                         {
-                           
+
 
                             // after
                             if (!IsLast)
@@ -642,12 +645,12 @@ namespace sql.builder
 
                     // для материализованых запросов остальной текст будет отбрасываться
                     // обработать нужно только узел call
-                    foreach (var xchild in CurrentXElement.Elements().Where(el => el.Name.LocalName != "call")) xchild.SetAttributeValue("notext","1");
+                    foreach (var xchild in CurrentXElement.Elements().Where(el => el.Name.LocalName != "call")) xchild.SetAttributeValue("notext", "1");
                 }
 
                 // из step8
                 SqlAfter.AppendLine("--\\" + Attr("name"));
-             
+
 
                 GenerateDefault();
                 Complete();
@@ -666,7 +669,7 @@ namespace sql.builder
                 }
 
                 // before
-               if (Parent2Name == "root" && ParentAttr("materialize") == "1")
+                if (Parent2Name == "root" && ParentAttr("materialize") == "1")
                 {
                     // before
                     var key_columns = CurrentXElement.Elements().Where(el => el.AttrOrDef("key", "") == "1");
@@ -676,7 +679,7 @@ namespace sql.builder
                         key_columns.Any()
                             ? "#'||" + String.Join("||'#'||", key_columns.Select(col => "mtr." + col.Attribute("as").Value))
                             : "'");
-                     
+
                     SqlBefore.AppendLine("select '" + ParentAttr("name") + "' as skod,");
                     SqlBefore.AppendLine(sid + " as sid,");
                     SqlBefore.AppendLine("row_number() over (order by 1) as rn,");
@@ -789,7 +792,7 @@ namespace sql.builder
                     SqlAfter.Append(" ) *power(10," + Attr("mp") + ")) ");
                 }
 
-                
+
 
                 if (AttrExists("nullif"))
                 {
@@ -808,7 +811,7 @@ namespace sql.builder
                             : (Attr("group") == "count_dist")
                                 ? " count(distinct "
                                 : (Attr("group") + "("));
-                 
+
                 }
 
                 if (AttrExists("nvl"))
@@ -822,8 +825,8 @@ namespace sql.builder
 
                 if (AttrExists("group") && Attr("group") != "1")
                 {
-        
-                  
+
+
                     // after
                     SqlAfter.Append((Attr("group") == "sumnvl") ? ",0)) " : ") ");
                 }
@@ -843,7 +846,7 @@ namespace sql.builder
             public override void Generate(XElement xelement)
             {
                 Prepare(xelement);
-                
+
                 // Генерируется два узла order. Первый обрабатывать не нужно
                 if (IsLast)
                 {
@@ -864,14 +867,14 @@ namespace sql.builder
                 }
                 else
                 {
-                    CurrentXElement.SetAttributeValue("notext","1");
+                    CurrentXElement.SetAttributeValue("notext", "1");
                 }
 
                 GenerateDefault();
                 Complete();
             }
         }
-        class SqlGen_Table: SqlGen
+        class SqlGen_Table : SqlGen
         {
             public override void Generate(XElement xelement)
             {
@@ -959,7 +962,7 @@ namespace sql.builder
             public override void Generate(XElement xelement)
             {
                 Prepare(xelement);
-                
+
                 // before
                 SqlBefore.AppendLine("connect by nocycle");
 
@@ -1103,7 +1106,7 @@ namespace sql.builder
 
                     SqlAfter.AppendLine();
                 }
-                
+
             }
 
             protected void Prepare(XElement xelement)
@@ -1125,9 +1128,9 @@ namespace sql.builder
                 {
                     if (node.NodeType == XmlNodeType.Text)
                     {
-                        node.Remove();                  
+                        node.Remove();
                     }
-                    else if(node.NodeType == XmlNodeType.Element)
+                    else if (node.NodeType == XmlNodeType.Element)
                     {
                         ClearNodeText((XElement)node);
                     }
@@ -1148,7 +1151,7 @@ namespace sql.builder
             protected string Attr(string attr_name)
             {
                 // чтобы не смахивало на hint
-                return CurrentXElement.AttrOrDef(attr_name, "").Replace("{+}","");
+                return CurrentXElement.AttrOrDef(attr_name, "").Replace("{+}", "");
             }
             /// <summary>
             /// Получить значение атрибута родителя текущего узла 
@@ -1203,7 +1206,7 @@ namespace sql.builder
             /// </summary>
             protected bool ChildrenExists(string child_name)
             {
-                return CurrentXElement.Elements(child_name).Any(); 
+                return CurrentXElement.Elements(child_name).Any();
             }
             /// <summary>
             /// Проверить, что существуют узлы с заданным именем на том же уровне
@@ -1278,7 +1281,7 @@ namespace sql.builder
         {
             private static readonly Dictionary<string, SqlGen> cash;
 
-            static SqlGenFactory() 
+            static SqlGenFactory()
             {
                 cash = new Dictionary<string, SqlGen>
                 {
@@ -1296,22 +1299,22 @@ namespace sql.builder
                 {
                     switch (element_name)
                     {
-                        case "select":    sql_gen = new SqlGen_Select(); break;
-                        case "query":     sql_gen = new SqlGen_Query(); break;
-                        case "column":    sql_gen = new SqlGen_Column(); break;
-                        case "call":      sql_gen = new SqlGen_Call(); break;
-                        case "order":     sql_gen = new SqlGen_Order(); break;
-                        case "table":     sql_gen = new SqlGen_Table(); break;
-                        case "from":      sql_gen = new SqlGen_From(); break;
-                        case "with":      sql_gen = new SqlGen_With(); break;
-                        case "where":     sql_gen = new SqlGen_Where(); break;
-                        case "connect":   sql_gen = new SqlGen_Connect(); break;
-                        case "start":     sql_gen = new SqlGen_Start(); break;
-                        case "group":     sql_gen = new SqlGen_Group(); break;
-                        case "having":    sql_gen = new SqlGen_Having(); break;
+                        case "select": sql_gen = new SqlGen_Select(); break;
+                        case "query": sql_gen = new SqlGen_Query(); break;
+                        case "column": sql_gen = new SqlGen_Column(); break;
+                        case "call": sql_gen = new SqlGen_Call(); break;
+                        case "order": sql_gen = new SqlGen_Order(); break;
+                        case "table": sql_gen = new SqlGen_Table(); break;
+                        case "from": sql_gen = new SqlGen_From(); break;
+                        case "with": sql_gen = new SqlGen_With(); break;
+                        case "where": sql_gen = new SqlGen_Where(); break;
+                        case "connect": sql_gen = new SqlGen_Connect(); break;
+                        case "start": sql_gen = new SqlGen_Start(); break;
+                        case "group": sql_gen = new SqlGen_Group(); break;
+                        case "having": sql_gen = new SqlGen_Having(); break;
                         case "dimension": sql_gen = new SqlGen_Dimension(); break;
-                        case "measures":  sql_gen = new SqlGen_Measures(); break;
-                        case "insert":    sql_gen = new SqlGen_Insert(); break;
+                        case "measures": sql_gen = new SqlGen_Measures(); break;
+                        case "insert": sql_gen = new SqlGen_Insert(); break;
 
                         default: return cash["default"];
                     }

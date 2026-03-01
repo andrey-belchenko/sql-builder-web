@@ -1,24 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Data;
-using DataTable = System.Data.DataTable;
-using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Xml;
 using System.Xml.Linq;
-using Contract = System.Diagnostics.Contracts.Contract;
 //using DWorkbook = DevExpress.Spreadsheet.Workbook;
 
-using sql.builder.ExcelApi;
-using sql.builder.DataApi;
 //using sql.builder.TFS;
 using sql.builder.XmlHelpers;
 using ExcelPrintEnv = sql.builder.Print.Xlsx.ExcelPrintEnv;
 using ExcelPrintOptions = sql.builder.Print.Xlsx.ExcelPrintOptions;
-using ExcelUtils = sql.builder.Print.Xlsx.ExcelUtils;
 
 namespace sql.builder
 {
@@ -47,11 +36,14 @@ namespace sql.builder
         /// <summary>
         /// Возвращает или задает путь последней печати файла
         /// </summary>
-        public static string LastPrintedFilePath {
-            get {
+        public static string LastPrintedFilePath
+        {
+            get
+            {
                 return last_printed_file_path;
             }
-            set {
+            set
+            {
                 last_printed_file_path = value;
             }
         }
@@ -63,10 +55,12 @@ namespace sql.builder
         {
             long now = Environment.TickCount;
             ulong elapsed;
-            unchecked {
+            unchecked
+            {
                 elapsed = (ulong)(now - prev_notify_time);
             }
-            if (elapsed >= 1000UL) {
+            if (elapsed >= 1000UL)
+            {
                 string message = "Формирование листа " + (printed_sheets + 1).ToString() + ", строка " + printed_rows.ToString();
                 WaitUIHelper.LastUsedUIHelper.SetDescription(message);
                 prev_notify_time = now;
@@ -99,51 +93,68 @@ namespace sql.builder
         {
 
             LastPrintedFilePath = null;
-            #if DEBUG
+#if DEBUG
             // в режиме отладки добавляем шаблон в проект sql.builder.templates и ТФС
             //if (XmlReports.IsDeveloperMode()) {
             //    ReloadExcelTemplate(template_path, "excel");
             //}
-            #endif
+#endif
             // попутно преобразуем в формат xlsx
-            if (options.NeedConvert) {
+            if (options.NeedConvert)
+            {
                 WaitUIHelper.LastUsedUIHelper.SetDescription("Предобработка файла Excel...");
                 template_path = PreProcess(template_path, data);
             }
             ExcelPrintErrors result = ExcelPrintErrors.None;
             WaitUIHelper.LastUsedUIHelper.SetDescription("Формирование файла Excel...");
-            try {
-                if (options.OnlyColumns) {
+            try
+            {
+                if (options.OnlyColumns)
+                {
                     options.DeleteUnusedColumns = false;
                 }
-                using (var env = new ExcelPrintEnv(template_path, options, data)) {
-                    if (options.OnlyColumns) {
+                using (var env = new ExcelPrintEnv(template_path, options, data))
+                {
+                    if (options.OnlyColumns)
+                    {
                         env.SaveTemplate(output_path);
-                    } else {
+                    }
+                    else
+                    {
                         var doc = new sql.builder.Print.Xlsx.ExcelPrintDocument(env);
                         doc.Printing += OnPrintingHandler;
                         result = doc.Print(data, options.UseDataReader);
                         doc.Printing -= OnPrintingHandler;
-                        if (result != ExcelPrintErrors.NoData) {
+                        if (result != ExcelPrintErrors.NoData)
+                        {
                             doc.Save(output_path);
                         }
                     }
                 }
-            } finally {
+            }
+            finally
+            {
                 //if (options.NeedConvert) {
                 //    File.Delete(template_path);
                 //}
             }
-            if (result != ExcelPrintErrors.NoData) {
-                if (options.NeedPostProcess) {
+            if (result != ExcelPrintErrors.NoData)
+            {
+                if (options.NeedPostProcess)
+                {
                     WaitUIHelper.LastUsedUIHelper.SetDescription("Постобработка файла Excel...");
                     string ext = options.OutputFormat.ToString().ToLower();
-                    if (options.UseFlexCel) {
+                    if (options.UseFlexCel)
+                    {
                         output_path = PostProcessFlexCel(output_path, ext);
-                    } else {
+                    }
+                    else
+                    {
                         output_path = PostProcess(output_path, ext, null, options.FormatSource);
                     }
-                } else if (options.OutputFormat != ExcelPrintOptions.FileFormat.Xlsx) {
+                }
+                else if (options.OutputFormat != ExcelPrintOptions.FileFormat.Xlsx)
+                {
                     output_path = ChangeExcelFileFormat(output_path, options.OutputFormat);
                 }
             }
@@ -159,7 +170,7 @@ namespace sql.builder
         {
             return Path.Combine(Path.GetDirectoryName(template_path), "converted", Path.GetFileNameWithoutExtension(template_path) + ".xlsx");
         }
-        
+
         #endregion
         #region Конструкторы
         /// <summary>
@@ -171,7 +182,7 @@ namespace sql.builder
         /// Конструктор класса печати sql.builder
         /// </summary>
         /// <param name="template_file_name">Имя файла шаблона Excel в формате *.xml</param>
-        public ExcelPrintDocument(string template_file_name) : base(template_file_name) {}
+        public ExcelPrintDocument(string template_file_name) : base(template_file_name) { }
         #endregion
         /// <summary>
         /// Выполняет постобработку файла (формат файла, метки, форматирование)
@@ -204,9 +215,11 @@ namespace sql.builder
         {
             if (Logger.IsAcive) Logger.Log("Постобработка файла...");
             //var exApp = new Application();
-            try {
+            try
+            {
                 //exApp.DisplayAlerts = false;
-                if (string.IsNullOrEmpty(file_name_new)) {
+                if (string.IsNullOrEmpty(file_name_new))
+                {
                     file_name_new = Path.ChangeExtension(file_name, output_format);
                 }
                 if (file_name != file_name_new)
@@ -214,7 +227,9 @@ namespace sql.builder
                     File.Copy(file_name, file_name_new);
                 }
                 return file_name_new;
-            } finally {
+            }
+            finally
+            {
                 //// вызов quit не убивает процесс excel.exe
                 //try {
                 //    Cmn.CloseExcel(ref exApp);
@@ -238,7 +253,7 @@ namespace sql.builder
         {
             return Path.Combine(XmlReports.GetCurrentContentFolder(), @"printTemplate\" + templateType);
         }
-        #if DEBUG
-        #endif
+#if DEBUG
+#endif
     }
 }

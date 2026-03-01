@@ -1,20 +1,20 @@
-﻿using System;
-using System.Xml.Linq;
-
-namespace sql.builder.DataApi
+﻿namespace sql.builder.DataApi
 {
-    public sealed class VScalarConst: VConst
+    public sealed class VScalarConst : VConst
     {
         public VScalarConst()
             : base(EName.@const)
         {
         }
         #region ConstComboValue
-        public override string P_ConstComboValue {
-            get {
+        public override string P_ConstComboValue
+        {
+            get
+            {
                 return this.Value;
             }
-            set {
+            set
+            {
                 this.Value = value ?? string.Empty;
             }
         }
@@ -28,7 +28,8 @@ namespace sql.builder.DataApi
         public void P_ConstComboValue_ListRefresh(VDataTable table)
         {
             VDataTable tbl = this.SelectionListTable();
-            if (tbl != null) {
+            if (tbl != null)
+            {
                 tbl.Refresh();
                 Cmn.CopyTable(tbl, table);
             }

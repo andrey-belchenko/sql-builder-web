@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using sql.builder.Clean;
 //using Vertica.Data.VerticaClient;
 using sql.builder.Core;
@@ -42,10 +42,12 @@ namespace sql.builder.DataApi
         }
         public VReport GetPrecompiledReport(string name, string project = null)
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VReport);
             }
-            if (!string.IsNullOrEmpty(project)) {
+            if (!string.IsNullOrEmpty(project))
+            {
                 this.manager.LoadProjectIfNeed(project);
             }
             var rep = new VReport(this, name);
@@ -98,37 +100,49 @@ namespace sql.builder.DataApi
             where T : VSXElement
         {
             XElement element = this.manager.GetNativeScheme().Elements(parent_name).Elements().SearchByAttribute(key_name, key);
-            if (element != null) {
+            if (element != null)
+            {
                 return VSXElement.Get<T>(element);
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
         public VSXElement GetElement(XName parent_name, string id, string keyName, string file = null, string name = null)
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), parent_name.LocalName + "|" + id)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), parent_name.LocalName + "|" + id))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), parent_name.LocalName + "|" + id) as VSXElement);
             }
             var parentElements = this.manager.GetNativeScheme().Elements(parent_name);
-            if (keyName == null) {
+            if (keyName == null)
+            {
                 var parentKeyNameAttr = parentElements.Attributes(AName.key_name).FirstOrDefault();
-                if (parentKeyNameAttr != null) {
+                if (parentKeyNameAttr != null)
+                {
                     keyName = parentKeyNameAttr.Value;
-                } else {
+                }
+                else
+                {
                     keyName = TextConst.AName.Name;
                 }
             }
             XElement element = null;
-            if (parentElements.Any()) {
+            if (parentElements.Any())
+            {
                 element = parentElements.Elements()
                    .Where(e => (file == null || e.AttrOrEmpty(AName.file) == file)
                             && (name == null || e.Name.LocalName == name))
                    .FirstOrDefault(e1 => e1.AttrOrEmpty(keyName) == id);
             }
             VSXElement el;
-            if (element != null) {
+            if (element != null)
+            {
                 el = VSXElement.Get(element);
-            } else {
+            }
+            else
+            {
                 el = null;
             }
             AddCashValue(el, MethodBase.GetCurrentMethod().ToString(), parent_name.LocalName + "|" + id);
@@ -136,13 +150,17 @@ namespace sql.builder.DataApi
         }
         public List<VSXElement> GetElements(string parentName = null)
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), parentName)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), parentName))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), parentName) as List<VSXElement>);
             }
             IEnumerable<XElement> list1;
-            if (parentName != null) {
+            if (parentName != null)
+            {
                 list1 = this.manager.GetNativeScheme().Elements(parentName);
-            } else {
+            }
+            else
+            {
                 list1 = this.manager.GetNativeScheme().Elements();
             }
             var list = list1.Elements().ToList().SelectAsArray(VSXElement.Get).ToList();
@@ -150,28 +168,31 @@ namespace sql.builder.DataApi
             return list;
         }
         public List<VSXElement> GetUsePartElements(string partName)
-		{
-			if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), partName)) {
-				return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), partName) as List<VSXElement>);
-			}
+        {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), partName))
+            {
+                return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), partName) as List<VSXElement>);
+            }
             IEnumerable<XElement> list1 = this.manager.GetNativeScheme().Descendants(TextConst.EName.UsePart).Where(e => e.Attribute(AName.part).Value == partName);
             List<VSXElement> list = list1.ToList().SelectAsArray(VSXElement.Get).ToList();
-			AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), partName);
-			return list;
-		}
+            AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), partName);
+            return list;
+        }
         public List<VSXElement> GetUseFieldElements(string fieldName)
-		{
-			if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), fieldName)) {
-				return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), fieldName) as List<VSXElement>);
-			}
+        {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), fieldName))
+            {
+                return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), fieldName) as List<VSXElement>);
+            }
             IEnumerable<XElement> list1 = this.manager.GetNativeScheme().Descendants(EName.usefield).Where(e => e.Attribute(AName.field).Value == fieldName);
             List<VSXElement> list = list1.ToList().SelectAsArray(VSXElement.Get).ToList();
-			AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), fieldName);
-			return list;
-		}
+            AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), fieldName);
+            return list;
+        }
         public List<VSourcedElement> GetSourcedElements()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSourcedElement>);
             }
             var list1 = GetElements().OfType<VSourcedElement>().ToList();
@@ -180,7 +201,8 @@ namespace sql.builder.DataApi
         }
         public List<VQueryCall> GetQueryCallsInFields()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VQueryCall>);
             }
             var list2 = GetElements(TextConst.EName.Forms);
@@ -189,13 +211,14 @@ namespace sql.builder.DataApi
             list3 = GetElements(TextConst.EName.Queries);
             list2.AddRange(list3);
             var list4 = list2.SelectMany(e => e.GetDescedantsP(e1 => (e1.Name == EName.listquery) || (e1.Name == EName.defaultquery))).ToList();
-            var  list5 = list4.SelectAsArray(e1 => e1.GetElementsP().FirstOrDefault() as VQueryCall).ToList();
+            var list5 = list4.SelectAsArray(e1 => e1.GetElementsP().FirstOrDefault() as VQueryCall).ToList();
             AddCashValue(list5, MethodBase.GetCurrentMethod().ToString(), null);
             return list5;
         }
         public List<VSXElement> GetReportsAndQReports()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSXElement>);
             }
             var list = GetElements(TextConst.EName.Reports);
@@ -206,7 +229,8 @@ namespace sql.builder.DataApi
         }
         public List<VSXElement> GetQReports()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSXElement>);
             }
             var list = GetElements(TextConst.EName.Queries).Where(EPredicate.IsReport).ToList();
@@ -236,11 +260,13 @@ namespace sql.builder.DataApi
             //{
             //    return VSXElement.Get<VQuery>(WebReportsAdapter.GetQueryXml(name)); 
             //}
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VQuery);
             }
             XElement q = this.manager.GetNativeScheme().Elements(EName.queries).Elements(EName.query).SearchByAttribute(AName.name, name);
-            if (q == null) {
+            if (q == null)
+            {
                 return null;
             }
             VQuery qry = VSXElement.Get<VQuery>(q);
@@ -249,11 +275,13 @@ namespace sql.builder.DataApi
         }
         public VQuery GetQueryByKeyDimensionName(string name)
         {
-            if (string.IsNullOrEmpty(name)) {
+            if (string.IsNullOrEmpty(name))
+            {
                 return null;
             }
             VDimension dim = this.GetDimension(name);
-            if (dim == null) {
+            if (dim == null)
+            {
                 return null;
             }
             VQuery q = this.GetQuery(dim.P_CalledQuery);
@@ -266,14 +294,17 @@ namespace sql.builder.DataApi
         /// <returns>найденое измерение или null</returns>
         public VDimension GetDimensionByQueryName(string name)
         {
-            if (string.IsNullOrEmpty(name)) {
+            if (string.IsNullOrEmpty(name))
+            {
                 return null;
             }
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VDimension);
             }
             XElement el = this.manager.GetNativeScheme().Elements(EName.dimension_packages).Elements(EName.dimension_package).Elements(EName.dimension).Where(EPredicate.IsNotExcuded).SearchByAttribute(AName.class_type, name);
-            if (el == null) {
+            if (el == null)
+            {
                 return null;
             }
             VDimension dim = VSXElement.Get<VDimension>(el);
@@ -282,12 +313,14 @@ namespace sql.builder.DataApi
         }
         public IList<VDimension> GetDimensions()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as IList<VDimension>);
             }
             IList<XElement> dims = this.manager.GetNativeScheme().Elements(EName.dimension_packages).Elements(EName.dimension_package).Elements(EName.dimension).Where(EPredicate.IsNotExcuded).ToList();
             VDimension[] arr = new VDimension[dims.Count];
-            for (int index = 0; index < dims.Count; index++) {
+            for (int index = 0; index < dims.Count; index++)
+            {
                 arr[index] = VSXElement.Get<VDimension>(dims[index]);
             }
             AddCashValue(arr, MethodBase.GetCurrentMethod().ToString(), null);
@@ -300,11 +333,13 @@ namespace sql.builder.DataApi
         /// <returns>найденое измерение или null</returns>
         public VDimension GetDimension(string name)
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VDimension);
             }
             XElement el = this.manager.GetNativeScheme().Elements(EName.dimension_packages).Elements(EName.dimension_package).Elements(EName.dimension).Where(EPredicate.IsNotExcuded).SearchByAttribute(AName.name, name);
-            if (el == null) {
+            if (el == null)
+            {
                 return null;
             }
             VDimension dim = VSXElement.Get<VDimension>(el);
@@ -313,7 +348,8 @@ namespace sql.builder.DataApi
         }
         public VAction GetAction(string name)
         {
-            if (this.IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
+            if (this.IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name))
+            {
                 return (this.GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VAction);
             }
             VAction action = this.GetElement<VAction>(EName.actions, AName.name, name);
@@ -322,7 +358,8 @@ namespace sql.builder.DataApi
         }
         public VField GetField(string id)
         {
-            if (this.IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), id)) {
+            if (this.IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), id))
+            {
                 return (this.GetCashValue(MethodBase.GetCurrentMethod().ToString(), id) as VField);
             }
             VField field = this.GetElement<VField>(EName.fields, AName.id, id);
@@ -331,11 +368,13 @@ namespace sql.builder.DataApi
         }
         public VColor GetColor(string name)
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VColor);
             }
             XElement el = this.manager.GetNativeScheme().Elements(EName.color_packages).Elements(EName.color_package).Elements(EName.color).Where(EPredicate.IsNotExcuded).SearchByAttribute(AName.name, name);
-            if (el == null) {
+            if (el == null)
+            {
                 return null;
             }
             VColor clr = VSXElement.Get<VColor>(el);
@@ -390,12 +429,14 @@ namespace sql.builder.DataApi
         /// <returns></returns>
         public IList<VExpression> GetExpressions()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as IList<VExpression>);
             }
             IList<XElement> expressions = this.manager.GetNativeScheme().Elements(EName.expression_packages).Elements(EName.expression_package).Elements(EName.call).Where(EPredicate.IsNotExcuded).ToList();
             VExpression[] arr = new VExpression[expressions.Count];
-            for (int index = 0; index < expressions.Count; index++) {
+            for (int index = 0; index < expressions.Count; index++)
+            {
                 arr[index] = VSXElement.Get<VExpression>(expressions[index]);
             }
             AddCashValue(arr, MethodBase.GetCurrentMethod().ToString(), null);
@@ -403,12 +444,15 @@ namespace sql.builder.DataApi
         }
         public List<VRole> GetRoles()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VRole>);
             }
             List<VRole> list = new List<VRole>();
-            foreach (VSXElement expPack in GetElements(TextConst.EName.SecurityPackages)) {
-                foreach (VRole exp in expPack.GetElementsP()) {
+            foreach (VSXElement expPack in GetElements(TextConst.EName.SecurityPackages))
+            {
+                foreach (VRole exp in expPack.GetElementsP())
+                {
                     list.Add(exp);
                 }
             }
@@ -417,11 +461,13 @@ namespace sql.builder.DataApi
         }
         public List<VSXElement> GetFactColumns()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSXElement>);
             }
             List<VSXElement> list = new List<VSXElement>();
-            foreach (VSXElement exp in GetElements(TextConst.EName.Queries).SelectMany(e => (e as VQuery).FactColumns()).Distinct()) {
+            foreach (VSXElement exp in GetElements(TextConst.EName.Queries).SelectMany(e => (e as VQuery).FactColumns()).Distinct())
+            {
                 list.Add(exp);
             }
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), null);
@@ -434,11 +480,13 @@ namespace sql.builder.DataApi
         /// <returns>найденое выражение или null</returns>
         public VExpression GetExpression(string name)
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VExpression);
             }
             XElement el = this.manager.GetNativeScheme().Elements(EName.expression_packages).Elements(EName.expression_package).Elements(EName.call).Where(EPredicate.IsNotExcuded).SearchByAttribute(AName.@as, name);
-            if (el == null) {
+            if (el == null)
+            {
                 return null;
             }
             VExpression exp = VSXElement.Get<VExpression>(el);
@@ -447,7 +495,8 @@ namespace sql.builder.DataApi
         }
         public VRole GetRole(string name)
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VRole);
             }
             var exp = GetRoles().FirstOrDefault(r => r.P_Name == name);
@@ -456,38 +505,46 @@ namespace sql.builder.DataApi
         }
         public List<VSXElement> GetQueryUseByColumnLink(string queryName)
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), queryName)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), queryName))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), queryName) as List<VSXElement>);
             }
             var cols = this.manager.GetScheme().Elements(EName.queries).Elements(EName.query).Elements(EName.select).Elements().Where(e => e.AttrOrEmpty(AName.link) == queryName);
             List<VSXElement> list = new List<VSXElement>();
-            foreach (XElement col in cols) {
+            foreach (XElement col in cols)
+            {
                 XElement qry = col.Ancestors(EName.query).First();
                 VSourcedElement vqry = this.GetQuery(qry.Attribute(AName.name).Value).GetMainE();
                 string colName = col.AttrOrEmpty(AName.@as);
-                if (string.IsNullOrEmpty(colName)){
+                if (string.IsNullOrEmpty(colName))
+                {
                     colName = col.AttrOrEmpty(AName.column);
                 }
                 VSXElement vcol = vqry.SearchColumn(colName);
                 list.Add(vcol);
-            }            
+            }
             AddCashValue(list, MethodBase.GetCurrentMethod().ToString(), queryName);
             return list;
         }
         public VSXElement GetFactColumn(string name)
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VSXElement);
             }
             VSXElement col = null;
             var compiledQueries = this.manager.GetScheme().Elements(EName.queries).Elements(EName.query).Elements(EName.select).Elements().Where(e => e.AttrOrEmpty(AName.fact) == name);
             XElement compiled;
-            if (compiledQueries.Count() > 1) {
+            if (compiledQueries.Count() > 1)
+            {
                 compiled = compiledQueries.First(e => e.Parent.Parent.Attribute(AName.inherit) == null);
-            } else {
+            }
+            else
+            {
                 compiled = compiledQueries.FirstOrDefault();
             }
-            if (compiled != null) {
+            if (compiled != null)
+            {
                 var queryName = compiled.Parent.Parent.Attribute(AName.name).Value;
                 col = GetQuery(queryName).SearchColumnByFactName(name);
             }
@@ -505,11 +562,13 @@ namespace sql.builder.DataApi
         }
         public VSXElement GetFactSource(string name)
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VSXElement);
             }
             VSXElement source = this.GetExpression(name);
-            if (source == null) {
+            if (source == null)
+            {
                 source = this.GetFactColumn(name);
             }
             AddCashValue(source, MethodBase.GetCurrentMethod().ToString(), name);
@@ -517,11 +576,13 @@ namespace sql.builder.DataApi
         }
         public List<VSXElement> GetSecurityObjects()
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), null))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), null) as List<VSXElement>);
             }
             var list = new List<VSXElement>();
-            foreach (XElement el in this.manager.GetNativeScheme().Descendants().Where(e => e.Attribute(TextConst.AName.SecurityId) != null).ToList()) {
+            foreach (XElement el in this.manager.GetNativeScheme().Descendants().Where(e => e.Attribute(TextConst.AName.SecurityId) != null).ToList())
+            {
                 var vel = VSXElement.Get(el);
                 list.Add(vel);
             }
@@ -530,11 +591,13 @@ namespace sql.builder.DataApi
         }
         public VSXElement GetSecurityObject(string name)
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VSXElement);
             }
             XElement el = this.manager.GetNativeScheme().Descendants().SearchByAttribute(AName.security_id, name);
-            if (el == null) {
+            if (el == null)
+            {
                 return null;
             }
             VSXElement vel = VSXElement.Get(el);
@@ -577,7 +640,8 @@ namespace sql.builder.DataApi
         public VSXElement GetReportOrQuery(string name)
         {
             VSXElement ret = GetReport(name);
-            if (ret == null) {
+            if (ret == null)
+            {
                 ret = GetQuery(name);
             }
             return ret;
@@ -590,16 +654,20 @@ namespace sql.builder.DataApi
             //    return VSXElement.Get<VForm>(reportXml);
             //}
             XElement q = this.manager.GetNativeScheme().Elements(EName.forms).Elements(EName.form).SearchByAttribute(AName.name, name);
-            if (q == null) {
+            if (q == null)
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return VSXElement.Get<VForm>(q);
             }
         }
         public VSXElement GetFormOrQuery(string name)
         {
             VSXElement vform = this.GetForm(name);
-            if (vform == null) {
+            if (vform == null)
+            {
                 vform = this.GetQuery(name);
             }
             return vform;
@@ -611,18 +679,21 @@ namespace sql.builder.DataApi
         public VForm GetFormOrQueryAsForm(string name)
         {
             VForm vform = this.GetForm(name);
-            if (vform == null) {
+            if (vform == null)
+            {
                 vform = this.GetFormFromQuery(name);
             }
             return vform;
         }
         public VForm GetFormFromQuery(string name)
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), name))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), name) as VForm);
             }
             VQuery qr = this.GetQuery(name);
-            if (qr == null) {
+            if (qr == null)
+            {
                 return null;
             }
             var xform = qr.GetFormXElement();
@@ -638,19 +709,23 @@ namespace sql.builder.DataApi
         }
         public VPart GetPart(string id)
         {
-            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), id)) {
+            if (IsCashValueExists(MethodBase.GetCurrentMethod().ToString(), id))
+            {
                 return (GetCashValue(MethodBase.GetCurrentMethod().ToString(), id) as VPart);//! без кешмрования baseelement будет работать некорректно
             }
             List<XElement> q = this.manager.GetNativeScheme().Elements(EName.parts).Elements(EName.part).Where(e => e.Attribute(AName.id).Value == id).ToList();
             VPart part = null;
-            if (q.Count == 0) {
+            if (q.Count == 0)
+            {
                 q = this.manager.GetNativeScheme().Descendants().Where(e => e.Attribute(AName.part_id) != null && e.Attribute(AName.part_id).Value == id).ToList().SelectAsArray<XElement, XElement>(VSXElement.Get).ToList(); // было Select(e => (XElement)VSXElement.Get(e))
                 XElement p = new XElement(EName.part);
                 p.Add(q);
                 part = VSXElement.Get<VPart>(p);
                 //part.environment = this;
                 part.VirtualParent = p;
-            } else {
+            }
+            else
+            {
                 part = VSXElement.Get<VPart>(q[0]);
             }
             AddCashValue(part, MethodBase.GetCurrentMethod().ToString(), id);
@@ -667,9 +742,12 @@ namespace sql.builder.DataApi
         {
             XElement parentElement = this.manager.GetNativeScheme().Elements().First(e1 => e1.AttrOrEmpty(TextConst.AName.ChildName) == elementType);
             XElement template;
-            if (templateName != null) {
+            if (templateName != null)
+            {
                 template = parentElement.Elements().First(e1 => e1.AttrOrEmpty(AName.template_name) == templateName);
-            } else {
+            }
+            else
+            {
                 template = null;
             }
             VSXElement el = CreateElement(elementType, template);
@@ -687,17 +765,23 @@ namespace sql.builder.DataApi
             XElement element;
             string name;
             XName keyName = XNamespace.None.GetName(parentElement.Attribute(AName.key_name).Value);
-            if (template != null) {
+            if (template != null)
+            {
                 XAttribute attr = template.Attribute(AName.template_name);
-                if (attr != null) {
+                if (attr != null)
+                {
                     name = attr.Value;
-                } else {
+                }
+                else
+                {
                     name = template.Attribute(keyName).Value;
                 }
                 element = new XElement(template);
                 element.RemoveAttribute(AName.template_name);
                 element.RemoveAttribute(AName.file);
-            } else {
+            }
+            else
+            {
                 name = elementType;
                 element = new XElement(elementType);
             }
@@ -709,7 +793,8 @@ namespace sql.builder.DataApi
             element.SetAttributeValue(keyName, name);
             parentElement.Add(element);
             var el = VSXElement.Get(element);
-            if (fileName != null) {
+            if (fileName != null)
+            {
                 el.SetAttributeValue(AName.file, fileName);
             }
             return el;
@@ -726,37 +811,46 @@ namespace sql.builder.DataApi
             if (!(e is VQuery) && !(e is VReport) && !(e is VForm)) return;
             if (e.Attribute(AName.file) == null) return;
             var navigators = this.manager.GetNativeScheme().Elements(EName.navigators).Elements(EName.navigator).Select(VSXElement.Get).ToArray();
-            foreach (var vsxElement in navigators) {
+            foreach (var vsxElement in navigators)
+            {
                 //ucQueriesEditorItem.UpdateElementFileInfo(vsxElement);
             }
             string project = Cmn.ExtractProjectName(e.Attribute(AName.file).Value);
             var changed = new HashSet<VSXElement>();
             var elements = Array.Empty<VSXElement>();
-            if (e is VReport || e.P_IsReport == TextConst.AVBool.True) {
+            if (e is VReport || e.P_IsReport == TextConst.AVBool.True)
+            {
                 elements = navigators.Descendants(EName.usereport)
                     .Where(x => x.Attribute(AName.project).Value == project && x.Attribute(AName.report).Value == e.P_Name)
                     .ToList()
                     .SelectAsArray(VSXElement.Get);
-                foreach (VSXElement element in elements) {
+                foreach (VSXElement element in elements)
+                {
                     element.P_SelfTitle = e.P_SelfTitle;
                     element.P_Invisible = e.P_Invisible;
                     element.P_SecurityId = e.P_SecurityId;
                     var parent = element.GetMainParent();
-                    if (!changed.Contains(parent)) {
-                        changed.Add(parent);
-                    }
-                }
-            } else if (e is VForm) {
-                elements = navigators.Descendants(EName.useform).Where(x => x.Attribute(AName.project).Value == project && x.Attribute(AName.form).Value == e.P_Name).ToList().SelectAsArray(VSXElement.Get);
-                foreach (VSXElement element in elements) {
-                    element.P_SelfTitle = e.P_SelfTitle;
-                    var parent = element.GetMainParent();
-                    if (!changed.Contains(parent)) {
+                    if (!changed.Contains(parent))
+                    {
                         changed.Add(parent);
                     }
                 }
             }
-            foreach (VSXElement n in changed) {
+            else if (e is VForm)
+            {
+                elements = navigators.Descendants(EName.useform).Where(x => x.Attribute(AName.project).Value == project && x.Attribute(AName.form).Value == e.P_Name).ToList().SelectAsArray(VSXElement.Get);
+                foreach (VSXElement element in elements)
+                {
+                    element.P_SelfTitle = e.P_SelfTitle;
+                    var parent = element.GetMainParent();
+                    if (!changed.Contains(parent))
+                    {
+                        changed.Add(parent);
+                    }
+                }
+            }
+            foreach (VSXElement n in changed)
+            {
                 n.SaveInSourceFile();
             }
         }

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
-using Devart.Data.Oracle;
-using sql.builder.DataApi;
-using System.Collections.Generic;
+﻿using System.Text;
 
 
 namespace sql.builder.XmlHelpers
@@ -17,14 +10,14 @@ namespace sql.builder.XmlHelpers
         {
 
             XmlReports.Environment.Manager.LoadProjectIfNeed("kido_lkk");
-            CodeGenerationUtils.PfxToReaplace = new string[] { "_tmp", "_cls"};
+            CodeGenerationUtils.PfxToReaplace = new string[] { "_tmp", "_cls" };
             CodeGenerationUtils.PfxToReaplaceWeb = new string[] { "vcs_" };
             CodeGenerationUtils.PfxToReaplaceCls = new string[] { "vcs_" };
             var sb = new StringBuilder();
             sb.Append(DataFileBegin());
             sb.Append(CodeGenerationUtils.ClassDeclaration(new string[] { "vcs_user_login_cls", "vcs_get_login_info", "vcs_get_all_login_list", "vcs_get_petition", "vcs_get_company_list", "vcs_get_counteragent_list" }));
             sb.Append(DataFileBeginMethods());
-            
+
             sb.Append(CodeGenerationUtils.UpdateTempFromObject("vcs_user_login_input"));
             sb.Append(CodeGenerationUtils.UpdateTempFromObject("vcs_petition_input"));
             sb.Append(CodeGenerationUtils.ExecuteMerge("vcs_user_login_merge"));
@@ -33,7 +26,7 @@ namespace sql.builder.XmlHelpers
             sb.Append(CodeGenerationUtils.ExecuteMerge("vcs_bind_request"));
             sb.Append(CodeGenerationUtils.ExecuteMerge("vcs_confirm_new_login"));
             sb.Append(CodeGenerationUtils.ExecuteDelete("vcs_user_login_delete"));
-            
+
             sb.Append(CodeGenerationUtils.ExecuteSelect("vcs_get_login_info"));
             sb.Append(CodeGenerationUtils.ExecuteSelect("vcs_get_new_login_list"));
             sb.Append(CodeGenerationUtils.ExecuteSelect("vcs_get_bing_req_err"));
@@ -53,9 +46,9 @@ namespace sql.builder.XmlHelpers
 
             sb = new StringBuilder();
             sb.Append(ServiceFileBegin());
-            sb.Append(CodeGenerationUtils.MethodSelect("vcs_get_login_info",true));
+            sb.Append(CodeGenerationUtils.MethodSelect("vcs_get_login_info", true));
             sb.Append(CodeGenerationUtils.MethodSelect("vcs_get_new_login_list", true));
-            sb.Append(CodeGenerationUtils.MethodSelect("vcs_get_all_login_list",false));
+            sb.Append(CodeGenerationUtils.MethodSelect("vcs_get_all_login_list", false));
             sb.Append(CodeGenerationUtils.MethodSelect("vcs_get_user_id", false));
             sb.Append(CodeGenerationUtils.MethodSelect("vcs_get_petition", false));
             sb.Append(CodeGenerationUtils.MethodSelect("vcs_get_petition_list", false));

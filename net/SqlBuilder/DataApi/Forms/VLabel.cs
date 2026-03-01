@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
-
-namespace sql.builder.DataApi
+﻿namespace sql.builder.DataApi
 {
     public sealed class VLabel : VSXElement
     {

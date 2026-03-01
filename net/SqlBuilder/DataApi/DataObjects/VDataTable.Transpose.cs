@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Xml.Linq;
-using System.Text;
 using sql.builder;
-using System.Data;
 namespace sql.builder.DataApi
 {
     public partial class VDataTable : DataTable
@@ -21,9 +20,9 @@ namespace sql.builder.DataApi
                 if (groupingQuery.Element(TextConst.EName.Grouping) != null)
                 {
                     groupingQuery = new XElement(groupingQuery);
-                    Compiler.addColumnsAlias(groupingQuery,false,true);
+                    Compiler.addColumnsAlias(groupingQuery, false, true);
                     Compiler.prepareSelfGrsets(groupingQuery, null);
-                    sourceQuery =(VQuery) VSXElement.Get( groupingQuery);
+                    sourceQuery = (VQuery)VSXElement.Get(groupingQuery);
                     _groupingInfo = sourceQuery.Descendants(TextConst.EName.Grsets).First();
                 }
                 else
@@ -34,7 +33,7 @@ namespace sql.builder.DataApi
                 _groupingInfo = new XElement(_groupingInfo);
                 //preProcessingIGroup(element);
 
-                var allFacts = sourceQuery.Columns().Where(e => Compiler.grFuncsNames.Contains( Cmn.GetAttrValue(e, TextConst.AName.Group))).ToList();
+                var allFacts = sourceQuery.Columns().Where(e => Compiler.grFuncsNames.Contains(Cmn.GetAttrValue(e, TextConst.AName.Group))).ToList();
 
                 foreach (XElement grset in _groupingInfo.Descendants(TextConst.EName.Grset))
                 {
@@ -46,7 +45,7 @@ namespace sql.builder.DataApi
                         xfactsInfo = new XElement(TextConst.EName.Facts);
                         grset.Add(xfactsInfo);
                     }
-                   
+
                     var keys = grset.Attribute(TextConst.AName.Level).Value.Split(',').ToList();
                     foreach (string key in keys)
                     {
@@ -59,9 +58,9 @@ namespace sql.builder.DataApi
 
                             xcolsInfo.Add(xcolInfo);
                             foreach (VSXElement attrCol in sourceQuery.Columns().Where(
-                                e => Cmn.GetAttrValue(e, TextConst.AName.Group) == keyColumn.XName  
+                                e => Cmn.GetAttrValue(e, TextConst.AName.Group) == keyColumn.XName
                                     ||
-                                     Cmn.GetAttrValue(e, TextConst.AName.Master) == keyColumn.XName  
+                                     Cmn.GetAttrValue(e, TextConst.AName.Master) == keyColumn.XName
                                     ).ToList())
                             {
                                 xcolInfo = new XElement(TextConst.EName.Column, new XAttribute(TextConst.AName.Column, attrCol.XName));
@@ -79,17 +78,17 @@ namespace sql.builder.DataApi
                         }
                     }
                 }
-               
 
-            
-                
+
+
+
             }
             return _groupingInfo;
         }
 
-        public  bool IsOnColsGrouping()
+        public bool IsOnColsGrouping()
         {
-           // return false;
+            // return false;
             if (this.Columns.Contains(TextConst.AVSpecColumnGrset.OnColsColId)) // !!! не очень удачно - коcвенный признак, пока так
             {
                 return true;
@@ -108,9 +107,9 @@ namespace sql.builder.DataApi
     }
     class VDataTableTransposeUtils
     {
-        
-        
-        
+
+
+
         public static void TransposeIfNeed(VDataTable table)
         {
             //return;
@@ -123,7 +122,8 @@ namespace sql.builder.DataApi
         private class DimensionValue
         {
             private string _id;
-            public string Id{
+            public string Id
+            {
                 get
                 {
                     return _id;
@@ -135,7 +135,7 @@ namespace sql.builder.DataApi
                     {
                     }
                 }
-            
+
             }
             public Dictionary<string, string> Atributes = new Dictionary<string, string>();
             public SortedList<string, string> NewColumnsNames = new SortedList<string, string>();
@@ -146,13 +146,13 @@ namespace sql.builder.DataApi
         {
             public DataRow MainRow;
             public SortedList<string, SortedList<string, List<DataRow>>> OtherRows = new SortedList<string, SortedList<string, List<DataRow>>>();// главная строка->идентификаторы измерений->строки для идентификатора
-           
+
 
         }
 
         private class GrsetData
         {
-            public SortedList<string, DimensionValue> DimValues=new SortedList<string,DimensionValue>();
+            public SortedList<string, DimensionValue> DimValues = new SortedList<string, DimensionValue>();
             public string Name = null;
 
             public XElement XInfo = null;
@@ -162,15 +162,15 @@ namespace sql.builder.DataApi
             public string IntervalBeginColumnName = null;
             public string IntervalEndColumnName = null;
             public bool FillDimvalTable = false; //для reader пока не реализовано
-            public string  DimvalTableName = null;
+            public string DimvalTableName = null;
         }
 
         private class FactColumnInfo
         {
-            
+
             public string Name = null;
-         
-            
+
+
 
         }
 
@@ -188,12 +188,12 @@ namespace sql.builder.DataApi
             }
 
 
-           
+
         }
 
         private static string clearColId(string val)
         {
-            return val.Replace(".", "_").Replace(",", "_").Replace("#", "_"); 
+            return val.Replace(".", "_").Replace(",", "_").Replace("#", "_");
         }
         private static void AnalyzeDataWithFullLoad(TransposeDataStructure data, VDataTable table)
         {
@@ -201,7 +201,7 @@ namespace sql.builder.DataApi
 
             foreach (var grs in data.Grsets.Values)
             {
-                TryPreAnalyzeDataWithDimQuery(grs, table); 
+                TryPreAnalyzeDataWithDimQuery(grs, table);
             }
             foreach (DataRow row in table.AsEnumerable())
             {
@@ -231,36 +231,36 @@ namespace sql.builder.DataApi
                 }
                 else
                 {
-                  
-                   
-                    
-                    
-                    string dimValId="";
+
+
+
+
+                    string dimValId = "";
                     if (grset.IsWithDimQuery)
                     {
                         dimValId = getDimValIdStringFromRow(grset, row, null, null);
                     }
                     else
                     {
-                         dimValId = addDimValFromRow(grset, row, null, null,null);
+                        dimValId = addDimValFromRow(grset, row, null, null, null);
                     }
                     if (!rowset.OtherRows.ContainsKey(rowGrsetName))
                     {
                         rowset.OtherRows.Add(rowGrsetName, new SortedList<string, List<DataRow>>());
-                         
-                    }
-                     List<DataRow> rows=null;
-                     if (rowset.OtherRows[rowGrsetName].ContainsKey(dimValId))
-                     {
-                         rows = rowset.OtherRows[rowGrsetName][dimValId];
-                     }
-                     else
-                     {
-                         rows = new List<DataRow>();
-                         rowset.OtherRows[rowGrsetName].Add(dimValId, rows);
-                     }
 
-                     rows.Add(row);
+                    }
+                    List<DataRow> rows = null;
+                    if (rowset.OtherRows[rowGrsetName].ContainsKey(dimValId))
+                    {
+                        rows = rowset.OtherRows[rowGrsetName][dimValId];
+                    }
+                    else
+                    {
+                        rows = new List<DataRow>();
+                        rowset.OtherRows[rowGrsetName].Add(dimValId, rows);
+                    }
+
+                    rows.Add(row);
                 }
             }
         }
@@ -268,7 +268,7 @@ namespace sql.builder.DataApi
 
         private static string getDimValIdStringFromRow(GrsetData grset, DataRow row, string keyColumnName, List<string> otherCols)
         {
-           
+
             var pfx = "";
             if (keyColumnName == null)
             {
@@ -303,7 +303,7 @@ namespace sql.builder.DataApi
             }
             else
             {
-                return tr.IsCurrentRowValueExists (columnName);
+                return tr.IsCurrentRowValueExists(columnName);
             }
         }
 
@@ -323,8 +323,8 @@ namespace sql.builder.DataApi
             {
                 pfx = "_";
             }
-            var dimValId = clearColId(pfx+
-                readRowOrReaderVal(row,tr,keyColumnName)
+            var dimValId = clearColId(pfx +
+                readRowOrReaderVal(row, tr, keyColumnName)
                 .ToString());
             if (!grset.DimValues.ContainsKey(dimValId))
             {
@@ -334,7 +334,7 @@ namespace sql.builder.DataApi
                 {
                     if (dimColName != grset.IntervalEndColumnName)
                     {
-                        var attrVal = readRowOrReaderVal( row,tr,dimColName).ToString();
+                        var attrVal = readRowOrReaderVal(row, tr, dimColName).ToString();
                         dimVal.Atributes.Add(dimColName, attrVal);
                     }
                 }
@@ -350,13 +350,13 @@ namespace sql.builder.DataApi
                     }
                     else
                     {
-                        
+
                         //if (!tr.IsCurrentRowValueExists(ibc))
                         //{
                         //    ibc = keyColumnName;
                         //}
                     }
-                    var v = readRowOrReaderVal(row,tr,ibc);
+                    var v = readRowOrReaderVal(row, tr, ibc);
                     if (!(v is decimal))
                     {
                         v = (decimal)Cmn.ToDecimal(readRowOrReaderVal(row, tr, ibc).ToString());
@@ -372,9 +372,9 @@ namespace sql.builder.DataApi
             return dimValId;
         }
 
-        private static void UpdateDimTableIfNeed(GrsetData grset,  DimensionValue dimVal,DataSet ds)
+        private static void UpdateDimTableIfNeed(GrsetData grset, DimensionValue dimVal, DataSet ds)
         {
-            
+
             if (!grset.FillDimvalTable) return;
             var tbl = ds.Tables[grset.DimvalTableName];
 
@@ -403,7 +403,7 @@ namespace sql.builder.DataApi
                     if (!tbl.Columns.Contains(aa.Key))
                     {
                         tbl.Columns.Add(aa.Key);
-                       
+
                     }
                     row[aa.Key] = aa.Value;
                 }
@@ -444,7 +444,7 @@ namespace sql.builder.DataApi
 
                 foreach (DataRow row in tbl.Rows)
                 {
-                    addDimValFromRow(grset, row,null,null,null);
+                    addDimValFromRow(grset, row, null, null, null);
                 }
             }
         }
@@ -481,7 +481,7 @@ namespace sql.builder.DataApi
             }
 
 
-            if (table.GetDataSet().Tables[dimQryName]==null)
+            if (table.GetDataSet().Tables[dimQryName] == null)
             { //наоборот, таблица заполняетя в соответствии с фактическими значениями измерений, нужно для вывода в excel
                 grset.DimvalTableName = dimQryName;
                 grset.FillDimvalTable = true;
@@ -499,21 +499,21 @@ namespace sql.builder.DataApi
             }
 
             dimTable.ReadAll();
-                foreach (DataRow row in table.GetDataSet().Tables[dimQryName].Rows)
-                {
-                    addDimValFromRow(grset, row, row.Table.Columns[0].ColumnName, otherCols,null);
-                }
+            foreach (DataRow row in table.GetDataSet().Tables[dimQryName].Rows)
+            {
+                addDimValFromRow(grset, row, row.Table.Columns[0].ColumnName, otherCols, null);
+            }
             //}
 
-          
+
         }
 
-        private static TransposeDataStructure AnalyzeData(VDataTable table,XElement goupingInfo )
+        private static TransposeDataStructure AnalyzeData(VDataTable table, XElement goupingInfo)
         {
             var data = new TransposeDataStructure();
             foreach (XElement xgrset in goupingInfo.Element(TextConst.EName.OnColumns).Descendants(TextConst.EName.Grset).ToList())
             {
-               
+
                 var name = xgrset.Attribute(TextConst.AName.As).Value;
                 var grset = new GrsetData();
                 grset.XInfo = xgrset;
@@ -529,16 +529,16 @@ namespace sql.builder.DataApi
                 }
 
                 foreach (XElement xcol in grset.XInfo.Element(TextConst.EName.Facts).Elements().ToList())
-                { 
-                   
+                {
+
                     var fci = new FactColumnInfo();
-                    fci.Name=xcol.Attribute(TextConst.AName.Column).Value;
-                
+                    fci.Name = xcol.Attribute(TextConst.AName.Column).Value;
+
                     grset.FactColumnsInfo.Add(fci.Name, fci);
                 }
-             
-               
-                data.Grsets.Add(name,grset); 
+
+
+                data.Grsets.Add(name, grset);
             }
             if (!table.IsReader)
             {
@@ -547,7 +547,7 @@ namespace sql.builder.DataApi
             else
             {
                 PreAnalyzeDataWithPartialLoad(data, table);
-                
+
             }
 
             return data;
@@ -558,10 +558,11 @@ namespace sql.builder.DataApi
         {
             if (!dval.NewColumnsNames.ContainsKey(factColName))
             {
-                dval.NewColumnsNames[factColName] = factColName + /*"_" + grset.Name +*/ dval.Id; 
+                dval.NewColumnsNames[factColName] = factColName + /*"_" + grset.Name +*/ dval.Id;
                 // есть вероятность получить неуникальное имя, решать путем добавлния того же факта с другим именем
                 // добавление в имя grset.Name создает много неудобства для вычислений на клиенте, и оформлении шаблона excel
-                if (!data.NewColumnsNames.ContainsKey(dval.Id)){
+                if (!data.NewColumnsNames.ContainsKey(dval.Id))
+                {
                     data.NewColumnsNames[dval.Id] = new SortedList<string, string>();
                 }
                 data.NewColumnsNames[dval.Id][factColName] = dval.NewColumnsNames[factColName];// для вычислений на клиенте
@@ -570,7 +571,7 @@ namespace sql.builder.DataApi
             return dval.NewColumnsNames[factColName];
         }
 
-        private static void addColumn(string newName,bool dimOnTop, VDataTable table, string factColName, DimensionValue dval, string prevColName)
+        private static void addColumn(string newName, bool dimOnTop, VDataTable table, string factColName, DimensionValue dval, string prevColName)
         {
 
             var factTitle = table.Columns[factColName].Caption;
@@ -594,8 +595,8 @@ namespace sql.builder.DataApi
                 newTitle = dimTitle;
                 bandTitle = factTitle;
             }
-            copyColumn(table, factColName, newName, newTitle,bandTitle, prevColName);
-            
+            copyColumn(table, factColName, newName, newTitle, bandTitle, prevColName);
+
         }
         private static void processColumns(VDataTable table, TransposeDataStructure data)
         {
@@ -612,7 +613,7 @@ namespace sql.builder.DataApi
                     foreach (DimensionValue dval in grset.DimValues.Values)
                     {
 
-                        var newName = combineColumnName(data,grset, factColName, dval);
+                        var newName = combineColumnName(data, grset, factColName, dval);
                         string insertAfter = null;
                         if (dimOnTop)
                         {
@@ -636,7 +637,7 @@ namespace sql.builder.DataApi
                         {
                             insertAfter = prevColName;
                         }
-                        addColumn(newName,dimOnTop, table, factColName, dval, insertAfter);
+                        addColumn(newName, dimOnTop, table, factColName, dval, insertAfter);
 
                         var origCol = (VDataColumn)table.Columns[factColName];
                         var newCol = (VDataColumn)table.Columns[newName];
@@ -679,7 +680,7 @@ namespace sql.builder.DataApi
                     }
                     else
                     {
-                      
+
                         var grsetId = tr.reader[TextConst.AVSpecColumnGrset.OnColsGrSetId].ToString();
                         var dimId = clearColId(tr.reader[TextConst.AVSpecColumnGrset.OnColsColId].ToString());
                         var grset = tri.Grsets[grsetId];
@@ -701,7 +702,7 @@ namespace sql.builder.DataApi
                             }
                             else
                             {
-                                
+
                                 var dvalIndex1 = grset.DimValues.IndexOfKey(dimId);
                                 object endValue = tr.reader[grset.IntervalEndColumnName];
                                 decimal valToAdd = (decimal)Cmn.Nvl(tr.reader[fi.Name], (decimal)0);
@@ -711,7 +712,7 @@ namespace sql.builder.DataApi
 
                         }
 
-                        
+
                     }
                 }
                 else
@@ -725,12 +726,12 @@ namespace sql.builder.DataApi
         }
 
 
-        private static void updateRowWithIntervalValue(int dvalIndex1,GrsetData grset,object endValue, DataRow targetRow,TableReference tr, string factColName,decimal valToAdd, TransposeDataStructure data) 
+        private static void updateRowWithIntervalValue(int dvalIndex1, GrsetData grset, object endValue, DataRow targetRow, TableReference tr, string factColName, decimal valToAdd, TransposeDataStructure data)
         {
             var dvalIndex = dvalIndex1;
             while (true) // сальдо добавляется во все колонки за период, в течении которого оно действует
             {
-                
+
                 DimensionValue dval = grset.DimValues.Values.ElementAt(dvalIndex);
                 if (endValue != DBNull.Value)
                 {
@@ -741,7 +742,7 @@ namespace sql.builder.DataApi
                 }
                 //if (dval.NumericValue)
                 var newColName = combineColumnName(data, grset, factColName, dval);
-                if (rowOrTrColumnExists(targetRow,tr,newColName))
+                if (rowOrTrColumnExists(targetRow, tr, newColName))
                 {
                     if (targetRow != null)
                     {
@@ -780,7 +781,7 @@ namespace sql.builder.DataApi
                         {
                             foreach (DimensionValue dval in grset.DimValues.Values)
                             {
-                                var newColName = combineColumnName(data,grset, factColName, dval);
+                                var newColName = combineColumnName(data, grset, factColName, dval);
                                 if (rs.OtherRows.ContainsKey(grset.Name))
                                 {
                                     if (rs.OtherRows[grset.Name].ContainsKey(dval.Id))
@@ -788,28 +789,28 @@ namespace sql.builder.DataApi
                                         rs.MainRow[newColName] = rs.OtherRows[grset.Name][dval.Id][0][factColName];
                                     }
                                 }
-                               
+
                                 prevColName = newColName;
                             }
                         }
                         else if (rs.OtherRows.ContainsKey(grset.Name))
                         {
-                            foreach (var othr in rs.OtherRows[grset.Name]) 
+                            foreach (var othr in rs.OtherRows[grset.Name])
                             {
-                                
+
                                 if (!grset.DimValues.ContainsKey(othr.Key))
                                 {
                                     addDimValFromRow(grset, othr.Value[0], null, null, null);
                                 }
                                 var dvalIndex1 = grset.DimValues.IndexOfKey(othr.Key);
 
-                                
-                                foreach (DataRow row in othr.Value) 
+
+                                foreach (DataRow row in othr.Value)
                                 {
-                                    object endValue =  row[grset.IntervalEndColumnName];
+                                    object endValue = row[grset.IntervalEndColumnName];
                                     decimal valToAdd = (decimal)Cmn.Nvl(row[factColName], (decimal)0);
                                     var targetRow = rs.MainRow;
-                                    updateRowWithIntervalValue(dvalIndex1, grset, endValue, targetRow,null, factColName, valToAdd, data);
+                                    updateRowWithIntervalValue(dvalIndex1, grset, endValue, targetRow, null, factColName, valToAdd, data);
                                 }
                             }
                         }
@@ -823,7 +824,7 @@ namespace sql.builder.DataApi
                     }
 
                 }
-               
+
             }
             table.ResumeChangeEvent();
         }
@@ -846,25 +847,25 @@ namespace sql.builder.DataApi
             table.TransposeStructure = data;
             if (!table.IsReader)
             {
-                postProcessbands(table.Scheme.Element(TextConst.EName.ViewColumns),data);
+                postProcessbands(table.Scheme.Element(TextConst.EName.ViewColumns), data);
             }
 
         }
 
-        private static void postProcessbands(XElement viewcolumns,TransposeDataStructure data)
+        private static void postProcessbands(XElement viewcolumns, TransposeDataStructure data)
         {
             var factNames = data.Grsets.Values.SelectMany(g => g.FactColumnsInfo.Values).Select(fi => fi.Name).ToArray();
             // <band title="name1 | name2">...</band> в  
             //<band title="name1"> <band title="name2"> ...</band></band>
 
-            viewcolumns.Elements(TextConst.AName.Column).Where(e=>factNames.Contains( Cmn.GetAttrValue(e,TextConst.AName.Name))).Remove();// частный случай, убирается колонка с аггрегированным в целом по строке значением, доделать
+            viewcolumns.Elements(TextConst.AName.Column).Where(e => factNames.Contains(Cmn.GetAttrValue(e, TextConst.AName.Name))).Remove();// частный случай, убирается колонка с аггрегированным в целом по строке значением, доделать
 
             foreach (var xband in viewcolumns.Elements(TextConst.EName.Band).ToArray())
             {
                 var bname = Cmn.GetAttrValue(xband, TextConst.AName.Title);
-                var bnamea = bname.Split(new string[]{" | "},StringSplitOptions.None);
+                var bnamea = bname.Split(new string[] { " | " }, StringSplitOptions.None);
 
-            
+
                 if (bnamea.Length > 1)
                 {
                     var els = xband.Elements().ToArray();
@@ -904,12 +905,12 @@ namespace sql.builder.DataApi
             }
         }
 
-        private static void copyColumn(VDataTable table,string name, string newName, string newTitle,string bandTitle,string prevColName=null)
+        private static void copyColumn(VDataTable table, string name, string newName, string newTitle, string bandTitle, string prevColName = null)
         {
             var xcolumns = table.Scheme.Element(TextConst.EName.Columns);
             var xviewcolumns = table.Scheme.Element(TextConst.EName.ViewColumns);
 
-            var xcolumn=xcolumns.Elements().First(e=>Cmn.GetAttrValue(e,TextConst.AName.Name)==name);
+            var xcolumn = xcolumns.Elements().First(e => Cmn.GetAttrValue(e, TextConst.AName.Name) == name);
             var newxcolumn = new XElement(xcolumn);
             newxcolumn.SetAttributeValue(TextConst.AName.Name, newName);
             newxcolumn.SetAttributeValue(TextConst.AName.Title, newTitle);
@@ -921,21 +922,21 @@ namespace sql.builder.DataApi
             newxcolumn.SetAttributeValue(TextConst.AName.Title, newTitle);
 
             XElement xprevElement = null;
-            
+
             if (prevColName != null)
             {
-                 xprevElement = xviewcolumns.Descendants(TextConst.EName.Column).First(e => Cmn.GetAttrValue(e, TextConst.AName.Name) == prevColName);
+                xprevElement = xviewcolumns.Descendants(TextConst.EName.Column).First(e => Cmn.GetAttrValue(e, TextConst.AName.Name) == prevColName);
             }
             else
             {
-                 xprevElement = xcolumn;
-               
+                xprevElement = xcolumn;
+
             }
 
             XElement xparentElement = null;
             if (bandTitle != null)
             {
-                bool bandExists=false;
+                bool bandExists = false;
                 if (xprevElement.Parent.Name.LocalName == TextConst.EName.Band)
                 {
                     if (Cmn.GetAttrValue(xprevElement.Parent, TextConst.AName.Title) == bandTitle)
@@ -947,7 +948,7 @@ namespace sql.builder.DataApi
                     {
                         xprevElement = xprevElement.Parent;
                     }
-                    
+
                 }
                 if (!bandExists)
                 {
@@ -956,7 +957,7 @@ namespace sql.builder.DataApi
                     xprevElement.AddAfterSelf(xband);
                     xparentElement = xband;
                 }
-               
+
             }
 
 

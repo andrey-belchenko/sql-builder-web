@@ -10,5 +10,5 @@ namespace sql.builder.DataApi
         }
     }
 
-    
+
 }

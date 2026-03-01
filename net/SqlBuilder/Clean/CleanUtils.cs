@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace sql.builder.Clean
 {
@@ -10,7 +6,7 @@ namespace sql.builder.Clean
     {
         public static string GetRootPath()
         {
-           return  AppDomain.CurrentDomain.BaseDirectory;
-        } 
+            return AppDomain.CurrentDomain.BaseDirectory;
+        }
     }
 }

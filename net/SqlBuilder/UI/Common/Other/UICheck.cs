@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.Drawing;
 //using System.Windows.Forms; // Control
 using System.Xml.Linq;
 //using DevExpress.XtraEditors.Repository;
@@ -26,11 +25,14 @@ namespace sql.builder.UI
         }
         public override void Initialize(XElement xfield, UIFormC form)
         {
-            if (form.FormUseType == UIFormC.UseType.SchemeEditor) {
+            if (form.FormUseType == UIFormC.UseType.SchemeEditor)
+            {
                 this.BaseInitialize(xfield, form, ReturnType.Simple, typeof(string), true, true);
                 //this.SetValueChecked(TextConst.AVBool.True);
                 //this.SetValueUnchecked(DBNull.Value);
-            } else {
+            }
+            else
+            {
                 this.BaseInitialize(xfield, form, ReturnType.Simple, typeof(decimal), true, true);
                 //this.SetValueChecked(Cmn.DECIMAL_ONE);
                 //this.SetValueUnchecked(Cmn.DECIMAL_ZERO);
@@ -44,7 +46,8 @@ namespace sql.builder.UI
         }
         public override void SetControlValue(object value, int index = 1)
         {
-            if (this.UseType != UIFormC.UseType.SchemeEditor && value == DBNull.Value) {
+            if (this.UseType != UIFormC.UseType.SchemeEditor && value == DBNull.Value)
+            {
                 value = Cmn.DECIMAL_ZERO;
             }
             //this.SetCheckEditValue(value);
@@ -75,22 +78,32 @@ namespace sql.builder.UI
         //}
         public override void RefreshData()
         {
-            if (this.UseDefaultQuery && this.data_set_default != null) {
+            if (this.UseDefaultQuery && this.data_set_default != null)
+            {
                 XElement master_values = this.OnNeedMasterValues(this);
                 this.data_set_default.Refresh(master_values);
                 DataRowCollection rows = this.data_set_default.Tables[0].Rows;
-                if (rows.Count > 0) {
+                if (rows.Count > 0)
+                {
                     object value = rows[0][0];
-                    if ((!Cmn.IsNullOrDBNull(value)) && value.ToString() != TextConst.AVBool.False) {
+                    if ((!Cmn.IsNullOrDBNull(value)) && value.ToString() != TextConst.AVBool.False)
+                    {
                         this.SetChecked(true);
-                    } else {
+                    }
+                    else
+                    {
                         this.SetChecked(false);
                     }
-                } else {
+                }
+                else
+                {
                     this.SetChecked(false);
                 }
-            } else {
-                if (this.xfield.AttrOrDefault(AName.@checked, false) && this.Form.DefaultParams == null) {
+            }
+            else
+            {
+                if (this.xfield.AttrOrDefault(AName.@checked, false) && this.Form.DefaultParams == null)
+                {
                     this.SetChecked(true);
                 }
             }

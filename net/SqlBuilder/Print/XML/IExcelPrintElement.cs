@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml;
+﻿using System.Collections.Generic;
 using System.Data;
+using System.Xml;
 
 namespace sql.builder.Print.XML
 {

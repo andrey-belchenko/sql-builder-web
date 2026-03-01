@@ -1,8 +1,4 @@
-﻿using System;
-using System.Xml.Linq;
-using AName_ = sql.builder.DataApi.AName;
-
-namespace sql.builder.DataApi
+﻿namespace sql.builder.DataApi
 {
     /*public sealed class VEntityTypeField : VSXElement
     {

@@ -1,11 +1,10 @@
 using System;
-using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.Print.Xlsx
 {
@@ -15,7 +14,8 @@ namespace sql.builder.Print.Xlsx
         private static StringBuilder buffer;
         private static string GetSafeExcelText(string text)
         {
-            if (buffer == null) {
+            if (buffer == null)
+            {
                 buffer = new StringBuilder(256);
             }
             Contract.Assume(buffer.Length == 0);
@@ -38,17 +38,24 @@ namespace sql.builder.Print.Xlsx
             XElement root = this.xml.Root;
             Contract.Assume(root.Name == ns.Main.sst);
             XAttribute attr = root.Attribute(ns.None.uniqueCount);
-            if (attr != null) {
+            if (attr != null)
+            {
                 this._strings = new Dictionary<string, Tuple<int, XElement>>(Convert.ToInt32(attr.Value));
-            } else {
+            }
+            else
+            {
                 this._strings = new Dictionary<string, Tuple<int, XElement>>();
             }
-            foreach (XElement xsi in root.Elements(ns.Main.si)) {
+            foreach (XElement xsi in root.Elements(ns.Main.si))
+            {
                 XElement xt = xsi.Element(ns.Main.t);
                 string text;  // ����� ��� �����������
-                if (xt != null) {
+                if (xt != null)
+                {
                     text = xt.Value;
-                } else {
+                }
+                else
+                {
                     // xsi ����� ��������� ���� r � ����������� ������� - ������� �� ��� �����
                     text = xsi.ToString(SaveOptions.DisableFormatting);
                 }
@@ -61,12 +68,16 @@ namespace sql.builder.Print.Xlsx
         {
             Tuple<int, XElement> info = null;
             text = GetSafeExcelText(text);
-            if (!this._strings.TryGetValue(text, out info)) {
+            if (!this._strings.TryGetValue(text, out info))
+            {
                 XElement xsi;
                 // ����� � xml �����������
-                if (text.StartsWith("<si")) {
+                if (text.StartsWith("<si"))
+                {
                     xsi = XElement.Parse(text);
-                } else {
+                }
+                else
+                {
                     // ��������� ������� xml:space = preserve
                     XElement xt = new XElement(ns.Main.t);
                     xt.Add(new XAttribute(ns.Xml.space, "preserve"));
@@ -102,13 +113,15 @@ namespace sql.builder.Print.Xlsx
                 writer.Close();
             }*/
             XmlWriterSettings settings = new XmlWriterSettings();
-            #if !FRAMEWORK_40
+#if !FRAMEWORK_40
             settings.WriteEndDocumentOnClose = false;
-            #endif
-            using (XmlWriter writer = XmlWriter.Create(this.file_path, settings)) {
+#endif
+            using (XmlWriter writer = XmlWriter.Create(this.file_path, settings))
+            {
                 writer.WriteStartDocument(true);
                 writer.WriteStartElement("sst", ns.main.NamespaceName);
-                foreach (Tuple<int, XElement> v in this._strings.Values) {
+                foreach (Tuple<int, XElement> v in this._strings.Values)
+                {
                     v.Item2.WriteTo(writer);
                 }
                 writer.WriteEndElement();

@@ -1,17 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
-using Npgsql;
 using sql.builder;
-using sql.builder.Clean;
-using sql.builder.Clean.Extensions;
 using sql.builder.DataApi;
-using sql.builder.UI;
 
 namespace SqlBuilderLib.DevTools
 {
@@ -57,7 +48,7 @@ namespace SqlBuilderLib.DevTools
             var sb = new StringBuilder();
             sb.Append(indent);
             sb.AppendLine("new FieldGroup({");
-            
+
             // Group label
             var groupLabel = fieldGroup.P_Title ?? fieldGroup.P_Name ?? "";
             if (string.IsNullOrEmpty(groupLabel))
@@ -68,15 +59,15 @@ namespace SqlBuilderLib.DevTools
             sb.Append("    label: '");
             sb.Append(EscapeString(groupLabel));
             sb.AppendLine("',");
-            
+
             sb.Append(indent);
             sb.AppendLine("    items: [");
-            
+
             for (int i = 0; i < childItems.Count; i++)
             {
                 // Child items are already properly indented
                 sb.Append(childItems[i]);
-                
+
                 if (i < childItems.Count - 1)
                 {
                     sb.AppendLine(",");
@@ -86,13 +77,13 @@ namespace SqlBuilderLib.DevTools
                     sb.AppendLine();
                 }
             }
-            
+
             sb.Append(indent);
             sb.Append("    ]");
             sb.AppendLine();
             sb.Append(indent);
             sb.Append("})");
-            
+
             return sb.ToString();
         }
     }

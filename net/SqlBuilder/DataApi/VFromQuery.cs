@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 namespace sql.builder.DataApi
 {
@@ -20,17 +18,20 @@ namespace sql.builder.DataApi
             child_nodes.Add(TextConst.EName.Where);
             VSXElement parent = this.GetParent();
             VSourcedElement root_query = this.RootQuery();
-            if ((this.IsCall() && parent is VFrom) || (parent is VQueryCall && root_query is VReport)) {
+            if ((this.IsCall() && parent is VFrom) || (parent is VQueryCall && root_query is VReport))
+            {
                 child_nodes.Add(TextConst.EName.Call);
                 child_nodes.Add(TextConst.EName.Using);
             }
             child_nodes.Add(TextConst.EName.ExtendWhere);
-            if (root_query is VReport) {
+            if (root_query is VReport)
+            {
                 child_nodes.Add(TextConst.EName.Events);
                 child_nodes.Add(TextConst.EName.Query);
             }
             child_nodes.Add(TextConst.EName.DimLink);
-            if (root_query is VForm) {
+            if (root_query is VForm)
+            {
                 child_nodes.Add(TextConst.EName.Qube);
             }
             return child_nodes;

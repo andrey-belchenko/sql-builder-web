@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Npgsql;
@@ -20,21 +19,21 @@ namespace SqlBuilderLib.DevTools
             // Get the path to the Data folder relative to the project root
             // Find project root by looking for SqlBuilder.slnx
             string projectRoot = GetProjectRoot();
-            
+
             if (string.IsNullOrEmpty(projectRoot))
             {
                 // Fallback: use current directory if project root cannot be determined
                 projectRoot = Directory.GetCurrentDirectory();
             }
-            
+
             var dataFolder = Path.Combine(projectRoot, "Data");
-            
+
             // Ensure the Data folder exists
             if (!Directory.Exists(dataFolder))
             {
                 Directory.CreateDirectory(dataFolder);
             }
-            
+
             return dataFolder;
         }
 
@@ -77,14 +76,14 @@ namespace SqlBuilderLib.DevTools
         {
             // Remove extension(s)
             string nameWithoutExtension = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(fileName));
-            
+
             // Match pattern: log-{nav_id}
             var match = Regex.Match(nameWithoutExtension, @"^log-(.+)$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 return match.Groups[1].Value;
             }
-            
+
             return null;
         }
 
@@ -97,7 +96,7 @@ namespace SqlBuilderLib.DevTools
             var fields = new List<string>();
             bool inQuotes = false;
             string currentField = "";
-            
+
             foreach (char c in line)
             {
                 if (c == '"')
@@ -114,10 +113,10 @@ namespace SqlBuilderLib.DevTools
                     currentField += c;
                 }
             }
-            
+
             // Add the last field
             fields.Add(currentField);
-            
+
             return fields.ToArray();
         }
 
@@ -128,15 +127,15 @@ namespace SqlBuilderLib.DevTools
         {
             if (string.IsNullOrWhiteSpace(dateString))
                 return null;
-            
+
             // Remove quotes if present
             dateString = dateString.Trim('"');
-            
+
             if (DateTime.TryParseExact(dateString, DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
             {
                 return result;
             }
-            
+
             return null;
         }
 
@@ -150,7 +149,7 @@ namespace SqlBuilderLib.DevTools
             {
                 var dataFolder = GetDataFolderPath();
                 var csvFiles = Directory.GetFiles(dataFolder, "log-*.csv", SearchOption.TopDirectoryOnly);
-                
+
                 if (csvFiles.Length == 0)
                 {
                     return;
@@ -159,7 +158,7 @@ namespace SqlBuilderLib.DevTools
                 using (var connection = new NpgsqlConnection(ConnectionString))
                 {
                     connection.Open();
-                    
+
                     // Clear the table before loading
                     using (var truncateCommand = new NpgsqlCommand("TRUNCATE TABLE report_dev_sqlb.reports_exec", connection))
                     {
@@ -180,14 +179,14 @@ namespace SqlBuilderLib.DevTools
                         Console.WriteLine($"Processing file: {csvFile} (nav_id: {navId})");
                         var lines = File.ReadAllLines(csvFile);
                         int fileRecordCount = 0;
-                        
+
                         foreach (var line in lines)
                         {
                             if (string.IsNullOrWhiteSpace(line))
                                 continue;
 
                             var fields = ParseCsvLine(line);
-                            
+
                             // Expected format: user_name, reports_name, started_at, finished_at
                             if (fields.Length < 4)
                             {
@@ -205,29 +204,29 @@ namespace SqlBuilderLib.DevTools
                             {
                                 command.Connection = connection;
                                 command.CommandText = "INSERT INTO report_dev_sqlb.reports_exec (nav_id, reports_name, user_name, started_at, finished_at) VALUES (@nav_id, @reports_name, @user_name, @started_at, @finished_at)";
-                                
+
                                 command.Parameters.AddWithValue("@nav_id", navId ?? (object)DBNull.Value);
                                 command.Parameters.AddWithValue("@reports_name", string.IsNullOrEmpty(reportsName) ? (object)DBNull.Value : reportsName);
                                 command.Parameters.AddWithValue("@user_name", string.IsNullOrEmpty(userName) ? (object)DBNull.Value : userName);
                                 command.Parameters.AddWithValue("@started_at", startedAt.HasValue ? (object)startedAt.Value : DBNull.Value);
                                 command.Parameters.AddWithValue("@finished_at", finishedAt.HasValue ? (object)finishedAt.Value : DBNull.Value);
-                                
+
                                 command.ExecuteNonQuery();
                             }
 
                             totalRecordsProcessed++;
                             fileRecordCount++;
-                            
+
                             // Log progress every 100 records
                             if (totalRecordsProcessed % 100 == 0)
                             {
                                 Console.WriteLine($"Processed {totalRecordsProcessed} records...");
                             }
                         }
-                        
+
                         Console.WriteLine($"Completed file '{csvFile}': {fileRecordCount} records processed");
                     }
-                    
+
                     Console.WriteLine($"Total records loaded: {totalRecordsProcessed}");
                 }
             }

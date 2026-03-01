@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 // Cross-platform: Image is Windows-only, using object instead
 namespace sql.builder.UI
 {
-    public interface IVBarItem:IVControl,IVVisibleControl,IVEnabledControl
+    public interface IVBarItem : IVControl, IVVisibleControl, IVEnabledControl
     {
 
         void SetCaption(string value);
@@ -13,6 +9,6 @@ namespace sql.builder.UI
         //void SetVisible(bool value);
         //void SetEnabled(bool value);
         void SetIsRight(bool value);
-       
+
     }
 }

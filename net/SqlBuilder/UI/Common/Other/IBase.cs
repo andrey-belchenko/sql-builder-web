@@ -2,19 +2,19 @@
 using System.Drawing;
 namespace sql.builder.UI
 {
-    public interface IBase: IDisposable
+    public interface IBase : IDisposable
     {
         string GetText();
         bool IsEditable();
 
-        
-       // bool IsButtonCustomVisibility(object button); // костыль, чтобы не приятать кнопки для нередактируемого поля если видимость установлена через переменную
+
+        // bool IsButtonCustomVisibility(object button); // костыль, чтобы не приятать кнопки для нередактируемого поля если видимость установлена через переменную
     }
     public interface IRange : IBase
     {
         void GetText(out string value_1, out string value_2);
     }
-    public interface IForm 
+    public interface IForm
     {
         string GetTitle();
         string GetFormName();
@@ -25,14 +25,14 @@ namespace sql.builder.UI
 
     }
 
-    public interface IList :  IBase
+    public interface IList : IBase
     {
         bool IsMultiselect();
         void ProcessFilter();
         bool TrySelectValueByName(string text);
-       // void ListItemSelected(object[] changedNodes);
+        // void ListItemSelected(object[] changedNodes);
         void RefreshList();
-      
+
         bool IsNeedRefresh();
         void ApplyValue();
         bool IsServerFilter();
@@ -46,7 +46,7 @@ namespace sql.builder.UI
         void SetFocusIfNeed(); // Емцов - костыль для населенного пункта, если что переделать нормально
         void PrepareListSource();
         void ApplyArrayValueToControlDataEditorList();
-       // void AddPart(IVControl control);
+        // void AddPart(IVControl control);
         ///
         void listEdit_AutoFilterChanged();
         void PopupContainerEdit_Closed();

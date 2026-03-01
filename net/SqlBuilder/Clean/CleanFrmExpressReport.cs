@@ -325,7 +325,7 @@ namespace sql.builder.WinForms
                 Parser.SaveReportParamsToXml(rep_params2, GetUIForm());
                 kod_log = Logger.ReportStart(this._report_name, rep_params2);
                 //
-                ds = _report.Result( new XElement(rep_params), 2, null, true, this._dataSet != null ? _dataSet.SchemePreset : null);
+                ds = _report.Result(new XElement(rep_params), 2, null, true, this._dataSet != null ? _dataSet.SchemePreset : null);
                 if (ds.Connection == null)
                 {
                     ds.Connection = XmlReports.Environment.Connection;
@@ -514,7 +514,7 @@ namespace sql.builder.WinForms
 
         public VDataSet ExecuteReportGetDs()
         {
-            
+
             this.ShowMessages = false;
             this.BeginForming();
             string path = null;

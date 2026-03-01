@@ -5,14 +5,14 @@
         public static string WorkFolder
         {
             get { return Cmn.ReadStringFromRegistry("all", "workfolder"); }
-            set {Cmn.WriteStringToRegistry("all", "workfolder", value); }
+            set { Cmn.WriteStringToRegistry("all", "workfolder", value); }
         }
 
         public static string DevExpressSkinName
         {
             get
             {
-                var skin_name =  Cmn.ReadStringFromRegistry("all", "skinname");
+                var skin_name = Cmn.ReadStringFromRegistry("all", "skinname");
                 return string.IsNullOrEmpty(skin_name) ? "Office 2010 Silver" : skin_name;
             }
             set { Cmn.WriteStringToRegistry("all", "skinname", value); }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 using System.IO;
 //using sql.builder.TFS;
 using AName_ = sql.builder.DataApi.AName;
@@ -10,14 +8,16 @@ namespace sql.builder.DataApi
     /// <summary>
     /// &lt;template name="" title="" /&gt;
     /// </summary>
-    public sealed class VPrintTemplate: VSXElement
+    public sealed class VPrintTemplate : VSXElement
     {
         public VPrintTemplate()
             : base(EName.template)
         {
         }
-        public override string XName {
-            get {
+        public override string XName
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.name);
             }
         }
@@ -40,8 +40,10 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region Title
-        public override string P_Title {
-            get {
+        public override string P_Title
+        {
+            get
+            {
                 return this.P_SelfTitle;
             }
         }
@@ -63,11 +65,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region ClientView
-        public override string P_ClientView {
-            get {
+        public override string P_ClientView
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.client_view);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.client_view, value);
             }
         }
@@ -77,11 +82,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region PrintXlsx
-        public override string P_PrintXlsx {
-            get {
+        public override string P_PrintXlsx
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.print_xlsx);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.print_xlsx, value);
             }
         }
@@ -91,11 +99,14 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region UseFlexCel
-        public override string P_UseFlexCel {
-            get {
+        public override string P_UseFlexCel
+        {
+            get
+            {
                 return this.AttrOrEmpty(AName_.use_flexcel);
             }
-            set {
+            set
+            {
                 this.SetAttributeValue(AName_.use_flexcel, value);
             }
         }
@@ -105,18 +116,27 @@ namespace sql.builder.DataApi
         }
         #endregion
         #region PostProcess
-        public override string P_PostProcess {
-            get {
-                if (this.AttrOrEmpty(AName_.post_process) == TextConst.AVBool.False) {
+        public override string P_PostProcess
+        {
+            get
+            {
+                if (this.AttrOrEmpty(AName_.post_process) == TextConst.AVBool.False)
+                {
                     return string.Empty;
-                } else {
+                }
+                else
+                {
                     return TextConst.AVBool.True;
                 }
             }
-            set {
-                if (string.IsNullOrEmpty(value)) {
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
                     value = TextConst.AVBool.False;
-                } else {
+                }
+                else
+                {
                     value = null;
                 }
                 this.SetAttributeValue(AName_.post_process, value);

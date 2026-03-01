@@ -14,9 +14,11 @@ namespace sql.builder.Print.Xlsx
         public static void InitXNameStaticFields(XNamespace ns, Type type)
         {
             System.Reflection.FieldInfo[] fields = type.GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public);
-            for (int index = 0; index < fields.Length; index++) {
+            for (int index = 0; index < fields.Length; index++)
+            {
                 System.Reflection.FieldInfo field_info = fields[index];
-                if (field_info.GetValue(null) == null) {
+                if (field_info.GetValue(null) == null)
+                {
                     field_info.SetValue(null, ns.GetName(field_info.Name));
                 }
             }
@@ -96,8 +98,8 @@ namespace sql.builder.Print.Xlsx
         }
         public static class Relsp
         {
-            public static XName Relationship   = ns.relsp.GetName("Relationship");
-            public static XName Relationships  = ns.relsp.GetName("Relationships");
+            public static XName Relationship = ns.relsp.GetName("Relationship");
+            public static XName Relationships = ns.relsp.GetName("Relationships");
         }
         public static class Relsd
         {
@@ -105,18 +107,18 @@ namespace sql.builder.Print.Xlsx
         }
         public static class CT
         {
-            public static XName Override  = ns.ct.GetName("Override");
-            public static XName Types     = ns.ct.GetName("Types");
+            public static XName Override = ns.ct.GetName("Override");
+            public static XName Types = ns.ct.GetName("Types");
         }
         public static class DC
         {
-            public static XName creator       = ns.dc.GetName("creator");
-            public static XName description   = ns.dc.GetName("description");
+            public static XName creator = ns.dc.GetName("creator");
+            public static XName description = ns.dc.GetName("description");
         }
         public static class CP
         {
-            public static XName coreProperties   = ns.cp.GetName("coreProperties");
-            public static XName lastModifiedBy   = ns.cp.GetName("lastModifiedBy");
+            public static XName coreProperties = ns.cp.GetName("coreProperties");
+            public static XName lastModifiedBy = ns.cp.GetName("lastModifiedBy");
         }
         public static class Xml
         {

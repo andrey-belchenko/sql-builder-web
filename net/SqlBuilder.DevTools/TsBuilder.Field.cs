@@ -1,9 +1,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Xml.Linq;
 using sql.builder;
 using sql.builder.DataApi;
 using sql.builder.UI;

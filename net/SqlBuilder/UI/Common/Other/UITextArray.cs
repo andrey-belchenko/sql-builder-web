@@ -1,13 +1,7 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-//using System.Windows.Forms;
-using System.Xml.Linq;
+﻿//using System.Windows.Forms;
 //using DevExpress.XtraEditors.Controls;
 //using DevExpress.XtraEditors.Mask;
 //using DevExpress.XtraEditors.Repository;
-using sql.builder.DataApi;
-
 namespace sql.builder.UI
 {
     public partial class UITextArray : UIText

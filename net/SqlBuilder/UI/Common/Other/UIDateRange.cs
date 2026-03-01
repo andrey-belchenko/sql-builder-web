@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Data;
 //using System.Windows.Forms;
 using System.Xml.Linq;
@@ -47,7 +46,8 @@ namespace sql.builder.UI
         {
 
             var val = this.GetCtrlValue();
-            if (val == null) {
+            if (val == null)
+            {
                 val = new object[] { null, null };
                 this.SetCtrlValue(val);
             }
@@ -56,17 +56,22 @@ namespace sql.builder.UI
         }
         public override void RefreshData()
         {
-            if (this.UseDefaultQuery && this.data_set_default != null) {
+            if (this.UseDefaultQuery && this.data_set_default != null)
+            {
                 XElement master_values = this.OnNeedMasterValues(this);
                 this.data_set_default.Refresh(master_values);
                 DataTable dt = this.data_set_default.Tables[0];
-                if (dt.Rows.Count > 0) {
+                if (dt.Rows.Count > 0)
+                {
                     DataRow row = dt.Rows[0];
                     object from_value = UIDate.ConvertToDateTime(row[0]);
                     object to_value;
-                    if (dt.Columns.Count > 1) {
+                    if (dt.Columns.Count > 1)
+                    {
                         to_value = UIDate.ConvertToDateTime(row[1]);
-                    } else {
+                    }
+                    else
+                    {
                         to_value = from_value;
                     }
 
@@ -75,7 +80,9 @@ namespace sql.builder.UI
                     //this.deControlFrom.EditValue = from_value;
                     //this.deControlTo.EditValue = to_value;
                 }
-            } else if (this.Form.FormUseType == UIFormC.UseType.ParamEditor && this.mandatory) {
+            }
+            else if (this.Form.FormUseType == UIFormC.UseType.ParamEditor && this.mandatory)
+            {
                 //if (Cmn.IsNullOrDBNull(this.deControlTo.EditValue)) {
                 //    this.deControlTo.EditValue = DateTime.Now;
                 //}
@@ -94,7 +101,7 @@ namespace sql.builder.UI
         {
             var val = this.GetCtrlValue() as object[];
             value_1 = UIDate.ValueToString(val[0]);
-            value_2 = UIDate.ValueToString(val[1]); 
+            value_2 = UIDate.ValueToString(val[1]);
         }
         #endregion
     }

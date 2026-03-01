@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using System.Globalization;
-using Contract = System.Diagnostics.Contracts.Contract;
-using sql.builder.ExcelApi;
 using sql.builder.DataApi;
+using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.Print.Xlsx
 {
@@ -18,9 +15,11 @@ namespace sql.builder.Print.Xlsx
         {
             string text = cell.Text;
             int len = text.Length;
-            if (len > 3 && text[0] == '[' && text[1] == ':' && text.IndexOf(']', 2) == (len - 1)) {
+            if (len > 3 && text[0] == '[' && text[1] == ':' && text.IndexOf(']', 2) == (len - 1))
+            {
                 int pos = text.LastIndexOf('.');
-                if (pos >= 0) {
+                if (pos >= 0)
+                {
                     string table_name = string.Intern(text.Substring(2, pos - 2));
                     string column_name = text.Substring(pos + 1, len - pos - 2);
                     return new SingleExcelPrintValue(cell, parent, table_name, column_name);
@@ -159,18 +158,20 @@ namespace sql.builder.Print.Xlsx
         }*/
         public static void GetFormula(TableReference tr, string column_name, ExcelPrintRow row, out string formula)
         {
-             XElement xformula = tr.GetColumnFormula(column_name);
-             if (xformula == null) {
-                 formula = string.Empty;
-                 return;
-             }
-             SortedList<string, string> varCellsNames = row.GetVarColsIndex();
-             foreach (XElement xcol in xformula.Descendants(AName.column)) {
-                 string name = xcol.Attribute(AName.column).Value;
-                 string sref = varCellsNames[name] + rowIndStr;
-                 xcol.Value = sref;
-             }
-             formula = xformula.Value;
+            XElement xformula = tr.GetColumnFormula(column_name);
+            if (xformula == null)
+            {
+                formula = string.Empty;
+                return;
+            }
+            SortedList<string, string> varCellsNames = row.GetVarColsIndex();
+            foreach (XElement xcol in xformula.Descendants(AName.column))
+            {
+                string name = xcol.Attribute(AName.column).Value;
+                string sref = varCellsNames[name] + rowIndStr;
+                xcol.Value = sref;
+            }
+            formula = xformula.Value;
         }
     }
     public interface IExcelPrintValue
@@ -203,40 +204,53 @@ namespace sql.builder.Print.Xlsx
             TableReference tr = this.parent.Parent.GetTableReference(this.table_name);
             DataTable table = tr.Table;
             DataColumn column;
-            if (this.column_name == TextConst.AVSpecColumn.RowId) {
+            if (this.column_name == TextConst.AVSpecColumn.RowId)
+            {
                 column = table.PrimaryKey[0];
-            } else {
+            }
+            else
+            {
                 column = table.Columns[this.column_name];
             }
             object val = null;
             string val_text = string.Empty;
-            if (pi != null) {
-                if (this.formula == null) {
+            if (pi != null)
+            {
+                if (this.formula == null)
+                {
                     ExcelPrintValue.GetFormula(tr, column.ColumnName, this.parent, out this.formula);
                 }
-                if (this.formula != string.Empty) {
+                if (this.formula != string.Empty)
+                {
                     var f = new ExcelPrintFormula();
                     f.Formula = this.formula.Replace(ExcelPrintValue.rowIndStr, (pi.LastPrintedRowID + 1).ToString())
                     .Replace(" ", string.Empty);// для красоты, но на будкщее придумать корректный вариант, могут быть строковые константы
                     return f;
                 }
-                if (tr.IsCurrentRowExists()) {
+                if (tr.IsCurrentRowExists())
+                {
                     val = tr.GetCurrentRowValue(column);
                     val_text = val.ToString();
                 }
             }
             Type type = column.DataType;
-            if (val_text == string.Empty) {
-                if (!tr.IsCurrentRowExists() && type == typeof(decimal)) {
+            if (val_text == string.Empty)
+            {
+                if (!tr.IsCurrentRowExists() && type == typeof(decimal))
+                {
                     return Cmn.DECIMAL_ZERO;
-                } else {
+                }
+                else
+                {
                     return string.Empty;
                 }
             }
             VDataTable vt = table as VDataTable;
-            if (vt != null) {
+            if (vt != null)
+            {
                 VDataColumn vc = (VDataColumn)column;
-                if (tr != null && tr.IsCurrentRowExists()) {
+                if (tr != null && tr.IsCurrentRowExists())
+                {
                     if (Printing.CreateRefs && (!vc.IsEmptyEvent) && (vt.HasRowEvents || vc.HasCellEvents))
                     {
                         var rowVal = tr.GetCurrentRowValue(table.PrimaryKey[0].ColumnName)
@@ -246,28 +260,42 @@ namespace sql.builder.Print.Xlsx
                     }
                 }
             }
-            if (type == typeof(decimal)) {
-                if (val is decimal) {
+            if (type == typeof(decimal))
+            {
+                if (val is decimal)
+                {
                     return val;
-                } else {
+                }
+                else
+                {
                     return Convert.ToDecimal(val_text);
                 }
-            } else if (type == typeof(DateTime)) {
+            }
+            else if (type == typeof(DateTime))
+            {
                 // время тоже выведется если есть
                 DateTime? dat = null;
                 decimal oaDate = decimal.Zero;
-                try {
+                try
+                {
                     dat = Convert.ToDateTime(val);
                     oaDate = (decimal)dat.GetValueOrDefault().ToOADate();
-                } catch {
-                    if (dat.HasValue) {
+                }
+                catch
+                {
+                    if (dat.HasValue)
+                    {
                         return dat.GetValueOrDefault().ToString("dd.MM.yyyy");
-                    } else {
+                    }
+                    else
+                    {
                         return null;
                     }
                 }
                 return oaDate;
-            } else {
+            }
+            else
+            {
                 return val_text;
             }
         }
@@ -286,19 +314,24 @@ namespace sql.builder.Print.Xlsx
             this.parent = parent;
             this.table_columns = new SortedList<string, List<string>>(1);
             List<string> vars = Cmn.ExtractParamsFromString(this.cell.Text);
-            for (int index = 0; index < vars.Count; index++) {
+            for (int index = 0; index < vars.Count; index++)
+            {
                 string str = vars[index];
                 int len = str.Length;
                 int pos = str.LastIndexOf('.');
-                if (pos >= 0) {
+                if (pos >= 0)
+                {
                     string table_name = string.Intern(str.Substring(0, pos));
                     string column_name = str.Substring(pos + 1);
                     List<string> cols;
-                    if (!this.table_columns.TryGetValue(table_name, out cols)) {
+                    if (!this.table_columns.TryGetValue(table_name, out cols))
+                    {
                         cols = new List<string>(1);
                         cols.Add(column_name);
                         this.table_columns.Add(table_name, cols);
-                    } else if (!cols.Contains(column_name)) {
+                    }
+                    else if (!cols.Contains(column_name))
+                    {
                         cols.Add(column_name);
                     }
                 }
@@ -307,29 +340,38 @@ namespace sql.builder.Print.Xlsx
         public object GetValue(WorksheetPrint pi, out string hyperlinkTarget)
         {
             hyperlinkTarget = null;
-            if (buffer == null) {
+            if (buffer == null)
+            {
                 buffer = new StringBuilder(256);
             }
             Contract.Assume(buffer.Length == 0);
             buffer.Append(cell.Text);
-            foreach (KeyValuePair<string, List<string>> tc in this.table_columns) {
+            foreach (KeyValuePair<string, List<string>> tc in this.table_columns)
+            {
                 string table_name = tc.Key;
                 TableReference tr = this.parent.Parent.GetTableReference(table_name);
                 DataTable table = tr.Table;
-                for (int index = 0; index < tc.Value.Count; index++) {
+                for (int index = 0; index < tc.Value.Count; index++)
+                {
                     string column_name = tc.Value[index];
                     DataColumn column;
-                    if (column_name == TextConst.AVSpecColumn.RowId) {
+                    if (column_name == TextConst.AVSpecColumn.RowId)
+                    {
                         column = table.PrimaryKey[0];
                         column_name = column.ColumnName;
-                    } else {
+                    }
+                    else
+                    {
                         column = table.Columns[column_name];
                     }
-                    if (pi != null) {
-                        if (this.formula == null) {
+                    if (pi != null)
+                    {
+                        if (this.formula == null)
+                        {
                             ExcelPrintValue.GetFormula(tr, column_name, this.parent, out this.formula);
                         }
-                        if (this.formula != string.Empty) {
+                        if (this.formula != string.Empty)
+                        {
                             var f = new ExcelPrintFormula();
                             f.Formula = this.formula.Replace(ExcelPrintValue.rowIndStr, (pi.LastPrintedRowID + 1).ToString())
                             .Replace(" ", string.Empty);// для красоты, но на будкщее придумать корректный вариант, могут быть строковые константы
@@ -337,10 +379,13 @@ namespace sql.builder.Print.Xlsx
                         }
                     }
                     string val_text;
-                    if (tr.IsCurrentRowExists()) {
+                    if (tr.IsCurrentRowExists())
+                    {
                         object val = tr.GetCurrentRowValue(column);
                         val_text = val.ToString();
-                    } else {
+                    }
+                    else
+                    {
                         val_text = string.Empty;
                     }
                     buffer.Replace("[:" + table_name + "." + column_name + "]", val_text);

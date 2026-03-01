@@ -1,13 +1,12 @@
 ﻿using System;
-using Contract = System.Diagnostics.Contracts.Contract;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Data;
-using System.Xml.Linq;
-using System.Linq;
+using System.Globalization;
 using System.Text;
-using sql.builder.ExcelApi;
+using System.Xml.Linq;
 using sql.builder.DataApi;
+using sql.builder.ExcelApi;
+using Contract = System.Diagnostics.Contracts.Contract;
 
 namespace sql.builder.Print.XML
 {
@@ -22,9 +21,11 @@ namespace sql.builder.Print.XML
             Contract.Assert(element.Parent.Name == VExcelNS.SpreadSheet.Cell);
             string text = element.Value;
             int len = text.Length;
-            if (len > 3 && text[0] == '[' && text[1] == ':' && text.IndexOf(']', 2) == (len - 1)) {
+            if (len > 3 && text[0] == '[' && text[1] == ':' && text.IndexOf(']', 2) == (len - 1))
+            {
                 int pos = text.LastIndexOf('.');
-                if (pos >= 0) {
+                if (pos >= 0)
+                {
                     string table_name = string.Intern(text.Substring(2, pos - 2));
                     string column_name = text.Substring(pos + 1, len - pos - 2);
                     element.Value = string.Empty;
@@ -35,9 +36,12 @@ namespace sql.builder.Print.XML
         }
         [ThreadStatic]
         private static StringBuilder buffer;
-        public static StringBuilder Buffer {
-            get {
-                if (buffer == null) {
+        public static StringBuilder Buffer
+        {
+            get
+            {
+                if (buffer == null)
+                {
                     buffer = new StringBuilder(256);
                 }
                 return buffer;
@@ -49,11 +53,15 @@ namespace sql.builder.Print.XML
             sb.Replace("\n\r", "\n");
             sb.Replace("\r\n", "\n");
             int index = 0;
-            while (index < sb.Length) {
+            while (index < sb.Length)
+            {
                 char ch = sb[index];
-                if (System.Xml.XmlConvert.IsXmlChar(ch)) {
+                if (System.Xml.XmlConvert.IsXmlChar(ch))
+                {
                     index++;
-                } else {
+                }
+                else
+                {
                     sb.Remove(index, 1);
                 }
             }
@@ -105,25 +113,33 @@ namespace sql.builder.Print.XML
             TableReference tr = this.parent.Parent.GetTableReference(this.table_name);
             DataTable table = tr.Table;
             DataColumn column;
-            if (this.column_name == TextConst.AVSpecColumn.RowId) {
+            if (this.column_name == TextConst.AVSpecColumn.RowId)
+            {
                 column = table.PrimaryKey[0];
-            } else {
+            }
+            else
+            {
                 column = table.Columns[this.column_name];
-                if (column == null) {
+                if (column == null)
+                {
                     throw new InvalidOperationException("В наборе данных отсутствует колонка " + this.table_name + "." + this.column_name);
                 }
             }
             object value;
-            if (tr.IsCurrentRowExists()) {
+            if (tr.IsCurrentRowExists())
+            {
                 value = tr.GetCurrentRowValue(column);
-            } else {
+            }
+            else
+            {
                 value = null;
             }
             string excel_type;
             string text = null;
             bool is_null = Cmn.IsNullOrDBNull(value);
             Type data_type = column.DataType;
-            if (data_type == typeof(decimal)) {
+            if (data_type == typeof(decimal))
+            {
                 excel_type = "Number";
                 //data.SetAttrValue(VExcelNS.SpreadSheet.Type, "Number");
                 //if (is_null) {
@@ -133,57 +149,80 @@ namespace sql.builder.Print.XML
                 //        text = string.Empty;
                 //    }
                 //} else {
-                if (!is_null) {
+                if (!is_null)
+                {
                     text = ((IFormattable)value).ToString(null, CultureInfo.InvariantCulture);
                 }
-            } else if (data_type == typeof(DateTime)) {
+            }
+            else if (data_type == typeof(DateTime))
+            {
                 excel_type = "DateTime";
-                if (!is_null) {
+                if (!is_null)
+                {
                     DateTime date = Convert.ToDateTime(value);
-                    if (date < ExcelPrintValue.MIN_EXCEL_DATE) {
+                    if (date < ExcelPrintValue.MIN_EXCEL_DATE)
+                    {
                         date = ExcelPrintValue.MIN_EXCEL_DATE;
                     }
-                    if (date.Hour == 0 && date.Minute == 0) {
+                    if (date.Hour == 0 && date.Minute == 0)
+                    {
                         text = date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-                    } else {
+                    }
+                    else
+                    {
                         text = date.ToString("yyyy-MM-dd'T'HH:mm", CultureInfo.InvariantCulture);
                     }
                 }
-            } else { // data_type == typeof(string)
+            }
+            else
+            { // data_type == typeof(string)
                 excel_type = "String";
-                if (!is_null) {
+                if (!is_null)
+                {
                     StringBuilder buffer = ExcelPrintValue.Buffer;
                     Contract.Assume(buffer.Length == 0);
                     buffer.Append(value.ToString());
                     ExcelPrintValue.RefineExcelText(buffer);
-                    if (buffer.Length == 0) {
+                    if (buffer.Length == 0)
+                    {
                         text = null;
-                    } else {
+                    }
+                    else
+                    {
                         text = buffer.ToString();
                         buffer.Clear();
                     }
                 }
             }
-            if (text != null) {
+            if (text != null)
+            {
                 this.data.SetAttrValue(VExcelNS.SpreadSheet.Type, excel_type);
                 //this.data.Value = text;
                 this.data.RemoveNodes();
-                if (text.IndexOf('\n') < 0) {
+                if (text.IndexOf('\n') < 0)
+                {
                     this.data.Add(new XText(text));
-                } else {
+                }
+                else
+                {
                     this.data.Add(new XCData(text));
                 }
-                if (this.data.Parent == null) {
+                if (this.data.Parent == null)
+                {
                     this.cell.Add(data);
                 }
-            } else {
+            }
+            else
+            {
                 this.cell.RemoveNodes();
             }
             //
             VDataTable vt = table as VDataTable;
-            if (vt != null && tr.IsCurrentRowExists()) {
+            if (vt != null && tr.IsCurrentRowExists())
+            {
                 VDataColumn vc = vt.GetColumn(column.ColumnName);
-                if (Printing.CreateRefs && !vc.IsEmptyEvent && (vt.HasRowEvents || vc.HasCellEvents)) {
+                if (Printing.CreateRefs && !vc.IsEmptyEvent && (vt.HasRowEvents || vc.HasCellEvents))
+                {
                     //XElement cell = this.element.Parent;
                     this.cell.SetAttrValue(VExcelNS.SpreadSheet.HRef, "http://" + table.TableName + "." + column.ColumnName + ".[" + tr.GetCurrentRowValue(table.PrimaryKey[0].ColumnName).ToString() + "]");
                     this.cell.SetAttrValue(VExcelNS.Excel.HRefScreenTip, "Открыть");
@@ -217,19 +256,24 @@ namespace sql.builder.Print.XML
             this.parent = parent;
             this.table_columns = new Dictionary<string, List<string>>(1);
             List<string> vars = Cmn.ExtractParamsFromString(this.text);
-            for (int index = 0; index < vars.Count; index++) {
+            for (int index = 0; index < vars.Count; index++)
+            {
                 string str = vars[index];
                 int len = str.Length;
                 int pos = str.LastIndexOf('.');
-                if (pos >= 0) {
+                if (pos >= 0)
+                {
                     string table_name = string.Intern(str.Substring(0, pos));
                     string column_name = str.Substring(pos + 1);
                     List<string> cols;
-                    if (!this.table_columns.TryGetValue(table_name, out cols)) {
+                    if (!this.table_columns.TryGetValue(table_name, out cols))
+                    {
                         cols = new List<string>(1);
                         cols.Add(column_name);
                         this.table_columns.Add(table_name, cols);
-                    } else if (!cols.Contains(column_name)) {
+                    }
+                    else if (!cols.Contains(column_name))
+                    {
                         cols.Add(column_name);
                     }
                     // создаем список печатаемых колонок
@@ -245,22 +289,30 @@ namespace sql.builder.Print.XML
             StringBuilder buffer = ExcelPrintValue.Buffer;
             Contract.Assume(buffer.Length == 0);
             buffer.Append(this.text);
-            foreach (var pair in this.table_columns) {
+            foreach (var pair in this.table_columns)
+            {
                 string table_name = pair.Key;
                 TableReference tr = this.parent.Parent.GetTableReference(table_name);
                 DataTable table = tr.Table;
-                for (int col_index = 0; col_index < pair.Value.Count; col_index++) {
+                for (int col_index = 0; col_index < pair.Value.Count; col_index++)
+                {
                     string column_name = pair.Value[col_index];
                     DataColumn column;
-                    if (column_name == TextConst.AVSpecColumn.RowId) {
+                    if (column_name == TextConst.AVSpecColumn.RowId)
+                    {
                         column = table.PrimaryKey[0];
-                    } else {
+                    }
+                    else
+                    {
                         column = table.Columns[column_name];
                     }
                     string val;
-                    if (tr.IsCurrentRowExists()) {
+                    if (tr.IsCurrentRowExists())
+                    {
                         val = tr.GetCurrentRowValue(column).ToString();
-                    } else {
+                    }
+                    else
+                    {
                         val = string.Empty;
                     }
                     buffer.Replace("[:" + table_name + "." + column_name + "]", val);
@@ -270,9 +322,12 @@ namespace sql.builder.Print.XML
             string value = buffer.ToString();
             buffer.Clear();
             this.element.RemoveNodes();
-            if (value.IndexOf('\n') < 0) {
+            if (value.IndexOf('\n') < 0)
+            {
                 this.element.Add(new XText(value));
-            } else {
+            }
+            else
+            {
                 this.element.Add(new XCData(value));
             }
         }

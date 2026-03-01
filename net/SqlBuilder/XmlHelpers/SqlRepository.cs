@@ -19,7 +19,7 @@ namespace sql.builder.XmlHelpers
         private static XElement query_changed;
         private static XElement query_for_update;
 
-      //  private static string key_changed_name;
+        //  private static string key_changed_name;
 
         private static string query_sql;
         private static string query_upd_sql;
@@ -32,20 +32,20 @@ namespace sql.builder.XmlHelpers
 
         static void Initialize()
         {
-           
+
             UIStatic.LoadProject("ipr");
             query = XmlReports.Environment.GetPrecompiledQuery(query_name);
-          
+
             query_changed_name = query.GetAttrValue("changes");
 
             rep_name = query.GetAttrValue("stored").ToLower();
-            dim_tab_name=rep_name + "_dims";
+            dim_tab_name = rep_name + "_dims";
             query_changed = GetQueryChanged();
             changes_scheme = XmlReports.Environment.GetPrecompiledReport(query_changed).Scheme;
             query_sql = RepositoriesHelper.GetSelectSql(query);
             query_changed_sql = RepositoriesHelper.GetSelectSql(query_changed);
             query_for_update = GetQueryForUpdate();
-         //   key_changed_name = query_changed.Element("select").Elements().First().Attribute("as").Value;
+            //   key_changed_name = query_changed.Element("select").Elements().First().Attribute("as").Value;
 
             query_upd_sql = RepositoriesHelper.GetSelectSql(query_for_update);
             delete_cond = GetDeleteCond();
@@ -54,15 +54,15 @@ namespace sql.builder.XmlHelpers
 
         public static string GetDeleteCond()
         {
-            string sql = "exists (select * from "+dim_tab_name+" dim where ";
+            string sql = "exists (select * from " + dim_tab_name + " dim where ";
             string a = "";
             foreach (XElement col in changes_scheme.Descendants("table").First().Element("columns").Elements())
             {
                 if (col.Attribute("name").Value != dateChangeName && col.Attribute("name").Value != "name")
                 {
                     sql += a + "dim." + col.Attribute("name").Value + "=" + "a." + col.Attribute("name").Value;
-                   
-                     a = " and ";
+
+                    a = " and ";
                 }
 
 
@@ -95,8 +95,8 @@ namespace sql.builder.XmlHelpers
             sql.AppendLine("\t\td_start date;");
             sql.AppendLine("\t\tv_tablespace varchar2(100);");
             sql.AppendLine("\t\tv_exists number;");
-            sql.AppendLine("\tBEGIN");          
-           
+            sql.AppendLine("\tBEGIN");
+
             AddLockRepositorySql("s_result", 2);
 
             sql.AppendLine("\t\t--Если хранилище уже заблокировано - ничего не делаем");
@@ -174,7 +174,7 @@ namespace sql.builder.XmlHelpers
             sql.AppendLine("\t\td_start := sysdate;");
             sql.AppendLine("\t\t--Получаем список измененных кодов");
             AddDropTableSql(dim_tab_name, "v_exists", 2);
-            sql.AppendLine(String.Format("\t\texecute immediate 'create table {0}  as (select * from {1}_view_dim)';",dim_tab_name ,rep_name));
+            sql.AppendLine(String.Format("\t\texecute immediate 'create table {0}  as (select * from {1}_view_dim)';", dim_tab_name, rep_name));
             sql.AppendLine("\t\t--Если хранилище ни разу не формировалось полностью - список измененных кодов так же будет пустым");
             sql.AppendLine("\t\texecute immediate 'select substr(stragg_dist(name), 1, 470)  from " + dim_tab_name + "' into s_info;");
             sql.AppendLine("\t\t--Если кодов нет, значит и обновлять нечего");
@@ -194,8 +194,8 @@ namespace sql.builder.XmlHelpers
             sql.AppendLine(String.Format("\t\texecute immediate 'delete {0} a where {1}';", rep_name, delete_cond));
 
             sql.AppendLine("\t\texecute immediate 'insert into " + rep_name + " (select * from " + rep_name + "_view_upd)';");
-       
-        
+
+
 
 
             sql.AppendLine("\t\tupdate vr_repository_info set DATE_START_UPD=d_start where upper (rep_table)=upper('" + rep_name + "');");
@@ -204,10 +204,10 @@ namespace sql.builder.XmlHelpers
             AddUnlockRepositorySql(2);
             AddLogSql("Блокировка снята", "''", 2);
 
-           
+
             /////////////////
 
-            
+
             sql.AppendLine();
             sql.AppendLine("\t\tEXCEPTION");
             sql.AppendLine("\t\t\tWHEN OTHERS THEN");
@@ -262,18 +262,18 @@ namespace sql.builder.XmlHelpers
         private static XElement GetQueryChanged()
         {
             XElement qry = XmlReports.Environment.GetPrecompiledQuery(query_changed_name);
-            qry=new XElement(qry);
+            qry = new XElement(qry);
 
-            qry.SetAttributeValue("as","a");
+            qry.SetAttributeValue("as", "a");
             qry.Attributes("name").Remove();
-            XElement qry1=new XElement("query",new XElement("select"),new XElement("from",qry),new XElement("where"
+            XElement qry1 = new XElement("query", new XElement("select"), new XElement("from", qry), new XElement("where"
                 , new XElement("call", new XAttribute("function", "gt")
                    , new XElement("column", new XAttribute("table", "a"), new XAttribute("column", "date_change"))
-                   , new XElement("const", new XText("(select nvl (DATE_START_UPD,DATE_START) from vr_repository_info where upper(REP_TABLE)=upper('"+rep_name+"'))"))
+                   , new XElement("const", new XText("(select nvl (DATE_START_UPD,DATE_START) from vr_repository_info where upper(REP_TABLE)=upper('" + rep_name + "'))"))
                 )
-                
+
                 ));
-            XElement splitter=null;
+            XElement splitter = null;
             XElement nameExpr = new XElement("call", new XAttribute("function", "||"), new XAttribute("as", "name"));
             foreach (XElement col in qry.Element("select").Elements())
             {
@@ -298,14 +298,14 @@ namespace sql.builder.XmlHelpers
         }
         private static XElement GetChangeJoinElement()
         {
-            XElement qry = new XElement("query",new XElement("select"),new XElement("from"));
+            XElement qry = new XElement("query", new XElement("select"), new XElement("from"));
             qry.SetAttributeValue("as", "changes");
             qry.SetAttributeValue("join", "inner");
             qry.Add(new XElement("call", new XAttribute("function", "and")));
             qry.Element("from").Add(new XElement("table", new XAttribute("name", dim_tab_name), new XAttribute("as", "a")));
             foreach (XElement col in changes_scheme.Descendants("table").First().Element("columns").Elements())
             {
-                if (col.Attribute("name").Value != dateChangeName && col.Attribute("name").Value !="name")
+                if (col.Attribute("name").Value != dateChangeName && col.Attribute("name").Value != "name")
                 {
                     XElement srcCol = query.Element("select").Elements().Where(e => e.Attribute("as").Value == col.Attribute("name").Value).First();
                     XElement chCol = new XElement("column", new XAttribute("table", "a"), new XAttribute("column", col.Attribute("name").Value));
@@ -341,7 +341,7 @@ namespace sql.builder.XmlHelpers
         {
             var stabs = new String('\t', tabs);
             sql.AppendLine(stabs + "--Попытка заблокировать хранилище");
-            sql.AppendLine(stabs + String.Format("{0} := kg_common.lock_dog('sql.builder_{1}',0,0);", 
+            sql.AppendLine(stabs + String.Format("{0} := kg_common.lock_dog('sql.builder_{1}',0,0);",
                 result_var_name, rep_name));
         }
         private static void AddUnlockRepositorySql(int tabs = 0)
@@ -389,7 +389,8 @@ namespace sql.builder.XmlHelpers
         private static void AddIndexesExprSql(int tabs = 0)
         {
             var stabs = new string('\t', tabs);
-            foreach (VSXElement dim in query.DimensionsOld()) {
+            foreach (VSXElement dim in query.DimensionsOld())
+            {
                 sql.AppendLine(String.Format(stabs + "execute immediate 'CREATE INDEX {0}_{1} ON {0} ({1} ASC)';", rep_name, dim.XName));
             }
         }

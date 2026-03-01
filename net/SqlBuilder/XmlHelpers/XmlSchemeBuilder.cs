@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Xml.Linq;
-using sql.builder.Clean;
 using infoenergo.core.Data;
+using sql.builder.Clean;
 //using infoenergo.core.Extensions;
 using sql.builder.DataApi;
 
@@ -39,36 +39,47 @@ namespace sql.builder.XmlHelpers
         {
             string db_scheme, object_type;
             int pos = table.IndexOf('.');
-            if (pos >= 0) {
+            if (pos >= 0)
+            {
                 db_scheme = table.Substring(0, pos).ToUpper();
                 table = table.Substring(pos + 1);
-            } else {
+            }
+            else
+            {
                 db_scheme = string.Empty;
             }
             VOracleParameter[] parameters = new VOracleParameter[2] { new VOracleParameter("table_name", VOracleDbType.VarChar, table, ParameterDirection.Input),
                                                                     new VOracleParameter("db_scheme", VOracleDbType.VarChar, db_scheme, ParameterDirection.Input) };
             DataTable dt = DataHelper.SqlGetTable("SELECT owner, object_type FROM all_objects WHERE object_name = UPPER(:table_name) AND owner = NVL(:db_scheme, USER) AND object_type IN ('TABLE', 'VIEW')", parameters, db.Connection);
             DataRow row;
-            if (dt.Rows.Count > 0) {
+            if (dt.Rows.Count > 0)
+            {
                 row = dt.Rows[0];
-                if (string.IsNullOrEmpty(db_scheme)) {
+                if (string.IsNullOrEmpty(db_scheme))
+                {
                     db_scheme = row.Field<string>("owner");
                 }
                 object_type = row.Field<string>("object_type");
                 Cmn.DisposeAndSetNull(ref dt);
-            } else {
+            }
+            else
+            {
                 Cmn.DisposeAndSetNull(ref dt);
-                if (string.IsNullOrEmpty(db_scheme)) {
+                if (string.IsNullOrEmpty(db_scheme))
+                {
                     parameters = new VOracleParameter[1] { new VOracleParameter("table_name", VOracleDbType.VarChar, table, ParameterDirection.Input) };
                     dt = DataHelper.SqlGetTable("SELECT owner, object_type FROM all_objects WHERE object_name = UPPER(:table_name) AND object_type IN ('TABLE', 'VIEW')", parameters, db.Connection);
-                    if (dt.Rows.Count != 1) {
+                    if (dt.Rows.Count != 1)
+                    {
                         return null;
                     }
                     row = dt.Rows[0];
                     db_scheme = row.Field<string>("owner");
                     object_type = row.Field<string>("object_type");
                     Cmn.DisposeAndSetNull(ref dt);
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             }
@@ -79,7 +90,8 @@ namespace sql.builder.XmlHelpers
         public static XElement UpdateScheme(XElement old_scheme, XElement new_scheme)
         {
             // чистим namespace чтобы не мешал
-            if (old_scheme.Name.NamespaceName != "") {
+            if (old_scheme.Name.NamespaceName != "")
+            {
                 old_scheme.Attribute("xmlns").Remove();
                 //old_scheme.DescendantsAndSelf().ForEach(el => el.Name = el.Name.LocalName); //sklubowicz: это не компилялось!
                 foreach (var el in old_scheme.DescendantsAndSelf())
@@ -89,15 +101,18 @@ namespace sql.builder.XmlHelpers
             }
             XElement query1 = old_scheme.Element(EName.queries).Element(EName.query);
             XElement query2 = new_scheme.Element(EName.queries).Element(EName.query);
-            if (query1.Attribute(AName.name).Value != query2.Attribute(AName.name).Value) {
+            if (query1.Attribute(AName.name).Value != query2.Attribute(AName.name).Value)
+            {
                 return null;
             }
             XElement xquery_result = CompareXElements(query1, query2);
             // если был сгенерирован лишний ключ
             IList<XElement> xKeyColumns = xquery_result.Element(EName.select).Elements().Where(c => c.AttrOrDefault(AName.key, false)).ToList();
-            if (xKeyColumns.Count > 1) {
+            if (xKeyColumns.Count > 1)
+            {
                 XElement xcol = xKeyColumns.LastOrDefault(c => c.AttrOrDefault(AName.function, null) == TextConst.AVFunction.RowId);
-                if (xcol != null) {
+                if (xcol != null)
+                {
                     xcol.Remove();
                 }
             }
@@ -204,14 +219,16 @@ namespace sql.builder.XmlHelpers
             DataTable dtCols = db.GetTableStuct(table, db_scheme);
             List<string> pk_cols_names = new List<string>(1);
             int index;
-            for (index = 0; index < dtCols.Rows.Count; index++) {
+            for (index = 0; index < dtCols.Rows.Count; index++)
+            {
                 DataRow row = dtCols.Rows[index];
                 string name = row["column_name"].ToString().ToLower();
                 string db_type = row["data_type"].ToString();
                 string comment = row["comments"].ToString();
                 //string data_type = GetType(db_type);
                 string data_type;
-                switch (db_type) {
+                switch (db_type)
+                {
                     case "NUMBER":
                     case "FLOAT":
                         data_type = TextConst.AVDataType.Number;
@@ -240,43 +257,54 @@ namespace sql.builder.XmlHelpers
                 }
                 XElement xcolumn = Factory.NewColumn(alias, name);
                 xcolumn.Add(new XAttribute(AName.type, data_type));
-                if (data_type == TextConst.AVDataType.String) {
+                if (data_type == TextConst.AVDataType.String)
+                {
                     string length = row["data_length"].ToString();
                     xcolumn.Add(new XAttribute(AName.data_size, length));
                 }
-                if (row["nullable"].ToString() == "N") {
+                if (row["nullable"].ToString() == "N")
+                {
                     xcolumn.Add(new XAttribute(AName.column_mandatory, TextConst.AVBool.True));
                 }
-                if (!name.Contains("kod_")) {
+                if (!name.Contains("kod_"))
+                {
                     xcolumn.Add(new XAttribute(AName.title, GetDefaultTitle(name)));
                 }
-                if (!string.IsNullOrEmpty(comment)) {
+                if (!string.IsNullOrEmpty(comment))
+                {
                     xcolumn.Add(new XAttribute(AName.comment, comment));
                 }
                 xselect.Add(xcolumn);
-                if (row["is_pk"].ToString() == "1") {
+                if (row["is_pk"].ToString() == "1")
+                {
                     pk_cols_names.Add(name);
                 }
             }
             Cmn.DisposeAndSetNull(ref dtCols);
-            if (object_type == "TABLE") {
+            if (object_type == "TABLE")
+            {
                 // генерируем колонку-ключ если в базе его нет и если table не view
-                if (pk_cols_names.Count == 0 && object_type == "TABLE") {
+                if (pk_cols_names.Count == 0 && object_type == "TABLE")
+                {
                     XElement xcall = Factory.NewCall(TextConst.AVFunction.RowId);
                     xcall.Add(new XAttribute(AName.@as, table + "_id"));
                     xcall.Add(new XAttribute(AName.key, TextConst.AVBool.True));
                     xselect.AddFirst(xcall);
-                } else if (pk_cols_names.Count > 1) {
+                }
+                else if (pk_cols_names.Count > 1)
+                {
                     // генерируем колонку-ключ если в базе он составной
                     XElement xcall = Factory.NewCall(TextConst.AVFunction.Concat);
                     xcall.Add(new XAttribute(AName.@as, table + "_id"));
                     xcall.Add(new XAttribute(AName.@type, TextConst.AVDataType.String));
                     xcall.Add(new XAttribute(AName.key, TextConst.AVBool.True));
                     index = 0;
-                    while (true) {
+                    while (true)
+                    {
                         xcall.Add(Factory.NewColumn(alias, pk_cols_names[index]));
                         index++;
-                        if (index >= pk_cols_names.Count) {
+                        if (index >= pk_cols_names.Count)
+                        {
                             break;
                         }
                         xcall.Add(Factory.NewConst("'-'"));
@@ -294,22 +322,27 @@ namespace sql.builder.XmlHelpers
                 VOracleParameter[] parameters = new VOracleParameter[2] { new VOracleParameter("table_name", VOracleDbType.VarChar, table, ParameterDirection.Input),
                                                                     new VOracleParameter("db_scheme", VOracleDbType.VarChar, db_scheme, ParameterDirection.Input) };
                 DataTable ref_constraints = DataHelper.SqlGetTable("SELECT constraint_name, r_constraint_name FROM all_constraints WHERE table_name = UPPER(:table_name) AND owner = :db_scheme AND constraint_type = 'R'", parameters, db.Connection);
-                foreach (DataRow row in ref_constraints.Rows) {
+                foreach (DataRow row in ref_constraints.Rows)
+                {
                     string constraint_name = row["constraint_name"].ToString();
                     DataTable dtColumns = GetConstraintColumns(constraint_name);
                     DataTable dtRelColumns = GetConstraintColumns(row["r_constraint_name"].ToString());
-                    if (dtRelColumns.Rows.Count != 0) {
+                    if (dtRelColumns.Rows.Count != 0)
+                    {
                         string rel_table_name;
                         string rel_column;
                         string column;
                         string join;
-                        if (dtColumns.Rows.Count == 1) { // связь через одну колонку
+                        if (dtColumns.Rows.Count == 1)
+                        { // связь через одну колонку
                             rel_table_name = dtRelColumns.Rows[0]["table_name"].ToString().ToLower();
                             rel_column = dtRelColumns.Rows[0]["column_name"].ToString().ToLower();
                             column = dtColumns.Rows[0]["column_name"].ToString().ToLower();
                             //join = IsNotNullColumn(column, c_constraints_cols, c_constraints) ? "left inner" : "left outer";
                             join = TextConst.AVJoin.LeftOuter;
-                        } else if (dtColumns.Rows.Count > 1) { // связь через несколько колонок - создаем фиктивную колонку
+                        }
+                        else if (dtColumns.Rows.Count > 1)
+                        { // связь через несколько колонок - создаем фиктивную колонку
                             rel_table_name = dtRelColumns.Rows[0]["table_name"].ToString().ToLower();
                             rel_column = rel_table_name + "_id";
                             column = rel_column;
@@ -319,16 +352,20 @@ namespace sql.builder.XmlHelpers
                             xcall.Add(new XAttribute(AName.@as, rel_column));
                             xcall.Add(new XAttribute(AName.@type, TextConst.AVDataType.String));
                             index = 0;
-                            while (true) {
+                            while (true)
+                            {
                                 xcall.Add(Factory.NewColumn(alias, dtColumns.Rows[index]["column_name"].ToString().ToLower()));
                                 index++;
-                                if (index >= dtColumns.Rows.Count) {
+                                if (index >= dtColumns.Rows.Count)
+                                {
                                     break;
                                 }
                                 xcall.Add(Factory.NewConst("'-'"));
                             }
                             xselect.Add(xcall);
-                        } else {
+                        }
+                        else
+                        {
                             throw new Exception("Для констрэйнта " + constraint_name + " нет колонок");
                         }
                         XElement xsub_query = new XElement(EName.query);

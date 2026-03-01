@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data;
+﻿using System.Data;
 using sql.builder.DataApi;
 namespace sql.builder.UI
 {
@@ -11,7 +7,7 @@ namespace sql.builder.UI
         VDataTable GetDataTable();
         void BeginUpdate();
         void EndUpdate();
-        VLayoutControlContainerInfo LayoutContainer {get; set; }
+        VLayoutControlContainerInfo LayoutContainer { get; set; }
         bool IsVisibleInLayout();
         void UpdateDataSourceSelectedRows();
         void SetFocusedCell(string columnName, DataRow row);
@@ -24,5 +20,5 @@ namespace sql.builder.UI
     {
         void SetVisibleInLayout(bool value);
     }
-   
+
 }

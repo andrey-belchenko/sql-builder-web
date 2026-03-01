@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using AName_ = sql.builder.DataApi.AName;
+﻿using System.Collections.Generic;
 
 namespace sql.builder.DataApi
 {
@@ -37,7 +33,8 @@ namespace sql.builder.DataApi
         {
             table.Rows.Clear();
             IList<VRole> roles = XmlReports.Environment.GetRoles();
-            for (int index = 0; index < roles.Count; index++) {
+            for (int index = 0; index < roles.Count; index++)
+            {
                 VRole role = roles[index];
                 table.AddRow(role.P_Name, role.P_Title);
             }
@@ -52,7 +49,8 @@ namespace sql.builder.DataApi
         {
             string s = Bold(this.P_CalledObject);
             VRole role = this.UsedRole();
-            if (role != null) {
+            if (role != null)
+            {
                 s += " " + Italic(role.P_SelfTitle);
             }
             return s;
