@@ -2205,11 +2205,6 @@ namespace sql.builder
                 i++;
             }
 
-            if (sql.Contains("Отчет"))
-            {
-
-            }
-
             return paramNames.ToArray();
         }
         #region Для использования в качестве аргумента Select() и SelectAsArray()
