@@ -104,7 +104,7 @@ namespace SqlBuilderLib.DevTools
 
             // Update report title if suffix is present
             var finalReportTitle = reportTitle;
-            if (!string.IsNullOrEmpty(tsFileSuffix))
+            if (!string.IsNullOrEmpty(tsFileSuffix) && reportTitle!=templateTitle)
             {
                 finalReportTitle = reportTitle + " (" + EscapeString(templateTitle) + ")";
             }

@@ -270,7 +270,7 @@ namespace sql.builder.DataApi
                     {
                         param = CreateDBParameter(param_name, "Varchar2");
                     }
-                    cmd.Parameters.Add(param);
+                    cmd.Parameters.Add(param.GetDbParameter());
                 }
             }
             catch (Exception)

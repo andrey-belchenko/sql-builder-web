@@ -12,7 +12,7 @@ namespace SqlBuilderLib.DevTools
         static string BasePath = @"C:\Repos\ai\asuse-ai\asuse-ai-reports\reports-config\sql-builder\generated";
 
         public static bool Enabled = false;
-        public static void Initialize()
+        public static void Initialize(bool withConnection = true)
         {
 
             Enabled = true;
@@ -20,10 +20,11 @@ namespace SqlBuilderLib.DevTools
             Console.OutputEncoding = Encoding.UTF8;
             DevAnalyzer.PrepareOnly = true;
             XmlReports.SourceFolder = @"C:\Repos\ai-tfs\root\main\all\sql.builder.templates";
-            var conStr = "User Id=asuse;Password=kl0pik;Server=realryaz;Pooling=False;Sid=realryaz;Port=1521";
-            // var conStr = "User Id=asuse;Password=kl0pik;Server=REALKAZN;Pooling=False;Sid=REALKAZN;Port=1521";
-            // TNS format connection string
-            // var conStr = "User Id=asuse;Password=learning;Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.60.32.80)(PORT=1521)))(CONNECT_DATA=(SID=nata)))";
+            // Oracle.ManagedDataAccess.Core format: Data Source=host:port/sid
+            var conStr = "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=ryazan-ora.infoenergo.loc)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=realryaz)));User Id=asuse;Password=kl0pik;Pooling=False";
+            // var conStr = "Data Source=REALKAZN:1521/REALKAZN;User Id=asuse;Password=kl0pik;Pooling=False";
+            // TNS format (alternative)
+            // var conStr = "User Id=asuse;Password=learning;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.60.32.80)(PORT=1521))(CONNECT_DATA=(SID=nata)))";
             CleanSqlBuilder.ChangeConnectionString(conStr);
             Console.WriteLine(conStr);
         }

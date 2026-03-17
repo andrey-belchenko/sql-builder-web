@@ -10,9 +10,9 @@ namespace SqlBuilderApp
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            DevTasks.TestReport();
+            //DevTasks.TestReport();
 
-            // DevTasks.AnalyzeSql();
+            //DevTasks.AnalyzeSql();
             //DevTasks.TestTableRename();
             //AnalyzerStorage.SaveAllCollectionsToFiles();
             //DevUtils.TestReportsAnalysis();
@@ -52,10 +52,10 @@ namespace SqlBuilderApp
 
 
 
-            //// Генерация форм
-            // TsBuilder.DeleteGenerated();
-            // TsBuilder.Initialize();
-            // TsBuilder.BuildNavigators();
+            //// Генерация
+             TsBuilder.DeleteGenerated();
+             TsBuilder.Initialize();
+             TsBuilder.BuildNavigators();
 
 
             ////////////////
